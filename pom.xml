@@ -7,7 +7,7 @@
    </parent>
    <groupId>org.jboss.forge</groupId>
    <artifactId>java-parser-parent</artifactId>
-   <version>1.0.0.Alpha1</version>
+   <version>1.0.0-SNAPSHOT</version>
    <packaging>pom</packaging>
    <name>Forge - Java Parser Parent</name>
    <licenses>
@@ -75,7 +75,7 @@
       <connection>scm:git:git://github.com/forge/java-parser.git</connection>
       <developerConnection>scm:git:git@github.com:forge/java-parser.git</developerConnection>
       <url>http://github.com/forge/java-parser</url>
-     <tag>1.0.0.Alpha1</tag>
+     <tag>HEAD</tag>
   </scm>
 </project>
 
