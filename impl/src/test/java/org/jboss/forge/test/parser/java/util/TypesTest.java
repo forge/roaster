@@ -130,4 +130,16 @@ public class TypesTest
       assertEquals("java.lang.Class[]", Types.stripGenerics("java.lang.Class<E extends Enum<E>>[]"));
    }
 
+   @Test
+   public void testStringIsJavaLang()
+   {
+      assertTrue(Types.isJavaLang("String"));
+   }
+
+   @Test
+   public void testAssertClassIsNotJavaLang()
+   {
+      assertFalse(Types.isJavaLang("AssertClass"));
+   }
+
 }

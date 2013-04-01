@@ -15,9 +15,9 @@ import org.jboss.forge.parser.java.JavaClass;
 import org.jboss.forge.parser.java.Method;
 
 /**
- * 
+ *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
- * 
+ *
  */
 public class Refactory
 {
@@ -36,7 +36,8 @@ public class Refactory
                .setPublic()
                .setBody("return this." + fieldName + ";");
 
-      if (!field.isFinal()) {
+      if (!field.isFinal())
+      {
          clazz.addMethod().setReturnTypeVoid().setName("set" + methodNameSuffix).setPublic()
                   .setParameters("final " + field.getTypeInspector().toString() + " " + fieldName)
                   .setBody("this." + fieldName + " = " + fieldName + ";");
@@ -76,7 +77,9 @@ public class Refactory
 
    public static void createToStringFromFields(final JavaClass clazz, final List<Field<JavaClass>> fields)
    {
-      Method<JavaClass> method = clazz.addMethod().setName("toString").setReturnType(String.class).setPublic();
+      Method<JavaClass> method = clazz.addMethod().setName("toString").setReturnType(String.class)
+               .setPublic();
+      method.addAnnotation(Override.class);
 
       List<String> list = new ArrayList<String>();
 
@@ -85,21 +88,29 @@ public class Refactory
       {
          if (clazz.hasField(field))
          {
-            String line = "";
+            StringBuilder line = new StringBuilder();
 
             if (!field.isPrimitive())
                if (field.isType(String.class))
-                  line += "if(" + field.getName() + " != null && !" + field.getName() + ".trim().isEmpty())\n";
+               {
+                  line.append("if(").append(field.getName()).append(" != null && !").append(field.getName())
+                           .append(".trim().isEmpty())\n");
+               }
                else
-                  line += "if(" + field.getName() + " != null)\n";
+               {
+                  line.append("if(").append(field.getName()).append(" != null)\n");
+               }
 
-            line += " result += " + (list.isEmpty() ? "" : "\" \" + ") + field.getName() + ";";
+            boolean isFirst = list.isEmpty();
 
-            list.add(line);
+            line.append(" result += ").append(isFirst ? "\"" : "\", ");
+            line.append(field.getName()).append(": \" + ").append(field.getName()).append(";");
+
+            list.add(line.toString());
          }
       }
 
-      String body = "String result = \"\";\n" +
+      String body = "String result = getClass().getSimpleName()+\" \";\n" +
                Strings.join(list, delimeter) + "\n" +
                "return result;";
       method.setBody(body);

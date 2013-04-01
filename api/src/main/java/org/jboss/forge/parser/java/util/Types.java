@@ -216,12 +216,7 @@ public class Types
       {
          return true;
       }
-      for (String t : LANG_TYPES)
-      {
-         if (type.endsWith(t))
-            return true;
-      }
-      return false;
+      return LANG_TYPES.contains(type);
    }
 
    public static boolean isBasicType(String idType)

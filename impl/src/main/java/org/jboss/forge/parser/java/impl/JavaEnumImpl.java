@@ -41,7 +41,7 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnum> imple
       for (Object o : (((EnumDeclaration) getBodyDeclaration()).enumConstants()))
       {
          EnumConstantDeclaration field = (EnumConstantDeclaration) o;
-         result.add(new EnumConstantImpl<JavaEnum>((JavaEnum) this, field));
+         result.add(new EnumConstantImpl<JavaEnum>(this, field));
       }
 
       return Collections.unmodifiableList(result);
