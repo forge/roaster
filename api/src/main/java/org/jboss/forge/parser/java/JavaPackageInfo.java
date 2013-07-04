@@ -4,13 +4,12 @@
  * Licensed under the Eclipse Public License version 1.0, available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
+
 package org.jboss.forge.parser.java;
 
 /**
- * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
- * 
+ * Represents a Java Package Info.
  */
-public enum SourceType
+public interface JavaPackageInfo extends JavaSource<JavaPackageInfo>
 {
-   CLASS, INTERFACE, ENUM, ANNOTATION, PACKAGEINFO
 }
