@@ -8,7 +8,9 @@ package org.jboss.forge.test.parser.java.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.matchers.JUnitMatchers.containsString;
 
 import java.util.List;
 
@@ -105,5 +107,48 @@ public class RefactoryTest
       assertTrue(javaClass.hasMethodSignature("toString"));
       assertTrue(javaClass.getMethod("toString").getBody().contains("return"));
       assertTrue(javaClass.getMethod("toString").getBody().contains("firstName != null"));
+   }
+   
+   @Test
+   public void testCreateHashCodeAndEquals() throws Exception
+   {
+      Field<JavaClass> field = javaClass.getField("foo");
+      Refactory.createHashCodeAndEquals(javaClass, field);
+
+      List<Method<JavaClass>> methods = javaClass.getMethods();
+      Method<JavaClass> equals = methods.get(0);
+      Method<JavaClass> hashcode = methods.get(1);
+
+      assertEquals("equals", equals.getName());
+      assertEquals(1, equals.getParameters().size());
+      assertThat(equals.getBody(), containsString("if (foo != that.foo) {\n  return false;\n}"));
+      
+      assertEquals("hashCode", hashcode.getName());
+      assertEquals(0, hashcode.getParameters().size());
+      assertEquals("int", hashcode.getReturnType());
+      assertThat(hashcode.getBody(), containsString("result=prime * result + foo;"));
+   }
+   
+   @Test
+   public void testCreateHashCodeAndEqualsMultipleFields() throws Exception
+   {
+      Field<JavaClass> intField = javaClass.getField("foo");
+      Field<JavaClass> stringField = javaClass.getField("firstName");
+      Refactory.createHashCodeAndEquals(javaClass, intField, stringField);
+
+      List<Method<JavaClass>> methods = javaClass.getMethods();
+      Method<JavaClass> equals = methods.get(0);
+      Method<JavaClass> hashcode = methods.get(1);
+
+      assertEquals("equals", equals.getName());
+      assertEquals(1, equals.getParameters().size());
+      assertThat(equals.getBody(), containsString("if (foo != that.foo) {\n  return false;\n}"));
+      assertThat(equals.getBody(), containsString("if (firstName != null) {\n  return firstName.equals(((Foo)that).firstName);\n}"));
+      
+      assertEquals("hashCode", hashcode.getName());
+      assertEquals(0, hashcode.getParameters().size());
+      assertEquals("int", hashcode.getReturnType());
+      assertThat(hashcode.getBody(), containsString("result=prime * result + foo;"));
+      assertThat(hashcode.getBody(), containsString("result=prime * result + ((firstName == null) ? 0 : firstName.hashCode());"));
    }
 }
