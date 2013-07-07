@@ -13,6 +13,7 @@ import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
+import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 /**
@@ -21,6 +22,8 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 public class TypeDeclarationFinderVisitor extends ASTVisitor
 {
    private List<AbstractTypeDeclaration> declarations = new ArrayList<AbstractTypeDeclaration>();
+
+   private PackageDeclaration packageDeclaration;
 
    @Override
    public boolean visit(final TypeDeclaration node)
@@ -41,6 +44,18 @@ public class TypeDeclarationFinderVisitor extends ASTVisitor
    {
       declarations.add(node);
       return super.visit(node);
+   }
+
+   @Override
+   public boolean visit(PackageDeclaration node)
+   {
+      packageDeclaration = node;
+      return super.visit(node);
+   }
+
+   public PackageDeclaration getPackageDeclaration()
+   {
+      return packageDeclaration;
    }
 
    public List<AbstractTypeDeclaration> getTypeDeclarations()
