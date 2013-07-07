@@ -7,6 +7,7 @@
 package org.jboss.forge.parser.java.ast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -92,7 +93,7 @@ public class ModifierAccessor
       }
       else
       {
-         return new ArrayList<Modifier>();
+         return Collections.emptyList();
       }
    }
 }
