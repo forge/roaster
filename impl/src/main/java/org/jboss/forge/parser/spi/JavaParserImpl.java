@@ -18,12 +18,13 @@ import java.util.Map;
 
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
-import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
+import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.util.Util;
@@ -39,6 +40,7 @@ import org.jboss.forge.parser.java.impl.JavaAnnotationImpl;
 import org.jboss.forge.parser.java.impl.JavaClassImpl;
 import org.jboss.forge.parser.java.impl.JavaEnumImpl;
 import org.jboss.forge.parser.java.impl.JavaInterfaceImpl;
+import org.jboss.forge.parser.java.impl.JavaPackageInfoImpl;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -112,6 +114,11 @@ public class JavaParserImpl implements JavaParserProvider
          AbstractTypeDeclaration declaration = declarations.get(0);
          return getJavaSource(null, document, unit, declaration);
       }
+      else if (visitor.getPackageDeclaration() != null)
+      {
+         return getJavaSource(null, document, unit, visitor.getPackageDeclaration());
+
+      }
       throw new ParserException("Could not find type declaration in Java source - is this actually code?");
    }
 
@@ -120,26 +127,34 @@ public class JavaParserImpl implements JavaParserProvider
     * {@link TypeDeclaration}, and enclosing {@link JavaSource} type.
     */
    public static JavaSource<?> getJavaSource(JavaSource<?> enclosingType, Document document, CompilationUnit unit,
-            BodyDeclaration declaration)
+            ASTNode declaration)
    {
       if (declaration instanceof TypeDeclaration)
       {
-         if (((TypeDeclaration) declaration).isInterface())
+         TypeDeclaration typeDeclaration = (TypeDeclaration) declaration;
+         if (typeDeclaration.isInterface())
          {
-            return new JavaInterfaceImpl(enclosingType, document, unit, declaration);
+            return new JavaInterfaceImpl(enclosingType, document, unit, typeDeclaration);
          }
          else
          {
-            return new JavaClassImpl(enclosingType, document, unit, declaration);
+            return new JavaClassImpl(enclosingType, document, unit, typeDeclaration);
          }
       }
       else if (declaration instanceof EnumDeclaration)
       {
-         return new JavaEnumImpl(enclosingType, document, unit, declaration);
+         EnumDeclaration enumDeclaration = (EnumDeclaration) declaration;
+         return new JavaEnumImpl(enclosingType, document, unit, enumDeclaration);
       }
       else if (declaration instanceof AnnotationTypeDeclaration)
       {
-         return new JavaAnnotationImpl(enclosingType, document, unit, declaration);
+         AnnotationTypeDeclaration annotationTypeDeclaration = (AnnotationTypeDeclaration) declaration;
+         return new JavaAnnotationImpl(enclosingType, document, unit, annotationTypeDeclaration);
+      }
+      else if (declaration instanceof PackageDeclaration)
+      {
+         PackageDeclaration packageDeclaration = (PackageDeclaration) declaration;
+         return new JavaPackageInfoImpl(enclosingType, document, unit, packageDeclaration);
       }
       else
       {
