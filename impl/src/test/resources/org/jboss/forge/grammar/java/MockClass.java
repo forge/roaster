@@ -1,6 +1,7 @@
 package org.jboss.forge.grammar.java;
 
 import java.net.URL;
+import static java.util.Collections.*;
 
 public class MockClass
 {
