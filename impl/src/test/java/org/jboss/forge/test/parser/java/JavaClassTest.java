@@ -21,7 +21,6 @@ public class JavaClassTest extends JavaClassTestBase
    public JavaClass getSource()
    {
       InputStream stream = JavaClassTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockClass.java");
-      JavaClass javaClass = JavaParser.parse(JavaClass.class, stream);
-      return javaClass;
+      return JavaParser.parse(JavaClass.class, stream);
    }
 }

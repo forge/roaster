@@ -12,5 +12,5 @@ package org.jboss.forge.parser.java;
  */
 public enum SourceType
 {
-   CLASS, INTERFACE, ENUM, ANNOTATION, PACKAGEINFO
+   CLASS, INTERFACE, ENUM, ANNOTATION
 }

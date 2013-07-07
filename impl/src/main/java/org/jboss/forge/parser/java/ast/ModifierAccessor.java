@@ -9,14 +9,13 @@ package org.jboss.forge.parser.java.ast;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 
 public class ModifierAccessor
 {
-   public boolean hasModifier(ASTNode body, final ModifierKeyword modifier)
+   public boolean hasModifier(BodyDeclaration body, final ModifierKeyword modifier)
    {
       boolean result = false;
       List<Modifier> modifiers = getModifiers(body);
@@ -30,10 +29,10 @@ public class ModifierAccessor
       return result;
    }
 
-   private List<Modifier> getModifiers(ASTNode body)
+   private List<Modifier> getModifiers(BodyDeclaration body)
    {
       List<Modifier> result = new ArrayList<Modifier>();
-      List<?> modifiers = getInternalModifiers(body);
+      List<?> modifiers = body.modifiers();
       for (Object m : modifiers)
       {
          if (m instanceof Modifier)
@@ -45,7 +44,8 @@ public class ModifierAccessor
       return result;
    }
 
-   public List<Modifier> clearVisibility(ASTNode body)
+   @SuppressWarnings("unchecked")
+   public List<Modifier> clearVisibility(BodyDeclaration body)
    {
       List<Modifier> modifiers = getModifiers(body);
 
@@ -58,16 +58,18 @@ public class ModifierAccessor
          }
       }
 
-      getInternalModifiers(body).removeAll(toBeRemoved);
+      body.modifiers().removeAll(toBeRemoved);
       return modifiers;
    }
 
-   public void addModifier(ASTNode body, ModifierKeyword keyword)
+   @SuppressWarnings("unchecked")
+   public void addModifier(BodyDeclaration body, ModifierKeyword keyword)
    {
-      getInternalModifiers(body).add(body.getAST().newModifier(keyword));
+      body.modifiers().add(body.getAST().newModifier(keyword));
    }
 
-   public void removeModifier(ASTNode body, ModifierKeyword keyword)
+   @SuppressWarnings("unchecked")
+   public void removeModifier(BodyDeclaration body, ModifierKeyword keyword)
    {
       List<Modifier> modifiers = getModifiers(body);
 
@@ -80,19 +82,6 @@ public class ModifierAccessor
          }
       }
 
-      getInternalModifiers(body).removeAll(toBeRemoved);
-   }
-
-   @SuppressWarnings("unchecked")
-   private List<Modifier> getInternalModifiers(final ASTNode body)
-   {
-      if (body instanceof BodyDeclaration)
-      {
-         return ((BodyDeclaration) body).modifiers();
-      }
-      else
-      {
-         return new ArrayList<Modifier>();
-      }
+      body.modifiers().removeAll(toBeRemoved);
    }
 }
