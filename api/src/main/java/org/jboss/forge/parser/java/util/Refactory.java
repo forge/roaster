@@ -44,23 +44,56 @@ public class Refactory
       }
    }
 
-   public static void createHashCodeAndEquals(final JavaClass clazz)
+   public static void createHashCodeAndEquals(final JavaClass clazz, final Field<?>... fields)
    {
+      if(fields == null || fields.length < 1)
+      {
+         throw new IllegalArgumentException("fields cannot be null or empty.");
+      }
+      
+      StringBuilder fieldEqualityChecks = new StringBuilder();
+      StringBuilder hashCodeComputation = new StringBuilder();
+      for (Field<?> field : fields)
+      {
+         String fieldName = field.getName();
+
+         if (field.isPrimitive())
+         {
+            fieldEqualityChecks.append("if (").append(fieldName).append(" != that.").append(fieldName).append(") { ");
+            fieldEqualityChecks.append(" return false;");
+            fieldEqualityChecks.append("} ");
+            
+            hashCodeComputation.append("result = prime * result + ").append(fieldName).append(";");
+         }
+         else
+         {
+            fieldEqualityChecks.append("if (").append(fieldName).append(" != null) { ");
+            fieldEqualityChecks.append(" return ").append(fieldName).append(".equals(((");
+            fieldEqualityChecks.append(clazz.getName());
+            fieldEqualityChecks.append(") that).").append(fieldName);
+            fieldEqualityChecks.append("); } ");
+
+            hashCodeComputation.append("result = prime * result + ((").append(fieldName).append(" == null) ? 0 : ")
+                     .append(fieldName).append(".hashCode());");
+         }
+      }
+      
       clazz.addMethod(
                "public boolean equals(Object that) { " +
                         "if (this == that) { return true; } " +
                         "if (that == null) { return false; } " +
                         "if (getClass() != that.getClass()) { return false; } " +
-                        "if (id != null) { return id.equals((("
-                        + clazz.getName() + ") that).id); } " +
-                        "return super.equals(that); " +
+                        fieldEqualityChecks.toString() +
+                        "return true; " +
                         "}")
                .addAnnotation(Override.class);
 
       clazz.addMethod(
                "public int hashCode() { " +
-                        "if (id != null) { return id.hashCode(); } " +
-                        "return super.hashCode(); }")
+                        "final int prime = 31;" +
+                        "int result = 1;" +
+                        hashCodeComputation.toString() +
+                        "return result; }")
                .addAnnotation(Override.class);
    }
 
