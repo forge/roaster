@@ -15,12 +15,20 @@ import org.jboss.forge.parser.java.JavaClass;
 import org.jboss.forge.parser.java.Method;
 
 /**
+ * Utility refactory methods for {@link JavaClass} objects
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
- * 
+ * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
+ * @author <a href="mailto:vreynolds@redhat.com">Vineet Reynolds</a>
  */
 public class Refactory
 {
+   /**
+    * Generates a getXXX and setXXX method for the supplied field
+    * 
+    * @param clazz
+    * @param field
+    */
    public static void createGetterAndSetter(final JavaClass clazz, final Field<JavaClass> field)
    {
       if (!clazz.hasField(field))
@@ -44,6 +52,13 @@ public class Refactory
       }
    }
 
+   /**
+    * Create a <i>hashCode</i> and <i>equals</i> implementation for the given class and fields
+    * 
+    * @deprecated Use {@link Refactory#createHashCodeAndEquals(JavaClass, Field...)} instead, since this method relies
+    *             on the existence of the id field
+    */
+   @Deprecated
    public static void createHashCodeAndEquals(final JavaClass clazz)
    {
       final Field<?>[] fields;
@@ -61,6 +76,12 @@ public class Refactory
       createHashCodeAndEquals(clazz, fields);
    }
 
+   /**
+    * Create a <i>hashCode</i> and <i>equals</i> implementation for the given class and fields
+    * 
+    * @param clazz class to be changed
+    * @param fields fields to be used in the equals/hashCode methods
+    */
    public static void createHashCodeAndEquals(final JavaClass clazz, final Field<?>... fields)
    {
       if (fields == null || fields.length < 1)
@@ -114,17 +135,34 @@ public class Refactory
                .addAnnotation(Override.class);
    }
 
+   /**
+    * Create a <i>toString</i> implementation using all the fields in this class
+    * 
+    * @param clazz
+    */
    public static void createToStringFromFields(final JavaClass clazz)
    {
       List<Field<JavaClass>> fields = clazz.getFields();
       createToStringFromFields(clazz, fields);
    }
 
+   /**
+    * Create a <i>toString</i> implementation using the supplied fields
+    * 
+    * @param clazz
+    * @param fields
+    */
    public static void createToStringFromFields(final JavaClass clazz, final Field<JavaClass>... fields)
    {
       createToStringFromFields(clazz, Arrays.asList(fields));
    }
 
+   /**
+    * Create a <i>toString</i> implementation using the supplied fields
+    * 
+    * @param clazz
+    * @param fields
+    */
    public static void createToStringFromFields(final JavaClass clazz, final List<Field<JavaClass>> fields)
    {
       Method<JavaClass> method = clazz.addMethod().setName("toString").setReturnType(String.class)
