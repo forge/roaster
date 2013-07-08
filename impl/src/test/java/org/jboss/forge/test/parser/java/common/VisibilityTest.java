@@ -26,12 +26,12 @@ public abstract class VisibilityTest
    }
 
    @Before
-   public void reset()
+   public void reset() throws Exception
    {
       resetTests();
    }
 
-   public abstract void resetTests();
+   public abstract void resetTests() throws Exception;
 
    @Test
    public void testSetPublic() throws Exception

@@ -20,6 +20,7 @@ import org.junit.Test;
  */
 public class JavaEnumTest
 {
+   @SuppressWarnings("resource")
    @Test
    public void testCanParseEnum() throws Exception
    {

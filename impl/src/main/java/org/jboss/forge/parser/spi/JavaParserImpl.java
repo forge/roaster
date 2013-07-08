@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +62,12 @@ public class JavaParserImpl implements JavaParserProvider
       {
          Streams.closeQuietly(stream);
       }
+   }
+
+   @Override
+   public JavaSource<?> parse(URL url) throws IOException
+   {
+      return parse(url.openStream());
    }
 
    @Override
@@ -233,4 +240,18 @@ public class JavaParserImpl implements JavaParserProvider
       throw new ParserException("Source does not represent a [" + type.getSimpleName() + "], instead was ["
                + source.getClass().getSimpleName() + "] - Cannot convert.");
    }
+
+   @Override
+   @SuppressWarnings("unchecked")
+   public <T extends JavaSource<?>> T parse(final Class<T> type, final URL url) throws IOException
+   {
+      JavaSource<?> source = parse(url.openStream());
+      if (type.isAssignableFrom(source.getClass()))
+      {
+         return (T) source;
+      }
+      throw new ParserException("Source does not represent a [" + type.getSimpleName() + "], instead was ["
+               + source.getClass().getSimpleName() + "] - Cannot convert.");
+   }
+
 }

@@ -33,6 +33,7 @@ public class JavaAnnotationTest
 {
    private JavaAnnotation javaAnnotation;
 
+   @SuppressWarnings("resource")
    @Before
    public void setup()
    {

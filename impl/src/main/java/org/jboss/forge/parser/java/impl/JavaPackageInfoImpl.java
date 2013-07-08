@@ -44,11 +44,13 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       this.pkg = pkg;
    }
 
+   @Override
    public SourceType getSourceType()
    {
       return SourceType.PACKAGEINFO;
    }
 
+   @Override
    public String getName()
    {
       return "package-info";
@@ -65,6 +67,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    public static ServiceLoader<WildcardImportResolver> loader = ServiceLoader.load(WildcardImportResolver.class);
    private static List<WildcardImportResolver> resolvers;
 
+   @Override
    public JavaSource<?> getEnclosingType()
    {
       return enclosingType;
@@ -73,46 +76,55 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    /*
     * Annotation modifiers
     */
+   @Override
    public Annotation<JavaPackageInfo> addAnnotation()
    {
       return annotations.addAnnotation(this, getPackageDeclaration());
    }
 
+   @Override
    public Annotation<JavaPackageInfo> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
    {
       return annotations.addAnnotation(this, getPackageDeclaration(), clazz.getName());
    }
 
+   @Override
    public Annotation<JavaPackageInfo> addAnnotation(final String className)
    {
       return annotations.addAnnotation(this, getPackageDeclaration(), className);
    }
 
+   @Override
    public List<Annotation<JavaPackageInfo>> getAnnotations()
    {
       return annotations.getAnnotations(this, getPackageDeclaration());
    }
 
+   @Override
    public boolean hasAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
    {
       return annotations.hasAnnotation(this, getPackageDeclaration(), type.getName());
    }
 
+   @Override
    public boolean hasAnnotation(final String type)
    {
       return annotations.hasAnnotation(this, getPackageDeclaration(), type);
    }
 
+   @Override
    public JavaPackageInfo removeAnnotation(final Annotation<JavaPackageInfo> annotation)
    {
-      return (JavaPackageInfo) annotations.removeAnnotation(this, getPackageDeclaration(), annotation);
+      return annotations.removeAnnotation(this, getPackageDeclaration(), annotation);
    }
 
+   @Override
    public Annotation<JavaPackageInfo> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
    {
       return annotations.getAnnotation(this, getPackageDeclaration(), type);
    }
 
+   @Override
    public Annotation<JavaPackageInfo> getAnnotation(final String type)
    {
       return annotations.getAnnotation(this, getPackageDeclaration(), type);
@@ -122,22 +134,26 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
     * Import modifiers
     */
 
+   @Override
    public Import addImport(final Class<?> type)
    {
       return addImport(type.getCanonicalName());
    }
 
+   @Override
    public <T extends JavaSource<?>> Import addImport(final T type)
    {
       String qualifiedName = type.getQualifiedName();
       return this.addImport(qualifiedName);
    }
 
+   @Override
    public Import addImport(final Import imprt)
    {
       return addImport(imprt.getQualifiedName()).setStatic(imprt.isStatic());
    }
 
+   @Override
    @SuppressWarnings("unchecked")
    public Import addImport(final String className)
    {
@@ -164,6 +180,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       return imprt;
    }
 
+   @Override
    public Import getImport(final String className)
    {
       List<Import> imports = getImports();
@@ -177,21 +194,25 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       return null;
    }
 
+   @Override
    public Import getImport(final Class<?> type)
    {
       return getImport(type.getName());
    }
 
+   @Override
    public <T extends JavaSource<?>> Import getImport(final T type)
    {
       return getImport(type.getQualifiedName());
    }
 
+   @Override
    public Import getImport(final Import imprt)
    {
       return getImport(imprt.getQualifiedName());
    }
 
+   @Override
    @SuppressWarnings("unchecked")
    public List<Import> getImports()
    {
@@ -205,21 +226,25 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       return Collections.unmodifiableList(results);
    }
 
+   @Override
    public boolean hasImport(final Class<?> type)
    {
       return hasImport(type.getName());
    }
 
+   @Override
    public <T extends JavaSource<T>> boolean hasImport(final T type)
    {
       return hasImport(type.getQualifiedName());
    }
 
+   @Override
    public boolean hasImport(final Import imprt)
    {
       return hasImport(imprt.getQualifiedName());
    }
 
+   @Override
    public boolean hasImport(final String type)
    {
       String resultType = type;
@@ -234,11 +259,13 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       return getImport(resultType) != null;
    }
 
+   @Override
    public boolean requiresImport(final Class<?> type)
    {
       return requiresImport(type.getName());
    }
 
+   @Override
    public boolean requiresImport(final String type)
    {
       String resultType = type;
@@ -259,6 +286,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       return true;
    }
 
+   @Override
    public String resolveType(final String type)
    {
       String original = type;
@@ -355,6 +383,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       return !Strings.isNullOrEmpty(type) && !Types.isPrimitive(type);
    }
 
+   @Override
    public JavaPackageInfo removeImport(final String name)
    {
       for (Import i : getImports())
@@ -368,16 +397,19 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       return this;
    }
 
+   @Override
    public JavaPackageInfo removeImport(final Class<?> clazz)
    {
       return removeImport(clazz.getName());
    }
 
+   @Override
    public <T extends JavaSource<?>> JavaPackageInfo removeImport(final T type)
    {
       return removeImport(type.getQualifiedName());
    }
 
+   @Override
    public JavaPackageInfo removeImport(final Import imprt)
    {
       Object internal = imprt.getInternal();
@@ -388,6 +420,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       return this;
    }
 
+   @Override
    public List<Member<JavaPackageInfo, ?>> getMembers()
    {
       List<Member<JavaPackageInfo, ?>> result = new ArrayList<Member<JavaPackageInfo, ?>>();
@@ -402,12 +435,14 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       throw new ParserException("Source body was not of the expected type (PackageDeclaration).");
    }
 
+   @Override
    public JavaPackageInfo setName(final String name)
    {
       getPackageDeclaration().setName(unit.getAST().newSimpleName(name));
-      return (JavaPackageInfo) this;
+      return this;
    }
 
+   @Override
    public String getCanonicalName()
    {
       String result = getName();
@@ -426,6 +461,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       return result;
    }
 
+   @Override
    public String getQualifiedName()
    {
       String result = getName();
@@ -447,6 +483,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    /*
     * Package modifiers
     */
+   @Override
    public String getPackage()
    {
       PackageDeclaration pkg = unit.getPackage();
@@ -460,6 +497,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       }
    }
 
+   @Override
    public JavaPackageInfo setPackage(final String name)
    {
       if (unit.getPackage() == null)
@@ -470,12 +508,14 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       return this;
    }
 
+   @Override
    public JavaPackageInfo setDefaultPackage()
    {
       unit.setPackage(null);
       return this;
    }
 
+   @Override
    public boolean isDefaultPackage()
    {
       return unit.getPackage() == null;
@@ -484,22 +524,26 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    /*
     * Visibility modifiers
     */
+   @Override
    public boolean isPackagePrivate()
    {
       return (!isPublic() && !isPrivate() && !isProtected());
    }
 
+   @Override
    public JavaPackageInfo setPackagePrivate()
    {
       modifiers.clearVisibility(getPackageDeclaration());
       return this;
    }
 
+   @Override
    public boolean isPublic()
    {
       return modifiers.hasModifier(getPackageDeclaration(), ModifierKeyword.PUBLIC_KEYWORD);
    }
 
+   @Override
    public JavaPackageInfo setPublic()
    {
       modifiers.clearVisibility(getPackageDeclaration());
@@ -507,11 +551,13 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       return this;
    }
 
+   @Override
    public boolean isPrivate()
    {
       return modifiers.hasModifier(getPackageDeclaration(), ModifierKeyword.PRIVATE_KEYWORD);
    }
 
+   @Override
    public JavaPackageInfo setPrivate()
    {
       modifiers.clearVisibility(getPackageDeclaration());
@@ -519,11 +565,13 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       return this;
    }
 
+   @Override
    public boolean isProtected()
    {
       return modifiers.hasModifier(getPackageDeclaration(), ModifierKeyword.PROTECTED_KEYWORD);
    }
 
+   @Override
    public JavaPackageInfo setProtected()
    {
       modifiers.clearVisibility(getPackageDeclaration());
@@ -531,11 +579,13 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       return this;
    }
 
+   @Override
    public Visibility getVisibility()
    {
       return Visibility.getFrom(this);
    }
 
+   @Override
    public JavaPackageInfo setVisibility(final Visibility scope)
    {
       return Visibility.set(this, scope);
@@ -565,11 +615,13 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       return Formatter.format(document.get());
    }
 
+   @Override
    public Object getInternal()
    {
       return unit;
    }
 
+   @Override
    public JavaPackageInfo getOrigin()
    {
       return this;
@@ -628,6 +680,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       return true;
    }
 
+   @Override
    public List<SyntaxError> getSyntaxErrors()
    {
       List<SyntaxError> result = new ArrayList<SyntaxError>();
@@ -643,31 +696,37 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       return result;
    }
 
+   @Override
    public boolean hasSyntaxErrors()
    {
       return !getSyntaxErrors().isEmpty();
    }
 
+   @Override
    public boolean isClass()
    {
       return false;
    }
 
+   @Override
    public boolean isEnum()
    {
       return false;
    }
 
+   @Override
    public boolean isInterface()
    {
       return false;
    }
 
+   @Override
    public boolean isAnnotation()
    {
       return false;
    }
 
+   @Override
    public List<JavaSource<?>> getNestedClasses()
    {
       List<AbstractTypeDeclaration> declarations = getNestedDeclarations(pkg);

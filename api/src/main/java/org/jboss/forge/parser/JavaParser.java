@@ -9,7 +9,9 @@ package org.jboss.forge.parser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
@@ -55,6 +57,14 @@ public final class JavaParser
    }
 
    /**
+    * Parse the given {@link URL} data into a new {@link JavaSource} instance.
+    */
+   public static JavaSource<?> parse(final URL data) throws IOException
+   {
+      return getParser().parse(data);
+   }
+
+   /**
     * Read the given {@link InputStream} and parse the data into a new {@link JavaClass} instance.
     */
    public static JavaSource<?> parse(final InputStream data)
@@ -84,6 +94,16 @@ public final class JavaParser
    public static <T extends JavaSource<?>> T create(final Class<T> type)
    {
       return getParser().create(type);
+   }
+
+   /**
+    * Read the given {@link URL} and parse its data into a new {@link JavaSource} instance of the given type.
+    * 
+    * @throws FileNotFoundException
+    */
+   public static <T extends JavaSource<?>> T parse(final Class<T> type, final URL url) throws IOException
+   {
+      return getParser().parse(type, url);
    }
 
    /**

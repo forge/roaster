@@ -7,10 +7,12 @@ import org.jboss.forge.parser.java.JavaClass;
 
 public class NestedJavaClassTest extends JavaClassTest
 {
+   @SuppressWarnings("resource")
    @Override
    public JavaClass getSource()
    {
-      InputStream stream = JavaClassTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/NestedMockClass.java");
+      InputStream stream = JavaClassTest.class
+               .getResourceAsStream("/org/jboss/forge/grammar/java/NestedMockClass.java");
       return (JavaClass) JavaParser.parse(JavaClass.class, stream).getNestedClasses().get(0);
    }
 }

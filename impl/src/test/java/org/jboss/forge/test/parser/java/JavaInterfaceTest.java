@@ -25,6 +25,7 @@ import org.junit.Test;
  */
 public class JavaInterfaceTest
 {
+   @SuppressWarnings("resource")
    @Test
    public void testCanParseInterface() throws Exception
    {
@@ -35,6 +36,7 @@ public class JavaInterfaceTest
       assertEquals("MockInterface", name);
    }
 
+   @SuppressWarnings("resource")
    @Test
    public void testCanParseBigInterface() throws Exception
    {

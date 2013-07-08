@@ -18,6 +18,7 @@ import org.jboss.forge.test.parser.java.common.AnnotationTest;
  */
 public class MethodAnnotationTest extends AnnotationTest<JavaClass, Method<JavaClass>>
 {
+   @SuppressWarnings("resource")
    @Override
    public void resetTests()
    {

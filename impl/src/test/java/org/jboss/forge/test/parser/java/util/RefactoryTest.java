@@ -114,6 +114,7 @@ public class RefactoryTest
       assertFalse(javaClass.hasSyntaxErrors());
    }
    
+   @SuppressWarnings("deprecation")
    @Test
    public void testCreateHashCodeAndEqualsNoFields() throws Exception
    {

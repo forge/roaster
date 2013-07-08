@@ -16,6 +16,7 @@ import org.junit.Test;
 public class JavaPackageInfoTest
 {
 
+   @SuppressWarnings("resource")
    @Test
    public void testCanParsePackageInfo() throws Exception
    {

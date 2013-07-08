@@ -29,7 +29,7 @@ import org.jboss.forge.parser.java.util.Types;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
- *
+ * 
  */
 public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> extends AbstractJavaSource<O> implements
          MethodHolder<O>, FieldHolder<O>
@@ -202,21 +202,23 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
          if (local.getName().equals(name))
          {
             List<Parameter<O>> localParams = local.getParameters();
-            if (((paramTypes != null) && (localParams.size() == 0))
-                     || (localParams.size() == paramTypes.length))
+            if (paramTypes != null)
             {
-               boolean matches = true;
-               for (int i = 0; i < localParams.size(); i++)
+               if (localParams.isEmpty() || (localParams.size() == paramTypes.length))
                {
-                  Parameter<O> localParam = localParams.get(i);
-                  String type = paramTypes[i];
-                  if (!Types.areEquivalent(localParam.getType(), type))
+                  boolean matches = true;
+                  for (int i = 0; i < localParams.size(); i++)
                   {
-                     matches = false;
+                     Parameter<O> localParam = localParams.get(i);
+                     String type = paramTypes[i];
+                     if (!Types.areEquivalent(localParam.getType(), type))
+                     {
+                        matches = false;
+                     }
                   }
+                  if (matches)
+                     return local;
                }
-               if (matches)
-                  return local;
             }
          }
       }
