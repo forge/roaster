@@ -50,6 +50,7 @@ public class RefactoryTest
       assertEquals("getFoo", getter.getName());
       assertTrue(getter.getParameters().isEmpty());
       assertEquals("setFoo", setter.getName());
+      assertFalse(javaClass.hasSyntaxErrors());
    }
 
    @Test
@@ -65,6 +66,7 @@ public class RefactoryTest
       assertEquals("getFirstName", getter.getName());
       assertTrue(getter.getParameters().isEmpty());
       assertEquals("setFirstName", setter.getName());
+      assertFalse(javaClass.hasSyntaxErrors());
    }
 
    @Test
@@ -78,6 +80,7 @@ public class RefactoryTest
 
       assertEquals("getBar", getter.getName());
       assertEquals(1, methods.size());
+      assertFalse(javaClass.hasSyntaxErrors());
    }
 
    @Test
@@ -97,6 +100,7 @@ public class RefactoryTest
       assertEquals("setNames", setter.getName());
       assertFalse(setter.getParameters().isEmpty());
       assertEquals("Set<String>", setter.getParameters().get(0).getType());
+      assertFalse(javaClass.hasSyntaxErrors());
    }
 
    @Test
@@ -107,7 +111,27 @@ public class RefactoryTest
       assertTrue(javaClass.hasMethodSignature("toString"));
       assertTrue(javaClass.getMethod("toString").getBody().contains("return"));
       assertTrue(javaClass.getMethod("toString").getBody().contains("firstName != null"));
+      assertFalse(javaClass.hasSyntaxErrors());
    }
+   
+   @Test
+   public void testCreateHashCodeAndEqualsNoFields() throws Exception
+   {
+      Refactory.createHashCodeAndEquals(javaClass);
+
+      List<Method<JavaClass>> methods = javaClass.getMethods();
+      Method<JavaClass> equals = methods.get(0);
+      Method<JavaClass> hashcode = methods.get(1);
+
+      assertEquals("equals", equals.getName());
+      assertEquals(1, equals.getParameters().size());
+      
+      assertEquals("hashCode", hashcode.getName());
+      assertEquals(0, hashcode.getParameters().size());
+      assertEquals("int", hashcode.getReturnType());
+      assertFalse(javaClass.hasSyntaxErrors());
+   }
+
    
    @Test
    public void testCreateHashCodeAndEquals() throws Exception
@@ -127,6 +151,7 @@ public class RefactoryTest
       assertEquals(0, hashcode.getParameters().size());
       assertEquals("int", hashcode.getReturnType());
       assertThat(hashcode.getBody(), containsString("result=prime * result + foo;"));
+      assertFalse(javaClass.hasSyntaxErrors());
    }
    
    @Test
@@ -150,5 +175,6 @@ public class RefactoryTest
       assertEquals("int", hashcode.getReturnType());
       assertThat(hashcode.getBody(), containsString("result=prime * result + foo;"));
       assertThat(hashcode.getBody(), containsString("result=prime * result + ((firstName == null) ? 0 : firstName.hashCode());"));
+      assertFalse(javaClass.hasSyntaxErrors());
    }
 }

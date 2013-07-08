@@ -15,9 +15,9 @@ import org.jboss.forge.parser.java.JavaClass;
 import org.jboss.forge.parser.java.Method;
 
 /**
- *
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
- *
+ * 
  */
 public class Refactory
 {
@@ -44,13 +44,30 @@ public class Refactory
       }
    }
 
+   public static void createHashCodeAndEquals(final JavaClass clazz)
+   {
+      final Field<?>[] fields;
+      Field<JavaClass> idField = clazz.getField("id");
+      // FORGE-995: Retained this for backwards compatibility
+      if (idField != null)
+      {
+         fields = new Field[] { idField };
+      }
+      else
+      {
+         List<Field<JavaClass>> classFields = clazz.getFields();
+         fields = classFields.toArray(new Field[classFields.size()]);
+      }
+      createHashCodeAndEquals(clazz, fields);
+   }
+
    public static void createHashCodeAndEquals(final JavaClass clazz, final Field<?>... fields)
    {
-      if(fields == null || fields.length < 1)
+      if (fields == null || fields.length < 1)
       {
          throw new IllegalArgumentException("fields cannot be null or empty.");
       }
-      
+
       StringBuilder fieldEqualityChecks = new StringBuilder();
       StringBuilder hashCodeComputation = new StringBuilder();
       for (Field<?> field : fields)
@@ -62,7 +79,7 @@ public class Refactory
             fieldEqualityChecks.append("if (").append(fieldName).append(" != that.").append(fieldName).append(") { ");
             fieldEqualityChecks.append(" return false;");
             fieldEqualityChecks.append("} ");
-            
+
             hashCodeComputation.append("result = prime * result + ").append(fieldName).append(";");
          }
          else
@@ -77,7 +94,7 @@ public class Refactory
                      .append(fieldName).append(".hashCode());");
          }
       }
-      
+
       clazz.addMethod(
                "public boolean equals(Object that) { " +
                         "if (this == that) { return true; } " +
