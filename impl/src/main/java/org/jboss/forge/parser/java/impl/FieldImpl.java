@@ -539,4 +539,17 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
       }
       return result;
    }
+   
+   @Override
+   public boolean isTransient()
+   {
+      return modifiers.hasModifier(field, ModifierKeyword.TRANSIENT_KEYWORD);
+   }
+
+   @Override
+   public boolean isVolatile()
+   {
+      return modifiers.hasModifier(field, ModifierKeyword.VOLATILE_KEYWORD);
+   }
+
 }

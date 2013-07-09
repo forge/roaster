@@ -181,9 +181,28 @@ public class FieldTest
 
       assertFalse(objectField.isPrimitive());
       assertTrue(primitiveField.isPrimitive());
-
    }
+   
+   @Test
+   public void testIsTransient() throws Exception
+   {
+      Field<JavaClass> transientField = javaClass.addField("public transient boolean flag = false;");
+      Field<JavaClass> nonTransientField = javaClass.addField("public boolean flag = false;");
 
+      assertTrue(transientField.isTransient());
+      assertFalse(nonTransientField.isTransient());
+   }
+   
+   @Test
+   public void testIsVolatile() throws Exception
+   {
+      Field<JavaClass> volatileField = javaClass.addField("public volatile boolean flag = false;");
+      Field<JavaClass> nonVolatileField = javaClass.addField("public boolean flag = false;");
+
+      assertTrue(volatileField.isVolatile());
+      assertFalse(nonVolatileField.isVolatile());
+   }
+   
    @Test
    public void testAddFieldInitializerLiteral() throws Exception
    {
