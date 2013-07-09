@@ -89,6 +89,15 @@ public class Refactory
          throw new IllegalArgumentException("fields cannot be null or empty.");
       }
 
+      String superEqualsCheck = "";
+      String defaultHashcode = "int result = 1;";
+      if(!clazz.getSuperType().equals("java.lang.Object"))
+      {
+         superEqualsCheck = "if (!super.equals(obj)) { return false;} ";
+         defaultHashcode = "int result = super.hashCode();";
+      }
+      
+      boolean isTempFieldCreated = false;
       StringBuilder fieldEqualityChecks = new StringBuilder();
       StringBuilder hashCodeComputation = new StringBuilder();
       for (Field<?> field : fields)
@@ -97,30 +106,92 @@ public class Refactory
 
          if (field.isPrimitive())
          {
-            fieldEqualityChecks.append("if (").append(fieldName).append(" != that.").append(fieldName).append(") { ");
-            fieldEqualityChecks.append(" return false;");
-            fieldEqualityChecks.append("} ");
+            if (field.isPrimitive("float"))
+            {
+               fieldEqualityChecks.append("if (Float.floatToIntBits(").append(fieldName).append(") != Float.floatToIntBits(other.").append(fieldName)
+                        .append(")) { ");
+               fieldEqualityChecks.append(" return false;");
+               fieldEqualityChecks.append("} ");
+               
+               // result = prime * result + Float.floatToIntBits(floatValue);
+               hashCodeComputation.append("result = prime * result + ").append("Float.floatToIntBits(").append(fieldName).append(");");
+            }
+            else if (field.isPrimitive("double"))
+            {
+               fieldEqualityChecks.append("if (Double.doubleToLongBits(").append(fieldName).append(") != Double.doubleToLongBits(other.").append(fieldName)
+                        .append(")) { ");
+               fieldEqualityChecks.append(" return false;");
+               fieldEqualityChecks.append("} ");
+               
+               // long temp;
+               // temp = Double.doubleToLongBits(doubleValue);
+               // result = prime * result + (int) (temp ^ (temp >>> 32));
+               if(!isTempFieldCreated)
+               {
+                  hashCodeComputation.append("long temp;");
+                  isTempFieldCreated = true;
+               }
+               hashCodeComputation.append("temp = Double.doubleToLongBits(").append(fieldName).append(");");
+               hashCodeComputation.append("result = prime * result + (int) (temp ^ (temp >>> 32));");
+            }
+            else
+            {
+               fieldEqualityChecks.append("if (").append(fieldName).append(" != other.").append(fieldName)
+                        .append(") { ");
+               fieldEqualityChecks.append(" return false;");
+               fieldEqualityChecks.append("} ");
 
-            hashCodeComputation.append("result = prime * result + ").append(fieldName).append(";");
+               if (field.isPrimitive("long"))
+               {
+                  // result = prime * result + (int) (longValue ^ (longValue >>> 32));
+                  hashCodeComputation.append("result = prime * result + (int) (").append(fieldName).append(" ^ (")
+                           .append(fieldName).append(" >>> 32));");
+               }
+               else if(field.isPrimitive("boolean"))
+               {
+                  // result = prime * result + (booleanValue : 1231 : 1237);
+                  hashCodeComputation.append("result = prime * result + (").append(fieldName).append(" ? 1231 : 1237);");
+               }
+               else
+               {
+                  // For byte, char, short, int
+                  // result = prime * result + fieldValue;
+                  hashCodeComputation.append("result = prime * result + ").append(fieldName).append(";");
+               }
+            }
+         }
+         else if(field.isArray())
+         {
+            fieldEqualityChecks.append("if (!Arrays.equals(").append(fieldName).append(", other.").append(fieldName).append(")) {");
+            fieldEqualityChecks.append(" return false; }");
+            
+            // result = prime * result + Arrays.hashCode(array);
+            hashCodeComputation.append("result = prime * result + Arrays.hashCode(").append(fieldName).append(");");
          }
          else
          {
             fieldEqualityChecks.append("if (").append(fieldName).append(" != null) { ");
-            fieldEqualityChecks.append(" return ").append(fieldName).append(".equals(((");
-            fieldEqualityChecks.append(clazz.getName());
-            fieldEqualityChecks.append(") that).").append(fieldName);
-            fieldEqualityChecks.append("); } ");
+            fieldEqualityChecks.append(" if(!").append(fieldName).append(".equals(");
+            fieldEqualityChecks.append("that.").append(fieldName);
+            fieldEqualityChecks.append(")) { return false;} } ");
 
+            // result = prime * result + (( obj == null) ? 0 : obj.hashCode());
             hashCodeComputation.append("result = prime * result + ((").append(fieldName).append(" == null) ? 0 : ")
                      .append(fieldName).append(".hashCode());");
          }
       }
+      
+      StringBuilder typeCheckAndAssignment = new StringBuilder();
+      String klassName = clazz.getName();
+      typeCheckAndAssignment.append("if (!(obj instanceof ").append(klassName).append(")) {");
+      typeCheckAndAssignment.append(" return false;}");
+      typeCheckAndAssignment.append(klassName).append(" other = (").append(klassName).append(") obj;");
 
       clazz.addMethod(
-               "public boolean equals(Object that) { " +
-                        "if (this == that) { return true; } " +
-                        "if (that == null) { return false; } " +
-                        "if (getClass() != that.getClass()) { return false; } " +
+               "public boolean equals(Object obj) { " +
+                        "if (this == obj) { return true; } " +
+                        superEqualsCheck.toString() +
+                        typeCheckAndAssignment.toString() +
                         fieldEqualityChecks.toString() +
                         "return true; " +
                         "}")
@@ -129,7 +200,7 @@ public class Refactory
       clazz.addMethod(
                "public int hashCode() { " +
                         "final int prime = 31;" +
-                        "int result = 1;" +
+                        defaultHashcode +
                         hashCodeComputation.toString() +
                         "return result; }")
                .addAnnotation(Override.class);

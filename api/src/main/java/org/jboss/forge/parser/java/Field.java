@@ -67,5 +67,34 @@ public interface Field<O extends JavaSource<O>> extends Member<O, Field<O>>
 
    Field<O> setStringInitializer(String value);
 
+   /**
+    * 
+    * @return True if the type of the field is a primitive type 
+    */
    boolean isPrimitive();
+   
+   /**
+    * 
+    * @param type The primitive type to check against
+    * @return True if the type of the field is of the specified primitive type
+    */
+   boolean isPrimitive(String type);
+   
+   /**
+    * 
+    * @return True if the field is transient
+    */
+   boolean isTransient();
+   
+   /**
+    * 
+    * @return True if the field is volatile
+    */
+   boolean isVolatile();
+   
+   /**
+    * 
+    * @return True if the field is an array 
+    */
+   boolean isArray();
 }

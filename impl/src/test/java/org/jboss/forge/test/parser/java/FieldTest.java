@@ -181,7 +181,53 @@ public class FieldTest
 
       assertFalse(objectField.isPrimitive());
       assertTrue(primitiveField.isPrimitive());
+   }
+   
+   @Test
+   public void testIsPrimitiveOfType() throws Exception
+   {
+      Field<JavaClass> objectField = javaClass.addField("public Boolean flag = false;");
+      Field<JavaClass> primitiveField = javaClass.addField("public boolean flag = false;");
 
+      assertFalse(objectField.isPrimitive("Boolean"));
+      assertFalse(objectField.isPrimitive("boolean"));
+      assertFalse(primitiveField.isPrimitive("Boolean"));
+      assertTrue(primitiveField.isPrimitive("boolean"));
+   }
+   
+   @Test
+   public void testIsTransient() throws Exception
+   {
+      Field<JavaClass> transientField = javaClass.addField("public transient boolean flag = false;");
+      Field<JavaClass> nonTransientField = javaClass.addField("public boolean flag = false;");
+
+      assertTrue(transientField.isTransient());
+      assertFalse(nonTransientField.isTransient());
+   }
+   
+   @Test
+   public void testIsVolatile() throws Exception
+   {
+      Field<JavaClass> volatileField = javaClass.addField("public volatile boolean flag = false;");
+      Field<JavaClass> nonVolatileField = javaClass.addField("public boolean flag = false;");
+
+      assertTrue(volatileField.isVolatile());
+      assertFalse(nonVolatileField.isVolatile());
+   }
+   
+   @Test
+   public void testIsArray() throws Exception
+   {
+      Field<JavaClass> primitiveArrayField = javaClass.addField("public boolean[] flags = false;");
+      Field<JavaClass> primitiveField = javaClass.addField("public boolean flag = false;");
+      Field<JavaClass> objectArrayField = javaClass.addField("public Boolean[] flags = false;");
+      Field<JavaClass> objectField = javaClass.addField("public Boolean flag = false;");
+
+      assertTrue(primitiveArrayField.isArray());
+      assertFalse(primitiveField.isArray());
+      
+      assertTrue(objectArrayField.isArray());
+      assertFalse(objectField.isArray());
    }
 
    @Test

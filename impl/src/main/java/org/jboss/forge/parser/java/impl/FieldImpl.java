@@ -539,4 +539,40 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
       }
       return result;
    }
+   
+   @Override
+   public boolean isPrimitive(String type)
+   {
+      boolean result = false;
+      Type fieldType = field.getType();
+      if (fieldType != null)
+      {
+         result = fieldType.isPrimitiveType() && isType(type);
+      }
+      return result;
+   }
+
+   @Override
+   public boolean isTransient()
+   {
+      return modifiers.hasModifier(field, ModifierKeyword.TRANSIENT_KEYWORD);
+   }
+
+   @Override
+   public boolean isVolatile()
+   {
+      return modifiers.hasModifier(field, ModifierKeyword.VOLATILE_KEYWORD);
+   }
+
+   @Override
+   public boolean isArray()
+   {
+      boolean result = false;
+      Type type = field.getType();
+      if (type != null)
+      {
+         result = type.isArrayType();
+      }
+      return result;
+   }
 }
