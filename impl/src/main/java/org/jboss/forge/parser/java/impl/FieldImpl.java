@@ -552,15 +552,4 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
       return modifiers.hasModifier(field, ModifierKeyword.VOLATILE_KEYWORD);
    }
 
-   @Override
-   public boolean isArray()
-   {
-      boolean result = false;
-      Type type = field.getType();
-      if (type != null)
-      {
-         result = type.isArrayType();
-      }
-      return result;
-   }
 }

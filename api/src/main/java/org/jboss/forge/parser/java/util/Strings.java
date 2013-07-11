@@ -411,4 +411,22 @@ public class Strings
          return -1;
       }
    }
+
+   public static int countNumberOfOccurences(String text, String toMatch)
+   {
+      int count = 0;
+      if(toMatch == null || toMatch.length() < 1)
+      {
+         return count;
+      }
+      
+      String wholeText = text;
+      int idx = 0;
+      while((idx = wholeText.indexOf(toMatch, idx)) != -1)
+      {
+         count++;
+         idx = idx + toMatch.length();
+      }
+      return count;
+   }
 }

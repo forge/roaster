@@ -85,9 +85,4 @@ public interface Field<O extends JavaSource<O>> extends Member<O, Field<O>>
     */
    boolean isVolatile();
    
-   /**
-    * 
-    * @return True if the field is an array 
-    */
-   boolean isArray();
 }

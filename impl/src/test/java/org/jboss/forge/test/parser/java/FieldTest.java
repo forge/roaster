@@ -204,21 +204,6 @@ public class FieldTest
    }
    
    @Test
-   public void testIsArray() throws Exception
-   {
-      Field<JavaClass> primitiveArrayField = javaClass.addField("public boolean[] flags = false;");
-      Field<JavaClass> primitiveField = javaClass.addField("public boolean flag = false;");
-      Field<JavaClass> objectArrayField = javaClass.addField("public Boolean[] flags = false;");
-      Field<JavaClass> objectField = javaClass.addField("public Boolean flag = false;");
-
-      assertTrue(primitiveArrayField.isArray());
-      assertFalse(primitiveField.isArray());
-      
-      assertTrue(objectArrayField.isArray());
-      assertFalse(objectField.isArray());
-   }
-
-   @Test
    public void testAddFieldInitializerLiteral() throws Exception
    {
       javaClass.addField("public int flag;").setLiteralInitializer("1234").setPrivate();

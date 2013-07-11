@@ -191,7 +191,7 @@ public class Refactory
                }
             }
          }
-         else if (field.isArray())
+         else if (field.getTypeInspector().isArray())
          {
             // if(!Arrays.equals(array, other.array)) {
             //    return false;

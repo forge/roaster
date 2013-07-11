@@ -19,6 +19,7 @@ import org.jboss.forge.parser.java.Field;
 import org.jboss.forge.parser.java.JavaClass;
 import org.jboss.forge.parser.java.Method;
 import org.jboss.forge.parser.java.util.Refactory;
+import org.jboss.forge.parser.java.util.Strings;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -350,28 +351,10 @@ public class RefactoryTest
       assertEquals(0, hashcode.getParameters().size());
       assertEquals("int", hashcode.getReturnType());
       assertThat(hashcode.getBody(), containsString("long temp;"));
-      assertEquals(1, countNumberOfOccurences(hashcode.getBody(), "long temp;"));
+      assertEquals(1, Strings.countNumberOfOccurences(hashcode.getBody(), "long temp;"));
       assertThat(hashcode.getBody(), containsString("temp=Double.doubleToLongBits(firstDouble);"));
       assertThat(hashcode.getBody(), containsString("temp=Double.doubleToLongBits(secondDouble);"));
       assertThat(hashcode.getBody(), containsString("prime * result + (int)(temp ^ (temp >>> 32));"));
-      assertEquals(2, countNumberOfOccurences(hashcode.getBody(), "prime * result + (int)(temp ^ (temp >>> 32));"));
-   }
-
-   private int countNumberOfOccurences(String text, String toMatch)
-   {
-      int count = 0;
-      if(toMatch == null || toMatch.length() < 1)
-      {
-         return count;
-      }
-      
-      String wholeText = text;
-      int idx = 0;
-      while((idx = wholeText.indexOf(toMatch, idx)) != -1)
-      {
-         count++;
-         idx = idx + toMatch.length();
-      }
-      return count;
+      assertEquals(2, Strings.countNumberOfOccurences(hashcode.getBody(), "prime * result + (int)(temp ^ (temp >>> 32));"));
    }
 }
