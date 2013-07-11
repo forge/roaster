@@ -20,6 +20,7 @@ import org.jboss.forge.parser.java.JavaClass;
 import org.jboss.forge.parser.java.Method;
 import org.jboss.forge.parser.java.util.Refactory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -114,6 +115,16 @@ public class RefactoryTest
       assertFalse(javaClass.hasSyntaxErrors());
    }
    
+   @Test(expected=IllegalArgumentException.class)
+   public void testCreateHashCodeAndEqualsForStatics() throws Exception
+   {
+      JavaClass aClass = JavaParser
+               .parse(JavaClass.class,
+                        "public class Foo { private static boolean flag;}");
+      Field<JavaClass> booleanField = aClass.getField("flag");
+      Refactory.createHashCodeAndEquals(aClass, booleanField);
+   }
+   
    @Test
    public void testCreateHashCodeAndEqualsForPrimitives() throws Exception
    {
@@ -205,8 +216,8 @@ public class RefactoryTest
 
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());
-      assertThat(equals.getBody(), containsString("if (object != null) {\n  if (!object.equals(that.object)) {\n    return false;\n  }\n}"));
-      assertThat(equals.getBody(), containsString("if (date != null) {\n  if (!date.equals(that.date)) {\n    return false;\n  }\n}"));
+      assertThat(equals.getBody(), containsString("if (object != null) {\n  if (!object.equals(other.object)) {\n    return false;\n  }\n}"));
+      assertThat(equals.getBody(), containsString("if (date != null) {\n  if (!date.equals(other.date)) {\n    return false;\n  }\n}"));
 
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
@@ -258,6 +269,62 @@ public class RefactoryTest
       assertEquals("int", hashcode.getReturnType());
       assertThat(hashcode.getBody(), containsString("int result=super.hashCode();"));
       assertFalse(subClass.hasSyntaxErrors());
+   }
+   
+   @Test
+   public void testCreateHashCodeAndEqualsOuterClass() throws Exception
+   {
+      JavaClass outerClass = JavaParser
+               .parse(JavaClass.class,
+                        "public class Foo { private Foo.Bar bar; class Bar{ private Boolean flag; } }");
+      Field<JavaClass> outerField = outerClass.getField("bar");
+      Refactory.createHashCodeAndEquals(outerClass, outerField);
+
+      List<Method<JavaClass>> methods = outerClass.getMethods();
+      Method<JavaClass> equals = methods.get(0);
+      Method<JavaClass> hashcode = methods.get(1);
+
+      assertEquals("equals", equals.getName());
+      assertEquals(1, equals.getParameters().size());
+      assertThat(equals.getBody(), containsString("if (bar != null) {\n  if (!bar.equals(other.bar)) {\n    return false;\n  }\n}"));
+
+      assertEquals("hashCode", hashcode.getName());
+      assertEquals(0, hashcode.getParameters().size());
+      assertEquals("int", hashcode.getReturnType());
+      assertThat(hashcode.getBody(), containsString("result=prime * result + ((bar == null) ? 0 : bar.hashCode());"));
+      assertFalse(outerClass.hasSyntaxErrors());
+   }
+   
+   @Test
+   @Ignore
+   // This is not supported for now
+   public void testCreateHashCodeAndEqualsInnerClass() throws Exception
+   {
+      JavaClass outerClass = JavaParser
+               .parse(JavaClass.class,
+                        "public class Foo { private Foo.Bar bar; class Bar{ private Boolean flag; } }");
+      JavaClass innerClass = (JavaClass) outerClass.getNestedClasses().get(0);
+      Field<JavaClass> innerField = innerClass.getField("flag");
+      Refactory.createHashCodeAndEquals(innerClass, innerField);
+
+      List<Method<JavaClass>> methods = innerClass.getMethods();
+      Method<JavaClass> equals = methods.get(0);
+      Method<JavaClass> hashcode = methods.get(1);
+      Method<JavaClass> outerTypeAccessor = methods.get(2);
+      
+      assertEquals("getOuterType", outerTypeAccessor.getName());
+
+      assertEquals("equals", equals.getName());
+      assertEquals(1, equals.getParameters().size());
+      assertThat(equals.getBody(), containsString("if ((!getOuterType().equals(other.getOuterType()))) {\n  return false;\n}"));
+      assertThat(equals.getBody(), containsString("if (flag != null) {\n  if (!flag.equals(other.flag)) {\n    return false;\n  }\n}"));
+
+      assertEquals("hashCode", hashcode.getName());
+      assertEquals(0, hashcode.getParameters().size());
+      assertEquals("int", hashcode.getReturnType());
+      assertThat(hashcode.getBody(), containsString("result=prime * result + getOuterType().hashCode();"));
+      assertThat(hashcode.getBody(), containsString("result=prime * result + ((flag == null) ? 0 : flag.hashCode());"));
+      assertFalse(outerClass.hasSyntaxErrors());
    }
 
    @Test

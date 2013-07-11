@@ -77,56 +77,83 @@ public class Refactory
    }
 
    /**
-    * Create a <i>hashCode</i> and <i>equals</i> implementation for the given class and fields
+    * Create a <i>hashCode</i> and <i>equals</i> implementation for the given class and fields. Callers must verify that
+    * the types of the fields override the default identity based equals and hashcode implementations. No warnings are
+    * issued in an event where the field type uses the implementation of java.lang.Object.
+    * 
+    * This method ignores static fields for generating the equals and hashCode methods, since they are ideally not meant
+    * to be used in these cases. Although transient fields could also be ignored, they are not since there is no
+    * mechanism to convey warnings (not errors) in this case.
     * 
     * @param clazz class to be changed
     * @param fields fields to be used in the equals/hashCode methods
     */
    public static void createHashCodeAndEquals(final JavaClass clazz, final Field<?>... fields)
    {
+      if (clazz == null)
+      {
+         throw new IllegalArgumentException("The provided class cannot be null.");
+      }
       if (fields == null || fields.length < 1)
       {
-         throw new IllegalArgumentException("fields cannot be null or empty.");
+         throw new IllegalArgumentException("The provided fields cannot be null or empty.");
       }
 
       String superEqualsCheck = "";
       String defaultHashcode = "int result = 1;";
-      if(!clazz.getSuperType().equals("java.lang.Object"))
+      if (!clazz.getSuperType().equals("java.lang.Object"))
       {
          superEqualsCheck = "if (!super.equals(obj)) { return false;} ";
          defaultHashcode = "int result = super.hashCode();";
       }
-      
+
       boolean isTempFieldCreated = false;
       StringBuilder fieldEqualityChecks = new StringBuilder();
       StringBuilder hashCodeComputation = new StringBuilder();
       for (Field<?> field : fields)
       {
-         String fieldName = field.getName();
+         if(field == null)
+         {
+            throw new IllegalArgumentException("A supplied field was null. The equals and hashCode computation will be aborted.");
+         }
+         if (field.isStatic())
+         {
+            throw new IllegalArgumentException("A static field was detected. The equals and hashCode computation will be aborted.");
+         }
 
+         String fieldName = field.getName();
          if (field.isPrimitive())
          {
-            if (field.isPrimitive("float"))
+            if (field.isType("float"))
             {
-               fieldEqualityChecks.append("if (Float.floatToIntBits(").append(fieldName).append(") != Float.floatToIntBits(other.").append(fieldName)
+               // if(Float.floatToIntBits(floatValue) != Float.floatToIntBits(other.floatValue)) {
+               //   return false;
+               // }
+               fieldEqualityChecks.append("if (Float.floatToIntBits(").append(fieldName)
+                        .append(") != Float.floatToIntBits(other.").append(fieldName)
                         .append(")) { ");
                fieldEqualityChecks.append(" return false;");
                fieldEqualityChecks.append("} ");
-               
+
                // result = prime * result + Float.floatToIntBits(floatValue);
-               hashCodeComputation.append("result = prime * result + ").append("Float.floatToIntBits(").append(fieldName).append(");");
+               hashCodeComputation.append("result = prime * result + ").append("Float.floatToIntBits(")
+                        .append(fieldName).append(");");
             }
-            else if (field.isPrimitive("double"))
+            else if (field.isType("double"))
             {
-               fieldEqualityChecks.append("if (Double.doubleToLongBits(").append(fieldName).append(") != Double.doubleToLongBits(other.").append(fieldName)
+               // if(Double.doubleToLongBits(doubleValue) != Double.doubleToLongBits(other.doubleValue)) {
+               //   return false;
+               // }
+               fieldEqualityChecks.append("if (Double.doubleToLongBits(").append(fieldName)
+                        .append(") != Double.doubleToLongBits(other.").append(fieldName)
                         .append(")) { ");
                fieldEqualityChecks.append(" return false;");
                fieldEqualityChecks.append("} ");
-               
+
                // long temp;
                // temp = Double.doubleToLongBits(doubleValue);
                // result = prime * result + (int) (temp ^ (temp >>> 32));
-               if(!isTempFieldCreated)
+               if (!isTempFieldCreated)
                {
                   hashCodeComputation.append("long temp;");
                   isTempFieldCreated = true;
@@ -136,21 +163,25 @@ public class Refactory
             }
             else
             {
+               // if(value != other.value) {
+               //   return false;
+               // }
                fieldEqualityChecks.append("if (").append(fieldName).append(" != other.").append(fieldName)
                         .append(") { ");
                fieldEqualityChecks.append(" return false;");
                fieldEqualityChecks.append("} ");
 
-               if (field.isPrimitive("long"))
+               if (field.isType("long"))
                {
                   // result = prime * result + (int) (longValue ^ (longValue >>> 32));
                   hashCodeComputation.append("result = prime * result + (int) (").append(fieldName).append(" ^ (")
                            .append(fieldName).append(" >>> 32));");
                }
-               else if(field.isPrimitive("boolean"))
+               else if (field.isType("boolean"))
                {
                   // result = prime * result + (booleanValue : 1231 : 1237);
-                  hashCodeComputation.append("result = prime * result + (").append(fieldName).append(" ? 1231 : 1237);");
+                  hashCodeComputation.append("result = prime * result + (").append(fieldName)
+                           .append(" ? 1231 : 1237);");
                }
                else
                {
@@ -160,19 +191,28 @@ public class Refactory
                }
             }
          }
-         else if(field.isArray())
+         else if (field.isArray())
          {
-            fieldEqualityChecks.append("if (!Arrays.equals(").append(fieldName).append(", other.").append(fieldName).append(")) {");
+            // if(!Arrays.equals(array, other.array)) {
+            //    return false;
+            // }
+            fieldEqualityChecks.append("if (!Arrays.equals(").append(fieldName).append(", other.").append(fieldName)
+                     .append(")) {");
             fieldEqualityChecks.append(" return false; }");
-            
+
             // result = prime * result + Arrays.hashCode(array);
             hashCodeComputation.append("result = prime * result + Arrays.hashCode(").append(fieldName).append(");");
          }
          else
          {
+            // if(value != null) {
+            //    if(!value.equals(other.value)) {
+            //       return false;
+            //    }
+            // }
             fieldEqualityChecks.append("if (").append(fieldName).append(" != null) { ");
             fieldEqualityChecks.append(" if(!").append(fieldName).append(".equals(");
-            fieldEqualityChecks.append("that.").append(fieldName);
+            fieldEqualityChecks.append("other.").append(fieldName);
             fieldEqualityChecks.append(")) { return false;} } ");
 
             // result = prime * result + (( obj == null) ? 0 : obj.hashCode());
@@ -180,9 +220,20 @@ public class Refactory
                      .append(fieldName).append(".hashCode());");
          }
       }
-      
+
+      if (fieldEqualityChecks.length() < 1 || hashCodeComputation.length() < 1)
+      {
+         throw new IllegalArgumentException(
+                  "A failure was detected when generating the equals and hashCode methods. Verify the type and modifiers of the provided fields.");
+      }
+
       StringBuilder typeCheckAndAssignment = new StringBuilder();
       String klassName = clazz.getName();
+
+      // if (!(obj instanceof Type)) {
+      //    return false;
+      // }
+      // Type other = (Type) obj;
       typeCheckAndAssignment.append("if (!(obj instanceof ").append(klassName).append(")) {");
       typeCheckAndAssignment.append(" return false;}");
       typeCheckAndAssignment.append(klassName).append(" other = (").append(klassName).append(") obj;");

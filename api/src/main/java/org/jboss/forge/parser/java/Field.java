@@ -75,13 +75,6 @@ public interface Field<O extends JavaSource<O>> extends Member<O, Field<O>>
    
    /**
     * 
-    * @param type The primitive type to check against
-    * @return True if the type of the field is of the specified primitive type
-    */
-   boolean isPrimitive(String type);
-   
-   /**
-    * 
     * @return True if the field is transient
     */
    boolean isTransient();

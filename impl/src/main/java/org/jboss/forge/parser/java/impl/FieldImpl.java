@@ -541,18 +541,6 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    }
    
    @Override
-   public boolean isPrimitive(String type)
-   {
-      boolean result = false;
-      Type fieldType = field.getType();
-      if (fieldType != null)
-      {
-         result = fieldType.isPrimitiveType() && isType(type);
-      }
-      return result;
-   }
-
-   @Override
    public boolean isTransient()
    {
       return modifiers.hasModifier(field, ModifierKeyword.TRANSIENT_KEYWORD);

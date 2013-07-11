@@ -184,18 +184,6 @@ public class FieldTest
    }
    
    @Test
-   public void testIsPrimitiveOfType() throws Exception
-   {
-      Field<JavaClass> objectField = javaClass.addField("public Boolean flag = false;");
-      Field<JavaClass> primitiveField = javaClass.addField("public boolean flag = false;");
-
-      assertFalse(objectField.isPrimitive("Boolean"));
-      assertFalse(objectField.isPrimitive("boolean"));
-      assertFalse(primitiveField.isPrimitive("Boolean"));
-      assertTrue(primitiveField.isPrimitive("boolean"));
-   }
-   
-   @Test
    public void testIsTransient() throws Exception
    {
       Field<JavaClass> transientField = javaClass.addField("public transient boolean flag = false;");
