@@ -61,19 +61,22 @@ public class Refactory
    @Deprecated
    public static void createHashCodeAndEquals(final JavaClass clazz)
    {
-      final Field<?>[] fields;
-      Field<JavaClass> idField = clazz.getField("id");
-      // FORGE-995: Retained this for backwards compatibility
-      if (idField != null)
-      {
-         fields = new Field[] { idField };
-      }
-      else
-      {
-         List<Field<JavaClass>> classFields = clazz.getFields();
-         fields = classFields.toArray(new Field[classFields.size()]);
-      }
-      createHashCodeAndEquals(clazz, fields);
+      clazz.addMethod(
+               "public boolean equals(Object that) { " +
+                        "if (this == that) { return true; } " +
+                        "if (that == null) { return false; } " +
+                        "if (getClass() != that.getClass()) { return false; } " +
+                        "if (id != null) { return id.equals((("
+                        + clazz.getName() + ") that).id); } " +
+                        "return super.equals(that); " +
+                        "}")
+               .addAnnotation(Override.class);
+
+      clazz.addMethod(
+               "public int hashCode() { " +
+                        "if (id != null) { return id.hashCode(); } " +
+                        "return super.hashCode(); }")
+               .addAnnotation(Override.class);
    }
 
    /**
