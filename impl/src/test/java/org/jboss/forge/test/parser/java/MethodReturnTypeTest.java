@@ -38,6 +38,81 @@ public class MethodReturnTypeTest
    }
 
    @Test
+   public void testGetQualifiedReturnTypePrimitiveArray() throws Exception
+   {
+      Method<JavaClass> method = JavaParser.create(JavaClass.class).addMethod("public long[] getLongArray()");
+      Assert.assertEquals("long[]", method.getQualifiedReturnType());
+   }
+
+   @Test
+   public void testGetQualifiedReturnTypeObjectArray() throws Exception
+   {
+      Method<JavaClass> method = JavaParser.create(JavaClass.class).addMethod("public Long[] getLongArray()");
+      Assert.assertEquals("java.lang.Long[]", method.getQualifiedReturnType());
+   }
+
+   @Test
+   public void testGetQualifiedReturnTypeNDimensionObjectArray() throws Exception
+   {
+      Method<JavaClass> method = JavaParser.create(JavaClass.class).addMethod("public Long[][] getLongArray()");
+      Assert.assertEquals("java.lang.Long[][]", method.getQualifiedReturnType());
+   }
+
+   @Test
+   public void testGetQualifiedReturnTypeObjectArrayOfImportedType() throws Exception
+   {
+      Method<JavaClass> method = JavaParser.create(JavaClass.class).addMethod("public List[] getListArray()");
+      method.getOrigin().addImport(List.class);
+      Assert.assertEquals("java.util.List[]", method.getQualifiedReturnType());
+   }
+
+   @Test
+   public void testGetQualifiedReturnTypeImportedObjectArrayParameterizedImportedType() throws Exception
+   {
+      Method<JavaClass> method = JavaParser.create(JavaClass.class).addMethod("public List<Long>[] getListArray()");
+      method.getOrigin().addImport(List.class);
+      Assert.assertEquals("java.util.List[]", method.getQualifiedReturnType());
+   }
+
+   @Test
+   public void testGetReturnTypePrimitiveObjectArray() throws Exception
+   {
+      Method<JavaClass> method = JavaParser.create(JavaClass.class)
+               .addMethod("public long[] getList(return null;)");
+      method.getOrigin().addImport(List.class);
+      Type<JavaClass> type = method.getReturnTypeInspector();
+      Assert.assertEquals("long", type.getQualifiedName());
+      Assert.assertFalse(type.isParameterized());
+      Assert.assertFalse(type.isWildcard());
+      Assert.assertTrue(type.isPrimitive());
+      Assert.assertFalse(type.isQualified());
+      Assert.assertTrue(type.isArray());
+
+      List<Type<JavaClass>> arguments = type.getTypeArguments();
+
+      Assert.assertEquals(0, arguments.size());
+   }
+
+   @Test
+   public void testGetReturnTypeBoxedObjectArray() throws Exception
+   {
+      Method<JavaClass> method = JavaParser.create(JavaClass.class)
+               .addMethod("public Long[] getList(return null;)");
+      method.getOrigin().addImport(List.class);
+      Type<JavaClass> type = method.getReturnTypeInspector();
+      Assert.assertEquals("java.lang.Long", type.getQualifiedName());
+      Assert.assertFalse(type.isParameterized());
+      Assert.assertFalse(type.isWildcard());
+      Assert.assertFalse(type.isPrimitive());
+      Assert.assertFalse(type.isQualified());
+      Assert.assertTrue(type.isArray());
+
+      List<Type<JavaClass>> arguments = type.getTypeArguments();
+
+      Assert.assertEquals(0, arguments.size());
+   }
+
+   @Test
    public void testGetReturnTypeObjectArray() throws Exception
    {
       Method<JavaClass> method = JavaParser.create(JavaClass.class)

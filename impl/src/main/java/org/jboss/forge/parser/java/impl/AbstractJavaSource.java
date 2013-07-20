@@ -317,7 +317,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       // Check for direct import matches first since they are the fastest and least work-intensive
       if (Types.isSimpleName(result))
       {
-         if (!hasImport(type) && Types.isJavaLang(type))
+         if (!hasImport(result) && Types.isJavaLang(result))
          {
             result = "java.lang." + result;
          }

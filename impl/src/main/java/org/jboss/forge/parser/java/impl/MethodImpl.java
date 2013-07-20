@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.ArrayType;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
@@ -235,6 +236,17 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
       }
 
       result = parent.resolveType(result);
+      if (returnType != null && returnType.isArrayType())
+      {
+         // FIXME: This is a hack and needs fixing in the design of the Forge parser.
+         // The resolved type lacks information about arrays since arrays would be stripped from it
+         // We recreate it using the dimensions in the JDT Type to ensure that arrays are not lost in the return type.
+         int dimensions = ((ArrayType) returnType).getDimensions();
+         for (int ctr = 0; ctr < dimensions; ctr++)
+         {
+            result += "[]";
+         }
+      }
 
       return result;
    }
