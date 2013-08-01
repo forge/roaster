@@ -34,6 +34,7 @@ public abstract class JavaClassTestBase
    public void reset()
    {
       this.source = getSource();
+      assertTrue(this.source.isEditable());
    }
 
    protected abstract JavaClass getSource();
@@ -283,7 +284,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testAddConstructorIngoresReturnTypeAndName() throws Exception
+   public void testAddConstructorIgnoresReturnTypeAndName() throws Exception
    {
       int size = source.getMethods().size();
       Method<JavaClass> method = source.addMethod().setName("testMethod").setConstructor(true).setPrivate()

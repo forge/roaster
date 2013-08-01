@@ -32,6 +32,7 @@ public class JavaClassCreationTest
    {
       assertEquals("JavaClass", jc.getName());
       assertTrue(jc.isPublic());
+      assertTrue(jc.isEditable());
    }
 
 }

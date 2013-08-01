@@ -33,6 +33,7 @@ public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapa
    public void reset()
    {
       this.source = getSource();
+      assertTrue(this.source.isEditable());
    }
 
    protected abstract T getSource();

@@ -885,6 +885,12 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       return result;
    }
 
+   @Override
+   public boolean isEditable()
+   {
+      return true;
+   }
+
    private List<AbstractTypeDeclaration> getNestedDeclarations(BodyDeclaration body)
    {
 

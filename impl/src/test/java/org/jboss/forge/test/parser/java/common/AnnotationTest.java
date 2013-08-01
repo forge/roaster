@@ -44,6 +44,7 @@ public abstract class AnnotationTest<O extends JavaSource<O>, T>
    public void reset()
    {
       resetTests();
+      assertTrue(target.getOrigin().isEditable());
    }
 
    public abstract void resetTests();

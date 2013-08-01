@@ -37,6 +37,7 @@ public class RefactoryTest
       javaClass = JavaParser
                .parse(JavaClass.class,
                         "import java.util.Set; public class Foo { private int foo; private String firstName; private Set<String> names; private final int bar; }");
+      assertTrue(javaClass.isEditable());
    }
 
    @Test
