@@ -8,6 +8,7 @@
 package org.jboss.forge.parser;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,25 +28,44 @@ import org.jboss.forge.parser.spi.JavaParserProvider;
  */
 public final class JavaParser
 {
-   public static ServiceLoader<JavaParserProvider> loader = ServiceLoader.load(JavaParserProvider.class);
    private static List<JavaParserProvider> parsers;
 
-   private static JavaParserProvider getParser()
+   private static List<JavaParserProvider> getParsers()
    {
-      if (parsers == null)
+      synchronized (JavaParser.class)
       {
-         parsers = new ArrayList<JavaParserProvider>();
-         for (JavaParserProvider p : loader)
+         if (parsers == null)
          {
-            parsers.add(p);
+            parsers = new ArrayList<JavaParserProvider>();
+            for (JavaParserProvider p : ServiceLoader.load(JavaParserProvider.class))
+            {
+               parsers.add(p);
+            }
+         }
+         if (parsers.size() == 0)
+         {
+            throw new IllegalStateException("No instances of [" + JavaParserProvider.class.getName()
+                     + "] were found on the classpath.");
          }
       }
-      if (parsers.size() == 0)
+      return parsers;
+   }
+
+   /**
+    * Create a new empty {@link JavaSource} instance.
+    */
+   public static <T extends JavaSource<?>> T create(final Class<T> type)
+   {
+      for (JavaParserProvider parser : getParsers())
       {
-         throw new IllegalStateException("No instances of [" + JavaParserProvider.class.getName()
-                  + "] were found on the classpath.");
+         final T result = parser.create(type);
+         if (result != null)
+         {
+            return result;
+         }
       }
-      return parsers.get(0);
+      throw new ParserException("Cannot find JavaParserProvider capable of producing JavaSource of type "
+               + type.getSimpleName(), new IllegalArgumentException(type.getName()));
    }
 
    /**
@@ -53,7 +73,7 @@ public final class JavaParser
     */
    public static JavaSource<?> parse(final File file) throws FileNotFoundException
    {
-      return getParser().parse(file);
+      return parse(JavaSource.class, file);
    }
 
    /**
@@ -61,7 +81,7 @@ public final class JavaParser
     */
    public static JavaSource<?> parse(final URL data) throws IOException
    {
-      return getParser().parse(data);
+      return parse(JavaSource.class, data);
    }
 
    /**
@@ -69,7 +89,7 @@ public final class JavaParser
     */
    public static JavaSource<?> parse(final InputStream data)
    {
-      return getParser().parse(data);
+      return parse(JavaSource.class, data);
    }
 
    /**
@@ -77,7 +97,7 @@ public final class JavaParser
     */
    public static JavaSource<?> parse(final char[] data)
    {
-      return getParser().parse(data);
+      return parse(JavaSource.class, data);
    }
 
    /**
@@ -85,15 +105,7 @@ public final class JavaParser
     */
    public static JavaSource<?> parse(final String data)
    {
-      return getParser().parse(data);
-   }
-
-   /**
-    * Create a new empty {@link JavaClass} instance.
-    */
-   public static <T extends JavaSource<?>> T create(final Class<T> type)
-   {
-      return getParser().create(type);
+      return parse(JavaSource.class, data);
    }
 
    /**
@@ -103,7 +115,7 @@ public final class JavaParser
     */
    public static <T extends JavaSource<?>> T parse(final Class<T> type, final URL url) throws IOException
    {
-      return getParser().parse(type, url);
+      return internalParse(type, url.openStream());
    }
 
    /**
@@ -113,15 +125,7 @@ public final class JavaParser
     */
    public static <T extends JavaSource<?>> T parse(final Class<T> type, final File file) throws FileNotFoundException
    {
-      return getParser().parse(type, file);
-   }
-
-   /**
-    * Read the given {@link InputStream} and parse its data into a new {@link JavaSource} instance of the given type.
-    */
-   public static <T extends JavaSource<?>> T parse(final Class<T> type, final InputStream data)
-   {
-      return getParser().parse(type, data);
+      return internalParse(type, new FileInputStream(file));
    }
 
    /**
@@ -129,7 +133,7 @@ public final class JavaParser
     */
    public static <T extends JavaSource<?>> T parse(final Class<T> type, final char[] data)
    {
-      return getParser().parse(type, data);
+      return parse(type, new String(data));
    }
 
    /**
@@ -137,6 +141,43 @@ public final class JavaParser
     */
    public static <T extends JavaSource<?>> T parse(final Class<T> type, final String data)
    {
-      return getParser().parse(type, data);
+      return parse(type, Streams.fromString(data));
+   }
+
+   /**
+    * Read the given {@link InputStream} and parse its data into a new {@link JavaSource} instance of the given type.
+    * The caller is responsible for closing the stream.
+    */
+   public static <T extends JavaSource<?>> T parse(final Class<T> type, final InputStream data)
+   {
+      for (JavaParserProvider parser : getParsers())
+      {
+         final JavaSource<?> source = parser.parse(data);
+
+         if (type.isInstance(source))
+         {
+            @SuppressWarnings("unchecked")
+            final T result = (T) source;
+            return result;
+         }
+         else if (source != null)
+         {
+            throw new ParserException("Source does not represent a [" + type.getSimpleName() + "], instead was ["
+                     + source.getClass().getSimpleName() + "] - Cannot convert.");
+         }
+      }
+      throw new ParserException("Cannot find JavaParserProvider capable of parsing the requested data");
+   }
+
+   private static <T extends JavaSource<?>> T internalParse(final Class<T> type, final InputStream data)
+   {
+      try
+      {
+         return parse(type, data);
+      }
+      finally
+      {
+         Streams.closeQuietly(data);
+      }
    }
 }
