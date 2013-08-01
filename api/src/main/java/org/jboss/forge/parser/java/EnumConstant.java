@@ -11,8 +11,7 @@ import java.util.List;
 import org.jboss.forge.parser.Internal;
 import org.jboss.forge.parser.Origin;
 
-public interface EnumConstant<O extends JavaSource<O>> extends Internal, Origin<O>,
-         AnnotationTarget<O, EnumConstant<O>>, Named<EnumConstant<O>>
+public interface EnumConstant extends Internal, Origin<JavaEnum>
 {
    /**
     * Represents the anonymous subclass "body" of an enum constant.
@@ -38,5 +37,5 @@ public interface EnumConstant<O extends JavaSource<O>> extends Internal, Origin<
    /**
     * Remove the {@link Body} of this enum constant.
     */
-   EnumConstant<O> removeBody();
+   EnumConstant setName(String name);
 }
