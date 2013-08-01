@@ -52,7 +52,6 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnum> imple
    public EnumConstant<JavaEnum> addEnumConstant()
    {
       EnumConstantImpl<JavaEnum> enumConst = new EnumConstantImpl<JavaEnum>(this);
-      EnumConstantImpl enumConst = new EnumConstantImpl(this);
       EnumDeclaration enumDeclaration = (EnumDeclaration) getBodyDeclaration();
       List<EnumConstantDeclaration> constants = enumDeclaration.enumConstants();
       constants.add((EnumConstantDeclaration) enumConst.getInternal());
