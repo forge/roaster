@@ -9,6 +9,7 @@ package org.jboss.forge.parser.java;
 import org.jboss.forge.parser.Internal;
 import org.jboss.forge.parser.Origin;
 
+//TODO implement MethodHolder
 public interface EnumConstant extends Internal, Origin<JavaEnum>
 {
    /**
