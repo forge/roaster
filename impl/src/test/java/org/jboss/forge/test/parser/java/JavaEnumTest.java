@@ -33,6 +33,7 @@ public class JavaEnumTest
    {
       InputStream stream = JavaEnumTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockEnum.java");
       javaEnum = JavaParser.parse(JavaEnum.class, stream);
+      assertTrue(javaEnum.isEditable());
    }
 
    @Test
