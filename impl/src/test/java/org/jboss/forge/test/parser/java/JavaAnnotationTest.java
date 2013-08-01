@@ -41,6 +41,7 @@ public class JavaAnnotationTest
                JavaAnnotationTest.class
                         .getResourceAsStream("/org/jboss/forge/grammar/java/MockJavaAnnotationType.java");
       javaAnnotation = JavaParser.parse(JavaAnnotation.class, stream);
+      assertTrue(javaAnnotation.isEditable());
    }
 
    @Test

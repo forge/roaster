@@ -739,6 +739,12 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       return result;
    }
 
+   @Override
+   public boolean isEditable()
+   {
+      return true;
+   }
+
    private List<AbstractTypeDeclaration> getNestedDeclarations(ASTNode body)
    {
 

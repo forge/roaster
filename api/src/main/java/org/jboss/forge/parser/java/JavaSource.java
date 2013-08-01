@@ -88,4 +88,9 @@ public interface JavaSource<T extends JavaSource<T>> extends
     * Return the {@link SourceType} of this {@link JavaSource} instance.
     */
    public SourceType getSourceType();
+
+   /**
+    * Return true if this {@link JavaSource} can be edited.
+    */
+   public boolean isEditable();
 }

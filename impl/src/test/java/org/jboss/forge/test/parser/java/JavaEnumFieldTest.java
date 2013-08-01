@@ -34,6 +34,7 @@ public class JavaEnumFieldTest
       stream = JavaEnumFieldTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockEnum.java");
       javaEnum = JavaParser.parse(JavaEnum.class, stream);
       field = javaEnum.getFields().get(javaEnum.getFields().size() - 1);
+      assertTrue(field.getOrigin().isEditable());
    }
 
    @Test

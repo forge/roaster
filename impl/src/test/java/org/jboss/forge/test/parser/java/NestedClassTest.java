@@ -64,6 +64,7 @@ public class NestedClassTest
 
       List<JavaSource<?>> nestedClasses = javaClass.getNestedClasses();
       JavaSource<?> inner1 = nestedClasses.get(0);
+      Assert.assertTrue(inner1.isEditable());
       inner1.addAnnotation(Deprecated.class);
 
       Assert.assertTrue(javaClass.toString().contains("@Deprecated"));

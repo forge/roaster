@@ -58,6 +58,7 @@ public class JavaInterfaceTest
       assertFalse(foo.hasImport(bar));
       assertFalse(bar.hasImport(foo));
 
+      assertTrue(foo.isEditable());
       Import importBar = foo.addImport(bar);
       assertTrue(foo.hasImport(bar));
       assertFalse(bar.hasImport(foo));
@@ -74,6 +75,7 @@ public class JavaInterfaceTest
    public void testImportImport() throws Exception
    {
       JavaInterface foo = JavaParser.parse(JavaInterface.class, "public interface Foo{}");
+      assertTrue(foo.isEditable());
       Import i = foo.addImport(getClass());
 
       foo.removeImport(getClass());

@@ -9,6 +9,7 @@ package org.jboss.forge.test.parser.java.common;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.jboss.forge.parser.java.JavaSource;
 import org.jboss.forge.parser.java.VisibilityScoped;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +30,9 @@ public abstract class VisibilityTest
    public void reset() throws Exception
    {
       resetTests();
+      if (this.target instanceof JavaSource<?>) {
+         assertTrue(((JavaSource<?>) this.target).isEditable());
+      }
    }
 
    public abstract void resetTests() throws Exception;

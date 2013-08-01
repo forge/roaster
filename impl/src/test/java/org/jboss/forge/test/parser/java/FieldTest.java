@@ -34,6 +34,7 @@ public class FieldTest
       stream = FieldTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedField.java");
       javaClass = JavaParser.parse(JavaClass.class, stream);
       field = javaClass.getFields().get(javaClass.getFields().size() - 1);
+      assertTrue(field.getOrigin().isEditable());
    }
 
    @Test

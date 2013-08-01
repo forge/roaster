@@ -37,6 +37,7 @@ public class JavaClassMethodTest
       javaClass = JavaParser.parse(JavaClass.class, stream);
       javaClass.addMethod("public URL rewriteURL(String pattern, String replacement) { return null; }");
       method = javaClass.getMethods().get(javaClass.getMethods().size() - 1);
+      assertTrue(method.getOrigin().isEditable());
    }
 
    @Test

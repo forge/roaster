@@ -38,6 +38,7 @@ public class JavaEnumMethodTest
       javaEnum = JavaParser.parse(JavaEnum.class, stream);
       javaEnum.addMethod("public URL rewriteURL(String pattern, String replacement) { return null; }");
       method = javaEnum.getMethods().get(javaEnum.getMethods().size() - 1);
+      assertTrue(method.getOrigin().isEditable());
    }
 
    @Test
