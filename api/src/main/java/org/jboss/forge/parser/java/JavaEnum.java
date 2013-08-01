@@ -23,22 +23,22 @@ public interface JavaEnum extends JavaSource<JavaEnum>, InterfaceCapable<JavaEnu
    /**
     * Add a new {@link EnumConstant}
     */
-   EnumConstant<JavaEnum> addEnumConstant();
+   EnumConstant addEnumConstant();
    
    /**
     * Add a new {@link EnumConstant} using the given declaration.
     */
-   EnumConstant<JavaEnum> addEnumConstant(String declaration);
+   EnumConstant addEnumConstant(String declaration);
    
    /**
     * Return the {@link EnumConstant} with the given name, or return null if no such constant exists.
     * @param name
     * @return
     */
-   EnumConstant<JavaEnum> getEnumConstant(String name);
+   EnumConstant getEnumConstant(String name);
 
    /**
     * Return all declared {@link EnumConstant} types for this {@link JavaEnum}
     */
-   List<EnumConstant<JavaEnum>> getEnumConstants();
+   List<EnumConstant> getEnumConstants();
 }

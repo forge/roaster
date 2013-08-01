@@ -14,38 +14,37 @@ import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.java.EnumConstant;
 import org.jboss.forge.parser.java.JavaEnum;
-import org.jboss.forge.parser.java.JavaSource;
 
-public class EnumConstantImpl<O extends JavaSource<O>> implements EnumConstant<O>
+public class EnumConstantImpl implements EnumConstant
 {
-   private O parent;
+   private JavaEnum parent;
    private AST ast;
    private EnumConstantDeclaration enumConstant;
 
-   private void init(final O parent)
+   private void init(final JavaEnum parent)
    {
       this.parent = parent;
       this.ast = ((ASTNode)parent.getInternal()).getAST();
    }
    
-   public EnumConstantImpl(final O parent) {
+   public EnumConstantImpl(final JavaEnum parent) {
       init(parent);
       this.enumConstant = ast.newEnumConstantDeclaration();
    }
    
-   public EnumConstantImpl(final O parent, final String declaration)
+   public EnumConstantImpl(final JavaEnum parent, final String declaration)
    {
       init(parent);
 
       String stub = "public enum Stub { " + declaration + " }";
       JavaEnum temp = (JavaEnum) JavaParser.parse(stub);
-      List<EnumConstant<JavaEnum>> constants = temp.getEnumConstants();
+      List<EnumConstant> constants = temp.getEnumConstants();
       EnumConstantDeclaration newField = (EnumConstantDeclaration) constants.get(0).getInternal();
       EnumConstantDeclaration subtree = (EnumConstantDeclaration) ASTNode.copySubtree(ast, newField);
       this.enumConstant = subtree;
    }
    
-   public EnumConstantImpl(final O parent, final Object internal)
+   public EnumConstantImpl(final JavaEnum parent, final Object internal)
    {
       init(parent);
       this.enumConstant = (EnumConstantDeclaration) internal;
@@ -58,7 +57,7 @@ public class EnumConstantImpl<O extends JavaSource<O>> implements EnumConstant<O
    }
 
    @Override
-   public EnumConstant<O> setName(String name)
+   public EnumConstant setName(String name)
    {
       this.enumConstant.setName(ast.newSimpleName(name));
       return this;
@@ -71,7 +70,7 @@ public class EnumConstantImpl<O extends JavaSource<O>> implements EnumConstant<O
    }
 
    @Override
-   public O getOrigin()
+   public JavaEnum getOrigin()
    {
       return parent;
    }

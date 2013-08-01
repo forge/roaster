@@ -34,14 +34,14 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnum> imple
    }
 
    @Override
-   public List<EnumConstant<JavaEnum>> getEnumConstants()
+   public List<EnumConstant> getEnumConstants()
    {
-      List<EnumConstant<JavaEnum>> result = new ArrayList<EnumConstant<JavaEnum>>();
+      List<EnumConstant> result = new ArrayList<EnumConstant>();
 
       for (Object o : (((EnumDeclaration) getBodyDeclaration()).enumConstants()))
       {
          EnumConstantDeclaration field = (EnumConstantDeclaration) o;
-         result.add(new EnumConstantImpl<JavaEnum>(this, field));
+         result.add(new EnumConstantImpl(this, field));
       }
 
       return Collections.unmodifiableList(result);
@@ -49,9 +49,9 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnum> imple
 
    @Override
    @SuppressWarnings("unchecked")
-   public EnumConstant<JavaEnum> addEnumConstant()
+   public EnumConstant addEnumConstant()
    {
-      EnumConstantImpl<JavaEnum> enumConst = new EnumConstantImpl<JavaEnum>(this);
+      EnumConstantImpl enumConst = new EnumConstantImpl(this);
       getBodyDeclaration().bodyDeclarations().add(enumConst.getInternal());
 
       return enumConst;
@@ -59,9 +59,9 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnum> imple
 
    @Override
    @SuppressWarnings("unchecked")
-   public EnumConstant<JavaEnum> addEnumConstant(final String declaration)
+   public EnumConstant addEnumConstant(final String declaration)
    {
-      EnumConstantImpl<JavaEnum> enumConst = new EnumConstantImpl<JavaEnum>(this, declaration);
+      EnumConstantImpl enumConst = new EnumConstantImpl(this, declaration);
 
       EnumDeclaration enumDeclaration = (EnumDeclaration) getBodyDeclaration();
       List<EnumConstantDeclaration> constants = enumDeclaration.enumConstants();
@@ -71,9 +71,9 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnum> imple
    }
 
    @Override
-   public EnumConstant<JavaEnum> getEnumConstant(String name)
+   public EnumConstant getEnumConstant(String name)
    {
-      for (EnumConstant<JavaEnum> enumConst : getEnumConstants())
+      for (EnumConstant enumConst : getEnumConstants())
       {
          if (enumConst.getName().equals(name))
          {
