@@ -15,6 +15,9 @@ import org.jboss.forge.parser.Origin;
  */
 public interface AnnotationElement extends AnnotationTarget<JavaAnnotation, AnnotationElement>, Origin<JavaAnnotation>
 {
+   /**
+    * Represents the default value of a given annotation element and provides mechanisms to set that value.
+    */
    public interface DefaultValue
    {
       String getString();
