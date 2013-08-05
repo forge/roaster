@@ -6,17 +6,22 @@
  */
 package org.jboss.forge.parser.java.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
+import org.eclipse.jdt.core.dom.Expression;
 import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.java.Annotation;
 import org.jboss.forge.parser.java.EnumConstant;
 import org.jboss.forge.parser.java.JavaEnum;
 import org.jboss.forge.parser.java.JavaSource;
 import org.jboss.forge.parser.java.ast.AnnotationAccessor;
+import org.jboss.forge.parser.java.util.Strings;
 
 public class EnumConstantImpl<O extends JavaSource<O>> implements EnumConstant<O>
 {
@@ -28,7 +33,7 @@ public class EnumConstantImpl<O extends JavaSource<O>> implements EnumConstant<O
    private void init(final O parent)
    {
       this.parent = parent;
-      this.ast = ((ASTNode)parent.getInternal()).getAST();
+      this.ast = ((ASTNode) parent.getInternal()).getAST();
    }
    
    public EnumConstantImpl(final O parent) {
@@ -77,6 +82,50 @@ public class EnumConstantImpl<O extends JavaSource<O>> implements EnumConstant<O
    public O getOrigin()
    {
       return parent;
+   }
+
+   @Override
+   public List<String> getConstructorArguments()
+   {
+      final List<String> result = new ArrayList<String>();
+      for (Object o : enumConstant.arguments()) {
+         result.add(o.toString());
+      }
+      return Collections.unmodifiableList(result);
+   }
+
+   @SuppressWarnings("unchecked")
+   @Override
+   public EnumConstant<O> setConstructorArguments(String... literalArguments)
+   {
+      enumConstant.arguments().clear();
+      if (literalArguments != null && literalArguments.length > 0)
+      {
+         final String stub = "public enum Stub { FOO(" + Strings.join(Arrays.asList(literalArguments), ", ") + "); }";
+         final JavaEnum temp = JavaParser.parse(JavaEnum.class, stub);
+         final List<EnumConstant<JavaEnum>> constants = temp.getEnumConstants();
+         final EnumConstantDeclaration newConstant = (EnumConstantDeclaration) constants.get(0).getInternal();
+         final List<Expression> arguments = newConstant.arguments();
+         for (Expression argument : arguments)
+         {
+            final Expression subtree = (Expression) ASTNode.copySubtree(ast, argument);
+            enumConstant.arguments().add(subtree);
+         }
+      }
+      return this;
+   }
+
+   @Override
+   public Body getBody()
+   {
+      return new EnumConstantBodyImpl((JavaEnum) parent, this);
+   }
+
+   @Override
+   public EnumConstant<O> removeBody()
+   {
+      enumConstant.setAnonymousClassDeclaration(null);
+      return this;
    }
 
    /*
@@ -141,6 +190,7 @@ public class EnumConstantImpl<O extends JavaSource<O>> implements EnumConstant<O
       return annotations.getAnnotation(this, enumConstant, type);
    }
 
+   @Override
    public boolean equals(Object obj)
    {
       if (obj == this)

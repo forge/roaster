@@ -14,6 +14,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
+import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
@@ -51,6 +52,16 @@ public class MethodFinderVisitor extends ASTVisitor
       return super.visit(node);
    }
 
+   @Override
+   public boolean visit(AnonymousClassDeclaration node)
+   {
+      parent = node;
+      @SuppressWarnings("unchecked")
+      final List<BodyDeclaration> bodyDeclarations = node.bodyDeclarations();
+      addMethods(bodyDeclarations);
+      return super.visit(node);
+   }
+
    public List<MethodDeclaration> getMethods()
    {
       return Collections.unmodifiableList(methods);
@@ -65,6 +76,11 @@ public class MethodFinderVisitor extends ASTVisitor
    {
       @SuppressWarnings("unchecked")
       final List<BodyDeclaration> bodyDeclarations = node.bodyDeclarations();
+      addMethods(bodyDeclarations);
+   }
+
+   private void addMethods(final List<BodyDeclaration> bodyDeclarations)
+   {
       for (BodyDeclaration bodyDeclaration : bodyDeclarations)
       {
          if (bodyDeclaration instanceof MethodDeclaration) {
