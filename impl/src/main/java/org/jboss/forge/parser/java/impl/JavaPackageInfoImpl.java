@@ -423,9 +423,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    @Override
    public List<Member<JavaPackageInfo, ?>> getMembers()
    {
-      List<Member<JavaPackageInfo, ?>> result = new ArrayList<Member<JavaPackageInfo, ?>>();
-
-      return result;
+      return Collections.emptyList();
    }
 
    protected PackageDeclaration getPackageDeclaration()
