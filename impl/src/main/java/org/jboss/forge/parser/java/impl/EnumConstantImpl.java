@@ -141,6 +141,32 @@ public class EnumConstantImpl<O extends JavaSource<O>> implements EnumConstant<O
       return annotations.getAnnotation(this, enumConstant, type);
    }
 
+   public boolean equals(Object obj)
+   {
+      if (obj == this)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (!obj.getClass().equals(getClass()))
+      {
+         return false;
+      }
+      final EnumConstantImpl<?> other = (EnumConstantImpl<?>) obj;
+      return other.enumConstant == enumConstant || other.enumConstant != null
+               && other.enumConstant.equals(enumConstant);
+   }
+
+   @Override
+   public int hashCode()
+   {
+      int result = 57 << 4;
+      return result | (enumConstant == null ? 0 : enumConstant.hashCode());
+   }
+
    @Override
    public String toString()
    {
