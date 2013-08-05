@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.ArrayType;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
@@ -298,8 +299,19 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    @Override
    public String getQualifiedType()
    {
-      Object type = field.getStructuralProperty(FieldDeclaration.TYPE_PROPERTY);
-      return parent.resolveType(type.toString());
+      Type fieldType = field.getType();
+      String result = parent.resolveType(fieldType.toString());
+      if (fieldType != null && fieldType.isArrayType())
+      {
+         // The resolved type lacks information about arrays since arrays would be stripped from it
+         // We recreate it using the dimensions in the JDT Type to ensure that arrays are not lost in the return type.
+         int dimensions = ((ArrayType) fieldType).getDimensions();
+         for (int ctr = 0; ctr < dimensions; ctr++)
+         {
+            result += "[]";
+         }
+      }
+      return result;
    }
 
    @Override
