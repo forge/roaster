@@ -211,7 +211,7 @@ public class FieldTypeTest
       final Field<JavaClass> field = javaClass.addField();
       field.setName("content");
       field.setType(byte[].class);
-      Assert.assertEquals("byte", field.getQualifiedType());
+      Assert.assertEquals("byte[]", field.getQualifiedType());
       Assert.assertTrue(field.getTypeInspector().isArray());
    }
 
@@ -222,7 +222,7 @@ public class FieldTypeTest
       final Field<JavaClass> field = javaClass.addField();
       field.setName("content");
       field.setType(byte[][][].class);
-      Assert.assertEquals("byte", field.getQualifiedType());
+      Assert.assertEquals("byte[][][]", field.getQualifiedType());
       Type<JavaClass> typeInspector = field.getTypeInspector();
       Assert.assertTrue(typeInspector.isArray());
       Assert.assertEquals(3, typeInspector.getArrayDimensions());
@@ -236,10 +236,10 @@ public class FieldTypeTest
       final Field<JavaClass> field = javaClass.addField();
       field.setName("content");
       field.setType(java.util.Vector[][][].class);
-      Assert.assertEquals("java.util.Vector", field.getQualifiedType());
+      Assert.assertEquals("java.util.Vector[][][]", field.getQualifiedType());
       Type<JavaClass> typeInspector = field.getTypeInspector();
       Assert.assertTrue(typeInspector.isArray());
       Assert.assertEquals(3, typeInspector.getArrayDimensions());
-      Assert.assertEquals("Vector", field.getType());
+      Assert.assertEquals("Vector[][][]", field.getType());
    }
 }
