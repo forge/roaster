@@ -9,7 +9,8 @@ package org.jboss.forge.parser.java;
 import org.jboss.forge.parser.Internal;
 import org.jboss.forge.parser.Origin;
 
-public interface EnumConstant<O extends JavaSource<O>> extends Internal, Origin<O>
+public interface EnumConstant<O extends JavaSource<O>> extends Internal, Origin<O>,
+         AnnotationTarget<O, EnumConstant<O>>
 {
    /**
     * Get this enum constant name.
