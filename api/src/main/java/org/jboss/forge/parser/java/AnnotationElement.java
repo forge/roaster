@@ -13,7 +13,7 @@ import org.jboss.forge.parser.Origin;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * @author Matt Benson
  */
-public interface AnnotationElement extends AnnotationTarget<JavaAnnotation, AnnotationElement>, Origin<JavaAnnotation>
+public interface AnnotationElement extends AnnotationTarget<JavaAnnotation, AnnotationElement>, Origin<JavaAnnotation>, Named<AnnotationElement>
 {
    /**
     * Represents the default value of a given annotation element and provides mechanisms to set that value.
@@ -49,10 +49,6 @@ public interface AnnotationElement extends AnnotationTarget<JavaAnnotation, Anno
       DefaultValue setClassArray(Class<?>... values);
 
    }
-
-   String getName();
-
-   AnnotationElement setName(String name);
 
    /**
     * Get this annotation element's type.

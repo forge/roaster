@@ -12,23 +12,13 @@ import org.jboss.forge.parser.Internal;
 import org.jboss.forge.parser.Origin;
 
 public interface EnumConstant<O extends JavaSource<O>> extends Internal, Origin<O>,
-         AnnotationTarget<O, EnumConstant<O>>
+         AnnotationTarget<O, EnumConstant<O>>, Named<EnumConstant<O>>
 {
    /**
     * Represents the anonymous subclass "body" of an enum constant.
     */
    public interface Body extends JavaSource<Body>, FieldHolder<Body>, MethodHolder<Body> {
    }
-
-   /**
-    * Get this enum constant name.
-    */
-   String getName();
-
-   /**
-    * Set this enum constant name.
-    */
-   EnumConstant<O> setName(String name);
 
    /**
     * Get the constructor arguments of this enum constant.
