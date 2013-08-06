@@ -13,7 +13,12 @@ public class JavaSourceCompatibilityTest {
 		JavaSource<?> source = JavaParser.parse("public class Test{public void test() {java.util.List<String> s = new java.util.ArrayList<String>(); for (String item : s){}}}");
 		Assert.assertFalse(source.hasSyntaxErrors());
 	}
-	
+	@Test
+	public void testSupportsGenericsSourceFromConstructor() throws Exception {
+		JavaSource<?> source = JavaParser.parse("public class Test{public Test() {java.util.List<String> s = new java.util.ArrayList<String>(); for (String item : s){}}}");
+		Assert.assertFalse(source.hasSyntaxErrors());
+	}
+
 	@Test
 	public void testSupportsGenericsSourceFromMethod() throws Exception {
 		JavaClass source = JavaParser.parse(JavaClass.class,"public class Test{}");
