@@ -14,6 +14,7 @@ import org.jboss.forge.parser.java.Field;
 import org.jboss.forge.parser.java.JavaClass;
 import org.jboss.forge.parser.java.Type;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -263,4 +264,15 @@ public class FieldTypeTest
       Assert.assertTrue(field.getTypeInspector().isArray());
    }
    
+   @Test
+   @Ignore("FORGE-1097")
+   public void testFieldTypesByteExtraDimensionDeclarationTest()
+   {
+      final JavaClass javaClass = JavaParser.create(JavaClass.class);
+      final Field<JavaClass> field = javaClass.addField("public byte content1[], content2;");
+      Assert.assertEquals("content1", field.getName());
+      Assert.assertEquals("byte[]", field.getQualifiedType());
+      Assert.assertEquals("byte[]", field.getType());
+      Assert.assertTrue(field.getTypeInspector().isArray());
+   }
 }
