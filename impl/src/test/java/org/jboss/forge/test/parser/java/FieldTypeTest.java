@@ -265,6 +265,16 @@ public class FieldTypeTest
    }
    
    @Test
+   public void testFieldTypeObjectArrayMixedDimensionTest()
+   {
+      final JavaClass javaClass = JavaParser.create(JavaClass.class);
+      final Field<JavaClass> field = javaClass.addField("public Long[] content[];");
+      Assert.assertEquals("java.lang.Long[][]", field.getQualifiedType());
+      Assert.assertEquals("Long[][]", field.getType());
+      Assert.assertTrue(field.getTypeInspector().isArray());
+   }
+   
+   @Test
    @Ignore("FORGE-1097")
    public void testFieldTypesByteExtraDimensionDeclarationTest()
    {
