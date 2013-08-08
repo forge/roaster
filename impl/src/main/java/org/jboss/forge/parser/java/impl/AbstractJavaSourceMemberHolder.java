@@ -15,9 +15,12 @@ import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jface.text.Document;
+import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.java.Field;
 import org.jboss.forge.parser.java.FieldHolder;
+import org.jboss.forge.parser.java.JavaClass;
 import org.jboss.forge.parser.java.JavaSource;
 import org.jboss.forge.parser.java.Member;
 import org.jboss.forge.parser.java.Method;
@@ -56,9 +59,21 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
    @SuppressWarnings("unchecked")
    public Field<O> addField(final String declaration)
    {
-      Field<O> field = new FieldImpl<O>((O) this, declaration);
-      addField(field);
-      return field;
+      String stub = "public class Stub { " + declaration + " }";
+      JavaClass temp = (JavaClass) JavaParser.parse(stub);
+      List<Field<JavaClass>> fields = temp.getFields();
+      Field<O> result = null;
+      for (Field<JavaClass> stubField : fields)
+      {
+         Object variableDeclaration = stubField.getInternal();
+         Field<O> field = new FieldImpl<O>((O) this, variableDeclaration, true);
+         addField(field);
+         if (result == null)
+         {
+            result = field;
+         }
+      }
+      return result;
    }
 
    @SuppressWarnings("unchecked")
@@ -74,7 +89,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
          }
          idx++;
       }
-      bodyDeclarations.add(idx, field.getInternal());
+      bodyDeclarations.add(idx, ((VariableDeclarationFragment) field.getInternal()).getParent());
    }
 
    @Override
@@ -99,7 +114,12 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
       {
          if (bodyDeclaration instanceof FieldDeclaration)
          {
-            result.add(new FieldImpl<O>((O) this, bodyDeclaration));
+            FieldDeclaration fieldDeclaration = (FieldDeclaration) bodyDeclaration;
+            List<VariableDeclarationFragment> fragments = fieldDeclaration.fragments();
+            for (VariableDeclarationFragment fragment : fragments)
+            {
+               result.add(new FieldImpl<O>((O) this, fragment));
+            }
          }
       }
 
@@ -142,7 +162,32 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
    @SuppressWarnings("unchecked")
    public O removeField(final Field<O> field)
    {
-      getBodyDeclaration().bodyDeclarations().remove(field.getInternal());
+      VariableDeclarationFragment fragment = (VariableDeclarationFragment) field.getInternal();
+      Iterator<Object> declarationsIterator = getBodyDeclaration().bodyDeclarations().iterator();
+      while (declarationsIterator.hasNext())
+      {
+         Object next = declarationsIterator.next();
+         if (next instanceof FieldDeclaration)
+         {
+            FieldDeclaration declaration = (FieldDeclaration) next;
+            if (declaration.equals(fragment.getParent()))
+            {
+               List<VariableDeclarationFragment> fragments = declaration.fragments();
+               if (fragments.contains(fragment))
+               {
+                  if (fragments.size() == 1)
+                  {
+                     declarationsIterator.remove();
+                  }
+                  else
+                  {
+                     fragments.remove(fragment);
+                  }
+                  break;
+               }
+            }
+         }
+      }
       return (O) this;
    }
 

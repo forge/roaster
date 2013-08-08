@@ -20,12 +20,15 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jface.text.Document;
 import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.java.Annotation;
 import org.jboss.forge.parser.java.EnumConstant;
+import org.jboss.forge.parser.java.EnumConstant.Body;
 import org.jboss.forge.parser.java.Field;
 import org.jboss.forge.parser.java.Import;
+import org.jboss.forge.parser.java.JavaClass;
 import org.jboss.forge.parser.java.JavaEnum;
 import org.jboss.forge.parser.java.JavaSource;
 import org.jboss.forge.parser.java.Member;
@@ -34,7 +37,6 @@ import org.jboss.forge.parser.java.Parameter;
 import org.jboss.forge.parser.java.SourceType;
 import org.jboss.forge.parser.java.SyntaxError;
 import org.jboss.forge.parser.java.Visibility;
-import org.jboss.forge.parser.java.EnumConstant.Body;
 import org.jboss.forge.parser.java.ast.MethodFinderVisitor;
 import org.jboss.forge.parser.java.ast.TypeDeclarationFinderVisitor;
 import org.jboss.forge.parser.java.util.Strings;
@@ -480,9 +482,21 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    @Override
    public Field<Body> addField(final String declaration)
    {
-      Field<Body> field = new FieldImpl<Body>(this, declaration);
-      addField(field);
-      return field;
+      String stub = "public class Stub { " + declaration + " }";
+      JavaClass temp = (JavaClass) JavaParser.parse(stub);
+      List<Field<JavaClass>> fields = temp.getFields();
+      Field<Body> result = null;
+      for (Field<JavaClass> stubField : fields)
+      {
+         Object variableDeclaration = stubField.getInternal();
+         Field<Body> field = new FieldImpl<Body>(this, variableDeclaration, true);
+         addField(field);
+         if (result == null)
+         {
+            result = field;
+         }
+      }
+      return result;
    }
 
    @SuppressWarnings("unchecked")
@@ -498,7 +512,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
          }
          idx++;
       }
-      bodyDeclarations.add(idx, (BodyDeclaration) field.getInternal());
+      bodyDeclarations.add(idx, (BodyDeclaration) ((VariableDeclarationFragment) field.getInternal()).getParent());
    }
 
    @Override
@@ -512,10 +526,14 @@ class EnumConstantBodyImpl implements EnumConstant.Body
       {
          if (bodyDeclaration instanceof FieldDeclaration)
          {
-            result.add(new FieldImpl<Body>(this, bodyDeclaration));
+            FieldDeclaration fieldDeclaration = (FieldDeclaration) bodyDeclaration;
+            List<VariableDeclarationFragment> fragments = fieldDeclaration.fragments();
+            for (VariableDeclarationFragment fragment : fragments)
+            {
+               result.add(new FieldImpl<Body>(this, fragment));
+            }
          }
       }
-
       return Collections.unmodifiableList(result);
    }
 
@@ -551,10 +569,36 @@ class EnumConstantBodyImpl implements EnumConstant.Body
       return getFields().contains(field);
    }
 
+   @SuppressWarnings("unchecked")
    @Override
    public Body removeField(final Field<Body> field)
    {
-      getBody().bodyDeclarations().remove(field.getInternal());
+      VariableDeclarationFragment fragment = (VariableDeclarationFragment) field.getInternal();
+      Iterator<Object> declarationsIterator = getBody().bodyDeclarations().iterator();
+      while (declarationsIterator.hasNext())
+      {
+         Object next = declarationsIterator.next();
+         if (next instanceof FieldDeclaration)
+         {
+            FieldDeclaration declaration = (FieldDeclaration) next;
+            if (declaration.equals(fragment.getParent()))
+            {
+               List<VariableDeclarationFragment> fragments = declaration.fragments();
+               if (fragments.contains(fragment))
+               {
+                  if (fragments.size() == 1)
+                  {
+                     declarationsIterator.remove();
+                  }
+                  else
+                  {
+                     fragments.remove(fragment);
+                  }
+                  break;
+               }
+            }
+         }
+      }
       return this;
    }
 
