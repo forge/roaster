@@ -13,8 +13,10 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ArrayType;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.ParameterizedType;
+import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.java.JavaClass;
 import org.jboss.forge.parser.java.JavaSource;
@@ -103,7 +105,19 @@ public class TypeImpl<O extends JavaSource<O>> implements Type<O>
    @Override
    public boolean isArray()
    {
-      return type.isArrayType();
+      int extraDimensions = 0;
+      ASTNode parent = type.getParent();
+      if(parent instanceof FieldDeclaration)
+      {
+         for(Object f: ((FieldDeclaration) parent).fragments())
+         {
+            if(f instanceof VariableDeclarationFragment)
+            {
+               extraDimensions = ((VariableDeclarationFragment) f).getExtraDimensions();
+            }
+         }
+      }
+      return type.isArrayType() || extraDimensions > 0;
    }
 
    @Override

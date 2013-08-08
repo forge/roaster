@@ -301,12 +301,29 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    {
       Type fieldType = field.getType();
       String result = parent.resolveType(fieldType.toString());
-      if (fieldType != null && fieldType.isArrayType())
+      int extraDimensions = 0;
+      for (Object f : field.fragments())
       {
-         // The resolved type lacks information about arrays since arrays would be stripped from it
-         // We recreate it using the dimensions in the JDT Type to ensure that arrays are not lost in the return type.
-         int dimensions = ((ArrayType) fieldType).getDimensions();
-         for (int ctr = 0; ctr < dimensions; ctr++)
+         if (f instanceof VariableDeclarationFragment)
+         {
+            VariableDeclarationFragment frag = (VariableDeclarationFragment) f;
+            extraDimensions = frag.getExtraDimensions();
+            break;
+         }
+      }
+      if (fieldType != null)
+      {
+         if (fieldType.isArrayType())
+         {
+            // The resolved type lacks information about arrays since arrays would be stripped from it
+            // We recreate it using the dimensions in the JDT Type to ensure that arrays are not lost in the return value.
+            int dimensions = ((ArrayType) fieldType).getDimensions();
+            for (int ctr = 0; ctr < dimensions; ctr++)
+            {
+               result += "[]";
+            }
+         }
+         for(int dimensionsToAdd = 0; dimensionsToAdd < extraDimensions; dimensionsToAdd++)
          {
             result += "[]";
          }
