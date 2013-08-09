@@ -2,14 +2,12 @@ package org.jboss.forge.test.parser.java;
 
 import java.util.List;
 
-import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlElement;
 
 import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.java.Field;
 import org.jboss.forge.parser.java.JavaClass;
 import org.junit.Assert;
-import org.junit.ClassRule;
 import org.junit.Test;
 
 public class FieldMultipleTest
