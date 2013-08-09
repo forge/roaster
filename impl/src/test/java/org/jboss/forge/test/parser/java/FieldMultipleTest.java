@@ -36,16 +36,19 @@ public class FieldMultipleTest
       Assert.assertEquals("a", fields.get(0).getName());
       Assert.assertEquals("java.lang.String", fields.get(0).getQualifiedType());
       Assert.assertEquals("String", fields.get(0).getType());
+      Assert.assertEquals(true, fields.get(0).isPublic());
       Assert.assertFalse(fields.get(0).getTypeInspector().isArray());
       
       Assert.assertEquals("b", fields.get(1).getName());
       Assert.assertEquals("java.lang.String", fields.get(1).getQualifiedType());
       Assert.assertEquals("String", fields.get(1).getType());
+      Assert.assertEquals(true, fields.get(0).isPublic());
       Assert.assertFalse(fields.get(1).getTypeInspector().isArray());
       
       Assert.assertEquals("c", fields.get(2).getName());
       Assert.assertEquals("java.lang.String[]", fields.get(2).getQualifiedType());
       Assert.assertEquals("String[]", fields.get(2).getType());
+      Assert.assertEquals(true, fields.get(0).isPublic());
       Assert.assertTrue(fields.get(2).getTypeInspector().isArray());
    }
 
@@ -75,6 +78,40 @@ public class FieldMultipleTest
       Assert.assertEquals("String[]", fields.get(2).getType());
       Assert.assertTrue(fields.get(2).getTypeInspector().isArray());
       Assert.assertTrue(fields.get(2).hasAnnotation(XmlElement.class));
+   }
+   
+   @Test
+   public void testMultipleFieldDeclarationWithInitializers() throws Exception
+   {
+      final JavaClass javaClass = JavaParser.create(JavaClass.class);
+      javaClass.addField("private static final String a = \"A\",b =\"B\",c[] = {\"C\"};");
+      List<Field<JavaClass>> fields = javaClass.getFields();
+      
+      Assert.assertEquals(3, fields.size());
+      
+      Assert.assertEquals("a", fields.get(0).getName());
+      Assert.assertEquals("java.lang.String", fields.get(0).getQualifiedType());
+      Assert.assertEquals("String", fields.get(0).getType());
+      Assert.assertEquals(true, fields.get(0).isPrivate());
+      Assert.assertEquals(true, fields.get(0).isStatic());
+      Assert.assertEquals("A", fields.get(0).getStringInitializer());
+      Assert.assertFalse(fields.get(0).getTypeInspector().isArray());
+      
+      Assert.assertEquals("b", fields.get(1).getName());
+      Assert.assertEquals("java.lang.String", fields.get(1).getQualifiedType());
+      Assert.assertEquals("String", fields.get(1).getType());
+      Assert.assertEquals(true, fields.get(1).isPrivate());
+      Assert.assertEquals(true, fields.get(1).isStatic());
+      Assert.assertEquals("B", fields.get(1).getStringInitializer());
+      Assert.assertFalse(fields.get(1).getTypeInspector().isArray());
+      
+      Assert.assertEquals("c", fields.get(2).getName());
+      Assert.assertEquals("java.lang.String[]", fields.get(2).getQualifiedType());
+      Assert.assertEquals("String[]", fields.get(2).getType());
+      Assert.assertEquals(true, fields.get(2).isPrivate());
+      Assert.assertEquals(true, fields.get(2).isStatic());
+      Assert.assertEquals("{\"C\"}", fields.get(2).getLiteralInitializer());
+      Assert.assertTrue(fields.get(2).getTypeInspector().isArray());
    }
 
 }
