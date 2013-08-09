@@ -2,10 +2,14 @@ package org.jboss.forge.test.parser.java;
 
 import java.util.List;
 
+import javax.annotation.Generated;
+import javax.xml.bind.annotation.XmlElement;
+
 import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.java.Field;
 import org.jboss.forge.parser.java.JavaClass;
 import org.junit.Assert;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 public class FieldMultipleTest
@@ -23,7 +27,7 @@ public class FieldMultipleTest
    }
    
    @Test
-   public void testMultipleFieldDeclaration()
+   public void testMultipleFieldDeclaration() throws Exception
    {
       final JavaClass javaClass = JavaParser.create(JavaClass.class);
       javaClass.addField("public String a,b,c[];");
@@ -47,5 +51,32 @@ public class FieldMultipleTest
       Assert.assertTrue(fields.get(2).getTypeInspector().isArray());
    }
 
+   @Test
+   public void testMultipleFieldDeclarationWithAnnotation() throws Exception
+   {
+      final JavaClass javaClass = JavaParser.create(JavaClass.class);
+      javaClass.addField("@javax.xml.bind.annotation.XmlElement public String a,b,c[];");
+      List<Field<JavaClass>> fields = javaClass.getFields();
+      
+      Assert.assertEquals(3, fields.size());
+      
+      Assert.assertEquals("a", fields.get(0).getName());
+      Assert.assertEquals("java.lang.String", fields.get(0).getQualifiedType());
+      Assert.assertEquals("String", fields.get(0).getType());
+      Assert.assertFalse(fields.get(0).getTypeInspector().isArray());
+      Assert.assertTrue(fields.get(0).hasAnnotation(XmlElement.class));
+      
+      Assert.assertEquals("b", fields.get(1).getName());
+      Assert.assertEquals("java.lang.String", fields.get(1).getQualifiedType());
+      Assert.assertEquals("String", fields.get(1).getType());
+      Assert.assertFalse(fields.get(1).getTypeInspector().isArray());
+      Assert.assertTrue(fields.get(1).hasAnnotation(XmlElement.class));
+
+      Assert.assertEquals("c", fields.get(2).getName());
+      Assert.assertEquals("java.lang.String[]", fields.get(2).getQualifiedType());
+      Assert.assertEquals("String[]", fields.get(2).getType());
+      Assert.assertTrue(fields.get(2).getTypeInspector().isArray());
+      Assert.assertTrue(fields.get(2).hasAnnotation(XmlElement.class));
+   }
 
 }
