@@ -7,10 +7,12 @@
 
 package org.jboss.forge.parser.java.impl;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.ArrayType;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
@@ -41,6 +43,7 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    private O parent;
    private AST ast;
    private final FieldDeclaration field;
+   private final VariableDeclarationFragment fragment;
 
    private void init(final O parent)
    {
@@ -51,25 +54,46 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    public FieldImpl(final O parent)
    {
       init(parent);
-      this.field = ast.newFieldDeclaration(ast.newVariableDeclarationFragment());
-   }
-
-   public FieldImpl(final O parent, final String declaration)
-   {
-      init(parent);
-
-      String stub = "public class Stub { " + declaration + " }";
-      JavaClass temp = (JavaClass) JavaParser.parse(stub);
-      List<Field<JavaClass>> fields = temp.getFields();
-      FieldDeclaration newField = (FieldDeclaration) fields.get(0).getInternal();
-      FieldDeclaration subtree = (FieldDeclaration) ASTNode.copySubtree(ast, newField);
-      this.field = subtree;
+      this.fragment = ast.newVariableDeclarationFragment();
+      this.field = ast.newFieldDeclaration(this.fragment);
    }
 
    public FieldImpl(final O parent, final Object internal)
    {
+      this(parent, internal, false);
+   }
+
+   @SuppressWarnings("unchecked")
+   public FieldImpl(final O parent, final Object internal, boolean copy)
+   {
       init(parent);
-      this.field = (FieldDeclaration) internal;
+      if (copy)
+      {
+         VariableDeclarationFragment newFieldFragment = (VariableDeclarationFragment) internal;
+         FieldDeclaration newFieldDeclaration = (FieldDeclaration) newFieldFragment.getParent();
+         this.field = (FieldDeclaration) ASTNode.copySubtree(ast, newFieldDeclaration);
+         Iterator<VariableDeclarationFragment> fragmentsIterator = this.field.fragments().iterator();
+         VariableDeclarationFragment temp = null;
+         while (fragmentsIterator.hasNext())
+         {
+            VariableDeclarationFragment variableDeclarationFragment = fragmentsIterator.next();
+            if (newFieldFragment.getName().getFullyQualifiedName()
+                     .equals(variableDeclarationFragment.getName().getFullyQualifiedName()))
+            {
+               temp = variableDeclarationFragment;
+            }
+            else
+            {
+               fragmentsIterator.remove();
+            }
+         }
+         this.fragment = temp;
+      }
+      else
+      {
+         this.fragment = (VariableDeclarationFragment) internal;
+         this.field = (FieldDeclaration) this.fragment.getParent();
+      }
    }
 
    @Override
@@ -81,7 +105,7 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    @Override
    public Object getInternal()
    {
-      return field;
+      return fragment;
    }
 
    /*
@@ -277,15 +301,7 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    @Override
    public Field<O> setName(final String name)
    {
-      for (Object f : field.fragments())
-      {
-         if (f instanceof VariableDeclarationFragment)
-         {
-            VariableDeclarationFragment frag = (VariableDeclarationFragment) f;
-            frag.setName(ast.newSimpleName(name));
-            break;
-         }
-      }
+      fragment.setName(ast.newSimpleName(name));
       return this;
    }
 
@@ -298,8 +314,28 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    @Override
    public String getQualifiedType()
    {
-      Object type = field.getStructuralProperty(FieldDeclaration.TYPE_PROPERTY);
-      return parent.resolveType(type.toString());
+      Type fieldType = field.getType();
+      String result = parent.resolveType(fieldType.toString());
+      int extraDimensions = fragment.getExtraDimensions();
+      if (fieldType != null)
+      {
+         if (fieldType.isArrayType())
+         {
+            // The resolved type lacks information about arrays since arrays would be stripped from it
+            // We recreate it using the dimensions in the JDT Type to ensure that arrays are not lost in the return
+            // value.
+            int dimensions = ((ArrayType) fieldType).getDimensions();
+            for (int ctr = 0; ctr < dimensions; ctr++)
+            {
+               result += "[]";
+            }
+         }
+         for (int dimensionsToAdd = 0; dimensionsToAdd < extraDimensions; dimensionsToAdd++)
+         {
+            result += "[]";
+         }
+      }
+      return result;
    }
 
    @Override
@@ -416,32 +452,14 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    @Override
    public String getLiteralInitializer()
    {
-      String result = null;
-      for (Object f : field.fragments())
-      {
-         if (f instanceof VariableDeclarationFragment)
-         {
-            VariableDeclarationFragment frag = (VariableDeclarationFragment) f;
-            result = frag.getInitializer().toString();
-            break;
-         }
-      }
+      String result = fragment.getInitializer().toString();
       return result;
    }
 
    @Override
    public String getStringInitializer()
    {
-      String result = null;
-      for (Object f : field.fragments())
-      {
-         if (f instanceof VariableDeclarationFragment)
-         {
-            VariableDeclarationFragment frag = (VariableDeclarationFragment) f;
-            result = Strings.unquote(frag.getInitializer().toString());
-            break;
-         }
-      }
+      String result = Strings.unquote(fragment.getInitializer().toString());
       return result;
    }
 
@@ -450,19 +468,8 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    {
       String stub = "public class Stub { private String stub = " + value + " }";
       JavaClass temp = (JavaClass) JavaParser.parse(stub);
-      FieldDeclaration internal = (FieldDeclaration) temp.getFields().get(0).getInternal();
-
-      for (Object f : internal.fragments())
-      {
-         if (f instanceof VariableDeclarationFragment)
-         {
-            VariableDeclarationFragment tempFrag = (VariableDeclarationFragment) f;
-            VariableDeclarationFragment localFrag = getFragment(field);
-            localFrag.setInitializer((Expression) ASTNode.copySubtree(ast, tempFrag.getInitializer()));
-            break;
-         }
-      }
-
+      VariableDeclarationFragment tempFrag = (VariableDeclarationFragment) temp.getFields().get(0).getInternal();
+      fragment.setInitializer((Expression) ASTNode.copySubtree(ast, tempFrag.getInitializer()));
       return this;
    }
 
@@ -472,56 +479,40 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
       return setLiteralInitializer(Strings.enquote(value));
    }
 
-   private VariableDeclarationFragment getFragment(final FieldDeclaration field)
-   {
-      VariableDeclarationFragment result = null;
-      for (Object f : field.fragments())
-      {
-         if (f instanceof VariableDeclarationFragment)
-         {
-            result = (VariableDeclarationFragment) f;
-            break;
-         }
-      }
-      return result;
-   }
-
    @Override
    public int hashCode()
    {
       final int prime = 31;
       int result = 1;
-      result = (prime * result) + ((field == null) ? 0 : field.hashCode());
+      result = prime * result + ((field == null) ? 0 : field.hashCode());
+      result = prime * result + ((fragment == null) ? 0 : fragment.hashCode());
       return result;
    }
 
    @Override
-   public boolean equals(final Object obj)
+   public boolean equals(Object obj)
    {
       if (this == obj)
-      {
          return true;
-      }
       if (obj == null)
-      {
          return false;
-      }
       if (getClass() != obj.getClass())
-      {
          return false;
-      }
       FieldImpl<?> other = (FieldImpl<?>) obj;
       if (field == null)
       {
          if (other.field != null)
-         {
             return false;
-         }
       }
       else if (!field.equals(other.field))
-      {
          return false;
+      if (fragment == null)
+      {
+         if (other.fragment != null)
+            return false;
       }
+      else if (!fragment.equals(other.fragment))
+         return false;
       return true;
    }
 
@@ -539,7 +530,7 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
       }
       return result;
    }
-   
+
    @Override
    public boolean isTransient()
    {

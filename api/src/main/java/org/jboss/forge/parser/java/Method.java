@@ -41,11 +41,6 @@ public interface Method<O extends JavaSource<O>> extends Abstractable<Method<O>>
    public boolean isConstructor();
 
    /**
-    * Set the name of this {@link Method}
-    */
-   public Method<O> setName(final String name);
-
-   /**
     * Get the return type of this {@link Method} or return null if the return type is void.
     */
    public String getReturnType();

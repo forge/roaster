@@ -13,8 +13,6 @@ package org.jboss.forge.parser.java;
  */
 public interface Field<O extends JavaSource<O>> extends Member<O, Field<O>>
 {
-   Field<O> setName(String name);
-
    /**
     * Get this field's type.
     */

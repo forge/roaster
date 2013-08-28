@@ -7,7 +7,7 @@
    </parent>
    <groupId>org.jboss.forge</groupId>
    <artifactId>java-parser-parent</artifactId>
-   <version>1.1.3-SNAPSHOT</version>
+   <version>1.1.5-SNAPSHOT</version>
    <packaging>pom</packaging>
    <name>Forge - Java Parser Parent</name>
    <licenses>
@@ -66,7 +66,7 @@
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
-         <version>4.10</version>
+         <version>4.11</version>
          <scope>test</scope>
       </dependency>
    </dependencies>

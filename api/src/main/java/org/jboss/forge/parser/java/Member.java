@@ -15,10 +15,8 @@ import org.jboss.forge.parser.Origin;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface Member<O extends JavaSource<O>, T> extends VisibilityScoped<T>, AnnotationTarget<O, T>, Origin<O>
+public interface Member<O extends JavaSource<O>, T> extends VisibilityScoped<T>, AnnotationTarget<O, T>, Origin<O>, Named<T>
 {
-   public String getName();
-
    public boolean isFinal();
 
    public T setFinal(boolean finl);

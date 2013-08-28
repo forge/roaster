@@ -211,7 +211,7 @@ public class FieldTypeTest
       final Field<JavaClass> field = javaClass.addField();
       field.setName("content");
       field.setType(byte[].class);
-      Assert.assertEquals("byte", field.getQualifiedType());
+      Assert.assertEquals("byte[]", field.getQualifiedType());
       Assert.assertTrue(field.getTypeInspector().isArray());
    }
 
@@ -222,7 +222,7 @@ public class FieldTypeTest
       final Field<JavaClass> field = javaClass.addField();
       field.setName("content");
       field.setType(byte[][][].class);
-      Assert.assertEquals("byte", field.getQualifiedType());
+      Assert.assertEquals("byte[][][]", field.getQualifiedType());
       Type<JavaClass> typeInspector = field.getTypeInspector();
       Assert.assertTrue(typeInspector.isArray());
       Assert.assertEquals(3, typeInspector.getArrayDimensions());
@@ -236,10 +236,40 @@ public class FieldTypeTest
       final Field<JavaClass> field = javaClass.addField();
       field.setName("content");
       field.setType(java.util.Vector[][][].class);
-      Assert.assertEquals("java.util.Vector", field.getQualifiedType());
+      Assert.assertEquals("java.util.Vector[][][]", field.getQualifiedType());
       Type<JavaClass> typeInspector = field.getTypeInspector();
       Assert.assertTrue(typeInspector.isArray());
       Assert.assertEquals(3, typeInspector.getArrayDimensions());
-      Assert.assertEquals("Vector", field.getType());
+      Assert.assertEquals("Vector[][][]", field.getType());
+   }
+   
+   @Test
+   public void testFieldTypeByteArrayAlternativeDeclarationTest()
+   {
+      final JavaClass javaClass = JavaParser.create(JavaClass.class);
+      final Field<JavaClass> field = javaClass.addField("public byte content[];");
+      Assert.assertEquals("byte[]", field.getQualifiedType());
+      Assert.assertEquals("byte[]", field.getType());
+      Assert.assertTrue(field.getTypeInspector().isArray());
+   }
+   
+   @Test
+   public void testFieldTypeObjectArrayAlternativeDeclarationTest()
+   {
+      final JavaClass javaClass = JavaParser.create(JavaClass.class);
+      final Field<JavaClass> field = javaClass.addField("public Long content[];");
+      Assert.assertEquals("java.lang.Long[]", field.getQualifiedType());
+      Assert.assertEquals("Long[]", field.getType());
+      Assert.assertTrue(field.getTypeInspector().isArray());
+   }
+   
+   @Test
+   public void testFieldTypeObjectArrayMixedDimensionTest()
+   {
+      final JavaClass javaClass = JavaParser.create(JavaClass.class);
+      final Field<JavaClass> field = javaClass.addField("public Long[] content[];");
+      Assert.assertEquals("java.lang.Long[][]", field.getQualifiedType());
+      Assert.assertEquals("Long[][]", field.getType());
+      Assert.assertTrue(field.getTypeInspector().isArray());
    }
 }

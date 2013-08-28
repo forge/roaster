@@ -6,19 +6,37 @@
  */
 package org.jboss.forge.parser.java;
 
+import java.util.List;
+
 import org.jboss.forge.parser.Internal;
 import org.jboss.forge.parser.Origin;
 
-//TODO implement MethodHolder
-public interface EnumConstant extends Internal, Origin<JavaEnum>
+public interface EnumConstant extends Internal, Origin<JavaEnum>,
+         AnnotationTarget<JavaEnum, EnumConstant>, Named<EnumConstant>
 {
    /**
-    * Get this enum constant name.
+    * Represents the anonymous subclass "body" of an enum constant.
     */
-   String getName();
-   
+   public interface Body extends JavaSource<Body>, FieldHolder<Body>, MethodHolder<Body> {
+   }
+
    /**
-    * Set this enum constant name.
+    * Get the constructor arguments of this enum constant.
     */
-   EnumConstant setName(String name);
+   List<String> getConstructorArguments();
+
+   /**
+    * Set the constructor arguments for this enum constant.
+    */
+   EnumConstant setConstructorArguments(String... literalArguments);
+
+   /**
+    * Get the {@link Body} of this enum constant.
+    */
+   Body getBody();
+
+   /**
+    * Remove the {@link Body} of this enum constant.
+    */
+   EnumConstant removeBody();
 }

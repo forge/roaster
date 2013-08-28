@@ -9,8 +9,10 @@ package org.jboss.forge.parser.java.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.ServiceLoader;
 
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
@@ -23,6 +25,7 @@ import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 import org.jboss.forge.parser.JavaParser;
@@ -622,7 +625,11 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
 
       try
       {
-         TextEdit edit = unit.rewrite(document, null);
+         @SuppressWarnings("rawtypes")
+         Map options = JavaCore.getOptions();
+         options.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_7);
+         options.put(CompilerOptions.OPTION_Encoding, "UTF-8");
+         TextEdit edit = unit.rewrite(document, options);
          edit.apply(document);
       }
       catch (Exception e)
