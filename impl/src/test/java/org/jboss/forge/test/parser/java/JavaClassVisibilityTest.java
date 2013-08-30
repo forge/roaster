@@ -17,7 +17,6 @@ import org.jboss.forge.test.parser.java.common.VisibilityTest;
  */
 public class JavaClassVisibilityTest extends VisibilityTest
 {
-   @SuppressWarnings("resource")
    @Override
    public void resetTests()
    {

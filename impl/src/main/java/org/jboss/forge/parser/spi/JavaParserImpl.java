@@ -35,6 +35,7 @@ import org.jboss.forge.parser.java.JavaAnnotation;
 import org.jboss.forge.parser.java.JavaClass;
 import org.jboss.forge.parser.java.JavaEnum;
 import org.jboss.forge.parser.java.JavaInterface;
+import org.jboss.forge.parser.java.JavaPackageInfo;
 import org.jboss.forge.parser.java.JavaSource;
 import org.jboss.forge.parser.java.ast.TypeDeclarationFinderVisitor;
 import org.jboss.forge.parser.java.impl.JavaAnnotationImpl;
@@ -124,7 +125,6 @@ public class JavaParserImpl implements JavaParserProvider
       else if (visitor.getPackageDeclaration() != null)
       {
          return getJavaSource(null, document, unit, visitor.getPackageDeclaration());
-
       }
       throw new ParserException("Could not find type declaration in Java source - is this actually code?");
    }
@@ -184,6 +184,9 @@ public class JavaParserImpl implements JavaParserProvider
 
       if (JavaInterface.class.isAssignableFrom(type))
          return (T) parse("public interface JavaInterface { }");
+
+      if (JavaPackageInfo.class.isAssignableFrom(type))
+         return (T) parse("package org.example;");
 
       throw new ParserException("Unknown JavaSource type [" + type.getName() + "]");
    }

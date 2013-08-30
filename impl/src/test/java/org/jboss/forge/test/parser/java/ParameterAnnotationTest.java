@@ -19,7 +19,6 @@ import org.jboss.forge.test.parser.java.common.AnnotationTest;
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-@SuppressWarnings("resource")
 public class ParameterAnnotationTest extends AnnotationTest<JavaClass, Parameter<JavaClass>>
 {
    @Override

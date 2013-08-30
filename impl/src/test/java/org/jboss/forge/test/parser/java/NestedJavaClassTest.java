@@ -7,7 +7,6 @@ import org.jboss.forge.parser.java.JavaClass;
 
 public class NestedJavaClassTest extends JavaClassTest
 {
-   @SuppressWarnings("resource")
    @Override
    public JavaClass getSource()
    {

@@ -33,7 +33,6 @@ public class JavaAnnotationTest
 {
    private JavaAnnotation javaAnnotation;
 
-   @SuppressWarnings("resource")
    @Before
    public void setup()
    {
@@ -126,11 +125,13 @@ public class JavaAnnotationTest
       assertTrue(nestedAnnotation.hasAnnotationElement(metasyntacticVariables));
       assertEquals("metasyntacticVariables", metasyntacticVariables.getName());
       Type<JavaAnnotation> metasyntacticVariablesType = metasyntacticVariables.getTypeInspector();
-      assertEquals("org.jboss.forge.test.parser.java.common.MockEnumType", metasyntacticVariablesType.getQualifiedName());
+      assertEquals("org.jboss.forge.test.parser.java.common.MockEnumType",
+               metasyntacticVariablesType.getQualifiedName());
       assertTrue(metasyntacticVariablesType.isArray());
       assertEquals(0, metasyntacticVariables.getDefaultValue().getEnumArray(MockEnumType.class).length);
       metasyntacticVariables.getDefaultValue().setEnumArray(MockEnumType.values());
-      assertArrayEquals(MockEnumType.values(), metasyntacticVariables.getDefaultValue().getEnumArray(MockEnumType.class));
+      assertArrayEquals(MockEnumType.values(), metasyntacticVariables.getDefaultValue()
+               .getEnumArray(MockEnumType.class));
    }
 
    @Test

@@ -16,7 +16,22 @@ import org.junit.Test;
 public class JavaPackageInfoTest
 {
 
-   @SuppressWarnings("resource")
+   @Test
+   public void testCanCreatePackageInfo() throws Exception
+   {
+      JavaPackageInfo packageInfo = JavaParser.create(JavaPackageInfo.class);
+      packageInfo.setPackage("org.jboss.forge.parser");
+      Assert.assertEquals("org.jboss.forge.parser", packageInfo.getPackage());
+      Assert.assertEquals("package-info", packageInfo.getName());
+   }
+
+   @Test(expected = UnsupportedOperationException.class)
+   public void testSetPackageInfoNameThrowsUnsupportedOperation() throws Exception
+   {
+      JavaPackageInfo packageInfo = JavaParser.create(JavaPackageInfo.class);
+      packageInfo.setName("anything");
+   }
+
    @Test
    public void testCanParsePackageInfo() throws Exception
    {
@@ -36,10 +51,10 @@ public class JavaPackageInfoTest
       Assert.assertEquals(3, values.size());
       String namespace = annotation.getLiteralValue("namespace");
       Assert.assertEquals(namespace, "\"http://forge.org/Test\"");
-      
-      Annotation<JavaPackageInfo> annotationXmlOrder = javaPkg.addAnnotation("javax.xml.bind.annotation.XmlAccessorOrder");
+
+      Annotation<JavaPackageInfo> annotationXmlOrder = javaPkg
+               .addAnnotation("javax.xml.bind.annotation.XmlAccessorOrder");
       Annotation<JavaPackageInfo> annotationXmlAccessorOrder = javaPkg.getAnnotation("XmlAccessorOrder");
       Assert.assertEquals(annotationXmlOrder.getName(), annotationXmlAccessorOrder.getName());
-      
    }
 }
