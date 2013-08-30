@@ -24,7 +24,6 @@ import org.junit.Test;
  */
 public class FieldAnnotationTest extends AnnotationTest<JavaClass, Field<JavaClass>>
 {
-   @SuppressWarnings("resource")
    @Override
    public void resetTests()
    {

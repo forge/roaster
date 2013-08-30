@@ -18,7 +18,6 @@ import org.jboss.forge.test.parser.java.common.AnnotationTest;
  */
 public class EnumConstantAnnotationTest extends AnnotationTest<JavaEnum, EnumConstant<JavaEnum>>
 {
-   @SuppressWarnings("resource")
    @Override
    public void resetTests()
    {

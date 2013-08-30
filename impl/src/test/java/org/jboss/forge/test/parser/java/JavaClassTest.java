@@ -17,7 +17,6 @@ import org.jboss.forge.test.parser.java.common.JavaClassTestBase;
  */
 public class JavaClassTest extends JavaClassTestBase
 {
-   @SuppressWarnings("resource")
    @Override
    public JavaClass getSource()
    {

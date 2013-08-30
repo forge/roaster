@@ -19,7 +19,7 @@ import org.jboss.forge.test.parser.java.common.VisibilityTest;
 public class FieldVisibilityTest extends VisibilityTest
 {
    @Override
-   @SuppressWarnings({ "rawtypes", "resource" })
+   @SuppressWarnings({ "rawtypes" })
    public void resetTests()
    {
       InputStream stream = FieldVisibilityTest.class

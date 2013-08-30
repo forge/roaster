@@ -30,7 +30,6 @@ public class EnumConstantTest
 {
    private JavaEnum javaEnum;
 
-   @SuppressWarnings("resource")
    @Before
    public void reset()
    {
@@ -59,7 +58,7 @@ public class EnumConstantTest
       foo.setConstructorArguments();
       assertTrue(foo.getConstructorArguments().isEmpty());
    }
-   
+
    @Test
    public void testAddRemoveBody()
    {
@@ -122,5 +121,5 @@ public class EnumConstantTest
       body.removeField(fooField);
       assertTrue(body.getFields().isEmpty());
    }
-   
+
 }
