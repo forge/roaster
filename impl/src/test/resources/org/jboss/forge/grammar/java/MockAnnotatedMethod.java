@@ -16,4 +16,8 @@ public class MockAnnotatedMethod
    public MockAnnotatedMethod()
    {
    }
+
+   public void testme()
+   {
+   }
 }

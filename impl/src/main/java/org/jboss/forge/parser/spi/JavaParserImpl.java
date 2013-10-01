@@ -30,6 +30,7 @@ import org.jboss.forge.parser.java.JavaAnnotation;
 import org.jboss.forge.parser.java.JavaClass;
 import org.jboss.forge.parser.java.JavaEnum;
 import org.jboss.forge.parser.java.JavaInterface;
+import org.jboss.forge.parser.java.JavaPackageInfo;
 import org.jboss.forge.parser.java.JavaSource;
 import org.jboss.forge.parser.java.ast.TypeDeclarationFinderVisitor;
 import org.jboss.forge.parser.java.impl.JavaAnnotationImpl;
@@ -43,25 +44,6 @@ import org.jboss.forge.parser.java.impl.JavaPackageInfoImpl;
  */
 public class JavaParserImpl implements JavaParserProvider
 {
-
-   @Override
-   @SuppressWarnings("unchecked")
-   public <T extends JavaSource<?>> T create(final Class<T> type)
-   {
-      if (JavaClass.class.isAssignableFrom(type))
-         return (T) parse("public class JavaClass { }");
-
-      if (JavaEnum.class.isAssignableFrom(type))
-         return (T) parse("public enum JavaEnum { }");
-
-      if (JavaAnnotation.class.isAssignableFrom(type))
-         return (T) parse("public @interface JavaAnnotation { }");
-
-      if (JavaInterface.class.isAssignableFrom(type))
-         return (T) parse("public interface JavaInterface { }");
-
-      throw new ParserException("Unknown JavaSource type [" + type.getName() + "]");
-   }
 
    @Override
    public JavaSource<?> parse(final InputStream data)
@@ -110,7 +92,6 @@ public class JavaParserImpl implements JavaParserProvider
       else if (visitor.getPackageDeclaration() != null)
       {
          return getJavaSource(null, document, unit, visitor.getPackageDeclaration());
-
       }
       throw new ParserException("Could not find type declaration in Java source - is this actually code?");
    }
@@ -153,6 +134,28 @@ public class JavaParserImpl implements JavaParserProvider
       {
          throw new ParserException("Unknown Java source type [" + declaration + "]");
       }
+   }
+
+   @Override
+   @SuppressWarnings("unchecked")
+   public <T extends JavaSource<?>> T create(final Class<T> type)
+   {
+      if (JavaClass.class.isAssignableFrom(type))
+         return (T) parse("public class JavaClass { }");
+
+      if (JavaEnum.class.isAssignableFrom(type))
+         return (T) parse("public enum JavaEnum { }");
+
+      if (JavaAnnotation.class.isAssignableFrom(type))
+         return (T) parse("public @interface JavaAnnotation { }");
+
+      if (JavaInterface.class.isAssignableFrom(type))
+         return (T) parse("public interface JavaInterface { }");
+
+      if (JavaPackageInfo.class.isAssignableFrom(type))
+         return (T) parse("package org.example;");
+
+      throw new ParserException("Unknown JavaSource type [" + type.getName() + "]");
    }
 
 }

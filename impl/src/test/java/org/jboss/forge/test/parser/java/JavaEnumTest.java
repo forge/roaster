@@ -28,7 +28,6 @@ public class JavaEnumTest
 {
    private JavaEnum javaEnum;
 
-   @SuppressWarnings("resource")
    @Before
    public void reset()
    {
@@ -44,6 +43,7 @@ public class JavaEnumTest
    }
 
    @Test
+   @SuppressWarnings("rawtypes")
    public void testAddEnumConstant()
    {
       int i = javaEnum.getEnumConstants().size();
@@ -53,6 +53,7 @@ public class JavaEnumTest
    }
 
    @Test
+   @SuppressWarnings("rawtypes")
    public void testAddEnumConstantFromDeclaration()
    {
       int i = javaEnum.getEnumConstants().size();

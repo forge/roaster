@@ -124,6 +124,25 @@ public class NestedClassTest
    }
 
    @Test
+   public void testClassWithNestedEnum()
+   {
+      JavaClass javaClass = (JavaClass) JavaParser
+               .parse("package org.example; "
+                        + "public class OuterClass { " +
+                        "  public enum InnerEnum{A,B,C;} " +
+                        "}");
+
+      Assert.assertEquals("org.example.OuterClass", javaClass.getCanonicalName());
+      List<JavaSource<?>> nestedClasses = javaClass.getNestedClasses();
+      JavaSource<?> inner1 = nestedClasses.get(0);
+      Assert.assertEquals(javaClass, inner1.getEnclosingType());
+      Assert.assertEquals("org.example.OuterClass.InnerEnum", inner1.getCanonicalName());
+      Assert.assertEquals("org.example.OuterClass$InnerEnum", inner1.getQualifiedName());
+      Assert.assertEquals("InnerEnum", inner1.getName());
+      Assert.assertEquals(1, nestedClasses.size());
+   }
+
+   @Test
    public void testAnnotationWithNestedClass()
    {
       JavaAnnotation javaAnnotation = (JavaAnnotation) JavaParser
