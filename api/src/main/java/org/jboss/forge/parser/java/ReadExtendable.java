@@ -8,7 +8,7 @@
 package org.jboss.forge.parser.java;
 
 /**
- * Represents a {@link ReadJavaSource} that can extend other types. (Java inheritance and interfaces.)
+ * Represents a {@link ReadJavaSource} that can extend other types (Java inheritance and interfaces).
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
@@ -22,6 +22,12 @@ public interface ReadExtendable<O extends ReadJavaSource<O>>
     */
    public String getSuperType();
 
+   /**
+    * Represents a {@link JavaSource} that can extend other types (Java inheritance and interfaces).
+    * 
+    * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+    * 
+    */
    public interface Extendable<O extends ReadJavaSource<O>> extends ReadExtendable<O>
    {
       /**

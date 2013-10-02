@@ -10,8 +10,8 @@ package org.jboss.forge.parser.java;
 import org.jboss.forge.parser.JavaParser;
 
 /**
- * Represents a Java {@link Class} source file as an in-memory modifiable element. See {@link JavaParser}
- * for various options in generating {@link ReadJavaClass} instances.
+ * Represents a Java {@code class} type. See {@link JavaParser} for various options in generating {@link ReadJavaClass}
+ * instances.
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
@@ -24,6 +24,12 @@ public interface ReadJavaClass<O extends ReadJavaClass<O>> extends
          ReadExtendable<O>,
          ReadAbstractable<O>
 {
+   /**
+    * Represents a Java {@code class} source file as an in-memory modifiable element. See {@link JavaParser} for various
+    * options in generating {@link JavaClass} instances.
+    * 
+    * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+    */
    public interface JavaClass extends ReadJavaClass<JavaClass>,
             JavaSource<JavaClass>,
             InterfaceCapable<JavaClass>,

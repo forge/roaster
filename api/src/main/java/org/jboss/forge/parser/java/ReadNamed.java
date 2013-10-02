@@ -10,6 +10,8 @@ package org.jboss.forge.parser.java;
 import java.lang.reflect.Method;
 
 /**
+ * Represents a named Java element.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
@@ -22,6 +24,12 @@ public interface ReadNamed
     */
    public String getName();
 
+   /**
+    * Represents a named Java source element.
+    * 
+    * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+    * 
+    */
    public interface Named<T> extends ReadNamed
    {
 

@@ -67,6 +67,12 @@ public interface ReadMethod<O extends ReadJavaSource<O>, T extends ReadMethod<O,
     */
    public List<String> getThrownExceptions();
 
+   /**
+    * Represents a Java Method in source form.
+    * 
+    * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+    * 
+    */
    public interface Method<O extends JavaSource<O>> extends ReadMethod<O, Method<O>>, Abstractable<Method<O>>, Member<O, Method<O>>
    {
       /**

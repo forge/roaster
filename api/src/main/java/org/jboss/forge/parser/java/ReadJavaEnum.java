@@ -13,8 +13,8 @@ import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.java.ReadEnumConstant.EnumConstant;
 
 /**
- * Represents a Java {@link Enum} source file as an in-memory modifiable element. See {@link JavaParser} for various
- * options in generating {@link ReadJavaEnum} instances.
+ * Represents a Java {@code enum} type. See {@link JavaParser} for various options in generating {@link ReadJavaEnum}
+ * instances.
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
@@ -35,6 +35,12 @@ public interface ReadJavaEnum<O extends ReadJavaEnum<O>> extends ReadJavaSource<
     */
    List<? extends ReadEnumConstant<O>> getEnumConstants();
 
+   /**
+    * Represents a Java {@code enum} source file as an in-memory modifiable element. See {@link JavaParser} for various
+    * options in generating {@link JavaEnum} instances.
+    * 
+    * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+    */
    public interface JavaEnum extends ReadJavaEnum<JavaEnum>, JavaSource<JavaEnum>, InterfaceCapable<JavaEnum>,
             FieldHolder<JavaEnum>,
             MethodHolder<JavaEnum>

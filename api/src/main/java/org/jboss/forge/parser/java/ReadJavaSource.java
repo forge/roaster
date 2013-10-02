@@ -12,6 +12,8 @@ import java.util.List;
 import org.jboss.forge.parser.Origin;
 
 /**
+ * Represents a Java type.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
@@ -87,6 +89,11 @@ public interface ReadJavaSource<T extends ReadJavaSource<T>> extends
     */
    public SourceType getSourceType();
 
+   /**
+    * Represents a Java type in source form.
+    * 
+    * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+    */
    public interface JavaSource<T extends JavaSource<T>> extends ReadJavaSource<T>,
             Packaged<T>,
             Importer<T>,

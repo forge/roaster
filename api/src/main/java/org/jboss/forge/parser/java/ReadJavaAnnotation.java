@@ -7,15 +7,14 @@
 
 package org.jboss.forge.parser.java;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.java.ReadAnnotationElement.AnnotationElement;
 
 /**
- * Represents a Java {@link Annotation} source file as an in-memory modifiable element. See {@link JavaParser} for
- * various options in generating {@link ReadJavaAnnotation} instances.
+ * Represents a Java {@code @interface} annotation type. See {@link JavaParser} for various options in generating
+ * {@link ReadJavaAnnotation} instances.
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
@@ -44,6 +43,12 @@ public interface ReadJavaAnnotation<O extends ReadJavaAnnotation<O>> extends Rea
     */
    public List<? extends ReadAnnotationElement<O>> getAnnotationElements();
 
+   /**
+    * Represents a Java {@code @interface} annotation source file as an in-memory modifiable element. See
+    * {@link JavaParser} for various options in generating {@link JavaAnnotation} instances.
+    * 
+    * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+    */
    public interface JavaAnnotation extends ReadJavaAnnotation<JavaAnnotation>, JavaSource<JavaAnnotation>
    {
       /**

@@ -15,11 +15,14 @@ import org.jboss.forge.parser.java.ReadJavaEnum.JavaEnum;
 import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 import org.jboss.forge.parser.java.ReadMethodHolder.MethodHolder;
 
+/**
+ * Represents one of the constant members of a {@link ReadJavaEnum}.
+ */
 public interface ReadEnumConstant<O extends ReadJavaEnum<O>> extends Internal, Origin<O>,
          ReadAnnotationTarget<O>, ReadNamed
 {
    /**
-    * Represents the anonymous subclass "body" of an enum constant.
+    * Represents the anonymous subclass "body" of a {@link ReadEnumConstant}.
     */
    public interface ReadBody<O extends ReadBody<O>> extends ReadJavaSource<O>, ReadFieldHolder<O>, ReadMethodHolder<O>
    {
@@ -35,9 +38,15 @@ public interface ReadEnumConstant<O extends ReadJavaEnum<O>> extends Internal, O
     */
    ReadBody<?> getBody();
 
+   /**
+    * Represents one of the constant members of a {@link JavaEnum}.
+    */
    public interface EnumConstant extends ReadEnumConstant<JavaEnum>, AnnotationTarget<JavaEnum, EnumConstant>,
             Named<EnumConstant>
    {
+      /**
+       * Represents the anonymous subclass "body" of an {@link EnumConstant}.
+       */
       public interface Body extends ReadBody<Body>, JavaSource<Body>, FieldHolder<Body>, MethodHolder<Body>
       {
       }

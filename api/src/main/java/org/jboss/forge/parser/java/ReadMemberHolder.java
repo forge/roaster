@@ -13,6 +13,8 @@ import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 import org.jboss.forge.parser.java.ReadMember.Member;
 
 /**
+ * Represents a {@link ReadJavaSource} that may declare fields or methods.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
@@ -23,6 +25,12 @@ public interface ReadMemberHolder<O extends ReadJavaSource<O>>
     */
    public List<? extends ReadMember<O>> getMembers();
 
+   /**
+    * Represents a {@link JavaSource} that may declare fields or methods.
+    * 
+    * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+    * 
+    */
    public interface MemberHolder<O extends JavaSource<O>> extends ReadMemberHolder<O>
    {
       /**
