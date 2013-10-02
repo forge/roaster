@@ -12,11 +12,12 @@ import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jface.text.Document;
-import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
-import org.jboss.forge.parser.java.ReadJavaSource;
-import org.jboss.forge.parser.java.ReadMethod.Method;
+import org.jboss.forge.parser.java.JavaType;
 import org.jboss.forge.parser.java.SourceType;
 import org.jboss.forge.parser.java.ast.ModifierAccessor;
+import org.jboss.forge.parser.java.source.JavaClassSource;
+import org.jboss.forge.parser.java.source.JavaSource;
+import org.jboss.forge.parser.java.source.MethodSource;
 import org.jboss.forge.parser.java.util.Types;
 
 /**
@@ -24,7 +25,7 @@ import org.jboss.forge.parser.java.util.Types;
  *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClass> implements JavaClass
+public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSource> implements JavaClassSource
 {
    private final ModifierAccessor modifiers = new ModifierAccessor();
 
@@ -35,9 +36,9 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClass> i
    }
 
    @Override
-   protected JavaClass updateTypeNames(final String newName)
+   protected JavaClassSource updateTypeNames(final String newName)
    {
-      for (Method<JavaClass> m : getMethods())
+      for (MethodSource<JavaClassSource> m : getMethods())
       {
          if (m.isConstructor())
          {
@@ -58,7 +59,7 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClass> i
    }
 
    @Override
-   public JavaClass setAbstract(final boolean abstrct)
+   public JavaClassSource setAbstract(final boolean abstrct)
    {
       if (abstrct)
       {
@@ -97,13 +98,13 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClass> i
    }
 
    @Override
-   public JavaClass setSuperType(final ReadJavaSource<?> type)
+   public JavaClassSource setSuperType(final JavaType<?> type)
    {
       return setSuperType(type.getQualifiedName());
    }
 
    @Override
-   public JavaClass setSuperType(final Class<?> type)
+   public JavaClassSource setSuperType(final Class<?> type)
    {
       if (type.isAnnotation() || type.isEnum() || type.isInterface() || type.isPrimitive())
       {
@@ -114,7 +115,7 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClass> i
 
    @SuppressWarnings("unchecked")
    @Override
-   public JavaClass setSuperType(final String type)
+   public JavaClassSource setSuperType(final String type)
    {
       if (type == null || type.trim().isEmpty())
       {

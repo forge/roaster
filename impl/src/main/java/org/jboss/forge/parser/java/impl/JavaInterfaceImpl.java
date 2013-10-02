@@ -9,14 +9,15 @@ package org.jboss.forge.parser.java.impl;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jface.text.Document;
-import org.jboss.forge.parser.java.ReadJavaInterface.JavaInterface;
 import org.jboss.forge.parser.java.SourceType;
+import org.jboss.forge.parser.java.source.JavaInterfaceSource;
+import org.jboss.forge.parser.java.source.JavaSource;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public class JavaInterfaceImpl extends AbstractGenericCapableJavaSource<JavaInterface> implements JavaInterface
+public class JavaInterfaceImpl extends AbstractGenericCapableJavaSource<JavaInterfaceSource> implements JavaInterfaceSource
 {
 
    public JavaInterfaceImpl(JavaSource<?> enclosingType, final Document document, final CompilationUnit unit, BodyDeclaration body)
@@ -25,7 +26,7 @@ public class JavaInterfaceImpl extends AbstractGenericCapableJavaSource<JavaInte
    }
 
    @Override
-   protected JavaInterface updateTypeNames(final String name)
+   protected JavaInterfaceSource updateTypeNames(final String name)
    {
       return this;
    }

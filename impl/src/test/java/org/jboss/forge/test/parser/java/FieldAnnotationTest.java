@@ -12,9 +12,9 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
-import org.jboss.forge.parser.java.ReadField.Field;
-import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
+import org.jboss.forge.parser.java.source.AnnotationSource;
+import org.jboss.forge.parser.java.source.FieldSource;
+import org.jboss.forge.parser.java.source.JavaClassSource;
 import org.jboss.forge.test.parser.java.common.AnnotationTest;
 import org.jboss.forge.test.parser.java.common.MockEnumType;
 import org.junit.Test;
@@ -22,22 +22,22 @@ import org.junit.Test;
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class FieldAnnotationTest extends AnnotationTest<JavaClass, Field<JavaClass>>
+public class FieldAnnotationTest extends AnnotationTest<JavaClassSource, FieldSource<JavaClassSource>>
 {
    @Override
    public void resetTests()
    {
       InputStream stream = FieldAnnotationTest.class
                .getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedField.java");
-      Field<JavaClass> field = JavaParser.parse(JavaClass.class, stream).getFields().get(0);
+      FieldSource<JavaClassSource> field = JavaParser.parse(JavaClassSource.class, stream).getFields().get(0);
       setTarget(field);
    }
 
    @Test
    public void testParseEnumValueStaticImport() throws Exception
    {
-      List<Annotation<JavaClass>> annotations = getTarget().getAnnotations();
-      Annotation<JavaClass> annotation = annotations.get(annotations.size() - 2);
+      List<AnnotationSource<JavaClassSource>> annotations = getTarget().getAnnotations();
+      AnnotationSource<JavaClassSource> annotation = annotations.get(annotations.size() - 2);
       MockEnumType enumValue = annotation.getEnumValue(MockEnumType.class);
       assertEquals(MockEnumType.FOO, enumValue);
    }

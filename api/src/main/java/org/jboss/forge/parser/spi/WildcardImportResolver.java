@@ -6,7 +6,7 @@
  */
 package org.jboss.forge.parser.spi;
 
-import org.jboss.forge.parser.java.ReadJavaSource;
+import org.jboss.forge.parser.java.JavaType;
 
 /**
  * Responsible for providing additional import resolution functionality for situations where classes have referenced a
@@ -17,5 +17,5 @@ import org.jboss.forge.parser.java.ReadJavaSource;
  */
 public interface WildcardImportResolver
 {
-   public String resolve(ReadJavaSource<?> source, String type);
+   public String resolve(JavaType<?> source, String type);
 }

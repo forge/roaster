@@ -7,17 +7,17 @@
 package org.jboss.forge.test.parser.java;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadJavaEnum.JavaEnum;
+import org.jboss.forge.parser.java.source.JavaEnumSource;
 import org.jboss.forge.test.parser.java.common.InterfacedTestBase;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class JavaEnumInterfaceTest extends InterfacedTestBase<JavaEnum>
+public class JavaEnumInterfaceTest extends InterfacedTestBase<JavaEnumSource>
 {
    @Override
-   protected JavaEnum getSource()
+   protected JavaEnumSource getSource()
    {
-      return JavaParser.parse(JavaEnum.class, "public enum MockEnum { FOO; }");
+      return JavaParser.parse(JavaEnumSource.class, "public enum MockEnum { FOO; }");
    }
 }

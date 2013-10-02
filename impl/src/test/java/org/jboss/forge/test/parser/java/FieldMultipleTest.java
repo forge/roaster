@@ -5,8 +5,8 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadField.Field;
-import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
+import org.jboss.forge.parser.java.source.FieldSource;
+import org.jboss.forge.parser.java.source.JavaClassSource;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,8 +15,8 @@ public class FieldMultipleTest
    @Test
    public void testFieldTypesByteExtraDimensionDeclaration()
    {
-      final JavaClass javaClass = JavaParser.create(JavaClass.class);
-      final Field<JavaClass> field = javaClass.addField("public byte content1[], content2;");
+      final JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
+      final FieldSource<JavaClassSource> field = javaClass.addField("public byte content1[], content2;");
       Assert.assertEquals(2, javaClass.getFields().size());
       Assert.assertEquals("content1", field.getName());
       Assert.assertEquals("byte[]", field.getQualifiedType());
@@ -27,9 +27,9 @@ public class FieldMultipleTest
    @Test
    public void testMultipleFieldDeclaration() throws Exception
    {
-      final JavaClass javaClass = JavaParser.create(JavaClass.class);
+      final JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.addField("public String a,b,c[];");
-      List<Field<JavaClass>> fields = javaClass.getFields();
+      List<FieldSource<JavaClassSource>> fields = javaClass.getFields();
       
       Assert.assertEquals(3, fields.size());
       
@@ -55,9 +55,9 @@ public class FieldMultipleTest
    @Test
    public void testMultipleFieldDeclarationWithAnnotation() throws Exception
    {
-      final JavaClass javaClass = JavaParser.create(JavaClass.class);
+      final JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.addField("@javax.xml.bind.annotation.XmlElement public String a,b,c[];");
-      List<Field<JavaClass>> fields = javaClass.getFields();
+      List<FieldSource<JavaClassSource>> fields = javaClass.getFields();
       
       Assert.assertEquals(3, fields.size());
       
@@ -83,9 +83,9 @@ public class FieldMultipleTest
    @Test
    public void testMultipleFieldDeclarationWithInitializers() throws Exception
    {
-      final JavaClass javaClass = JavaParser.create(JavaClass.class);
+      final JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.addField("private static final String a = \"A\",b =\"B\",c[] = {\"C\"};");
-      List<Field<JavaClass>> fields = javaClass.getFields();
+      List<FieldSource<JavaClassSource>> fields = javaClass.getFields();
       
       Assert.assertEquals(3, fields.size());
       

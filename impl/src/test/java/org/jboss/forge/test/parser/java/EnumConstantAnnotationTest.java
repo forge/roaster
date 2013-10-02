@@ -9,21 +9,21 @@ package org.jboss.forge.test.parser.java;
 import java.io.InputStream;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadEnumConstant.EnumConstant;
-import org.jboss.forge.parser.java.ReadJavaEnum.JavaEnum;
+import org.jboss.forge.parser.java.source.EnumConstantSource;
+import org.jboss.forge.parser.java.source.JavaEnumSource;
 import org.jboss.forge.test.parser.java.common.AnnotationTest;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class EnumConstantAnnotationTest extends AnnotationTest<JavaEnum, EnumConstant>
+public class EnumConstantAnnotationTest extends AnnotationTest<JavaEnumSource, EnumConstantSource>
 {
    @Override
    public void resetTests()
    {
       InputStream stream = EnumConstantAnnotationTest.class
                .getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedEnumConstant.java");
-      EnumConstant field = JavaParser.parse(JavaEnum.class, stream).getEnumConstants().get(0);
+      EnumConstantSource field = JavaParser.parse(JavaEnumSource.class, stream).getEnumConstants().get(0);
       setTarget(field);
    }
 

@@ -23,36 +23,37 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jface.text.Document;
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadAnnotation;
-import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
-import org.jboss.forge.parser.java.ReadEnumConstant.EnumConstant;
-import org.jboss.forge.parser.java.ReadEnumConstant.EnumConstant.Body;
-import org.jboss.forge.parser.java.ReadField;
-import org.jboss.forge.parser.java.ReadField.Field;
-import org.jboss.forge.parser.java.Import;
-import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
-import org.jboss.forge.parser.java.ReadJavaEnum.JavaEnum;
-import org.jboss.forge.parser.java.ReadJavaSource;
-import org.jboss.forge.parser.java.ReadMember.Member;
-import org.jboss.forge.parser.java.ReadMethod;
-import org.jboss.forge.parser.java.ReadMethod.Method;
-import org.jboss.forge.parser.java.ReadParameter;
-import org.jboss.forge.parser.java.ReadParameter.Parameter;
+import org.jboss.forge.parser.java.Annotation;
+import org.jboss.forge.parser.java.Field;
+import org.jboss.forge.parser.java.JavaType;
+import org.jboss.forge.parser.java.Method;
+import org.jboss.forge.parser.java.Parameter;
 import org.jboss.forge.parser.java.SourceType;
 import org.jboss.forge.parser.java.SyntaxError;
 import org.jboss.forge.parser.java.Visibility;
 import org.jboss.forge.parser.java.ast.MethodFinderVisitor;
 import org.jboss.forge.parser.java.ast.TypeDeclarationFinderVisitor;
+import org.jboss.forge.parser.java.source.AnnotationSource;
+import org.jboss.forge.parser.java.source.EnumConstantSource;
+import org.jboss.forge.parser.java.source.FieldSource;
+import org.jboss.forge.parser.java.source.Import;
+import org.jboss.forge.parser.java.source.JavaClassSource;
+import org.jboss.forge.parser.java.source.JavaEnumSource;
+import org.jboss.forge.parser.java.source.JavaSource;
+import org.jboss.forge.parser.java.source.MemberSource;
+import org.jboss.forge.parser.java.source.MethodSource;
+import org.jboss.forge.parser.java.source.ParameterSource;
+import org.jboss.forge.parser.java.source.EnumConstantSource.Body;
 import org.jboss.forge.parser.java.util.Strings;
 import org.jboss.forge.parser.java.util.Types;
 import org.jboss.forge.parser.spi.JavaParserImpl;
 
-class EnumConstantBodyImpl implements EnumConstant.Body
+class EnumConstantBodyImpl implements EnumConstantSource.Body
 {
-   private final EnumConstant enumConstant;
-   private final JavaEnum javaEnum;
+   private final EnumConstantSource enumConstant;
+   private final JavaEnumSource javaEnum;
 
-   EnumConstantBodyImpl(EnumConstant enumConstant)
+   EnumConstantBodyImpl(EnumConstantSource enumConstant)
    {
       this.enumConstant = enumConstant;
       this.javaEnum = enumConstant.getOrigin();
@@ -184,7 +185,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public <T extends ReadJavaSource<?>> Import addImport(T type)
+   public <T extends JavaType<?>> Import addImport(T type)
    {
       return javaEnum.addImport(type);
    }
@@ -214,7 +215,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public <T extends ReadJavaSource<T>> boolean hasImport(T type)
+   public <T extends JavaType<T>> boolean hasImport(T type)
    {
       return javaEnum.hasImport(type);
    }
@@ -238,7 +239,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public <T extends ReadJavaSource<?>> Import getImport(T type)
+   public <T extends JavaType<?>> Import getImport(T type)
    {
       return javaEnum.getImport(type);
    }
@@ -264,7 +265,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public <T extends ReadJavaSource<?>> Body removeImport(T type)
+   public <T extends JavaType<?>> Body removeImport(T type)
    {
       javaEnum.removeImport(type);
       return this;
@@ -363,7 +364,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public Annotation<Body> addAnnotation()
+   public AnnotationSource<Body> addAnnotation()
    {
       // could pass through to enumConstant, but would require then pretending its Annotation was ours
       // which should cause no problem at the moment, but could theoretically do so in the future
@@ -371,7 +372,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public Annotation<Body> addAnnotation(Class<? extends java.lang.annotation.Annotation> type)
+   public AnnotationSource<Body> addAnnotation(Class<? extends java.lang.annotation.Annotation> type)
    {
       // could pass through to enumConstant, but would require then pretending its Annotation was ours
       // which should cause no problem at the moment, but could theoretically do so in the future
@@ -379,7 +380,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public Annotation<Body> addAnnotation(String className)
+   public AnnotationSource<Body> addAnnotation(String className)
    {
       // could pass through to enumConstant, but would require then pretending its Annotation was ours
       // which should cause no problem at the moment, but could theoretically do so in the future
@@ -387,7 +388,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public List<Annotation<Body>> getAnnotations()
+   public List<AnnotationSource<Body>> getAnnotations()
    {
       // could pass through to enumConstant, but would require then pretending its Annotation was ours
       // which should cause no problem at the moment, but could theoretically do so in the future
@@ -411,7 +412,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public Annotation<Body> getAnnotation(Class<? extends java.lang.annotation.Annotation> type)
+   public AnnotationSource<Body> getAnnotation(Class<? extends java.lang.annotation.Annotation> type)
    {
       // could pass through to enumConstant, but would require then pretending its Annotation was ours
       // which should cause no problem at the moment, but could theoretically do so in the future
@@ -419,7 +420,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public Annotation<Body> getAnnotation(String type)
+   public AnnotationSource<Body> getAnnotation(String type)
    {
       // could pass through to enumConstant, but would require then pretending its Annotation was ours
       // which should cause no problem at the moment, but could theoretically do so in the future
@@ -427,7 +428,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public Body removeAnnotation(ReadAnnotation<Body> annotation)
+   public Body removeAnnotation(Annotation<Body> annotation)
    {
       // could pass through to enumConstant, but would require then pretending its Annotation was ours
       // which should cause no problem at the moment, but could theoretically do so in the future
@@ -449,7 +450,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
          if (result == null)
          {
             final String stub = "enum StubEnum { FOO() {}; }";
-            final JavaEnum temp = JavaParser.parse(JavaEnum.class, stub);
+            final JavaEnumSource temp = JavaParser.parse(JavaEnumSource.class, stub);
             final AnonymousClassDeclaration body = ((EnumConstantBodyImpl) temp.getEnumConstants().get(0).getBody())
                      .getBody();
             final AST ast = ((ASTNode) javaEnum.getInternal()).getAST();
@@ -467,33 +468,33 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public List<Member<Body, ?>> getMembers()
+   public List<MemberSource<Body, ?>> getMembers()
    {
-      final List<Member<Body, ?>> result = new ArrayList<Member<Body, ?>>();
+      final List<MemberSource<Body, ?>> result = new ArrayList<MemberSource<Body, ?>>();
       result.addAll(getFields());
       result.addAll(getMethods());
       return Collections.unmodifiableList(result);
    }
 
    @Override
-   public Field<Body> addField()
+   public FieldSource<Body> addField()
    {
-      Field<Body> field = new FieldImpl<Body>(this);
+      FieldSource<Body> field = new FieldImpl<Body>(this);
       addField(field);
       return field;
    }
 
    @Override
-   public Field<Body> addField(final String declaration)
+   public FieldSource<Body> addField(final String declaration)
    {
       String stub = "public class Stub { " + declaration + " }";
-      JavaClass temp = (JavaClass) JavaParser.parse(stub);
-      List<Field<JavaClass>> fields = temp.getFields();
-      Field<Body> result = null;
-      for (Field<JavaClass> stubField : fields)
+      JavaClassSource temp = (JavaClassSource) JavaParser.parse(stub);
+      List<FieldSource<JavaClassSource>> fields = temp.getFields();
+      FieldSource<Body> result = null;
+      for (FieldSource<JavaClassSource> stubField : fields)
       {
          Object variableDeclaration = stubField.getInternal();
-         Field<Body> field = new FieldImpl<Body>(this, variableDeclaration, true);
+         FieldSource<Body> field = new FieldImpl<Body>(this, variableDeclaration, true);
          addField(field);
          if (result == null)
          {
@@ -504,7 +505,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @SuppressWarnings("unchecked")
-   private void addField(ReadField<Body> field)
+   private void addField(Field<Body> field)
    {
       final List<BodyDeclaration> bodyDeclarations = getBody().bodyDeclarations();
       int idx = 0;
@@ -521,9 +522,9 @@ class EnumConstantBodyImpl implements EnumConstant.Body
 
    @Override
    @SuppressWarnings("unchecked")
-   public List<Field<Body>> getFields()
+   public List<FieldSource<Body>> getFields()
    {
-      final List<Field<Body>> result = new ArrayList<Field<Body>>();
+      final List<FieldSource<Body>> result = new ArrayList<FieldSource<Body>>();
 
       final List<BodyDeclaration> bodyDeclarations = getBody().bodyDeclarations();
       for (BodyDeclaration bodyDeclaration : bodyDeclarations)
@@ -542,9 +543,9 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public Field<Body> getField(final String name)
+   public FieldSource<Body> getField(final String name)
    {
-      for (Field<Body> field : getFields())
+      for (FieldSource<Body> field : getFields())
       {
          if (field.getName().equals(name))
          {
@@ -557,7 +558,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    @Override
    public boolean hasField(final String name)
    {
-      for (ReadField<Body> field : getFields())
+      for (Field<Body> field : getFields())
       {
          if (field.getName().equals(name))
          {
@@ -568,14 +569,14 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public boolean hasField(final ReadField<Body> field)
+   public boolean hasField(final Field<Body> field)
    {
       return getFields().contains(field);
    }
 
    @SuppressWarnings("unchecked")
    @Override
-   public Body removeField(final ReadField<Body> field)
+   public Body removeField(final Field<Body> field)
    {
       VariableDeclarationFragment fragment = (VariableDeclarationFragment) field.getInternal();
       Iterator<Object> declarationsIterator = getBody().bodyDeclarations().iterator();
@@ -607,7 +608,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public boolean hasMethod(final ReadMethod<Body, ?> method)
+   public boolean hasMethod(final Method<Body, ?> method)
    {
       return getMethods().contains(method);
    }
@@ -637,9 +638,9 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public Method<Body> getMethod(final String name)
+   public MethodSource<Body> getMethod(final String name)
    {
-      for (Method<Body> method : getMethods())
+      for (MethodSource<Body> method : getMethods())
       {
          if (method.getName().equals(name) && (method.getParameters().isEmpty()))
          {
@@ -650,13 +651,13 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public Method<Body> getMethod(final String name, final String... paramTypes)
+   public MethodSource<Body> getMethod(final String name, final String... paramTypes)
    {
-      for (Method<Body> local : getMethods())
+      for (MethodSource<Body> local : getMethods())
       {
          if (local.getName().equals(name))
          {
-            final List<Parameter<Body>> localParams = local.getParameters();
+            final List<ParameterSource<Body>> localParams = local.getParameters();
             if (paramTypes != null)
             {
                if (localParams.isEmpty() || (localParams.size() == paramTypes.length))
@@ -681,7 +682,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public Method<Body> getMethod(final String name, Class<?>... paramTypes)
+   public MethodSource<Body> getMethod(final String name, Class<?>... paramTypes)
    {
       final String[] types = new String[paramTypes == null ? 0 : paramTypes.length];
       for (int i = 0; i < types.length; i++)
@@ -693,14 +694,14 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public boolean hasMethodSignature(final ReadMethod<?, ?> method)
+   public boolean hasMethodSignature(final Method<?, ?> method)
    {
-      for (Method<Body> local : getMethods())
+      for (MethodSource<Body> local : getMethods())
       {
          if (local.getName().equals(method.getName()))
          {
-            final Iterator<Parameter<Body>> localParams = local.getParameters().iterator();
-            for (ReadParameter<? extends ReadJavaSource<?>> methodParam : method.getParameters())
+            final Iterator<ParameterSource<Body>> localParams = local.getParameters().iterator();
+            for (Parameter<? extends JavaType<?>> methodParam : method.getParameters())
             {
                if (localParams.hasNext() && Strings.areEqual(localParams.next().getType(), methodParam.getType()))
                {
@@ -715,7 +716,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public Body removeMethod(final ReadMethod<Body, ?> method)
+   public Body removeMethod(final Method<Body, ?> method)
    {
       getBody().bodyDeclarations().remove(method.getInternal());
       return this;
@@ -723,26 +724,26 @@ class EnumConstantBodyImpl implements EnumConstant.Body
 
    @Override
    @SuppressWarnings("unchecked")
-   public Method<Body> addMethod()
+   public MethodSource<Body> addMethod()
    {
-      final Method<Body> m = new MethodImpl<Body>(this);
+      final MethodSource<Body> m = new MethodImpl<Body>(this);
       getBody().bodyDeclarations().add(m.getInternal());
       return m;
    }
 
    @Override
    @SuppressWarnings("unchecked")
-   public Method<Body> addMethod(final String method)
+   public MethodSource<Body> addMethod(final String method)
    {
-      final Method<Body> m = new MethodImpl<Body>(this, method);
+      final MethodSource<Body> m = new MethodImpl<Body>(this, method);
       getBody().bodyDeclarations().add(m.getInternal());
       return m;
    }
 
    @Override
-   public List<Method<Body>> getMethods()
+   public List<MethodSource<Body>> getMethods()
    {
-      final List<Method<Body>> result = new ArrayList<Method<Body>>();
+      final List<MethodSource<Body>> result = new ArrayList<MethodSource<Body>>();
 
       final MethodFinderVisitor methodFinderVisitor = new MethodFinderVisitor();
       getBody().accept(methodFinderVisitor);

@@ -17,12 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 
-import org.jboss.forge.parser.java.ReadJavaSource;
-import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
+import org.jboss.forge.parser.java.JavaType;
+import org.jboss.forge.parser.java.source.JavaSource;
 import org.jboss.forge.parser.spi.JavaParserProvider;
 
 /**
- * Responsible for parsing data into new {@link ReadJavaSource} instances.
+ * Responsible for parsing data into new {@link JavaType} instances.
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
@@ -69,90 +69,90 @@ public final class JavaParser
    }
 
    /**
-    * Open the given {@link File}, parsing its contents into a new {@link ReadJavaSource} instance.
+    * Open the given {@link File}, parsing its contents into a new {@link JavaType} instance.
     */
-   public static ReadJavaSource<?> parse(final File file) throws FileNotFoundException
+   public static JavaType<?> parse(final File file) throws FileNotFoundException
    {
-      return parse(ReadJavaSource.class, file);
+      return parse(JavaType.class, file);
    }
 
    /**
-    * Parse the given {@link URL} data into a new {@link ReadJavaSource} instance.
+    * Parse the given {@link URL} data into a new {@link JavaType} instance.
     */
-   public static ReadJavaSource<?> parse(final URL data) throws IOException
+   public static JavaType<?> parse(final URL data) throws IOException
    {
-      return parse(ReadJavaSource.class, data);
+      return parse(JavaType.class, data);
    }
 
    /**
-    * Read the given {@link InputStream} and parse the data into a new {@link ReadJavaSource} instance.
+    * Read the given {@link InputStream} and parse the data into a new {@link JavaType} instance.
     */
-   public static ReadJavaSource<?> parse(final InputStream data)
+   public static JavaType<?> parse(final InputStream data)
    {
-      return parse(ReadJavaSource.class, data);
+      return parse(JavaType.class, data);
    }
 
    /**
-    * Parse the given character array into a new {@link ReadJavaSource} instance.
+    * Parse the given character array into a new {@link JavaType} instance.
     */
-   public static ReadJavaSource<?> parse(final char[] data)
+   public static JavaType<?> parse(final char[] data)
    {
-      return parse(ReadJavaSource.class, data);
+      return parse(JavaType.class, data);
    }
 
    /**
-    * Parse the given String data into a new {@link ReadJavaSource} instance.
+    * Parse the given String data into a new {@link JavaType} instance.
     */
-   public static ReadJavaSource<?> parse(final String data)
+   public static JavaType<?> parse(final String data)
    {
-      return parse(ReadJavaSource.class, data);
+      return parse(JavaType.class, data);
    }
 
    /**
-    * Read the given {@link URL} and parse its data into a new {@link ReadJavaSource} instance of the given type.
+    * Read the given {@link URL} and parse its data into a new {@link JavaType} instance of the given type.
     * 
     * @throws FileNotFoundException
     */
-   public static <T extends ReadJavaSource<?>> T parse(final Class<T> type, final URL url) throws IOException
+   public static <T extends JavaType<?>> T parse(final Class<T> type, final URL url) throws IOException
    {
       return internalParse(type, url.openStream());
    }
 
    /**
-    * Read the given {@link File} and parse its data into a new {@link ReadJavaSource} instance of the given type.
+    * Read the given {@link File} and parse its data into a new {@link JavaType} instance of the given type.
     * 
     * @throws FileNotFoundException
     */
-   public static <T extends ReadJavaSource<?>> T parse(final Class<T> type, final File file) throws FileNotFoundException
+   public static <T extends JavaType<?>> T parse(final Class<T> type, final File file) throws FileNotFoundException
    {
       return internalParse(type, new FileInputStream(file));
    }
 
    /**
-    * Read the given character array and parse its data into a new {@link ReadJavaSource} instance of the given type.
+    * Read the given character array and parse its data into a new {@link JavaType} instance of the given type.
     */
-   public static <T extends ReadJavaSource<?>> T parse(final Class<T> type, final char[] data)
+   public static <T extends JavaType<?>> T parse(final Class<T> type, final char[] data)
    {
       return parse(type, new String(data));
    }
 
    /**
-    * Read the given string and parse its data into a new {@link ReadJavaSource} instance of the given type.
+    * Read the given string and parse its data into a new {@link JavaType} instance of the given type.
     */
-   public static <T extends ReadJavaSource<?>> T parse(final Class<T> type, final String data)
+   public static <T extends JavaType<?>> T parse(final Class<T> type, final String data)
    {
       return parse(type, Streams.fromString(data));
    }
 
    /**
-    * Read the given {@link InputStream} and parse its data into a new {@link ReadJavaSource} instance of the given type.
+    * Read the given {@link InputStream} and parse its data into a new {@link JavaType} instance of the given type.
     * The caller is responsible for closing the stream.
     */
-   public static <T extends ReadJavaSource<?>> T parse(final Class<T> type, final InputStream data)
+   public static <T extends JavaType<?>> T parse(final Class<T> type, final InputStream data)
    {
       for (JavaParserProvider parser : getParsers())
       {
-         final ReadJavaSource<?> source = parser.parse(data);
+         final JavaType<?> source = parser.parse(data);
 
          if (type.isInstance(source))
          {
@@ -169,7 +169,7 @@ public final class JavaParser
       throw new ParserException("Cannot find JavaParserProvider capable of parsing the requested data");
    }
 
-   private static <T extends ReadJavaSource<?>> T internalParse(final Class<T> type, final InputStream data)
+   private static <T extends JavaType<?>> T internalParse(final Class<T> type, final InputStream data)
    {
       try
       {

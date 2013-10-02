@@ -16,8 +16,8 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.TypeParameter;
 import org.eclipse.jface.text.Document;
-import org.jboss.forge.parser.java.ReadGenericCapable.GenericCapable;
-import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
+import org.jboss.forge.parser.java.source.GenericCapableSource;
+import org.jboss.forge.parser.java.source.JavaSource;
 
 /**
  * 
@@ -27,7 +27,7 @@ import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractGenericCapableJavaSource<O extends JavaSource<O>> extends AbstractJavaSourceMemberHolder<O>
-         implements GenericCapable<O>
+         implements GenericCapableSource<O>
 {
 
    public AbstractGenericCapableJavaSource(JavaSource<?> enclosingType, Document document, CompilationUnit unit,

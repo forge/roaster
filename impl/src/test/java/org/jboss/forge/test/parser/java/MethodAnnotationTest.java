@@ -9,21 +9,21 @@ package org.jboss.forge.test.parser.java;
 import java.io.InputStream;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
-import org.jboss.forge.parser.java.ReadMethod.Method;
+import org.jboss.forge.parser.java.source.JavaClassSource;
+import org.jboss.forge.parser.java.source.MethodSource;
 import org.jboss.forge.test.parser.java.common.AnnotationTest;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class MethodAnnotationTest extends AnnotationTest<JavaClass, Method<JavaClass>>
+public class MethodAnnotationTest extends AnnotationTest<JavaClassSource, MethodSource<JavaClassSource>>
 {
    @Override
    public void resetTests()
    {
       InputStream stream = MethodAnnotationTest.class
                .getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedMethod.java");
-      Method<JavaClass> method = JavaParser.parse(JavaClass.class, stream).getMethods().get(0);
+      MethodSource<JavaClassSource> method = JavaParser.parse(JavaClassSource.class, stream).getMethods().get(0);
       setTarget(method);
    }
 }

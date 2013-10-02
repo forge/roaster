@@ -21,13 +21,13 @@ import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.PrimitiveType.Code;
 import org.eclipse.jdt.core.dom.TypeLiteral;
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadAnnotation;
-import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
-import org.jboss.forge.parser.java.ReadAnnotationElement.AnnotationElement;
-import org.jboss.forge.parser.java.ReadJavaAnnotation.JavaAnnotation;
-import org.jboss.forge.parser.java.ReadJavaSource;
+import org.jboss.forge.parser.java.Annotation;
+import org.jboss.forge.parser.java.JavaType;
 import org.jboss.forge.parser.java.Type;
 import org.jboss.forge.parser.java.ast.AnnotationAccessor;
+import org.jboss.forge.parser.java.source.AnnotationSource;
+import org.jboss.forge.parser.java.source.AnnotationElementSource;
+import org.jboss.forge.parser.java.source.JavaAnnotationSource;
 import org.jboss.forge.parser.java.util.Assert;
 import org.jboss.forge.parser.java.util.Strings;
 import org.jboss.forge.parser.java.util.Types;
@@ -36,17 +36,17 @@ import org.jboss.forge.parser.java.util.Types;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * @author Matt Benson
  */
-public class AnnotationElementImpl implements AnnotationElement
+public class AnnotationElementImpl implements AnnotationElementSource
 {
-   private class AnnotationValue extends AnnotationImpl<JavaAnnotation, JavaAnnotation>
+   private class AnnotationValue extends AnnotationImpl<JavaAnnotationSource, JavaAnnotationSource>
    {
 
-      AnnotationValue(JavaAnnotation parent)
+      AnnotationValue(JavaAnnotationSource parent)
       {
          super(parent);
       }
 
-      AnnotationValue(JavaAnnotation parent, Object internal)
+      AnnotationValue(JavaAnnotationSource parent, Object internal)
       {
          super(parent, internal);
       }
@@ -81,7 +81,7 @@ public class AnnotationElementImpl implements AnnotationElement
       }
 
       @Override
-      public Annotation<JavaAnnotation> getAnnotation()
+      public AnnotationSource<JavaAnnotationSource> getAnnotation()
       {
          Expression expr = member.getDefault();
          if (expr instanceof org.eclipse.jdt.core.dom.Annotation)
@@ -101,7 +101,7 @@ public class AnnotationElementImpl implements AnnotationElement
          else
          {
             String stub = "public @interface Stub { String stub() default " + value + "; }";
-            JavaAnnotation temp = (JavaAnnotation) JavaParser.parse(stub);
+            JavaAnnotationSource temp = (JavaAnnotationSource) JavaParser.parse(stub);
             AnnotationTypeMemberDeclaration internal = (AnnotationTypeMemberDeclaration) temp.getAnnotationElements()
                      .get(0).getInternal();
             member.setDefault((Expression) ASTNode.copySubtree(ast, internal.getDefault()));
@@ -142,7 +142,7 @@ public class AnnotationElementImpl implements AnnotationElement
       }
 
       @Override
-      public Annotation<JavaAnnotation> setAnnotation()
+      public AnnotationSource<JavaAnnotationSource> setAnnotation()
       {
          AnnotationValue result = new AnnotationValue(parent);
          member.setDefault((Expression) result.getInternal());
@@ -259,7 +259,7 @@ public class AnnotationElementImpl implements AnnotationElement
       
       private Class<?> resolveTypeLiteral(TypeLiteral typeLiteral)
       {
-         final Type<JavaAnnotation> type = new TypeImpl<JavaAnnotation>(getOrigin(), typeLiteral.getType());
+         final Type<JavaAnnotationSource> type = new TypeImpl<JavaAnnotationSource>(getOrigin(), typeLiteral.getType());
          if (type.isPrimitive())
          {
             final Class<?>[] primitiveTypes = { boolean.class, byte.class, short.class, int.class, long.class,
@@ -287,44 +287,44 @@ public class AnnotationElementImpl implements AnnotationElement
       }
    }
 
-   private final AnnotationAccessor<JavaAnnotation, AnnotationElement> annotations = new AnnotationAccessor<JavaAnnotation, AnnotationElement>();
+   private final AnnotationAccessor<JavaAnnotationSource, AnnotationElementSource> annotations = new AnnotationAccessor<JavaAnnotationSource, AnnotationElementSource>();
 
-   private JavaAnnotation parent;
+   private JavaAnnotationSource parent;
    private AST ast;
    private final AnnotationTypeMemberDeclaration member;
 
-   public AnnotationElementImpl(final JavaAnnotation parent)
+   public AnnotationElementImpl(final JavaAnnotationSource parent)
    {
       this(parent, ((ASTNode) parent.getInternal()).getAST().newAnnotationTypeMemberDeclaration());
    }
 
-   public AnnotationElementImpl(final JavaAnnotation parent, final String declaration)
+   public AnnotationElementImpl(final JavaAnnotationSource parent, final String declaration)
    {
       this(parent, parseElement(parent, declaration));
    }
 
-   public AnnotationElementImpl(final JavaAnnotation parent, final Object internal)
+   public AnnotationElementImpl(final JavaAnnotationSource parent, final Object internal)
    {
       this.parent = parent;
       ast = ((ASTNode) parent.getInternal()).getAST();
       member = (AnnotationTypeMemberDeclaration) internal;
    }
 
-   private static AnnotationTypeMemberDeclaration parseElement(JavaAnnotation parent, String declaration)
+   private static AnnotationTypeMemberDeclaration parseElement(JavaAnnotationSource parent, String declaration)
    {
       if (!declaration.trim().endsWith(";"))
       {
          declaration = declaration + ";";
       }
       String stub = "public @interface Stub { " + declaration + " }";
-      JavaAnnotation temp = (JavaAnnotation) JavaParser.parse(stub);
-      List<AnnotationElement> fields = temp.getAnnotationElements();
+      JavaAnnotationSource temp = (JavaAnnotationSource) JavaParser.parse(stub);
+      List<AnnotationElementSource> fields = temp.getAnnotationElements();
       AnnotationTypeMemberDeclaration newField = (AnnotationTypeMemberDeclaration) fields.get(0).getInternal();
       return (AnnotationTypeMemberDeclaration) ASTNode.copySubtree(((ASTNode) parent.getInternal()).getAST(), newField);
    }
 
    @Override
-   public JavaAnnotation getOrigin()
+   public JavaAnnotationSource getOrigin()
    {
       return parent.getOrigin();
    }
@@ -339,13 +339,13 @@ public class AnnotationElementImpl implements AnnotationElement
     * Annotation<O> Modifiers
     */
    @Override
-   public Annotation<JavaAnnotation> addAnnotation()
+   public AnnotationSource<JavaAnnotationSource> addAnnotation()
    {
       return annotations.addAnnotation(this, member);
    }
 
    @Override
-   public Annotation<JavaAnnotation> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
+   public AnnotationSource<JavaAnnotationSource> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
    {
       if (parent.requiresImport(clazz))
       {
@@ -355,13 +355,13 @@ public class AnnotationElementImpl implements AnnotationElement
    }
 
    @Override
-   public Annotation<JavaAnnotation> addAnnotation(final String className)
+   public AnnotationSource<JavaAnnotationSource> addAnnotation(final String className)
    {
       return annotations.addAnnotation(this, member, className);
    }
 
    @Override
-   public List<Annotation<JavaAnnotation>> getAnnotations()
+   public List<AnnotationSource<JavaAnnotationSource>> getAnnotations()
    {
       return annotations.getAnnotations(this, member);
    }
@@ -379,19 +379,19 @@ public class AnnotationElementImpl implements AnnotationElement
    }
 
    @Override
-   public Annotation<JavaAnnotation> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
+   public AnnotationSource<JavaAnnotationSource> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
    {
       return annotations.getAnnotation(this, member, type);
    }
 
    @Override
-   public Annotation<JavaAnnotation> getAnnotation(final String type)
+   public AnnotationSource<JavaAnnotationSource> getAnnotation(final String type)
    {
       return annotations.getAnnotation(this, member, type);
    }
 
    @Override
-   public AnnotationElement removeAnnotation(final ReadAnnotation<JavaAnnotation> annotation)
+   public AnnotationElementSource removeAnnotation(final Annotation<JavaAnnotationSource> annotation)
    {
       return annotations.removeAnnotation(this, member, annotation);
    }
@@ -413,7 +413,7 @@ public class AnnotationElementImpl implements AnnotationElement
    }
 
    @Override
-   public AnnotationElement setName(final String name)
+   public AnnotationElementSource setName(final String name)
    {
       member.setName(ast.newSimpleName(name));
       return this;
@@ -433,9 +433,9 @@ public class AnnotationElementImpl implements AnnotationElement
    }
 
    @Override
-   public org.jboss.forge.parser.java.Type<JavaAnnotation> getTypeInspector()
+   public org.jboss.forge.parser.java.Type<JavaAnnotationSource> getTypeInspector()
    {
-      return new TypeImpl<JavaAnnotation>(parent,
+      return new TypeImpl<JavaAnnotationSource>(parent,
                member.getStructuralProperty(AnnotationTypeMemberDeclaration.TYPE_PROPERTY));
    }
 
@@ -478,7 +478,7 @@ public class AnnotationElementImpl implements AnnotationElement
    }
 
    @Override
-   public AnnotationElement setType(final Class<?> clazz)
+   public AnnotationElementSource setType(final Class<?> clazz)
    {
       if (parent.requiresImport(clazz))
       {
@@ -488,17 +488,17 @@ public class AnnotationElementImpl implements AnnotationElement
    }
 
    @Override
-   public AnnotationElement setType(final ReadJavaSource<?> source)
+   public AnnotationElementSource setType(final JavaType<?> source)
    {
       return setType(source.getQualifiedName());
    }
 
    @Override
-   public AnnotationElement setType(final String typeName)
+   public AnnotationElementSource setType(final String typeName)
    {
       String simpleName = Types.toSimpleName(typeName);
 
-      JavaAnnotation origin = getOrigin();
+      JavaAnnotationSource origin = getOrigin();
       if (!Strings.areEqual(typeName, simpleName) && origin.requiresImport(typeName))
       {
          origin.addImport(typeName);

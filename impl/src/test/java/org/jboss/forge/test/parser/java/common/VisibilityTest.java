@@ -9,7 +9,7 @@ package org.jboss.forge.test.parser.java.common;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.jboss.forge.parser.java.ReadVisibilityScoped.VisibilityScoped;
+import org.jboss.forge.parser.java.source.VisibilityScopedSource;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,9 +18,9 @@ import org.junit.Test;
  */
 public abstract class VisibilityTest
 {
-   private VisibilityScoped<?> target;
+   private VisibilityScopedSource<?> target;
 
-   public void setTarget(VisibilityScoped<?> target)
+   public void setTarget(VisibilityScopedSource<?> target)
    {
       this.target = target;
    }

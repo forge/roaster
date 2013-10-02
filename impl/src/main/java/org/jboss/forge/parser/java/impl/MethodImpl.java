@@ -22,25 +22,25 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadAnnotation;
-import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
-import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
-import org.jboss.forge.parser.java.ReadJavaSource;
-import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
-import org.jboss.forge.parser.java.ReadMethod.Method;
-import org.jboss.forge.parser.java.ReadParameter.Parameter;
+import org.jboss.forge.parser.java.Annotation;
+import org.jboss.forge.parser.java.JavaType;
 import org.jboss.forge.parser.java.Type;
 import org.jboss.forge.parser.java.Visibility;
 import org.jboss.forge.parser.java.ast.AnnotationAccessor;
 import org.jboss.forge.parser.java.ast.ModifierAccessor;
+import org.jboss.forge.parser.java.source.AnnotationSource;
+import org.jboss.forge.parser.java.source.JavaClassSource;
+import org.jboss.forge.parser.java.source.JavaSource;
+import org.jboss.forge.parser.java.source.MethodSource;
+import org.jboss.forge.parser.java.source.ParameterSource;
 import org.jboss.forge.parser.java.util.Types;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class MethodImpl<O extends JavaSource<O>> implements Method<O>
+public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
 {
-   private final AnnotationAccessor<O, Method<O>> annotations = new AnnotationAccessor<O, Method<O>>();
+   private final AnnotationAccessor<O, MethodSource<O>> annotations = new AnnotationAccessor<O, MethodSource<O>>();
    private final ModifierAccessor modifiers = new ModifierAccessor();
 
    private O parent = null;
@@ -73,8 +73,8 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
       init(parent);
 
       String stub = "public class Stub { " + method + " }";
-      JavaClass temp = (JavaClass) JavaParser.parse(stub);
-      List<Method<JavaClass>> methods = temp.getMethods();
+      JavaClassSource temp = (JavaClassSource) JavaParser.parse(stub);
+      List<MethodSource<JavaClassSource>> methods = temp.getMethods();
       MethodDeclaration newMethod = (MethodDeclaration) methods.get(0).getInternal();
       MethodDeclaration subtree = (MethodDeclaration) ASTNode.copySubtree(cu.getAST(), newMethod);
       this.method = subtree;
@@ -87,8 +87,8 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
                .scope()) + " ";
       signature += this.getName() + "(";
 
-      List<Parameter<O>> parameters = this.getParameters();
-      for (Parameter<O> p : parameters)
+      List<ParameterSource<O>> parameters = this.getParameters();
+      for (ParameterSource<O> p : parameters)
       {
          signature += p.getType();
          if (parameters.indexOf(p) < (parameters.size() - 1))
@@ -106,13 +106,13 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
     */
 
    @Override
-   public Annotation<O> addAnnotation()
+   public AnnotationSource<O> addAnnotation()
    {
       return annotations.addAnnotation(this, method);
    }
 
    @Override
-   public Annotation<O> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
+   public AnnotationSource<O> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
    {
       if (!parent.hasImport(clazz))
       {
@@ -122,13 +122,13 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Annotation<O> addAnnotation(final String className)
+   public AnnotationSource<O> addAnnotation(final String className)
    {
       return annotations.addAnnotation(this, method, className);
    }
 
    @Override
-   public List<Annotation<O>> getAnnotations()
+   public List<AnnotationSource<O>> getAnnotations()
    {
       return annotations.getAnnotations(this, method);
    }
@@ -146,19 +146,19 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Method<O> removeAnnotation(final ReadAnnotation<O> annotation)
+   public MethodSource<O> removeAnnotation(final Annotation<O> annotation)
    {
       return annotations.removeAnnotation(this, method, annotation);
    }
 
    @Override
-   public Annotation<O> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
+   public AnnotationSource<O> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
    {
       return annotations.getAnnotation(this, method, type);
    }
 
    @Override
-   public Annotation<O> getAnnotation(final String type)
+   public AnnotationSource<O> getAnnotation(final String type)
    {
       return annotations.getAnnotation(this, method, type);
    }
@@ -183,11 +183,11 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Method<O> setBody(final String body)
+   public MethodSource<O> setBody(final String body)
    {
       String stub = "public class Stub { public void method() {" + body + "} }";
-      JavaClass temp = (JavaClass) JavaParser.parse(stub);
-      List<Method<JavaClass>> methods = temp.getMethods();
+      JavaClassSource temp = (JavaClassSource) JavaParser.parse(stub);
+      List<MethodSource<JavaClassSource>> methods = temp.getMethods();
       Block block = ((MethodDeclaration) methods.get(0).getInternal()).getBody();
 
       block = (Block) ASTNode.copySubtree(method.getAST(), block);
@@ -197,7 +197,7 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Method<O> setConstructor(final boolean constructor)
+   public MethodSource<O> setConstructor(final boolean constructor)
    {
       method.setConstructor(constructor);
       if (isConstructor())
@@ -260,17 +260,17 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Method<O> setReturnType(final Class<?> type)
+   public MethodSource<O> setReturnType(final Class<?> type)
    {
       return setReturnType(type.getSimpleName());
    }
 
    @Override
-   public Method<O> setReturnType(final String typeName)
+   public MethodSource<O> setReturnType(final String typeName)
    {
       String stub = "public class Stub { public " + typeName + " method() {} }";
-      JavaClass temp = (JavaClass) JavaParser.parse(stub);
-      List<Method<JavaClass>> methods = temp.getMethods();
+      JavaClassSource temp = (JavaClassSource) JavaParser.parse(stub);
+      List<MethodSource<JavaClassSource>> methods = temp.getMethods();
       org.eclipse.jdt.core.dom.Type returnType = ((MethodDeclaration) methods.get(0).getInternal()).getReturnType2();
 
       returnType = (org.eclipse.jdt.core.dom.Type) ASTNode.copySubtree(method.getAST(), returnType);
@@ -280,7 +280,7 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Method<O> setReturnType(final ReadJavaSource<?> type)
+   public MethodSource<O> setReturnType(final JavaType<?> type)
    {
       return setReturnType(type.getName());
    }
@@ -292,7 +292,7 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Method<O> setReturnTypeVoid()
+   public MethodSource<O> setReturnTypeVoid()
    {
       method.setReturnType2(null);
       return this;
@@ -309,7 +309,7 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Method<O> setAbstract(final boolean abstrct)
+   public MethodSource<O> setAbstract(final boolean abstrct)
    {
       if (abstrct)
       {
@@ -329,7 +329,7 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Method<O> setFinal(final boolean finl)
+   public MethodSource<O> setFinal(final boolean finl)
    {
       if (finl)
          modifiers.addModifier(method, ModifierKeyword.FINAL_KEYWORD);
@@ -345,7 +345,7 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Method<O> setStatic(final boolean statc)
+   public MethodSource<O> setStatic(final boolean statc)
    {
       if (statc)
          modifiers.addModifier(method, ModifierKeyword.STATIC_KEYWORD);
@@ -361,7 +361,7 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Method<O> setName(final String name)
+   public MethodSource<O> setName(final String name)
    {
       if (method.isConstructor())
       {
@@ -373,11 +373,11 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
 
    @Override
    @SuppressWarnings("unchecked")
-   public Method<O> setParameters(final String parameters)
+   public MethodSource<O> setParameters(final String parameters)
    {
       String stub = "public class Stub { public void method( " + parameters + " ) {} }";
-      JavaClass temp = (JavaClass) JavaParser.parse(stub);
-      List<Method<JavaClass>> methods = temp.getMethods();
+      JavaClassSource temp = (JavaClassSource) JavaParser.parse(stub);
+      List<MethodSource<JavaClassSource>> methods = temp.getMethods();
       List<VariableDeclaration> astParameters = ((MethodDeclaration) methods.get(0).getInternal()).parameters();
 
       method.parameters().clear();
@@ -391,9 +391,9 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public List<Parameter<O>> getParameters()
+   public List<ParameterSource<O>> getParameters()
    {
-      List<Parameter<O>> results = new ArrayList<Parameter<O>>();
+      List<ParameterSource<O>> results = new ArrayList<ParameterSource<O>>();
       @SuppressWarnings("unchecked")
       List<SingleVariableDeclaration> parameters = method.parameters();
       for (SingleVariableDeclaration param : parameters)
@@ -414,7 +414,7 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Method<O> setPackagePrivate()
+   public MethodSource<O> setPackagePrivate()
    {
       modifiers.clearVisibility(method);
       return this;
@@ -427,7 +427,7 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Method<O> setPublic()
+   public MethodSource<O> setPublic()
    {
       modifiers.clearVisibility(method);
       modifiers.addModifier(method, ModifierKeyword.PUBLIC_KEYWORD);
@@ -441,7 +441,7 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Method<O> setPrivate()
+   public MethodSource<O> setPrivate()
    {
       modifiers.clearVisibility(method);
       modifiers.addModifier(method, ModifierKeyword.PRIVATE_KEYWORD);
@@ -455,7 +455,7 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Method<O> setProtected()
+   public MethodSource<O> setProtected()
    {
       modifiers.clearVisibility(method);
       modifiers.addModifier(method, ModifierKeyword.PROTECTED_KEYWORD);
@@ -469,7 +469,7 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Method<O> setVisibility(final Visibility scope)
+   public MethodSource<O> setVisibility(final Visibility scope)
    {
       return Visibility.set(this, scope);
    }
@@ -536,14 +536,14 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Method<O> addThrows(final Class<? extends Exception> type)
+   public MethodSource<O> addThrows(final Class<? extends Exception> type)
    {
       return addThrows(type.getName());
    }
 
    @Override
    @SuppressWarnings({ "unchecked", "rawtypes" })
-   public Method<O> addThrows(final String type)
+   public MethodSource<O> addThrows(final String type)
    {
       String packg = Types.getPackage(type);
       String name = Types.toSimpleName(type);
@@ -576,13 +576,13 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Method<O> removeThrows(final Class<? extends Exception> type)
+   public MethodSource<O> removeThrows(final Class<? extends Exception> type)
    {
       return removeThrows(type.getName());
    }
 
    @Override
-   public Method<O> removeThrows(final String type)
+   public MethodSource<O> removeThrows(final String type)
    {
       List<?> list = (List<?>) method.getStructuralProperty(MethodDeclaration.THROWN_EXCEPTIONS_PROPERTY);
 

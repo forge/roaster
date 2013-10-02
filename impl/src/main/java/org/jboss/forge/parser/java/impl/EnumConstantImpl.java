@@ -16,44 +16,44 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.Expression;
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadAnnotation;
-import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
-import org.jboss.forge.parser.java.ReadEnumConstant.EnumConstant;
-import org.jboss.forge.parser.java.ReadJavaEnum.JavaEnum;
+import org.jboss.forge.parser.java.Annotation;
 import org.jboss.forge.parser.java.ast.AnnotationAccessor;
+import org.jboss.forge.parser.java.source.AnnotationSource;
+import org.jboss.forge.parser.java.source.EnumConstantSource;
+import org.jboss.forge.parser.java.source.JavaEnumSource;
 import org.jboss.forge.parser.java.util.Strings;
 
-public class EnumConstantImpl implements EnumConstant
+public class EnumConstantImpl implements EnumConstantSource
 {
-   private final AnnotationAccessor<JavaEnum, EnumConstant> annotations = new AnnotationAccessor<JavaEnum, EnumConstant>();
-   private JavaEnum parent;
+   private final AnnotationAccessor<JavaEnumSource, EnumConstantSource> annotations = new AnnotationAccessor<JavaEnumSource, EnumConstantSource>();
+   private JavaEnumSource parent;
    private AST ast;
    private EnumConstantDeclaration enumConstant;
 
-   private void init(final JavaEnum parent)
+   private void init(final JavaEnumSource parent)
    {
       this.parent = parent;
       this.ast = ((ASTNode) parent.getInternal()).getAST();
    }
    
-   public EnumConstantImpl(final JavaEnum parent) {
+   public EnumConstantImpl(final JavaEnumSource parent) {
       init(parent);
       this.enumConstant = ast.newEnumConstantDeclaration();
    }
    
-   public EnumConstantImpl(final JavaEnum parent, final String declaration)
+   public EnumConstantImpl(final JavaEnumSource parent, final String declaration)
    {
       init(parent);
 
       String stub = "public enum Stub { " + declaration + " }";
-      JavaEnum temp = (JavaEnum) JavaParser.parse(stub);
-      List<EnumConstant> constants = temp.getEnumConstants();
+      JavaEnumSource temp = (JavaEnumSource) JavaParser.parse(stub);
+      List<EnumConstantSource> constants = temp.getEnumConstants();
       EnumConstantDeclaration newField = (EnumConstantDeclaration) constants.get(0).getInternal();
       EnumConstantDeclaration subtree = (EnumConstantDeclaration) ASTNode.copySubtree(ast, newField);
       this.enumConstant = subtree;
    }
    
-   public EnumConstantImpl(final JavaEnum parent, final Object internal)
+   public EnumConstantImpl(final JavaEnumSource parent, final Object internal)
    {
       init(parent);
       this.enumConstant = (EnumConstantDeclaration) internal;
@@ -66,7 +66,7 @@ public class EnumConstantImpl implements EnumConstant
    }
 
    @Override
-   public EnumConstant setName(String name)
+   public EnumConstantSource setName(String name)
    {
       this.enumConstant.setName(ast.newSimpleName(name));
       return this;
@@ -79,7 +79,7 @@ public class EnumConstantImpl implements EnumConstant
    }
 
    @Override
-   public JavaEnum getOrigin()
+   public JavaEnumSource getOrigin()
    {
       return parent;
    }
@@ -96,14 +96,14 @@ public class EnumConstantImpl implements EnumConstant
 
    @SuppressWarnings("unchecked")
    @Override
-   public EnumConstant setConstructorArguments(String... literalArguments)
+   public EnumConstantSource setConstructorArguments(String... literalArguments)
    {
       enumConstant.arguments().clear();
       if (literalArguments != null && literalArguments.length > 0)
       {
          final String stub = "public enum Stub { FOO(" + Strings.join(Arrays.asList(literalArguments), ", ") + "); }";
-         final JavaEnum temp = JavaParser.parse(JavaEnum.class, stub);
-         final List<EnumConstant> constants = temp.getEnumConstants();
+         final JavaEnumSource temp = JavaParser.parse(JavaEnumSource.class, stub);
+         final List<EnumConstantSource> constants = temp.getEnumConstants();
          final EnumConstantDeclaration newConstant = (EnumConstantDeclaration) constants.get(0).getInternal();
          final List<Expression> arguments = newConstant.arguments();
          for (Expression argument : arguments)
@@ -122,7 +122,7 @@ public class EnumConstantImpl implements EnumConstant
    }
 
    @Override
-   public EnumConstant removeBody()
+   public EnumConstantSource removeBody()
    {
       enumConstant.setAnonymousClassDeclaration(null);
       return this;
@@ -133,13 +133,13 @@ public class EnumConstantImpl implements EnumConstant
     */
 
    @Override
-   public Annotation<JavaEnum> addAnnotation()
+   public AnnotationSource<JavaEnumSource> addAnnotation()
    {
       return annotations.addAnnotation(this, enumConstant);
    }
 
    @Override
-   public Annotation<JavaEnum> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
+   public AnnotationSource<JavaEnumSource> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
    {
       if (!parent.hasImport(clazz))
       {
@@ -149,13 +149,13 @@ public class EnumConstantImpl implements EnumConstant
    }
 
    @Override
-   public Annotation<JavaEnum> addAnnotation(final String className)
+   public AnnotationSource<JavaEnumSource> addAnnotation(final String className)
    {
       return annotations.addAnnotation(this, enumConstant, className);
    }
 
    @Override
-   public List<Annotation<JavaEnum>> getAnnotations()
+   public List<AnnotationSource<JavaEnumSource>> getAnnotations()
    {
       return annotations.getAnnotations(this, enumConstant);
    }
@@ -173,19 +173,19 @@ public class EnumConstantImpl implements EnumConstant
    }
 
    @Override
-   public EnumConstant removeAnnotation(final ReadAnnotation<JavaEnum> annotation)
+   public EnumConstantSource removeAnnotation(final Annotation<JavaEnumSource> annotation)
    {
       return annotations.removeAnnotation(this, enumConstant, annotation);
    }
 
    @Override
-   public Annotation<JavaEnum> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
+   public AnnotationSource<JavaEnumSource> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
    {
       return annotations.getAnnotation(this, enumConstant, type);
    }
 
    @Override
-   public Annotation<JavaEnum> getAnnotation(final String type)
+   public AnnotationSource<JavaEnumSource> getAnnotation(final String type)
    {
       return annotations.getAnnotation(this, enumConstant, type);
    }
