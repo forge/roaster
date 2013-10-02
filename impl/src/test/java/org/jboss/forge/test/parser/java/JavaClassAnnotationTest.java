@@ -18,7 +18,6 @@ import org.jboss.forge.test.parser.java.common.AnnotationTest;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class JavaClassAnnotationTest extends AnnotationTest
 {
-   @SuppressWarnings("resource")
    @Override
    public void resetTests()
    {

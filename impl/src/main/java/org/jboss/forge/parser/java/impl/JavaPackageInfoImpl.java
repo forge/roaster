@@ -436,8 +436,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    @Override
    public JavaPackageInfo setName(final String name)
    {
-      getPackageDeclaration().setName(unit.getAST().newSimpleName(name));
-      return this;
+      throw new UnsupportedOperationException("Changing name of [" + getQualifiedName() + "] not supported.");
    }
 
    @Override

@@ -25,7 +25,6 @@ public class FormatterTest
 {
    private static JavaClass javaClass;
 
-   @SuppressWarnings("resource")
    @BeforeClass
    public static void resetTests()
    {

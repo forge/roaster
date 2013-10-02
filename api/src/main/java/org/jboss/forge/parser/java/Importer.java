@@ -13,7 +13,7 @@ import java.util.List;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface Importer<O extends JavaSource<?>>
+public interface Importer<O extends JavaSource<O>>
 {
    /**
     * Add an import by qualified class name. (E.g: "com.example.Imported") unless it is in the provided 'java.lang.*'

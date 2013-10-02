@@ -6,23 +6,26 @@
  */
 package org.jboss.forge.test.parser.java;
 
-import java.io.InputStream;
+import java.io.IOException;
+import java.net.URL;
 
 import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.java.JavaClass;
+import org.jboss.forge.parser.java.Method;
 import org.jboss.forge.test.parser.java.common.VisibilityTest;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class JavaClassVisibilityTest extends VisibilityTest
+public class MethodPublicVisibilityTest extends VisibilityTest
 {
    @Override
-   public void resetTests()
+   @SuppressWarnings({ "rawtypes" })
+   public void resetTests() throws IOException
    {
-      InputStream stream = JavaClassVisibilityTest.class
-               .getResourceAsStream("/org/jboss/forge/grammar/java/MockClass.java");
-      JavaClass clazz = JavaParser.parse(JavaClass.class, stream);
-      setTarget(clazz);
+      URL url = MethodPublicVisibilityTest.class
+               .getResource("/org/jboss/forge/grammar/java/MockAnnotatedMethod.java");
+      Method method = JavaParser.parse(JavaClass.class, url).getMethods().get(1);
+      setTarget(method);
    }
 }
