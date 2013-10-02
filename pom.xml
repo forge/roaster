@@ -37,6 +37,11 @@
          <name>Stale Pedersen</name>
          <email>stalep@gmail.com</email>
       </developer>
+      <developer>
+         <id>mbenson</id>
+         <name>Matt Benson</name>
+         <email>gudnabrsam@gmail.com</email>
+      </developer>
    </developers>
 
    <prerequisites>
