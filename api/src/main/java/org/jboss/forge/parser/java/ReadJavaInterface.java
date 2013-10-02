@@ -10,10 +10,18 @@ package org.jboss.forge.parser.java;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface ReadJavaInterface<O extends ReadJavaInterface<O>> extends ReadJavaType<O>,
-         ReadInterfaceCapable
+public interface ReadJavaInterface<O extends ReadJavaInterface<O>> extends
+         ReadJavaSource<O>,
+         ReadInterfaceCapable,
+         ReadFieldHolder<O>,
+         ReadMethodHolder<O>,
+         ReadGenericCapable
 {
-   public interface JavaInterface extends ReadJavaInterface<JavaInterface>, JavaType<JavaInterface>,
+   public interface JavaInterface extends ReadJavaInterface<JavaInterface>,
+            JavaSource<JavaInterface>,
+            FieldHolder<JavaInterface>,
+            MethodHolder<JavaInterface>,
+            GenericCapable<JavaInterface>,
             InterfaceCapable<JavaInterface>
    {
    }
