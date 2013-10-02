@@ -29,8 +29,7 @@ import org.jboss.forge.parser.java.ReadEnumConstant.EnumConstant;
 import org.jboss.forge.parser.java.ReadEnumConstant.EnumConstant.Body;
 import org.jboss.forge.parser.java.ReadField;
 import org.jboss.forge.parser.java.ReadField.Field;
-import org.jboss.forge.parser.java.ReadImport;
-import org.jboss.forge.parser.java.ReadImport.Import;
+import org.jboss.forge.parser.java.Import;
 import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
 import org.jboss.forge.parser.java.ReadJavaEnum.JavaEnum;
 import org.jboss.forge.parser.java.ReadJavaSource;
@@ -179,7 +178,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public Import addImport(ReadImport imprt)
+   public Import addImport(Import imprt)
    {
       return javaEnum.addImport(imprt);
    }
@@ -221,7 +220,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public boolean hasImport(ReadImport imprt)
+   public boolean hasImport(Import imprt)
    {
       return javaEnum.hasImport(imprt);
    }
@@ -245,7 +244,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public Import getImport(ReadImport imprt)
+   public Import getImport(Import imprt)
    {
       return javaEnum.getImport(imprt);
    }
@@ -272,7 +271,7 @@ class EnumConstantBodyImpl implements EnumConstant.Body
    }
 
    @Override
-   public Body removeImport(ReadImport imprt)
+   public Body removeImport(Import imprt)
    {
       javaEnum.removeImport(imprt);
       return this;

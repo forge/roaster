@@ -18,6 +18,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.jboss.forge.parser.JavaParser;
+import org.jboss.forge.parser.java.Importer;
 import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
 import org.jboss.forge.parser.java.ReadJavaSource;
 import org.jboss.forge.parser.java.ReadMethod.Method;
@@ -183,7 +184,11 @@ public class TypeImpl<O extends ReadJavaSource<O>> implements Type<O>
    public String getQualifiedName()
    {
       String result = type.toString();
-      return origin.resolveType(result);
+      if (origin instanceof Importer<?>)
+      {
+         return ((Importer<?>) origin).resolveType(result);
+      }
+      return result;
    }
 
    @Override

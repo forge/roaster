@@ -9,8 +9,7 @@ package org.jboss.forge.parser.java.impl;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
-import org.jboss.forge.parser.java.ReadImport;
-import org.jboss.forge.parser.java.ReadImport.Import;
+import org.jboss.forge.parser.java.Import;
 import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 import org.jboss.forge.parser.java.util.Types;
 
@@ -108,10 +107,10 @@ public class ImportImpl implements Import
       if (this == obj)
           return true;
       
-      if (!(obj instanceof ReadImport))
+      if (!(obj instanceof Import))
           return false;
       
-      ReadImport other = (ReadImport) obj;
+      Import other = (Import) obj;
       if (!getQualifiedName().equals(other.getQualifiedName()))
       {
          return false;

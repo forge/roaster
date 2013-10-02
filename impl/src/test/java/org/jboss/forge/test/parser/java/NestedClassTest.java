@@ -3,7 +3,7 @@ package org.jboss.forge.test.parser.java;
 import java.util.List;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadImport.Import;
+import org.jboss.forge.parser.java.Import;
 import org.jboss.forge.parser.java.ReadJavaAnnotation.JavaAnnotation;
 import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
 import org.jboss.forge.parser.java.ReadJavaEnum.JavaEnum;

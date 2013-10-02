@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadImport.Import;
+import org.jboss.forge.parser.java.Import;
 import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
 import org.jboss.forge.parser.java.ReadMethod.Method;
 import org.junit.Before;
