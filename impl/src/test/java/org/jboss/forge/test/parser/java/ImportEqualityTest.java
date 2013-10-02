@@ -3,8 +3,7 @@ package org.jboss.forge.test.parser.java;
 import static org.junit.Assert.*;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadImport;
-import org.jboss.forge.parser.java.ReadImport.Import;
+import org.jboss.forge.parser.java.Import;
 import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 import org.jboss.forge.parser.java.impl.ImportImpl;
 import org.junit.Test;
@@ -17,30 +16,30 @@ public class ImportEqualityTest {
 
     @Test
     public void testImportEqualsAnotherInstance() throws Exception {
-        ReadImport firstImport = buildImport(DEFAULT_IMPORT);
-        ReadImport secondImport = buildImport(DEFAULT_IMPORT);
+        Import firstImport = buildImport(DEFAULT_IMPORT);
+        Import secondImport = buildImport(DEFAULT_IMPORT);
         assertEquals(firstImport, secondImport);
         assertEquals(secondImport, firstImport);
     }
     
     @Test
     public void testEqualsReturnsFalseForDifferentImport() throws Exception {
-        ReadImport classImport = buildImport(DEFAULT_IMPORT);
-        ReadImport interfaceImport = buildImport("org.jboss.forge.parser.java.impl.ImportImpl");
+        Import classImport = buildImport(DEFAULT_IMPORT);
+        Import interfaceImport = buildImport("org.jboss.forge.parser.java.impl.ImportImpl");
         assertFalse(classImport.equals(interfaceImport));
     }
     
     @Test
     public void testEqualsIsReflexive() throws Exception {
-        ReadImport reflexiveImport = buildImport(DEFAULT_IMPORT);
+        Import reflexiveImport = buildImport(DEFAULT_IMPORT);
         assertEquals(reflexiveImport, reflexiveImport);
     }
     
     @Test
     public void testEqualsIsTransitive() throws Exception {
-        ReadImport firstImport = buildImport(DEFAULT_IMPORT);
-        ReadImport secondImport = buildImport(DEFAULT_IMPORT);
-        ReadImport thirdImport = buildImport(DEFAULT_IMPORT);
+        Import firstImport = buildImport(DEFAULT_IMPORT);
+        Import secondImport = buildImport(DEFAULT_IMPORT);
+        Import thirdImport = buildImport(DEFAULT_IMPORT);
         assertEquals(firstImport, secondImport);
         assertEquals(secondImport, thirdImport);
         assertEquals(firstImport, thirdImport);
@@ -53,14 +52,14 @@ public class ImportEqualityTest {
     
     @Test
     public void testNotEqualsToDifferentClass() throws Exception {
-        ReadImport myImport = buildImport(DEFAULT_IMPORT);
+        Import myImport = buildImport(DEFAULT_IMPORT);
         assertFalse(myImport.equals(DEFAULT_IMPORT));
     }
     
     @Test
     public void testEqualsToDifferentImportImplementation() throws Exception {
-        ReadImport myImport = buildImport(DEFAULT_IMPORT);
-        ReadImport mockImport = new MockImportImpl(DEFAULT_IMPORT_PACKAGE, DEFAULT_IMPORT_CLASS);
+        Import myImport = buildImport(DEFAULT_IMPORT);
+        Import mockImport = new MockImportImpl(DEFAULT_IMPORT_PACKAGE, DEFAULT_IMPORT_CLASS);
         assertEquals(myImport, mockImport);
     }
     

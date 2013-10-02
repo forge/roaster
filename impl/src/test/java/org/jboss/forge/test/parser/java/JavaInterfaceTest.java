@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadImport.Import;
+import org.jboss.forge.parser.java.Import;
 import org.jboss.forge.parser.java.ReadJavaInterface.JavaInterface;
 import org.jboss.forge.parser.java.ReadMember.Member;
 import org.junit.Test;

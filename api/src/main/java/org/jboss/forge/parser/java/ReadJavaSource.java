@@ -17,7 +17,6 @@ import org.jboss.forge.parser.Origin;
  */
 public interface ReadJavaSource<T extends ReadJavaSource<T>> extends
          ReadPackaged<T>,
-         ReadImporter<T>,
          ReadNamed,
          ReadVisibilityScoped,
          ReadAnnotationTarget<T>,

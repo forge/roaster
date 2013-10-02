@@ -8,12 +8,15 @@
 package org.jboss.forge.parser.java;
 
 import org.jboss.forge.parser.Internal;
+import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 
 /**
+ * Represents an imported element in a {@link JavaSource}.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface ReadImport extends Internal
+public interface Import extends Internal
 {
    public String getPackage();
 
@@ -25,10 +28,7 @@ public interface ReadImport extends Internal
 
    public boolean isWildcard();
 
-   public interface Import extends ReadImport
-   {
-      public Import setName(final String name);
+   public Import setName(final String name);
 
-      public Import setStatic(final boolean value);
-   }
+   public Import setStatic(final boolean value);
 }

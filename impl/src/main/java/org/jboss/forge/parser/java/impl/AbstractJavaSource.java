@@ -32,8 +32,7 @@ import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.ParserException;
 import org.jboss.forge.parser.java.ReadAnnotation;
 import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
-import org.jboss.forge.parser.java.ReadImport;
-import org.jboss.forge.parser.java.ReadImport.Import;
+import org.jboss.forge.parser.java.Import;
 import org.jboss.forge.parser.java.ReadInterfaceCapable.InterfaceCapable;
 import org.jboss.forge.parser.java.ReadJavaInterface;
 import org.jboss.forge.parser.java.ReadJavaSource;
@@ -160,7 +159,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public Import addImport(final ReadImport imprt)
+   public Import addImport(final Import imprt)
    {
       return addImport(imprt.getQualifiedName()).setStatic(imprt.isStatic());
    }
@@ -218,7 +217,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public Import getImport(final ReadImport imprt)
+   public Import getImport(final Import imprt)
    {
       return getImport(imprt.getQualifiedName());
    }
@@ -249,7 +248,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public boolean hasImport(final ReadImport imprt)
+   public boolean hasImport(final Import imprt)
    {
       return hasImport(imprt.getQualifiedName());
    }
@@ -330,7 +329,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
 
          if (result.equals(original))
          {
-            for (ReadImport imprt : getImports())
+            for (Import imprt : getImports())
             {
                if (Types.areEquivalent(result, imprt.getQualifiedName()))
                {
@@ -344,7 +343,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       // If we didn't match any imports directly, we might have a wild-card/on-demand import.
       if (Types.isSimpleName(result))
       {
-         for (ReadImport imprt : getImports())
+         for (Import imprt : getImports())
          {
             if (imprt.isWildcard())
             {
@@ -396,7 +395,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    @Override
    public O removeImport(final String name)
    {
-      for (ReadImport i : getImports())
+      for (Import i : getImports())
       {
          if (i.getQualifiedName().equals(name))
          {
@@ -420,7 +419,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public O removeImport(final ReadImport imprt)
+   public O removeImport(final Import imprt)
    {
       Object internal = imprt.getInternal();
       if (unit.imports().contains(internal))
@@ -775,7 +774,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
          String name = JDTHelper.getTypeName(type);
          if (Types.isSimpleName(name) && this.hasImport(name))
          {
-            ReadImport imprt = this.getImport(name);
+            Import imprt = this.getImport(name);
             String pkg = imprt.getPackage();
             if (!Strings.isNullOrEmpty(pkg))
             {
