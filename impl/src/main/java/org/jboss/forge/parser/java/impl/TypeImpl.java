@@ -18,16 +18,16 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.JavaSource;
-import org.jboss.forge.parser.java.Method;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
+import org.jboss.forge.parser.java.ReadJavaSource;
+import org.jboss.forge.parser.java.ReadMethod.Method;
 import org.jboss.forge.parser.java.Type;
 import org.jboss.forge.parser.java.util.Types;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class TypeImpl<O extends JavaSource<O>> implements Type<O>
+public class TypeImpl<O extends ReadJavaSource<O>> implements Type<O>
 {
    private O origin = null;
    private final Type<O> parent;

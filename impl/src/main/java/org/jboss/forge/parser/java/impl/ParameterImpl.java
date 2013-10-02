@@ -10,9 +10,10 @@ import java.util.List;
 
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.jboss.forge.parser.java.Annotation;
-import org.jboss.forge.parser.java.JavaSource;
-import org.jboss.forge.parser.java.Parameter;
+import org.jboss.forge.parser.java.ReadAnnotation;
+import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
+import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
+import org.jboss.forge.parser.java.ReadParameter.Parameter;
 import org.jboss.forge.parser.java.Type;
 import org.jboss.forge.parser.java.ast.AnnotationAccessor;
 
@@ -115,7 +116,7 @@ public class ParameterImpl<O extends JavaSource<O>> implements Parameter<O>
    }
 
    @Override
-   public Parameter<O> removeAnnotation(final Annotation<O> annotation)
+   public Parameter<O> removeAnnotation(final ReadAnnotation<O> annotation)
    {
       return annotations.removeAnnotation(this, param, annotation);
    }

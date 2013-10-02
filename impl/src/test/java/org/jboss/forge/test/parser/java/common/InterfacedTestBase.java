@@ -14,9 +14,9 @@ import static org.junit.Assert.fail;
 import java.io.Serializable;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.InterfaceCapable;
-import org.jboss.forge.parser.java.JavaInterface;
-import org.jboss.forge.parser.java.JavaSource;
+import org.jboss.forge.parser.java.ReadInterfaceCapable.InterfaceCapable;
+import org.jboss.forge.parser.java.ReadJavaInterface.JavaInterface;
+import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,7 +33,6 @@ public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapa
    public void reset()
    {
       this.source = getSource();
-      assertTrue(this.source.isEditable());
    }
 
    protected abstract T getSource();

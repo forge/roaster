@@ -9,8 +9,8 @@ package org.jboss.forge.test.parser.java;
 import java.io.InputStream;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Field;
-import org.jboss.forge.parser.java.JavaClass;
+import org.jboss.forge.parser.java.ReadField.Field;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
 import org.jboss.forge.test.parser.java.common.VisibilityTest;
 
 /**
@@ -19,12 +19,11 @@ import org.jboss.forge.test.parser.java.common.VisibilityTest;
 public class FieldVisibilityTest extends VisibilityTest
 {
    @Override
-   @SuppressWarnings({ "rawtypes" })
    public void resetTests()
    {
       InputStream stream = FieldVisibilityTest.class
                .getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedField.java");
-      Field field = JavaParser.parse(JavaClass.class, stream).getFields().get(0);
+      Field<JavaClass> field = JavaParser.parse(JavaClass.class, stream).getFields().get(0);
       setTarget(field);
    }
 }

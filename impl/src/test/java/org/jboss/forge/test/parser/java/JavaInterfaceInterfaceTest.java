@@ -7,7 +7,7 @@
 package org.jboss.forge.test.parser.java;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.JavaInterface;
+import org.jboss.forge.parser.java.ReadJavaInterface.JavaInterface;
 import org.jboss.forge.test.parser.java.common.InterfacedTestBase;
 
 /**

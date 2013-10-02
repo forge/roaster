@@ -30,12 +30,15 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.ParserException;
-import org.jboss.forge.parser.java.Annotation;
-import org.jboss.forge.parser.java.Import;
-import org.jboss.forge.parser.java.InterfaceCapable;
-import org.jboss.forge.parser.java.JavaInterface;
-import org.jboss.forge.parser.java.JavaSource;
-import org.jboss.forge.parser.java.Member;
+import org.jboss.forge.parser.java.ReadAnnotation;
+import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
+import org.jboss.forge.parser.java.ReadImport;
+import org.jboss.forge.parser.java.ReadImport.Import;
+import org.jboss.forge.parser.java.ReadInterfaceCapable.InterfaceCapable;
+import org.jboss.forge.parser.java.ReadJavaInterface;
+import org.jboss.forge.parser.java.ReadJavaSource;
+import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
+import org.jboss.forge.parser.java.ReadMember.Member;
 import org.jboss.forge.parser.java.SyntaxError;
 import org.jboss.forge.parser.java.Visibility;
 import org.jboss.forge.parser.java.ast.AnnotationAccessor;
@@ -122,7 +125,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public O removeAnnotation(final Annotation<O> annotation)
+   public O removeAnnotation(final ReadAnnotation<O> annotation)
    {
       return (O) annotations.removeAnnotation(this, getBodyDeclaration(), annotation);
    }
@@ -150,14 +153,14 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public <T extends JavaSource<?>> Import addImport(final T type)
+   public <T extends ReadJavaSource<?>> Import addImport(final T type)
    {
       String qualifiedName = type.getQualifiedName();
       return this.addImport(qualifiedName);
    }
 
    @Override
-   public Import addImport(final Import imprt)
+   public Import addImport(final ReadImport imprt)
    {
       return addImport(imprt.getQualifiedName()).setStatic(imprt.isStatic());
    }
@@ -209,13 +212,13 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public <T extends JavaSource<?>> Import getImport(final T type)
+   public <T extends ReadJavaSource<?>> Import getImport(final T type)
    {
       return getImport(type.getQualifiedName());
    }
 
    @Override
-   public Import getImport(final Import imprt)
+   public Import getImport(final ReadImport imprt)
    {
       return getImport(imprt.getQualifiedName());
    }
@@ -240,13 +243,13 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public <T extends JavaSource<T>> boolean hasImport(final T type)
+   public <T extends ReadJavaSource<T>> boolean hasImport(final T type)
    {
       return hasImport(type.getQualifiedName());
    }
 
    @Override
-   public boolean hasImport(final Import imprt)
+   public boolean hasImport(final ReadImport imprt)
    {
       return hasImport(imprt.getQualifiedName());
    }
@@ -327,7 +330,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
 
          if (result.equals(original))
          {
-            for (Import imprt : getImports())
+            for (ReadImport imprt : getImports())
             {
                if (Types.areEquivalent(result, imprt.getQualifiedName()))
                {
@@ -341,7 +344,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       // If we didn't match any imports directly, we might have a wild-card/on-demand import.
       if (Types.isSimpleName(result))
       {
-         for (Import imprt : getImports())
+         for (ReadImport imprt : getImports())
          {
             if (imprt.isWildcard())
             {
@@ -393,7 +396,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    @Override
    public O removeImport(final String name)
    {
-      for (Import i : getImports())
+      for (ReadImport i : getImports())
       {
          if (i.getQualifiedName().equals(name))
          {
@@ -411,13 +414,13 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public <T extends JavaSource<?>> O removeImport(final T type)
+   public <T extends ReadJavaSource<?>> O removeImport(final T type)
    {
       return removeImport(type.getQualifiedName());
    }
 
    @Override
-   public O removeImport(final Import imprt)
+   public O removeImport(final ReadImport imprt)
    {
       Object internal = imprt.getInternal();
       if (unit.imports().contains(internal))
@@ -463,7 +466,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    {
       String result = getName();
 
-      JavaSource<?> enclosingType = this;
+      ReadJavaSource<?> enclosingType = this;
       while (enclosingType != enclosingType.getEnclosingType())
       {
          enclosingType = getEnclosingType();
@@ -487,7 +490,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    {
       String result = getName();
 
-      JavaSource<?> enclosingType = this;
+      ReadJavaSource<?> enclosingType = this;
       while (enclosingType != enclosingType.getEnclosingType())
       {
          enclosingType = getEnclosingType();
@@ -616,7 +619,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
     * Non-manipulation methods.
     */
    /**
-    * Return this {@link JavaSource} file as a String
+    * Return this {@link ReadJavaSource} file as a String
     */
    @Override
    public String toString()
@@ -772,7 +775,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
          String name = JDTHelper.getTypeName(type);
          if (Types.isSimpleName(name) && this.hasImport(name))
          {
-            Import imprt = this.getImport(name);
+            ReadImport imprt = this.getImport(name);
             String pkg = imprt.getPackage();
             if (!Strings.isNullOrEmpty(pkg))
             {
@@ -815,7 +818,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public O addInterface(final JavaInterface type)
+   public O addInterface(final ReadJavaInterface<?> type)
    {
       return addInterface(type.getQualifiedName());
    }
@@ -840,7 +843,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public boolean hasInterface(final JavaInterface type)
+   public boolean hasInterface(final ReadJavaInterface<?> type)
    {
       return hasInterface(type.getQualifiedName());
    }
@@ -867,7 +870,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public O removeInterface(final JavaInterface type)
+   public O removeInterface(final ReadJavaInterface<?> type)
    {
       return removeInterface(type.getQualifiedName());
    }
@@ -883,12 +886,6 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
          result.add(JavaParserImpl.getJavaSource(this, document, unit, declaration));
       }
       return result;
-   }
-
-   @Override
-   public boolean isEditable()
-   {
-      return true;
    }
 
    private List<AbstractTypeDeclaration> getNestedDeclarations(BodyDeclaration body)

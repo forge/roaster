@@ -16,9 +16,10 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.Expression;
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Annotation;
-import org.jboss.forge.parser.java.EnumConstant;
-import org.jboss.forge.parser.java.JavaEnum;
+import org.jboss.forge.parser.java.ReadAnnotation;
+import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
+import org.jboss.forge.parser.java.ReadEnumConstant.EnumConstant;
+import org.jboss.forge.parser.java.ReadJavaEnum.JavaEnum;
 import org.jboss.forge.parser.java.ast.AnnotationAccessor;
 import org.jboss.forge.parser.java.util.Strings;
 
@@ -172,7 +173,7 @@ public class EnumConstantImpl implements EnumConstant
    }
 
    @Override
-   public EnumConstant removeAnnotation(final Annotation<JavaEnum> annotation)
+   public EnumConstant removeAnnotation(final ReadAnnotation<JavaEnum> annotation)
    {
       return annotations.removeAnnotation(this, enumConstant, annotation);
    }

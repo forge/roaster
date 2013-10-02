@@ -13,10 +13,10 @@ import static org.junit.Assert.assertTrue;
 import java.io.InputStream;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.EnumConstant;
-import org.jboss.forge.parser.java.Field;
-import org.jboss.forge.parser.java.JavaEnum;
-import org.jboss.forge.parser.java.Method;
+import org.jboss.forge.parser.java.ReadEnumConstant;
+import org.jboss.forge.parser.java.ReadField.Field;
+import org.jboss.forge.parser.java.ReadJavaEnum.JavaEnum;
+import org.jboss.forge.parser.java.ReadMethod.Method;
 import org.jboss.forge.parser.java.Visibility;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +33,6 @@ public class JavaEnumTest
    {
       InputStream stream = JavaEnumTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockEnum.java");
       javaEnum = JavaParser.parse(JavaEnum.class, stream);
-      assertTrue(javaEnum.isEditable());
    }
 
    @Test
@@ -47,7 +46,7 @@ public class JavaEnumTest
    public void testAddEnumConstant()
    {
       int i = javaEnum.getEnumConstants().size();
-      EnumConstant enumConstant = javaEnum.addEnumConstant().setName("BLAH");
+      ReadEnumConstant enumConstant = javaEnum.addEnumConstant().setName("BLAH");
       assertEquals(i + 1, javaEnum.getEnumConstants().size());
       assertEquals("BLAH", enumConstant.getName());
    }
@@ -57,7 +56,7 @@ public class JavaEnumTest
    public void testAddEnumConstantFromDeclaration()
    {
       int i = javaEnum.getEnumConstants().size();
-      EnumConstant enumConstant = javaEnum.addEnumConstant("BLAH");
+      ReadEnumConstant enumConstant = javaEnum.addEnumConstant("BLAH");
       assertEquals(i + 1, javaEnum.getEnumConstants().size());
       assertEquals("BLAH", enumConstant.getName());
    }

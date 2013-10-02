@@ -17,9 +17,9 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Import;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.Method;
+import org.jboss.forge.parser.java.ReadImport.Import;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
+import org.jboss.forge.parser.java.ReadMethod.Method;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,7 +34,6 @@ public abstract class JavaClassTestBase
    public void reset()
    {
       this.source = getSource();
-      assertTrue(this.source.isEditable());
    }
 
    protected abstract JavaClass getSource();

@@ -22,11 +22,13 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Annotation;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.JavaSource;
-import org.jboss.forge.parser.java.Method;
-import org.jboss.forge.parser.java.Parameter;
+import org.jboss.forge.parser.java.ReadAnnotation;
+import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
+import org.jboss.forge.parser.java.ReadJavaSource;
+import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
+import org.jboss.forge.parser.java.ReadMethod.Method;
+import org.jboss.forge.parser.java.ReadParameter.Parameter;
 import org.jboss.forge.parser.java.Type;
 import org.jboss.forge.parser.java.Visibility;
 import org.jboss.forge.parser.java.ast.AnnotationAccessor;
@@ -144,7 +146,7 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Method<O> removeAnnotation(final Annotation<O> annotation)
+   public Method<O> removeAnnotation(final ReadAnnotation<O> annotation)
    {
       return annotations.removeAnnotation(this, method, annotation);
    }
@@ -278,7 +280,7 @@ public class MethodImpl<O extends JavaSource<O>> implements Method<O>
    }
 
    @Override
-   public Method<O> setReturnType(final JavaSource<?> type)
+   public Method<O> setReturnType(final ReadJavaSource<?> type)
    {
       return setReturnType(type.getName());
    }

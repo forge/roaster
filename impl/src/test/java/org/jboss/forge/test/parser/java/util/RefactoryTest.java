@@ -15,9 +15,9 @@ import static org.junit.matchers.JUnitMatchers.containsString;
 import java.util.List;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Field;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.Method;
+import org.jboss.forge.parser.java.ReadField.Field;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
+import org.jboss.forge.parser.java.ReadMethod.Method;
 import org.jboss.forge.parser.java.util.Refactory;
 import org.jboss.forge.parser.java.util.Strings;
 import org.junit.Before;
@@ -37,7 +37,6 @@ public class RefactoryTest
       javaClass = JavaParser
                .parse(JavaClass.class,
                         "import java.util.Set; public class Foo { private int foo; private String firstName; private Set<String> names; private final int bar; }");
-      assertTrue(javaClass.isEditable());
    }
 
    @Test

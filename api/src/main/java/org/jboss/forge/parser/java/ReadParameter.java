@@ -6,15 +6,21 @@
  */
 package org.jboss.forge.parser.java;
 
+import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
+
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface Parameter<O extends JavaSource<O>> extends AnnotationTarget<O, Parameter<O>>
+public interface ReadParameter<O extends ReadJavaSource<O>> extends ReadAnnotationTarget<O>
 {
    String getName();
 
    String getType();
 
    Type<?> getTypeInspector();
+
+   public interface Parameter<O extends JavaSource<O>> extends ReadParameter<O>, AnnotationTarget<O, Parameter<O>>
+   {
+   }
 }

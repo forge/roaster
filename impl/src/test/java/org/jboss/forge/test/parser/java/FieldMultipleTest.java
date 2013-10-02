@@ -5,8 +5,8 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Field;
-import org.jboss.forge.parser.java.JavaClass;
+import org.jboss.forge.parser.java.ReadField.Field;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
 import org.junit.Assert;
 import org.junit.Test;
 

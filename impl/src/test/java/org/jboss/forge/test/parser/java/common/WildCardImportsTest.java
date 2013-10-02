@@ -9,7 +9,7 @@ package org.jboss.forge.test.parser.java.common;
 import static org.junit.Assert.assertTrue;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.JavaClass;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
 import org.junit.Test;
 
 public class WildCardImportsTest

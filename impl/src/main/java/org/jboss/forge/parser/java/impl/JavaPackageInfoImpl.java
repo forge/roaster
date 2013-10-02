@@ -15,11 +15,13 @@ import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 import org.jboss.forge.parser.ParserException;
-import org.jboss.forge.parser.java.Annotation;
-import org.jboss.forge.parser.java.Import;
-import org.jboss.forge.parser.java.JavaPackageInfo;
-import org.jboss.forge.parser.java.JavaSource;
-import org.jboss.forge.parser.java.Member;
+import org.jboss.forge.parser.java.ReadAnnotation;
+import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
+import org.jboss.forge.parser.java.ReadImport;
+import org.jboss.forge.parser.java.ReadImport.Import;
+import org.jboss.forge.parser.java.ReadJavaPackageInfo.JavaPackageInfo;
+import org.jboss.forge.parser.java.ReadJavaSource;
+import org.jboss.forge.parser.java.ReadMember.Member;
 import org.jboss.forge.parser.java.SourceType;
 import org.jboss.forge.parser.java.SyntaxError;
 import org.jboss.forge.parser.java.Visibility;
@@ -113,7 +115,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public JavaPackageInfo removeAnnotation(final Annotation<JavaPackageInfo> annotation)
+   public JavaPackageInfo removeAnnotation(final ReadAnnotation<JavaPackageInfo> annotation)
    {
       return annotations.removeAnnotation(this, getPackageDeclaration(), annotation);
    }
@@ -141,14 +143,14 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public <T extends JavaSource<?>> Import addImport(final T type)
+   public <T extends ReadJavaSource<?>> Import addImport(final T type)
    {
       String qualifiedName = type.getQualifiedName();
       return this.addImport(qualifiedName);
    }
 
    @Override
-   public Import addImport(final Import imprt)
+   public Import addImport(final ReadImport imprt)
    {
       return addImport(imprt.getQualifiedName()).setStatic(imprt.isStatic());
    }
@@ -201,13 +203,13 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public <T extends JavaSource<?>> Import getImport(final T type)
+   public <T extends ReadJavaSource<?>> Import getImport(final T type)
    {
       return getImport(type.getQualifiedName());
    }
 
    @Override
-   public Import getImport(final Import imprt)
+   public Import getImport(final ReadImport imprt)
    {
       return getImport(imprt.getQualifiedName());
    }
@@ -233,13 +235,13 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public <T extends JavaSource<T>> boolean hasImport(final T type)
+   public <T extends ReadJavaSource<T>> boolean hasImport(final T type)
    {
       return hasImport(type.getQualifiedName());
    }
 
    @Override
-   public boolean hasImport(final Import imprt)
+   public boolean hasImport(final ReadImport imprt)
    {
       return hasImport(imprt.getQualifiedName());
    }
@@ -320,7 +322,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
 
          if (result.equals(original))
          {
-            for (Import imprt : getImports())
+            for (ReadImport imprt : getImports())
             {
                if (Types.areEquivalent(result, imprt.getQualifiedName()))
                {
@@ -334,7 +336,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       // If we didn't match any imports directly, we might have a wild-card/on-demand import.
       if (Types.isSimpleName(result))
       {
-         for (Import imprt : getImports())
+         for (ReadImport imprt : getImports())
          {
             if (imprt.isWildcard())
             {
@@ -386,7 +388,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    @Override
    public JavaPackageInfo removeImport(final String name)
    {
-      for (Import i : getImports())
+      for (ReadImport i : getImports())
       {
          if (i.getQualifiedName().equals(name))
          {
@@ -404,13 +406,13 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public <T extends JavaSource<?>> JavaPackageInfo removeImport(final T type)
+   public <T extends ReadJavaSource<?>> JavaPackageInfo removeImport(final T type)
    {
       return removeImport(type.getQualifiedName());
    }
 
    @Override
-   public JavaPackageInfo removeImport(final Import imprt)
+   public JavaPackageInfo removeImport(final ReadImport imprt)
    {
       Object internal = imprt.getInternal();
       if (unit.imports().contains(internal))
@@ -444,7 +446,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    {
       String result = getName();
 
-      JavaSource<?> enclosingType = this;
+      ReadJavaSource<?> enclosingType = this;
       while (enclosingType != enclosingType.getEnclosingType())
       {
          enclosingType = getEnclosingType();
@@ -463,7 +465,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    {
       String result = getName();
 
-      JavaSource<?> enclosingType = this;
+      ReadJavaSource<?> enclosingType = this;
       while (enclosingType != enclosingType.getEnclosingType())
       {
          enclosingType = getEnclosingType();
@@ -592,7 +594,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
     * Non-manipulation methods.
     */
    /**
-    * Return this {@link JavaSource} file as a String
+    * Return this {@link ReadJavaSource} file as a String
     */
    @Override
    public String toString()
@@ -734,12 +736,6 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
          result.add(JavaParserImpl.getJavaSource(this, document, unit, declaration));
       }
       return result;
-   }
-
-   @Override
-   public boolean isEditable()
-   {
-      return true;
    }
 
    private List<AbstractTypeDeclaration> getNestedDeclarations(ASTNode body)

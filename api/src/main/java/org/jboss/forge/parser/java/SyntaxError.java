@@ -7,7 +7,7 @@
 package org.jboss.forge.parser.java;
 
 /**
- * Describes a syntax problem in a {@link JavaClass}.
+ * Describes a syntax problem in a {@link ReadJavaClass}.
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 

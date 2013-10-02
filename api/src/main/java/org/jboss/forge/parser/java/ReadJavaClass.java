@@ -11,13 +11,19 @@ import org.jboss.forge.parser.JavaParser;
 
 /**
  * Represents a Java {@link Class} or interface source file as an in-memory modifiable element. See {@link JavaParser}
- * for various options in generating {@link JavaClass} instances.
+ * for various options in generating {@link ReadJavaClass} instances.
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public interface JavaClass extends
-         JavaType<JavaClass>,
-         Extendable<JavaClass>,
-         Abstractable<JavaClass>
+public interface ReadJavaClass<O extends ReadJavaClass<O>> extends
+         ReadJavaType<O>,
+         ReadExtendable<O>,
+         ReadAbstractable<O>
 {
+   public interface JavaClass extends ReadJavaClass<JavaClass>,
+            JavaType<JavaClass>,
+            Extendable<JavaClass>,
+            Abstractable<JavaClass>
+   {
+   }
 }

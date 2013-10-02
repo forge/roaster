@@ -9,8 +9,7 @@ package org.jboss.forge.parser.java.impl;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jface.text.Document;
-import org.jboss.forge.parser.java.JavaInterface;
-import org.jboss.forge.parser.java.JavaSource;
+import org.jboss.forge.parser.java.ReadJavaInterface.JavaInterface;
 import org.jboss.forge.parser.java.SourceType;
 
 /**

@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.JavaClass;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -32,7 +32,6 @@ public class JavaClassCreationTest
    {
       assertEquals("JavaClass", jc.getName());
       assertTrue(jc.isPublic());
-      assertTrue(jc.isEditable());
    }
 
 }

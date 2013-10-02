@@ -18,14 +18,18 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jface.text.Document;
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Field;
-import org.jboss.forge.parser.java.FieldHolder;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.JavaSource;
-import org.jboss.forge.parser.java.Member;
-import org.jboss.forge.parser.java.Method;
-import org.jboss.forge.parser.java.MethodHolder;
-import org.jboss.forge.parser.java.Parameter;
+import org.jboss.forge.parser.java.ReadField;
+import org.jboss.forge.parser.java.ReadField.Field;
+import org.jboss.forge.parser.java.ReadFieldHolder.FieldHolder;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
+import org.jboss.forge.parser.java.ReadJavaSource;
+import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
+import org.jboss.forge.parser.java.ReadMember.Member;
+import org.jboss.forge.parser.java.ReadMethod;
+import org.jboss.forge.parser.java.ReadMethod.Method;
+import org.jboss.forge.parser.java.ReadMethodHolder.MethodHolder;
+import org.jboss.forge.parser.java.ReadParameter;
+import org.jboss.forge.parser.java.ReadParameter.Parameter;
 import org.jboss.forge.parser.java.ast.MethodFinderVisitor;
 import org.jboss.forge.parser.java.util.Strings;
 import org.jboss.forge.parser.java.util.Types;
@@ -77,7 +81,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
    }
 
    @SuppressWarnings("unchecked")
-   private void addField(Field<O> field)
+   private void addField(ReadField<O> field)
    {
       List<Object> bodyDeclarations = getBodyDeclaration().bodyDeclarations();
       int idx = 0;
@@ -153,14 +157,14 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
    }
 
    @Override
-   public boolean hasField(final Field<O> field)
+   public boolean hasField(final ReadField<O> field)
    {
       return getFields().contains(field);
    }
 
    @Override
    @SuppressWarnings("unchecked")
-   public O removeField(final Field<O> field)
+   public O removeField(final ReadField<O> field)
    {
       VariableDeclarationFragment fragment = (VariableDeclarationFragment) field.getInternal();
       Iterator<Object> declarationsIterator = getBodyDeclaration().bodyDeclarations().iterator();
@@ -192,7 +196,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
    }
 
    @Override
-   public boolean hasMethod(final Method<O> method)
+   public boolean hasMethod(final ReadMethod<O, ?> method)
    {
       return getMethods().contains(method);
    }
@@ -288,14 +292,14 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
    }
 
    @Override
-   public boolean hasMethodSignature(final Method<?> method)
+   public boolean hasMethodSignature(final ReadMethod<?, ?> method)
    {
       for (Method<O> local : getMethods())
       {
          if (local.getName().equals(method.getName()))
          {
             Iterator<Parameter<O>> localParams = local.getParameters().iterator();
-            for (Parameter<? extends JavaSource<?>> methodParam : method.getParameters())
+            for (ReadParameter<? extends ReadJavaSource<?>> methodParam : method.getParameters())
             {
                if (localParams.hasNext() && Strings.areEqual(localParams.next().getType(), methodParam.getType()))
                {
@@ -311,7 +315,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
 
    @Override
    @SuppressWarnings("unchecked")
-   public O removeMethod(final Method<O> method)
+   public O removeMethod(final ReadMethod<O, ?> method)
    {
       getBodyDeclaration().bodyDeclarations().remove(method.getInternal());
       return (O) this;

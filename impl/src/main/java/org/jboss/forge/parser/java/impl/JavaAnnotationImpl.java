@@ -15,9 +15,9 @@ import org.eclipse.jdt.core.dom.AnnotationTypeMemberDeclaration;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jface.text.Document;
-import org.jboss.forge.parser.java.AnnotationElement;
-import org.jboss.forge.parser.java.JavaAnnotation;
-import org.jboss.forge.parser.java.JavaSource;
+import org.jboss.forge.parser.java.ReadAnnotationElement;
+import org.jboss.forge.parser.java.ReadAnnotationElement.AnnotationElement;
+import org.jboss.forge.parser.java.ReadJavaAnnotation.JavaAnnotation;
 import org.jboss.forge.parser.java.SourceType;
 import org.jboss.forge.parser.java.util.Strings;
 
@@ -100,7 +100,7 @@ public class JavaAnnotationImpl extends AbstractJavaSource<JavaAnnotation> imple
    }
 
    @Override
-   public boolean hasAnnotationElement(AnnotationElement annotationElement)
+   public boolean hasAnnotationElement(ReadAnnotationElement<?> annotationElement)
    {
       return getAnnotationElements().contains(annotationElement);
    }
@@ -136,7 +136,7 @@ public class JavaAnnotationImpl extends AbstractJavaSource<JavaAnnotation> imple
    }
 
    @Override
-   public JavaAnnotation removeAnnotationElement(AnnotationElement annotationElement)
+   public JavaAnnotation removeAnnotationElement(ReadAnnotationElement<?> annotationElement)
    {
       getBodyDeclaration().bodyDeclarations().remove(annotationElement.getInternal());
       return this;

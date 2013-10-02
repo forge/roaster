@@ -17,9 +17,9 @@ import static org.junit.Assert.assertTrue;
 import java.io.InputStream;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Annotation;
-import org.jboss.forge.parser.java.AnnotationElement;
-import org.jboss.forge.parser.java.JavaAnnotation;
+import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
+import org.jboss.forge.parser.java.ReadAnnotationElement.AnnotationElement;
+import org.jboss.forge.parser.java.ReadJavaAnnotation.JavaAnnotation;
 import org.jboss.forge.parser.java.SourceType;
 import org.jboss.forge.parser.java.Type;
 import org.jboss.forge.test.parser.java.common.MockEnumType;
@@ -40,7 +40,6 @@ public class JavaAnnotationTest
                JavaAnnotationTest.class
                         .getResourceAsStream("/org/jboss/forge/grammar/java/MockJavaAnnotationType.java");
       javaAnnotation = JavaParser.parse(JavaAnnotation.class, stream);
-      assertTrue(javaAnnotation.isEditable());
    }
 
    @Test

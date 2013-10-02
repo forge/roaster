@@ -9,8 +9,8 @@ package org.jboss.forge.test.parser.java;
 import java.io.InputStream;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.EnumConstant;
-import org.jboss.forge.parser.java.JavaEnum;
+import org.jboss.forge.parser.java.ReadEnumConstant.EnumConstant;
+import org.jboss.forge.parser.java.ReadJavaEnum.JavaEnum;
 import org.jboss.forge.test.parser.java.common.AnnotationTest;
 
 /**
