@@ -8,7 +8,11 @@ package org.jboss.forge.parser.java;
 
 import java.util.List;
 
+import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
+
 /**
+ * Represents a {@link ReadJavaSource} that may implement one or more interfaces.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
@@ -22,7 +26,13 @@ public interface ReadInterfaceCapable
 
    boolean hasInterface(ReadJavaInterface<?> type);
 
-   public interface InterfaceCapable<T extends ReadJavaSource<T>> extends ReadInterfaceCapable
+   /**
+    * Represents a {@link JavaSource} that may implement one or more interfaces.
+    * 
+    * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+    * 
+    */
+   public interface InterfaceCapable<T extends JavaSource<T>> extends ReadInterfaceCapable
    {
       T addInterface(String type);
 

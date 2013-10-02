@@ -13,6 +13,8 @@ import org.jboss.forge.parser.java.ReadField.Field;
 import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 
 /**
+ * Represents a {@link ReadJavaSource} that may contain field definitions.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
@@ -39,6 +41,12 @@ public interface ReadFieldHolder<O extends ReadJavaSource<O>> extends ReadMember
     */
    public List<? extends ReadField<O>> getFields();
 
+   /**
+    * Represents a {@link JavaSource} that may contain field definitions.
+    * 
+    * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+    * 
+    */
    public interface FieldHolder<O extends JavaSource<O>> extends ReadFieldHolder<O>, MemberHolder<O>
    {
 

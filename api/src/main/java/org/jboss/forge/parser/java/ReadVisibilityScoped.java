@@ -8,6 +8,8 @@
 package org.jboss.forge.parser.java;
 
 /**
+ * Represents a Java element that has a certain visibility scope.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
@@ -23,6 +25,12 @@ public interface ReadVisibilityScoped
 
    Visibility getVisibility();
 
+   /**
+    * Represents a Java source element that has a certain visibility scope.
+    * 
+    * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+    * 
+    */
    public interface VisibilityScoped<T> extends ReadVisibilityScoped
    {
       T setPackagePrivate();

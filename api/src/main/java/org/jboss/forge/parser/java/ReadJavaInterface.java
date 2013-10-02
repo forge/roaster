@@ -6,9 +6,13 @@
  */
 package org.jboss.forge.parser.java;
 
+import org.jboss.forge.parser.JavaParser;
+
 /**
- * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+ * Represents a Java {@code interface} type. See {@link JavaParser} for various options in generating
+ * {@link ReadJavaInterface} instances.
  * 
+ * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 public interface ReadJavaInterface<O extends ReadJavaInterface<O>> extends
          ReadJavaSource<O>,
@@ -17,6 +21,12 @@ public interface ReadJavaInterface<O extends ReadJavaInterface<O>> extends
          ReadMethodHolder<O>,
          ReadGenericCapable
 {
+   /**
+    * Represents a Java {@code interface} source file as an in-memory modifiable element. See {@link JavaParser} for
+    * various options in generating {@link JavaInterface} instances.
+    * 
+    * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+    */
    public interface JavaInterface extends ReadJavaInterface<JavaInterface>,
             JavaSource<JavaInterface>,
             FieldHolder<JavaInterface>,

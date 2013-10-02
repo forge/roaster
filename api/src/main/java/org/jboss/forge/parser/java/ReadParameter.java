@@ -9,6 +9,8 @@ package org.jboss.forge.parser.java;
 import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 
 /**
+ * Represents a parameter of a {@link ReadMethod}.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
@@ -20,6 +22,12 @@ public interface ReadParameter<O extends ReadJavaSource<O>> extends ReadAnnotati
 
    Type<?> getTypeInspector();
 
+   /**
+    * Represents a parameter of a {@link Method}.
+    * 
+    * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+    * 
+    */
    public interface Parameter<O extends JavaSource<O>> extends ReadParameter<O>, AnnotationTarget<O, Parameter<O>>
    {
    }

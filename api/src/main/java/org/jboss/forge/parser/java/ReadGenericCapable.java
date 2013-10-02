@@ -8,6 +8,13 @@ package org.jboss.forge.parser.java;
 
 import java.util.List;
 
+/**
+ * Represents a Java element that may define type variables.
+ * 
+ * @author mbenson
+ *
+ */
+//TODO consider for methods; this would probably necessitate splitting constructors from methods
 public interface ReadGenericCapable
 {
    /**
@@ -15,6 +22,12 @@ public interface ReadGenericCapable
     */
    List<String> getGenericTypes();
 
+   /**
+    * Represents a Java source element that may define type variables.
+    * 
+    * @author mbenson
+    *
+    */
    public interface GenericCapable<T> extends ReadGenericCapable
    {
       /**

@@ -13,6 +13,8 @@ import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 import org.jboss.forge.parser.java.ReadMethod.Method;
 
 /**
+ * Represents a {@link ReadJavaSource} that may declare methods.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
@@ -64,6 +66,12 @@ public interface ReadMethodHolder<O extends ReadJavaSource<O>> extends ReadMembe
     */
    public List<? extends ReadMethod<O, ?>> getMethods();
 
+   /**
+    * Represents a {@link JavaSource} that may declare methods.
+    * 
+    * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+    * 
+    */
    public interface MethodHolder<O extends JavaSource<O>> extends ReadMethodHolder<O>, MemberHolder<O>
    {
 

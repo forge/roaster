@@ -12,6 +12,8 @@ import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
 import org.jboss.forge.parser.java.ReadJavaAnnotation.JavaAnnotation;
 
 /**
+ * Represents an element definition of a {@link ReadJavaAnnotation}.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * @author Matt Benson
  */
@@ -36,26 +38,6 @@ public interface ReadAnnotationElement<O extends ReadJavaAnnotation<O>> extends 
       Class<?> getSingleClass();
 
       Class<?>[] getClassArray();
-   }
-
-   public interface DefaultValue extends ReadDefaultValue<JavaAnnotation>
-   {
-      Annotation<JavaAnnotation> getAnnotation();
-
-      DefaultValue setLiteral(String value);
-
-      DefaultValue setString(String value);
-
-      <T extends Enum<T>> DefaultValue setEnum(T value);
-
-      <T extends Enum<T>> DefaultValue setEnumArray(T... values);
-
-      Annotation<JavaAnnotation> setAnnotation();
-
-      DefaultValue setSingleClass(Class<?> value);
-
-      DefaultValue setClassArray(Class<?>... values);
-
    }
 
    /**
@@ -88,6 +70,32 @@ public interface ReadAnnotationElement<O extends ReadJavaAnnotation<O>> extends 
    public interface AnnotationElement extends ReadAnnotationElement<JavaAnnotation>,
             AnnotationTarget<JavaAnnotation, AnnotationElement>, Named<AnnotationElement>
    {
+      /**
+       * Represents an element definition of a {@link JavaAnnotation}.
+       * 
+       * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+       * @author Matt Benson
+       */
+      public interface DefaultValue extends ReadDefaultValue<JavaAnnotation>
+      {
+         Annotation<JavaAnnotation> getAnnotation();
+
+         DefaultValue setLiteral(String value);
+
+         DefaultValue setString(String value);
+
+         <T extends Enum<T>> DefaultValue setEnum(T value);
+
+         <T extends Enum<T>> DefaultValue setEnumArray(T... values);
+
+         Annotation<JavaAnnotation> setAnnotation();
+
+         DefaultValue setSingleClass(Class<?> value);
+
+         DefaultValue setClassArray(Class<?>... values);
+
+      }
+
       /**
        * Set the type of this {@link ReadAnnotationElement} to the given {@link Class} type. Attempt to add an import
        * statement to this annotation element's base {@link O} if required.

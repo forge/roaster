@@ -15,6 +15,8 @@ import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
 import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 
 /**
+ * Represents a Java element that may carry annotations.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 public interface ReadAnnotationTarget<O extends ReadJavaSource<O>> extends Internal, Origin<O>
@@ -29,6 +31,11 @@ public interface ReadAnnotationTarget<O extends ReadJavaSource<O>> extends Inter
 
    public ReadAnnotation<O> getAnnotation(final String type);
 
+   /**
+    * Represents a Java source element that may carry annotations.
+    * 
+    * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+    */
    public interface AnnotationTarget<O extends JavaSource<O>, T> extends ReadAnnotationTarget<O>
    {
       public List<Annotation<O>> getAnnotations();

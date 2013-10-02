@@ -7,9 +7,12 @@
 
 package org.jboss.forge.parser.java;
 
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
 import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 
 /**
+ * Represents a field of a {@link ReadJavaClass}, {@link ReadJavaInterface}, or {@link ReadJavaEnum}.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
@@ -62,6 +65,12 @@ public interface ReadField<O extends ReadJavaSource<O>> extends ReadMember<O>
     */
    boolean isVolatile();
 
+   /**
+    * Represents a field of a {@link JavaClass}, {@link JavaInterface}, or {@link JavaEnum}.
+    * 
+    * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+    * 
+    */
    public interface Field<O extends JavaSource<O>> extends ReadField<O>, Member<O, Field<O>>
    {
 

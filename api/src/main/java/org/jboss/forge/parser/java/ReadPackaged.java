@@ -8,6 +8,8 @@
 package org.jboss.forge.parser.java;
 
 /**
+ * Represents a {@link ReadJavaSource} that may be declared as belonging to a particular Java {@code package}.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
@@ -23,6 +25,12 @@ public interface ReadPackaged<T>
     */
    public boolean isDefaultPackage();
 
+   /**
+    * Represents a {@link JavaSource} that may be declared as belonging to a particular Java {@code package}.
+    * 
+    * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+    * 
+    */
    public interface Packaged<T> extends ReadPackaged<T>
    {
 

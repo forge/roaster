@@ -12,6 +12,8 @@ import org.jboss.forge.parser.Internal;
 import org.jboss.forge.parser.Origin;
 
 /**
+ * Represents an annotation on some Java element.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 public interface ReadAnnotation<O extends ReadJavaSource<O>> extends Internal, Origin<O>
@@ -56,6 +58,11 @@ public interface ReadAnnotation<O extends ReadJavaSource<O>> extends Internal, O
 
    Class<?>[] getClassArrayValue(String name);
 
+   /**
+    * Represents an annotation on some Java source element.
+    * 
+    * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+    */
    public interface Annotation<O extends ReadJavaSource<O>> extends ReadAnnotation<O>
    {
 

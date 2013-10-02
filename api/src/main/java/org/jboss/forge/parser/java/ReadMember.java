@@ -11,7 +11,7 @@ import org.jboss.forge.parser.Origin;
 import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 
 /**
- * Represents a {@link ReadJavaClass} member. (E.g.: a {@link ReadField} or {@link ReadMethod})
+ * Represents a {@link ReadJavaSource} member. (I.e.: a {@link ReadField} or {@link ReadMethod})
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
@@ -23,6 +23,12 @@ public interface ReadMember<O extends ReadJavaSource<O>> extends ReadVisibilityS
 
    public boolean isStatic();
 
+   /**
+    * Represents a {@link JavaSource} member. (I.e.: a {@link Field} or {@link Method})
+    * 
+    * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+    * 
+    */
    public interface Member<O extends JavaSource<O>, T> extends ReadMember<O>, AnnotationTarget<O, T>,
             VisibilityScoped<T>, Named<T>
    {
