@@ -22,24 +22,24 @@ import org.eclipse.jdt.core.dom.PrimitiveType.Code;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadAnnotation;
-import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
-import org.jboss.forge.parser.java.ReadField.Field;
-import org.jboss.forge.parser.java.ReadJavaClass;
-import org.jboss.forge.parser.java.ReadJavaSource;
-import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
+import org.jboss.forge.parser.java.Annotation;
+import org.jboss.forge.parser.java.JavaClass;
+import org.jboss.forge.parser.java.JavaType;
 import org.jboss.forge.parser.java.Visibility;
 import org.jboss.forge.parser.java.ast.AnnotationAccessor;
 import org.jboss.forge.parser.java.ast.ModifierAccessor;
+import org.jboss.forge.parser.java.source.AnnotationSource;
+import org.jboss.forge.parser.java.source.FieldSource;
+import org.jboss.forge.parser.java.source.JavaSource;
 import org.jboss.forge.parser.java.util.Strings;
 import org.jboss.forge.parser.java.util.Types;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class FieldImpl<O extends JavaSource<O>> implements Field<O>
+public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
 {
-   private final AnnotationAccessor<O, Field<O>> annotations = new AnnotationAccessor<O, Field<O>>();
+   private final AnnotationAccessor<O, FieldSource<O>> annotations = new AnnotationAccessor<O, FieldSource<O>>();
    private final ModifierAccessor modifiers = new ModifierAccessor();
 
    private O parent;
@@ -114,13 +114,13 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
     * Annotation<O> Modifiers
     */
    @Override
-   public Annotation<O> addAnnotation()
+   public AnnotationSource<O> addAnnotation()
    {
       return annotations.addAnnotation(this, field);
    }
 
    @Override
-   public Annotation<O> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
+   public AnnotationSource<O> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
    {
       if (parent.requiresImport(clazz))
       {
@@ -130,13 +130,13 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    }
 
    @Override
-   public Annotation<O> addAnnotation(final String className)
+   public AnnotationSource<O> addAnnotation(final String className)
    {
       return annotations.addAnnotation(this, field, className);
    }
 
    @Override
-   public List<Annotation<O>> getAnnotations()
+   public List<AnnotationSource<O>> getAnnotations()
    {
       return annotations.getAnnotations(this, field);
    }
@@ -154,19 +154,19 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    }
 
    @Override
-   public Annotation<O> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
+   public AnnotationSource<O> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
    {
       return annotations.getAnnotation(this, field, type);
    }
 
    @Override
-   public Annotation<O> getAnnotation(final String type)
+   public AnnotationSource<O> getAnnotation(final String type)
    {
       return annotations.getAnnotation(this, field, type);
    }
 
    @Override
-   public Field<O> removeAnnotation(final ReadAnnotation<O> annotation)
+   public FieldSource<O> removeAnnotation(final Annotation<O> annotation)
    {
       return annotations.removeAnnotation(this, field, annotation);
    }
@@ -188,7 +188,7 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    }
 
    @Override
-   public Field<O> setFinal(final boolean finl)
+   public FieldSource<O> setFinal(final boolean finl)
    {
       if (finl)
          modifiers.addModifier(field, ModifierKeyword.FINAL_KEYWORD);
@@ -204,7 +204,7 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    }
 
    @Override
-   public Field<O> setStatic(final boolean statc)
+   public FieldSource<O> setStatic(final boolean statc)
    {
       if (statc)
          modifiers.addModifier(field, ModifierKeyword.STATIC_KEYWORD);
@@ -220,7 +220,7 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    }
 
    @Override
-   public Field<O> setPackagePrivate()
+   public FieldSource<O> setPackagePrivate()
    {
       modifiers.clearVisibility(field);
       return this;
@@ -233,7 +233,7 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    }
 
    @Override
-   public Field<O> setPublic()
+   public FieldSource<O> setPublic()
    {
       modifiers.clearVisibility(field);
       modifiers.addModifier(field, ModifierKeyword.PUBLIC_KEYWORD);
@@ -247,7 +247,7 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    }
 
    @Override
-   public Field<O> setPrivate()
+   public FieldSource<O> setPrivate()
    {
       modifiers.clearVisibility(field);
       modifiers.addModifier(field, ModifierKeyword.PRIVATE_KEYWORD);
@@ -261,7 +261,7 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    }
 
    @Override
-   public Field<O> setProtected()
+   public FieldSource<O> setProtected()
    {
       modifiers.clearVisibility(field);
       modifiers.addModifier(field, ModifierKeyword.PROTECTED_KEYWORD);
@@ -275,7 +275,7 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    }
 
    @Override
-   public Field<O> setVisibility(final Visibility scope)
+   public FieldSource<O> setVisibility(final Visibility scope)
    {
       return Visibility.set(this, scope);
    }
@@ -301,7 +301,7 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    }
 
    @Override
-   public Field<O> setName(final String name)
+   public FieldSource<O> setName(final String name)
    {
       fragment.setName(ast.newSimpleName(name));
       return this;
@@ -385,7 +385,7 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    }
 
    @Override
-   public Field<O> setType(final Class<?> clazz)
+   public FieldSource<O> setType(final Class<?> clazz)
    {
       if (parent.requiresImport(clazz))
       {
@@ -395,13 +395,13 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    }
 
    @Override
-   public Field<O> setType(final ReadJavaSource<?> source)
+   public FieldSource<O> setType(final JavaType<?> source)
    {
       return setType(source.getQualifiedName());
    }
 
    @Override
-   public Field<O> setType(final String typeName)
+   public FieldSource<O> setType(final String typeName)
    {
       String simpleName = Types.toSimpleName(typeName);
 
@@ -466,17 +466,17 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    }
 
    @Override
-   public Field<O> setLiteralInitializer(final String value)
+   public FieldSource<O> setLiteralInitializer(final String value)
    {
       String stub = "public class Stub { private String stub = " + value + " }";
-      ReadJavaClass<?> temp = JavaParser.parse(ReadJavaClass.class, stub);
+      JavaClass<?> temp = JavaParser.parse(JavaClass.class, stub);
       VariableDeclarationFragment tempFrag = (VariableDeclarationFragment) temp.getFields().get(0).getInternal();
       fragment.setInitializer((Expression) ASTNode.copySubtree(ast, tempFrag.getInitializer()));
       return this;
    }
 
    @Override
-   public Field<O> setStringInitializer(final String value)
+   public FieldSource<O> setStringInitializer(final String value)
    {
       return setLiteralInitializer(Strings.enquote(value));
    }

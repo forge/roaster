@@ -15,25 +15,26 @@ import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 import org.jboss.forge.parser.ParserException;
-import org.jboss.forge.parser.java.ReadAnnotation;
-import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
-import org.jboss.forge.parser.java.Import;
-import org.jboss.forge.parser.java.ReadJavaPackageInfo.JavaPackageInfo;
-import org.jboss.forge.parser.java.ReadJavaSource;
-import org.jboss.forge.parser.java.ReadMember.Member;
+import org.jboss.forge.parser.java.Annotation;
+import org.jboss.forge.parser.java.JavaType;
 import org.jboss.forge.parser.java.SourceType;
 import org.jboss.forge.parser.java.SyntaxError;
 import org.jboss.forge.parser.java.Visibility;
 import org.jboss.forge.parser.java.ast.AnnotationAccessor;
 import org.jboss.forge.parser.java.ast.ModifierAccessor;
 import org.jboss.forge.parser.java.ast.TypeDeclarationFinderVisitor;
+import org.jboss.forge.parser.java.source.AnnotationSource;
+import org.jboss.forge.parser.java.source.Import;
+import org.jboss.forge.parser.java.source.JavaPackageInfoSource;
+import org.jboss.forge.parser.java.source.JavaSource;
+import org.jboss.forge.parser.java.source.MemberSource;
 import org.jboss.forge.parser.java.util.Formatter;
 import org.jboss.forge.parser.java.util.Strings;
 import org.jboss.forge.parser.java.util.Types;
 import org.jboss.forge.parser.spi.JavaParserImpl;
 import org.jboss.forge.parser.spi.WildcardImportResolver;
 
-public class JavaPackageInfoImpl implements JavaPackageInfo
+public class JavaPackageInfoImpl implements JavaPackageInfoSource
 {
 
    public JavaPackageInfoImpl(JavaSource<?> enclosingType, Document document,
@@ -57,7 +58,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
       return "package-info";
    }
 
-   private final AnnotationAccessor<JavaPackageInfo, JavaPackageInfo> annotations = new AnnotationAccessor<JavaPackageInfo, JavaPackageInfo>();
+   private final AnnotationAccessor<JavaPackageInfoSource, JavaPackageInfoSource> annotations = new AnnotationAccessor<JavaPackageInfoSource, JavaPackageInfoSource>();
    private final ModifierAccessor modifiers = new ModifierAccessor();
 
    protected final Document document;
@@ -78,25 +79,25 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
     * Annotation modifiers
     */
    @Override
-   public Annotation<JavaPackageInfo> addAnnotation()
+   public AnnotationSource<JavaPackageInfoSource> addAnnotation()
    {
       return annotations.addAnnotation(this, getPackageDeclaration());
    }
 
    @Override
-   public Annotation<JavaPackageInfo> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
+   public AnnotationSource<JavaPackageInfoSource> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
    {
       return annotations.addAnnotation(this, getPackageDeclaration(), clazz.getName());
    }
 
    @Override
-   public Annotation<JavaPackageInfo> addAnnotation(final String className)
+   public AnnotationSource<JavaPackageInfoSource> addAnnotation(final String className)
    {
       return annotations.addAnnotation(this, getPackageDeclaration(), className);
    }
 
    @Override
-   public List<Annotation<JavaPackageInfo>> getAnnotations()
+   public List<AnnotationSource<JavaPackageInfoSource>> getAnnotations()
    {
       return annotations.getAnnotations(this, getPackageDeclaration());
    }
@@ -114,19 +115,19 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public JavaPackageInfo removeAnnotation(final ReadAnnotation<JavaPackageInfo> annotation)
+   public JavaPackageInfoSource removeAnnotation(final Annotation<JavaPackageInfoSource> annotation)
    {
       return annotations.removeAnnotation(this, getPackageDeclaration(), annotation);
    }
 
    @Override
-   public Annotation<JavaPackageInfo> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
+   public AnnotationSource<JavaPackageInfoSource> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
    {
       return annotations.getAnnotation(this, getPackageDeclaration(), type);
    }
 
    @Override
-   public Annotation<JavaPackageInfo> getAnnotation(final String type)
+   public AnnotationSource<JavaPackageInfoSource> getAnnotation(final String type)
    {
       return annotations.getAnnotation(this, getPackageDeclaration(), type);
    }
@@ -142,7 +143,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public <T extends ReadJavaSource<?>> Import addImport(final T type)
+   public <T extends JavaType<?>> Import addImport(final T type)
    {
       String qualifiedName = type.getQualifiedName();
       return this.addImport(qualifiedName);
@@ -202,7 +203,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public <T extends ReadJavaSource<?>> Import getImport(final T type)
+   public <T extends JavaType<?>> Import getImport(final T type)
    {
       return getImport(type.getQualifiedName());
    }
@@ -234,7 +235,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public <T extends ReadJavaSource<T>> boolean hasImport(final T type)
+   public <T extends JavaType<T>> boolean hasImport(final T type)
    {
       return hasImport(type.getQualifiedName());
    }
@@ -385,7 +386,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public JavaPackageInfo removeImport(final String name)
+   public JavaPackageInfoSource removeImport(final String name)
    {
       for (Import i : getImports())
       {
@@ -399,19 +400,19 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public JavaPackageInfo removeImport(final Class<?> clazz)
+   public JavaPackageInfoSource removeImport(final Class<?> clazz)
    {
       return removeImport(clazz.getName());
    }
 
    @Override
-   public <T extends ReadJavaSource<?>> JavaPackageInfo removeImport(final T type)
+   public <T extends JavaType<?>> JavaPackageInfoSource removeImport(final T type)
    {
       return removeImport(type.getQualifiedName());
    }
 
    @Override
-   public JavaPackageInfo removeImport(final Import imprt)
+   public JavaPackageInfoSource removeImport(final Import imprt)
    {
       Object internal = imprt.getInternal();
       if (unit.imports().contains(internal))
@@ -422,7 +423,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public List<Member<JavaPackageInfo, ?>> getMembers()
+   public List<MemberSource<JavaPackageInfoSource, ?>> getMembers()
    {
       return Collections.emptyList();
    }
@@ -435,7 +436,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public JavaPackageInfo setName(final String name)
+   public JavaPackageInfoSource setName(final String name)
    {
       throw new UnsupportedOperationException("Changing name of [" + getQualifiedName() + "] not supported.");
    }
@@ -445,7 +446,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    {
       String result = getName();
 
-      ReadJavaSource<?> enclosingType = this;
+      JavaType<?> enclosingType = this;
       while (enclosingType != enclosingType.getEnclosingType())
       {
          enclosingType = getEnclosingType();
@@ -464,7 +465,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    {
       String result = getName();
 
-      ReadJavaSource<?> enclosingType = this;
+      JavaType<?> enclosingType = this;
       while (enclosingType != enclosingType.getEnclosingType())
       {
          enclosingType = getEnclosingType();
@@ -496,7 +497,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public JavaPackageInfo setPackage(final String name)
+   public JavaPackageInfoSource setPackage(final String name)
    {
       if (unit.getPackage() == null)
       {
@@ -507,7 +508,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public JavaPackageInfo setDefaultPackage()
+   public JavaPackageInfoSource setDefaultPackage()
    {
       unit.setPackage(null);
       return this;
@@ -529,7 +530,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public JavaPackageInfo setPackagePrivate()
+   public JavaPackageInfoSource setPackagePrivate()
    {
       modifiers.clearVisibility(getPackageDeclaration());
       return this;
@@ -542,7 +543,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public JavaPackageInfo setPublic()
+   public JavaPackageInfoSource setPublic()
    {
       modifiers.clearVisibility(getPackageDeclaration());
       modifiers.addModifier(getPackageDeclaration(), ModifierKeyword.PUBLIC_KEYWORD);
@@ -556,7 +557,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public JavaPackageInfo setPrivate()
+   public JavaPackageInfoSource setPrivate()
    {
       modifiers.clearVisibility(getPackageDeclaration());
       modifiers.addModifier(getPackageDeclaration(), ModifierKeyword.PRIVATE_KEYWORD);
@@ -570,7 +571,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public JavaPackageInfo setProtected()
+   public JavaPackageInfoSource setProtected()
    {
       modifiers.clearVisibility(getPackageDeclaration());
       modifiers.addModifier(getPackageDeclaration(), ModifierKeyword.PROTECTED_KEYWORD);
@@ -584,7 +585,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public JavaPackageInfo setVisibility(final Visibility scope)
+   public JavaPackageInfoSource setVisibility(final Visibility scope)
    {
       return Visibility.set(this, scope);
    }
@@ -593,7 +594,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
     * Non-manipulation methods.
     */
    /**
-    * Return this {@link ReadJavaSource} file as a String
+    * Return this {@link JavaType} file as a String
     */
    @Override
    public String toString()
@@ -620,7 +621,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfo
    }
 
    @Override
-   public JavaPackageInfo getOrigin()
+   public JavaPackageInfoSource getOrigin()
    {
       return this;
    }

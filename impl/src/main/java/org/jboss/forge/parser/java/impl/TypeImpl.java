@@ -18,17 +18,17 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Importer;
-import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
-import org.jboss.forge.parser.java.ReadJavaSource;
-import org.jboss.forge.parser.java.ReadMethod.Method;
+import org.jboss.forge.parser.java.JavaType;
 import org.jboss.forge.parser.java.Type;
+import org.jboss.forge.parser.java.source.Importer;
+import org.jboss.forge.parser.java.source.JavaClassSource;
+import org.jboss.forge.parser.java.source.MethodSource;
 import org.jboss.forge.parser.java.util.Types;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class TypeImpl<O extends ReadJavaSource<O>> implements Type<O>
+public class TypeImpl<O extends JavaType<O>> implements Type<O>
 {
    private O origin = null;
    private final Type<O> parent;
@@ -59,8 +59,8 @@ public class TypeImpl<O extends ReadJavaSource<O>> implements Type<O>
       this.parent = parent;
 
       String stub = "public class Stub { private " + type + " getType(){return null;} }";
-      JavaClass temp = (JavaClass) JavaParser.parse(stub);
-      List<Method<JavaClass>> methods = temp.getMethods();
+      JavaClassSource temp = (JavaClassSource) JavaParser.parse(stub);
+      List<MethodSource<JavaClassSource>> methods = temp.getMethods();
       MethodDeclaration newMethod = (MethodDeclaration) methods.get(0).getInternal();
       org.eclipse.jdt.core.dom.Type subtree = (org.eclipse.jdt.core.dom.Type) ASTNode.copySubtree(cu.getAST(),
                newMethod.getReturnType2());

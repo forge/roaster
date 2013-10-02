@@ -15,9 +15,9 @@ import static org.junit.matchers.JUnitMatchers.containsString;
 import java.util.List;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadField.Field;
-import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
-import org.jboss.forge.parser.java.ReadMethod.Method;
+import org.jboss.forge.parser.java.source.FieldSource;
+import org.jboss.forge.parser.java.source.JavaClassSource;
+import org.jboss.forge.parser.java.source.MethodSource;
 import org.jboss.forge.parser.java.util.Refactory;
 import org.jboss.forge.parser.java.util.Strings;
 import org.junit.Before;
@@ -29,25 +29,25 @@ import org.junit.Test;
  */
 public class RefactoryTest
 {
-   JavaClass javaClass;
+   JavaClassSource javaClass;
 
    @Before
    public void before()
    {
       javaClass = JavaParser
-               .parse(JavaClass.class,
+               .parse(JavaClassSource.class,
                         "import java.util.Set; public class Foo { private int foo; private String firstName; private Set<String> names; private final int bar; }");
    }
 
    @Test
    public void testAddGettersAndSetters() throws Exception
    {
-      Field<JavaClass> field = javaClass.getField("foo");
+      FieldSource<JavaClassSource> field = javaClass.getField("foo");
       Refactory.createGetterAndSetter(javaClass, field);
 
-      List<Method<JavaClass>> methods = javaClass.getMethods();
-      Method<JavaClass> getter = methods.get(0);
-      Method<JavaClass> setter = methods.get(1);
+      List<MethodSource<JavaClassSource>> methods = javaClass.getMethods();
+      MethodSource<JavaClassSource> getter = methods.get(0);
+      MethodSource<JavaClassSource> setter = methods.get(1);
 
       assertEquals("getFoo", getter.getName());
       assertTrue(getter.getParameters().isEmpty());
@@ -58,12 +58,12 @@ public class RefactoryTest
    @Test
    public void testAddGettersAndSettersCamelCase() throws Exception
    {
-      Field<JavaClass> field = javaClass.getField("firstName");
+      FieldSource<JavaClassSource> field = javaClass.getField("firstName");
       Refactory.createGetterAndSetter(javaClass, field);
 
-      List<Method<JavaClass>> methods = javaClass.getMethods();
-      Method<JavaClass> getter = methods.get(0);
-      Method<JavaClass> setter = methods.get(1);
+      List<MethodSource<JavaClassSource>> methods = javaClass.getMethods();
+      MethodSource<JavaClassSource> getter = methods.get(0);
+      MethodSource<JavaClassSource> setter = methods.get(1);
 
       assertEquals("getFirstName", getter.getName());
       assertTrue(getter.getParameters().isEmpty());
@@ -74,11 +74,11 @@ public class RefactoryTest
    @Test
    public void testAddGetterNotSetterForFinalField() throws Exception
    {
-      Field<JavaClass> field = javaClass.getField("bar");
+      FieldSource<JavaClassSource> field = javaClass.getField("bar");
       Refactory.createGetterAndSetter(javaClass, field);
 
-      List<Method<JavaClass>> methods = javaClass.getMethods();
-      Method<JavaClass> getter = methods.get(0);
+      List<MethodSource<JavaClassSource>> methods = javaClass.getMethods();
+      MethodSource<JavaClassSource> getter = methods.get(0);
 
       assertEquals("getBar", getter.getName());
       assertEquals(1, methods.size());
@@ -88,12 +88,12 @@ public class RefactoryTest
    @Test
    public void testAddGettersAndSettersGeneric() throws Exception
    {
-      Field<JavaClass> field = javaClass.getField("names");
+      FieldSource<JavaClassSource> field = javaClass.getField("names");
       Refactory.createGetterAndSetter(javaClass, field);
 
-      List<Method<JavaClass>> methods = javaClass.getMethods();
-      Method<JavaClass> getter = methods.get(0);
-      Method<JavaClass> setter = methods.get(1);
+      List<MethodSource<JavaClassSource>> methods = javaClass.getMethods();
+      MethodSource<JavaClassSource> getter = methods.get(0);
+      MethodSource<JavaClassSource> setter = methods.get(1);
 
       assertEquals("getNames", getter.getName());
       assertTrue(getter.getParameters().isEmpty());
@@ -119,33 +119,33 @@ public class RefactoryTest
    @Test(expected = IllegalArgumentException.class)
    public void testCreateHashCodeAndEqualsForStatics() throws Exception
    {
-      JavaClass aClass = JavaParser
-               .parse(JavaClass.class,
+      JavaClassSource aClass = JavaParser
+               .parse(JavaClassSource.class,
                         "public class Foo { private static boolean flag;}");
-      Field<JavaClass> booleanField = aClass.getField("flag");
+      FieldSource<JavaClassSource> booleanField = aClass.getField("flag");
       Refactory.createHashCodeAndEquals(aClass, booleanField);
    }
 
    @Test
    public void testCreateHashCodeAndEqualsForPrimitives() throws Exception
    {
-      JavaClass aClass = JavaParser
-               .parse(JavaClass.class,
+      JavaClassSource aClass = JavaParser
+               .parse(JavaClassSource.class,
                         "public class Foo { private boolean aBoolean; private byte aByte; private char aChar; private short aShort; private int anInt; private long aLong; private float aFloat; private double aDouble; }");
-      Field<JavaClass> booleanField = aClass.getField("aBoolean");
-      Field<JavaClass> byteField = aClass.getField("aByte");
-      Field<JavaClass> charField = aClass.getField("aChar");
-      Field<JavaClass> shortField = aClass.getField("aShort");
-      Field<JavaClass> intField = aClass.getField("anInt");
-      Field<JavaClass> longField = aClass.getField("aLong");
-      Field<JavaClass> floatField = aClass.getField("aFloat");
-      Field<JavaClass> doubleField = aClass.getField("aDouble");
+      FieldSource<JavaClassSource> booleanField = aClass.getField("aBoolean");
+      FieldSource<JavaClassSource> byteField = aClass.getField("aByte");
+      FieldSource<JavaClassSource> charField = aClass.getField("aChar");
+      FieldSource<JavaClassSource> shortField = aClass.getField("aShort");
+      FieldSource<JavaClassSource> intField = aClass.getField("anInt");
+      FieldSource<JavaClassSource> longField = aClass.getField("aLong");
+      FieldSource<JavaClassSource> floatField = aClass.getField("aFloat");
+      FieldSource<JavaClassSource> doubleField = aClass.getField("aDouble");
       Refactory.createHashCodeAndEquals(aClass, booleanField, byteField, charField, shortField, intField, longField,
                floatField, doubleField);
 
-      List<Method<JavaClass>> methods = aClass.getMethods();
-      Method<JavaClass> equals = methods.get(0);
-      Method<JavaClass> hashcode = methods.get(1);
+      List<MethodSource<JavaClassSource>> methods = aClass.getMethods();
+      MethodSource<JavaClassSource> equals = methods.get(0);
+      MethodSource<JavaClassSource> hashcode = methods.get(1);
 
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());
@@ -181,16 +181,16 @@ public class RefactoryTest
    @Test
    public void testCreateHashCodeAndEqualsForArrays() throws Exception
    {
-      JavaClass aClass = JavaParser
-               .parse(JavaClass.class,
+      JavaClassSource aClass = JavaParser
+               .parse(JavaClassSource.class,
                         "public class Foo { private boolean[] flags; private Object[] objects;}");
-      Field<JavaClass> primitiveArrayField = aClass.getField("flags");
-      Field<JavaClass> objectArrayField = aClass.getField("objects");
+      FieldSource<JavaClassSource> primitiveArrayField = aClass.getField("flags");
+      FieldSource<JavaClassSource> objectArrayField = aClass.getField("objects");
       Refactory.createHashCodeAndEquals(aClass, primitiveArrayField, objectArrayField);
 
-      List<Method<JavaClass>> methods = aClass.getMethods();
-      Method<JavaClass> equals = methods.get(0);
-      Method<JavaClass> hashcode = methods.get(1);
+      List<MethodSource<JavaClassSource>> methods = aClass.getMethods();
+      MethodSource<JavaClassSource> equals = methods.get(0);
+      MethodSource<JavaClassSource> hashcode = methods.get(1);
 
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());
@@ -208,16 +208,16 @@ public class RefactoryTest
    @Test
    public void testCreateHashCodeAndEqualsForObjects() throws Exception
    {
-      JavaClass aClass = JavaParser
-               .parse(JavaClass.class,
+      JavaClassSource aClass = JavaParser
+               .parse(JavaClassSource.class,
                         "import java.util.Date; public class Foo { private Object object; private Date date;}");
-      Field<JavaClass> identityBasedField = aClass.getField("object");
-      Field<JavaClass> nonIdentityBasedField = aClass.getField("date");
+      FieldSource<JavaClassSource> identityBasedField = aClass.getField("object");
+      FieldSource<JavaClassSource> nonIdentityBasedField = aClass.getField("date");
       Refactory.createHashCodeAndEquals(aClass, identityBasedField, nonIdentityBasedField);
 
-      List<Method<JavaClass>> methods = aClass.getMethods();
-      Method<JavaClass> equals = methods.get(0);
-      Method<JavaClass> hashcode = methods.get(1);
+      List<MethodSource<JavaClassSource>> methods = aClass.getMethods();
+      MethodSource<JavaClassSource> equals = methods.get(0);
+      MethodSource<JavaClassSource> hashcode = methods.get(1);
 
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());
@@ -242,9 +242,9 @@ public class RefactoryTest
    {
       Refactory.createHashCodeAndEquals(javaClass);
 
-      List<Method<JavaClass>> methods = javaClass.getMethods();
-      Method<JavaClass> equals = methods.get(0);
-      Method<JavaClass> hashcode = methods.get(1);
+      List<MethodSource<JavaClassSource>> methods = javaClass.getMethods();
+      MethodSource<JavaClassSource> equals = methods.get(0);
+      MethodSource<JavaClassSource> hashcode = methods.get(1);
 
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());
@@ -258,16 +258,16 @@ public class RefactoryTest
    @Test
    public void testCreateHashCodeAndEqualsSubclass() throws Exception
    {
-      JavaClass subClass = JavaParser
-               .parse(JavaClass.class,
+      JavaClassSource subClass = JavaParser
+               .parse(JavaClassSource.class,
                         "import java.util.Set;import java.util.Date; public class Foo extends Date { private int foo; private String firstName; private Set<String> names; private final int bar; }");
-      Field<JavaClass> intField = subClass.getField("foo");
-      Field<JavaClass> stringField = subClass.getField("firstName");
+      FieldSource<JavaClassSource> intField = subClass.getField("foo");
+      FieldSource<JavaClassSource> stringField = subClass.getField("firstName");
       Refactory.createHashCodeAndEquals(subClass, intField, stringField);
 
-      List<Method<JavaClass>> methods = subClass.getMethods();
-      Method<JavaClass> equals = methods.get(0);
-      Method<JavaClass> hashcode = methods.get(1);
+      List<MethodSource<JavaClassSource>> methods = subClass.getMethods();
+      MethodSource<JavaClassSource> equals = methods.get(0);
+      MethodSource<JavaClassSource> hashcode = methods.get(1);
 
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());
@@ -283,15 +283,15 @@ public class RefactoryTest
    @Test
    public void testCreateHashCodeAndEqualsOuterClass() throws Exception
    {
-      JavaClass outerClass = JavaParser
-               .parse(JavaClass.class,
+      JavaClassSource outerClass = JavaParser
+               .parse(JavaClassSource.class,
                         "public class Foo { private Foo.Bar bar; class Bar{ private Boolean flag; } }");
-      Field<JavaClass> outerField = outerClass.getField("bar");
+      FieldSource<JavaClassSource> outerField = outerClass.getField("bar");
       Refactory.createHashCodeAndEquals(outerClass, outerField);
 
-      List<Method<JavaClass>> methods = outerClass.getMethods();
-      Method<JavaClass> equals = methods.get(0);
-      Method<JavaClass> hashcode = methods.get(1);
+      List<MethodSource<JavaClassSource>> methods = outerClass.getMethods();
+      MethodSource<JavaClassSource> equals = methods.get(0);
+      MethodSource<JavaClassSource> hashcode = methods.get(1);
 
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());
@@ -310,17 +310,17 @@ public class RefactoryTest
    // This is not supported for now
    public void testCreateHashCodeAndEqualsInnerClass() throws Exception
    {
-      JavaClass outerClass = JavaParser
-               .parse(JavaClass.class,
+      JavaClassSource outerClass = JavaParser
+               .parse(JavaClassSource.class,
                         "public class Foo { private Foo.Bar bar; class Bar{ private Boolean flag; } }");
-      JavaClass innerClass = (JavaClass) outerClass.getNestedClasses().get(0);
-      Field<JavaClass> innerField = innerClass.getField("flag");
+      JavaClassSource innerClass = (JavaClassSource) outerClass.getNestedClasses().get(0);
+      FieldSource<JavaClassSource> innerField = innerClass.getField("flag");
       Refactory.createHashCodeAndEquals(innerClass, innerField);
 
-      List<Method<JavaClass>> methods = innerClass.getMethods();
-      Method<JavaClass> equals = methods.get(0);
-      Method<JavaClass> hashcode = methods.get(1);
-      Method<JavaClass> outerTypeAccessor = methods.get(2);
+      List<MethodSource<JavaClassSource>> methods = innerClass.getMethods();
+      MethodSource<JavaClassSource> equals = methods.get(0);
+      MethodSource<JavaClassSource> hashcode = methods.get(1);
+      MethodSource<JavaClassSource> outerTypeAccessor = methods.get(2);
 
       assertEquals("getOuterType", outerTypeAccessor.getName());
 
@@ -342,16 +342,16 @@ public class RefactoryTest
    @Test
    public void testCreateHashCodeAndEqualsMultipleLongFields() throws Exception
    {
-      JavaClass aClass = JavaParser
-               .parse(JavaClass.class,
+      JavaClassSource aClass = JavaParser
+               .parse(JavaClassSource.class,
                         "public class Foo { private double firstDouble; private double secondDouble;}");
-      Field<JavaClass> firstLongField = aClass.getField("firstDouble");
-      Field<JavaClass> secondLongField = aClass.getField("secondDouble");
+      FieldSource<JavaClassSource> firstLongField = aClass.getField("firstDouble");
+      FieldSource<JavaClassSource> secondLongField = aClass.getField("secondDouble");
       Refactory.createHashCodeAndEquals(aClass, firstLongField, secondLongField);
 
-      List<Method<JavaClass>> methods = aClass.getMethods();
-      Method<JavaClass> equals = methods.get(0);
-      Method<JavaClass> hashcode = methods.get(1);
+      List<MethodSource<JavaClassSource>> methods = aClass.getMethods();
+      MethodSource<JavaClassSource> equals = methods.get(0);
+      MethodSource<JavaClassSource> hashcode = methods.get(1);
 
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());

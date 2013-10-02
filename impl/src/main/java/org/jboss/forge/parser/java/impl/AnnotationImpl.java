@@ -24,19 +24,19 @@ import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeLiteral;
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
-import org.jboss.forge.parser.java.ReadAnnotationTarget.AnnotationTarget;
-import org.jboss.forge.parser.java.ReadJavaClass;
-import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
+import org.jboss.forge.parser.java.JavaClass;
 import org.jboss.forge.parser.java.Type;
 import org.jboss.forge.parser.java.ValuePair;
+import org.jboss.forge.parser.java.source.AnnotationSource;
+import org.jboss.forge.parser.java.source.AnnotationTargetSource;
+import org.jboss.forge.parser.java.source.JavaSource;
 import org.jboss.forge.parser.java.util.Assert;
 import org.jboss.forge.parser.java.util.Strings;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
+public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSource<O>
 {
    private class Nested extends AnnotationImpl<O, T>
    {
@@ -66,7 +66,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
 
    private static final String DEFAULT_VALUE = "value";
 
-   private AnnotationTarget<O, T> parent = null;
+   private AnnotationTargetSource<O, T> parent = null;
    private AST ast = null;
    private org.eclipse.jdt.core.dom.Annotation annotation;
 
@@ -75,24 +75,24 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
       MARKER, SINGLE, NORMAL
    }
 
-   public AnnotationImpl(final AnnotationTarget<O, T> parent)
+   public AnnotationImpl(final AnnotationTargetSource<O, T> parent)
    {
       this(parent, AnnotationType.MARKER);
    }
 
-   public AnnotationImpl(final AnnotationTarget<O, T> parent, final Object internal)
+   public AnnotationImpl(final AnnotationTargetSource<O, T> parent, final Object internal)
    {
       this.parent = parent;
       ast = ((ASTNode) parent.getInternal()).getAST();
       annotation = (org.eclipse.jdt.core.dom.Annotation) internal;
    }
 
-   public AnnotationImpl(final AnnotationTarget<O, T> parent, final AnnotationType type)
+   public AnnotationImpl(final AnnotationTargetSource<O, T> parent, final AnnotationType type)
    {
       this(parent, createAnnotation(parent, type));
    }
 
-   private static org.eclipse.jdt.core.dom.Annotation createAnnotation(final AnnotationTarget<?, ?> parent,
+   private static org.eclipse.jdt.core.dom.Annotation createAnnotation(final AnnotationTargetSource<?, ?> parent,
             final AnnotationType type)
    {
       AST ast = ((ASTNode) parent.getInternal()).getAST();
@@ -226,7 +226,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
    }
 
    @Override
-   public Annotation<O> removeAllValues()
+   public AnnotationSource<O> removeAllValues()
    {
       convertTo(AnnotationType.MARKER);
       return this;
@@ -234,7 +234,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
 
    @Override
    @SuppressWarnings("unchecked")
-   public Annotation<O> removeValue(final String name)
+   public AnnotationSource<O> removeValue(final String name)
    {
       if (annotation.isNormalAnnotation())
       {
@@ -271,14 +271,14 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
    }
 
    @Override
-   public Annotation<O> setName(final String className)
+   public AnnotationSource<O> setName(final String className)
    {
       annotation.setTypeName(ast.newName(className));
       return this;
    }
 
    @Override
-   public Annotation<O> setLiteralValue(final String value)
+   public AnnotationSource<O> setLiteralValue(final String value)
    {
       Assert.notNull(value, "null not accepted");
 
@@ -292,7 +292,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
          SingleMemberAnnotation sa = (SingleMemberAnnotation) annotation;
 
          String stub = "@" + getName() + "(" + value + ") public class Stub { }";
-         ReadJavaClass<?> temp = JavaParser.parse(ReadJavaClass.class, stub);
+         JavaClass<?> temp = JavaParser.parse(JavaClass.class, stub);
 
          SingleMemberAnnotation anno = (SingleMemberAnnotation) temp.getAnnotations().get(0).getInternal();
 
@@ -309,7 +309,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
 
    @Override
    @SuppressWarnings("unchecked")
-   public Annotation<O> setLiteralValue(final String name, final String value)
+   public AnnotationSource<O> setLiteralValue(final String name, final String value)
    {
       Assert.notNull(value, "null not accepted");
 
@@ -329,7 +329,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
       NormalAnnotation na = (NormalAnnotation) annotation;
 
       String stub = "@" + getName() + "(" + name + "=" + value + " ) public class Stub { }";
-      ReadJavaClass<?> temp = JavaParser.parse(ReadJavaClass.class, stub);
+      JavaClass<?> temp = JavaParser.parse(JavaClass.class, stub);
 
       NormalAnnotation anno = (NormalAnnotation) temp.getAnnotations().get(0).getInternal();
       MemberValuePair mvp = (MemberValuePair) anno.values().get(0);
@@ -350,13 +350,13 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
    }
 
    @Override
-   public Annotation<O> setStringValue(final String value)
+   public AnnotationSource<O> setStringValue(final String value)
    {
       return setLiteralValue(Strings.enquote(value));
    }
 
    @Override
-   public Annotation<O> setStringValue(final String name, final String value)
+   public AnnotationSource<O> setStringValue(final String name, final String value)
    {
       return setLiteralValue(name, Strings.enquote(value));
    }
@@ -396,25 +396,25 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
    }
 
    @Override
-   public Annotation<O> setEnumValue(final String name, final Enum<?> value)
+   public AnnotationSource<O> setEnumValue(final String name, final Enum<?> value)
    {
       return setEnumArrayValue(name, value);
    }
 
    @Override
-   public Annotation<O> setEnumValue(final Enum<?>... values)
+   public AnnotationSource<O> setEnumValue(final Enum<?>... values)
    {
       return setEnumArrayValue(values);
    }
 
    @Override
-   public Annotation<O> setEnumArrayValue(Enum<?>... values)
+   public AnnotationSource<O> setEnumArrayValue(Enum<?>... values)
    {
       return setEnumArrayValue(DEFAULT_VALUE, values);
    }
 
    @Override
-   public Annotation<O> setEnumArrayValue(String name, final Enum<?>... values)
+   public AnnotationSource<O> setEnumArrayValue(String name, final Enum<?>... values)
    {
       Assert.notNull(values, "null array not accepted");
 
@@ -530,7 +530,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
    }
 
    @Override
-   public Annotation<O> setAnnotationValue()
+   public AnnotationSource<O> setAnnotationValue()
    {
       if (isMarker())
       {
@@ -539,7 +539,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
 
       if (isSingleValue())
       {
-         final Annotation<O> result = new Nested(this);
+         final AnnotationSource<O> result = new Nested(this);
          ((SingleMemberAnnotation) annotation).setValue((Expression) result.getInternal());
          return result;
       }
@@ -547,7 +547,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
    }
 
    @Override
-   public Annotation<O> setAnnotationValue(String name)
+   public AnnotationSource<O> setAnnotationValue(String name)
    {
       if (!isNormal() && DEFAULT_VALUE.equals(name)) {
          return setAnnotationValue();
@@ -556,10 +556,10 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
       {
          convertTo(AnnotationType.NORMAL);
       }
-      Annotation<O> result = new Nested(this);
+      AnnotationSource<O> result = new Nested(this);
       
       String stub = "@" + getName() + "(" + name + "= 0 ) public class Stub { }";
-      ReadJavaClass<?> temp = JavaParser.parse(ReadJavaClass.class, stub);
+      JavaClass<?> temp = JavaParser.parse(JavaClass.class, stub);
 
       NormalAnnotation anno = (NormalAnnotation) temp.getAnnotations().get(0).getInternal();
       MemberValuePair mvp = (MemberValuePair) anno.values().get(0);
@@ -583,7 +583,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
    }
 
    @Override
-   public Annotation<O> getAnnotationValue()
+   public AnnotationSource<O> getAnnotationValue()
    {
       if (isSingleValue())
       {
@@ -602,7 +602,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
    }
 
    @Override
-   public Annotation<O> getAnnotationValue(String name)
+   public AnnotationSource<O> getAnnotationValue(String name)
    {
       if (isNormal())
       {
@@ -705,7 +705,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
    }
 
    @Override
-   public Annotation<O> setClassValue(String name, Class<?> value)
+   public AnnotationSource<O> setClassValue(String name, Class<?> value)
    {
       Assert.notNull(value, "null not accepted");
 
@@ -717,19 +717,19 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
    }
 
    @Override
-   public Annotation<O> setClassValue(Class<?> value)
+   public AnnotationSource<O> setClassValue(Class<?> value)
    {
       return setClassValue(DEFAULT_VALUE, value);
    }
 
    @Override
-   public Annotation<O> setClassArrayValue(Class<?>... values)
+   public AnnotationSource<O> setClassArrayValue(Class<?>... values)
    {
       return setClassArrayValue(DEFAULT_VALUE, values);
    }
 
    @Override
-   public Annotation<O> setClassArrayValue(String name, Class<?>... values)
+   public AnnotationSource<O> setClassArrayValue(String name, Class<?>... values)
    {
       Assert.notNull(values, "null array not accepted");
 

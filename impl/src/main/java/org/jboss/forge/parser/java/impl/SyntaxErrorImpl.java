@@ -8,7 +8,7 @@ package org.jboss.forge.parser.java.impl;
 
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.jboss.forge.parser.Internal;
-import org.jboss.forge.parser.java.ReadJavaSource;
+import org.jboss.forge.parser.java.JavaType;
 import org.jboss.forge.parser.java.SyntaxError;
 
 /**
@@ -17,10 +17,10 @@ import org.jboss.forge.parser.java.SyntaxError;
  */
 public class SyntaxErrorImpl implements SyntaxError, Internal
 {
-   private final ReadJavaSource<?> parent;
+   private final JavaType<?> parent;
    private final IProblem problem;
 
-   public SyntaxErrorImpl(final ReadJavaSource<?> parent, final Object internal)
+   public SyntaxErrorImpl(final JavaType<?> parent, final Object internal)
    {
       this.parent = parent;
       this.problem = (IProblem) internal;

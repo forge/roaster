@@ -17,14 +17,14 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.TextEdit;
-import org.jboss.forge.parser.java.ReadJavaClass;
+import org.jboss.forge.parser.java.JavaClass;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 public abstract class Formatter
 {
-   public static String format(ReadJavaClass javaClass)
+   public static String format(JavaClass javaClass)
    {
       return format(javaClass.toString());
    }

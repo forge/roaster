@@ -9,7 +9,7 @@ package org.jboss.forge.test.parser.java;
 import java.io.InputStream;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
+import org.jboss.forge.parser.java.source.JavaClassSource;
 import org.jboss.forge.test.parser.java.common.AnnotationTest;
 
 /**
@@ -23,7 +23,7 @@ public class JavaClassAnnotationTest extends AnnotationTest
    {
       InputStream stream = JavaClassAnnotationTest.class
                .getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedClass.java");
-      JavaClass javaClass = JavaParser.parse(JavaClass.class, stream);
+      JavaClassSource javaClass = JavaParser.parse(JavaClassSource.class, stream);
       setTarget(javaClass);
    }
 }

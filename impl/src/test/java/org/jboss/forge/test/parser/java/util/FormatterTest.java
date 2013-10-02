@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNotSame;
 import java.io.InputStream;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadJavaClass;
+import org.jboss.forge.parser.java.JavaClass;
 import org.jboss.forge.parser.java.util.Formatter;
 import org.jboss.forge.test.parser.java.FieldAnnotationTest;
 import org.junit.BeforeClass;
@@ -23,14 +23,14 @@ import org.junit.Test;
  */
 public class FormatterTest
 {
-   private static ReadJavaClass javaClass;
+   private static JavaClass javaClass;
 
    @BeforeClass
    public static void resetTests()
    {
       InputStream stream = FieldAnnotationTest.class
                .getResourceAsStream("/org/jboss/forge/grammar/java/MockUnformattedClass.java");
-      javaClass = JavaParser.parse(ReadJavaClass.class, stream);
+      javaClass = JavaParser.parse(JavaClass.class, stream);
    }
 
    @Test

@@ -7,7 +7,7 @@
 
 package org.jboss.forge.parser.java;
 
-import org.jboss.forge.parser.java.ReadVisibilityScoped.VisibilityScoped;
+import org.jboss.forge.parser.java.source.VisibilityScopedSource;
 import org.jboss.forge.parser.java.util.Assert;
 
 /**
@@ -36,7 +36,7 @@ public enum Visibility
       return scope;
    }
 
-   public static Visibility getFrom(ReadVisibilityScoped target)
+   public static Visibility getFrom(VisibilityScoped target)
    {
       Assert.notNull(target, "VisibilityScoped<T> target must not be null.");
 
@@ -51,7 +51,7 @@ public enum Visibility
 
       else
       {
-         throw new IllegalStateException(ReadVisibilityScoped.class.getSimpleName()
+         throw new IllegalStateException(VisibilityScoped.class.getSimpleName()
                   + " target does not comply with visibility scoping. Must be one of " + Visibility.values() + "[ "
                   + target + "]");
       }
@@ -63,7 +63,7 @@ public enum Visibility
       return scope;
    }
 
-   public static <T extends VisibilityScoped<?>> T set(T target, Visibility scope)
+   public static <T extends VisibilityScopedSource<?>> T set(T target, Visibility scope)
    {
       Assert.notNull(target, "VisibilityScoped<T> target must not be null.");
       Assert.notNull(scope, "Visibility scope must not be null");

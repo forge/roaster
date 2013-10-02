@@ -15,9 +15,9 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Import;
-import org.jboss.forge.parser.java.ReadJavaInterface.JavaInterface;
-import org.jboss.forge.parser.java.ReadMember.Member;
+import org.jboss.forge.parser.java.source.Import;
+import org.jboss.forge.parser.java.source.JavaInterfaceSource;
+import org.jboss.forge.parser.java.source.MemberSource;
 import org.junit.Test;
 
 /**
@@ -30,7 +30,7 @@ public class JavaInterfaceTest
    {
       InputStream stream = JavaInterfaceTest.class
                .getResourceAsStream("/org/jboss/forge/grammar/java/MockInterface.java");
-      JavaInterface javaClass = JavaParser.parse(JavaInterface.class, stream);
+      JavaInterfaceSource javaClass = JavaParser.parse(JavaInterfaceSource.class, stream);
       String name = javaClass.getName();
       assertEquals("MockInterface", name);
    }
@@ -40,18 +40,18 @@ public class JavaInterfaceTest
    {
       InputStream stream = JavaInterfaceTest.class
                .getResourceAsStream("/org/jboss/forge/grammar/java/BigInterface.java");
-      JavaInterface javaClass = JavaParser.parse(JavaInterface.class, stream);
+      JavaInterfaceSource javaClass = JavaParser.parse(JavaInterfaceSource.class, stream);
       String name = javaClass.getName();
       assertEquals("BigInterface", name);
-      List<Member<JavaInterface, ?>> members = javaClass.getMembers();
+      List<MemberSource<JavaInterfaceSource, ?>> members = javaClass.getMembers();
       assertFalse(members.isEmpty());
    }
 
    @Test
    public void testImportJavaSource() throws Exception
    {
-      JavaInterface foo = JavaParser.parse(JavaInterface.class, "package org.jboss.forge; public interface Foo{}");
-      JavaInterface bar = JavaParser.parse(JavaInterface.class, "package org.jboss.forge; public interface Bar{}");
+      JavaInterfaceSource foo = JavaParser.parse(JavaInterfaceSource.class, "package org.jboss.forge; public interface Foo{}");
+      JavaInterfaceSource bar = JavaParser.parse(JavaInterfaceSource.class, "package org.jboss.forge; public interface Bar{}");
 
       assertFalse(foo.hasImport(bar));
       assertFalse(bar.hasImport(foo));
@@ -71,7 +71,7 @@ public class JavaInterfaceTest
    @Test
    public void testImportImport() throws Exception
    {
-      JavaInterface foo = JavaParser.parse(JavaInterface.class, "public interface Foo{}");
+      JavaInterfaceSource foo = JavaParser.parse(JavaInterfaceSource.class, "public interface Foo{}");
       Import i = foo.addImport(getClass());
 
       foo.removeImport(getClass());

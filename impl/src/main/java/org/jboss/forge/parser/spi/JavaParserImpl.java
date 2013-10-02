@@ -26,19 +26,19 @@ import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.util.Util;
 import org.eclipse.jface.text.Document;
 import org.jboss.forge.parser.ParserException;
-import org.jboss.forge.parser.java.ReadJavaAnnotation.JavaAnnotation;
-import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
-import org.jboss.forge.parser.java.ReadJavaEnum.JavaEnum;
-import org.jboss.forge.parser.java.ReadJavaInterface.JavaInterface;
-import org.jboss.forge.parser.java.ReadJavaPackageInfo.JavaPackageInfo;
-import org.jboss.forge.parser.java.ReadJavaSource;
-import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
+import org.jboss.forge.parser.java.JavaType;
 import org.jboss.forge.parser.java.ast.TypeDeclarationFinderVisitor;
 import org.jboss.forge.parser.java.impl.JavaAnnotationImpl;
 import org.jboss.forge.parser.java.impl.JavaClassImpl;
 import org.jboss.forge.parser.java.impl.JavaEnumImpl;
 import org.jboss.forge.parser.java.impl.JavaInterfaceImpl;
 import org.jboss.forge.parser.java.impl.JavaPackageInfoImpl;
+import org.jboss.forge.parser.java.source.JavaAnnotationSource;
+import org.jboss.forge.parser.java.source.JavaClassSource;
+import org.jboss.forge.parser.java.source.JavaEnumSource;
+import org.jboss.forge.parser.java.source.JavaInterfaceSource;
+import org.jboss.forge.parser.java.source.JavaPackageInfoSource;
+import org.jboss.forge.parser.java.source.JavaSource;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -47,7 +47,7 @@ public class JavaParserImpl implements JavaParserProvider
 {
 
    @Override
-   public ReadJavaSource<?> parse(final InputStream data)
+   public JavaType<?> parse(final InputStream data)
    {
       try
       {
@@ -65,7 +65,7 @@ public class JavaParserImpl implements JavaParserProvider
    }
 
    @SuppressWarnings({ "rawtypes", "unchecked" })
-   private ReadJavaSource<?> parse(final String data)
+   private JavaType<?> parse(final String data)
    {
       Document document = new Document(data);
       ASTParser parser = ASTParser.newParser(AST.JLS4);
@@ -98,8 +98,8 @@ public class JavaParserImpl implements JavaParserProvider
    }
 
    /**
-    * Create a {@link ReadJavaSource} instance from the given {@link Document}, {@link CompilationUnit},
-    * {@link TypeDeclaration}, and enclosing {@link ReadJavaSource} type.
+    * Create a {@link JavaType} instance from the given {@link Document}, {@link CompilationUnit},
+    * {@link TypeDeclaration}, and enclosing {@link JavaType} type.
     */
    public static JavaSource<?> getJavaSource(JavaSource<?> enclosingType, Document document, CompilationUnit unit,
             ASTNode declaration)
@@ -143,19 +143,19 @@ public class JavaParserImpl implements JavaParserProvider
    {
       if (type != null)
       {
-         if (type.isAssignableFrom(JavaClass.class))
+         if (type.isAssignableFrom(JavaClassSource.class))
             return (T) parse("public class JavaClass { }");
    
-         if (type.isAssignableFrom(JavaEnum.class))
+         if (type.isAssignableFrom(JavaEnumSource.class))
             return (T) parse("public enum JavaEnum { }");
    
-         if (type.isAssignableFrom(JavaAnnotation.class))
+         if (type.isAssignableFrom(JavaAnnotationSource.class))
             return (T) parse("public @interface JavaAnnotation { }");
    
-         if (type.isAssignableFrom(JavaInterface.class))
+         if (type.isAssignableFrom(JavaInterfaceSource.class))
             return (T) parse("public interface JavaInterface { }");
    
-         if (type.isAssignableFrom(JavaPackageInfo.class))
+         if (type.isAssignableFrom(JavaPackageInfoSource.class))
             return (T) parse("package org.example;");
       }
       return null;

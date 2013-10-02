@@ -9,7 +9,7 @@ package org.jboss.forge.test.parser.java;
 import java.util.List;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
+import org.jboss.forge.parser.java.source.JavaClassSource;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,7 +19,7 @@ public class JavaClassGenericsTest
    @Test
    public void addAndRemoveGenericType() throws ClassNotFoundException
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class);
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.addGenericType("T");
@@ -31,7 +31,7 @@ public class JavaClassGenericsTest
    @Test
    public void addGenericSuperTypeWithPackage() throws ClassNotFoundException
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class);
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.setSuperType("it.coopservice.test.Bar<T>");
@@ -42,7 +42,7 @@ public class JavaClassGenericsTest
    @Test
    public void addConcreteGenericSuperTypeWithPackage() throws ClassNotFoundException
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class);
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.setSuperType("it.coopservice.test.Bar<com.coopservice.test.MyConcreteSuperClass>");
@@ -54,7 +54,7 @@ public class JavaClassGenericsTest
    @Test
    public void addMultipleConcreteGenericSuperTypeWithPackage() throws ClassNotFoundException
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class);
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.setSuperType("it.coopservice.test.Bar<com.coopservice.test.MyConcreteSuperClass,com.coopservice.test.MyOtherClass>");
@@ -67,7 +67,7 @@ public class JavaClassGenericsTest
    @Test
    public void addGenericSuperTypeWithoutPackage() throws ClassNotFoundException
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class);
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.setSuperType("Bar<T>");
@@ -78,7 +78,7 @@ public class JavaClassGenericsTest
    @Test
    public void removeGenericSuperType() throws ClassNotFoundException
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class);
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.addImport("it.coopservice.test.Bar");
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
@@ -91,7 +91,7 @@ public class JavaClassGenericsTest
    @Test
    public void addMultipleGenerics() throws ClassNotFoundException
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class);
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.addGenericType("I");
@@ -104,7 +104,7 @@ public class JavaClassGenericsTest
    @Test
    public void getClassGenerics() throws ClassNotFoundException
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class);
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.addGenericType("I");

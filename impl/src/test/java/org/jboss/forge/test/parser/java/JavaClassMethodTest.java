@@ -14,10 +14,10 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
-import org.jboss.forge.parser.java.ReadMember.Member;
-import org.jboss.forge.parser.java.ReadMethod.Method;
-import org.jboss.forge.parser.java.ReadParameter.Parameter;
+import org.jboss.forge.parser.java.source.JavaClassSource;
+import org.jboss.forge.parser.java.source.MemberSource;
+import org.jboss.forge.parser.java.source.MethodSource;
+import org.jboss.forge.parser.java.source.ParameterSource;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,14 +27,14 @@ import org.junit.Test;
 public class JavaClassMethodTest
 {
    private InputStream stream;
-   private JavaClass javaClass;
-   private Method<JavaClass> method;
+   private JavaClassSource javaClass;
+   private MethodSource<JavaClassSource> method;
 
    @Before
    public void reset()
    {
       stream = JavaClassMethodTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockClass.java");
-      javaClass = JavaParser.parse(JavaClass.class, stream);
+      javaClass = JavaParser.parse(JavaClassSource.class, stream);
       javaClass.addMethod("public URL rewriteURL(String pattern, String replacement) { return null; }");
       method = javaClass.getMethods().get(javaClass.getMethods().size() - 1);
    }
@@ -85,7 +85,7 @@ public class JavaClassMethodTest
    public void testSetParameters() throws Exception
    {
       method.setParameters("final int foo, final String bar");
-      List<Parameter<JavaClass>> parameters = method.getParameters();
+      List<ParameterSource<JavaClassSource>> parameters = method.getParameters();
       assertEquals(2, parameters.size());
       assertEquals("foo", parameters.get(0).getName());
       assertEquals("bar", parameters.get(1).getName());
@@ -95,7 +95,7 @@ public class JavaClassMethodTest
    public void testGetParameterType() throws Exception
    {
       method.setParameters("final int foo, final String bar");
-      List<Parameter<JavaClass>> parameters = method.getParameters();
+      List<ParameterSource<JavaClassSource>> parameters = method.getParameters();
       assertEquals(2, parameters.size());
       assertEquals("int", parameters.get(0).getType());
       assertEquals("String", parameters.get(1).getType());
@@ -119,9 +119,9 @@ public class JavaClassMethodTest
    @Test
    public void testGetMembers() throws Exception
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class).addMethod("public void doSomething();").getOrigin()
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class).addMethod("public void doSomething();").getOrigin()
                .addField("private int id;").getOrigin();
-      List<Member<JavaClass, ?>> members = javaClass.getMembers();
+      List<MemberSource<JavaClassSource, ?>> members = javaClass.getMembers();
       assertEquals(2, members.size());
    }
 }

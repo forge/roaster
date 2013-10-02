@@ -30,19 +30,19 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.ParserException;
-import org.jboss.forge.parser.java.ReadAnnotation;
-import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
-import org.jboss.forge.parser.java.Import;
-import org.jboss.forge.parser.java.ReadInterfaceCapable.InterfaceCapable;
-import org.jboss.forge.parser.java.ReadJavaInterface;
-import org.jboss.forge.parser.java.ReadJavaSource;
-import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
-import org.jboss.forge.parser.java.ReadMember.Member;
+import org.jboss.forge.parser.java.Annotation;
+import org.jboss.forge.parser.java.JavaInterface;
+import org.jboss.forge.parser.java.JavaType;
 import org.jboss.forge.parser.java.SyntaxError;
 import org.jboss.forge.parser.java.Visibility;
 import org.jboss.forge.parser.java.ast.AnnotationAccessor;
 import org.jboss.forge.parser.java.ast.ModifierAccessor;
 import org.jboss.forge.parser.java.ast.TypeDeclarationFinderVisitor;
+import org.jboss.forge.parser.java.source.AnnotationSource;
+import org.jboss.forge.parser.java.source.Import;
+import org.jboss.forge.parser.java.source.InterfaceCapableSource;
+import org.jboss.forge.parser.java.source.JavaSource;
+import org.jboss.forge.parser.java.source.MemberSource;
 import org.jboss.forge.parser.java.util.Formatter;
 import org.jboss.forge.parser.java.util.Strings;
 import org.jboss.forge.parser.java.util.Types;
@@ -51,12 +51,12 @@ import org.jboss.forge.parser.spi.WildcardImportResolver;
 
 /**
  * Represents a Java Source File
- *
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
-         JavaSource<O>, InterfaceCapable<O>
+         JavaSource<O>, InterfaceCapableSource<O>
 {
    private final AnnotationAccessor<O, O> annotations = new AnnotationAccessor<O, O>();
    private final ModifierAccessor modifiers = new ModifierAccessor();
@@ -88,25 +88,25 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
     * Annotation modifiers
     */
    @Override
-   public Annotation<O> addAnnotation()
+   public AnnotationSource<O> addAnnotation()
    {
       return annotations.addAnnotation(this, getBodyDeclaration());
    }
 
    @Override
-   public Annotation<O> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
+   public AnnotationSource<O> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
    {
       return annotations.addAnnotation(this, getBodyDeclaration(), clazz.getName());
    }
 
    @Override
-   public Annotation<O> addAnnotation(final String className)
+   public AnnotationSource<O> addAnnotation(final String className)
    {
       return annotations.addAnnotation(this, getBodyDeclaration(), className);
    }
 
    @Override
-   public List<Annotation<O>> getAnnotations()
+   public List<AnnotationSource<O>> getAnnotations()
    {
       return annotations.getAnnotations(this, getBodyDeclaration());
    }
@@ -124,19 +124,19 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public O removeAnnotation(final ReadAnnotation<O> annotation)
+   public O removeAnnotation(final Annotation<O> annotation)
    {
       return (O) annotations.removeAnnotation(this, getBodyDeclaration(), annotation);
    }
 
    @Override
-   public Annotation<O> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
+   public AnnotationSource<O> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
    {
       return annotations.getAnnotation(this, getBodyDeclaration(), type);
    }
 
    @Override
-   public Annotation<O> getAnnotation(final String type)
+   public AnnotationSource<O> getAnnotation(final String type)
    {
       return annotations.getAnnotation(this, getBodyDeclaration(), type);
    }
@@ -152,7 +152,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public <T extends ReadJavaSource<?>> Import addImport(final T type)
+   public <T extends JavaType<?>> Import addImport(final T type)
    {
       String qualifiedName = type.getQualifiedName();
       return this.addImport(qualifiedName);
@@ -211,7 +211,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public <T extends ReadJavaSource<?>> Import getImport(final T type)
+   public <T extends JavaType<?>> Import getImport(final T type)
    {
       return getImport(type.getQualifiedName());
    }
@@ -242,7 +242,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public <T extends ReadJavaSource<T>> boolean hasImport(final T type)
+   public <T extends JavaType<T>> boolean hasImport(final T type)
    {
       return hasImport(type.getQualifiedName());
    }
@@ -413,7 +413,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public <T extends ReadJavaSource<?>> O removeImport(final T type)
+   public <T extends JavaType<?>> O removeImport(final T type)
    {
       return removeImport(type.getQualifiedName());
    }
@@ -430,9 +430,9 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public List<Member<O, ?>> getMembers()
+   public List<MemberSource<O, ?>> getMembers()
    {
-      List<Member<O, ?>> result = new ArrayList<Member<O, ?>>();
+      List<MemberSource<O, ?>> result = new ArrayList<MemberSource<O, ?>>();
 
       return result;
    }
@@ -465,7 +465,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    {
       String result = getName();
 
-      ReadJavaSource<?> enclosingType = this;
+      JavaType<?> enclosingType = this;
       while (enclosingType != enclosingType.getEnclosingType())
       {
          enclosingType = getEnclosingType();
@@ -489,7 +489,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    {
       String result = getName();
 
-      ReadJavaSource<?> enclosingType = this;
+      JavaType<?> enclosingType = this;
       while (enclosingType != enclosingType.getEnclosingType())
       {
          enclosingType = getEnclosingType();
@@ -618,7 +618,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
     * Non-manipulation methods.
     */
    /**
-    * Return this {@link ReadJavaSource} file as a String
+    * Return this {@link JavaType} file as a String
     */
    @Override
    public String toString()
@@ -817,7 +817,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public O addInterface(final ReadJavaInterface<?> type)
+   public O addInterface(final JavaInterface<?> type)
    {
       return addInterface(type.getQualifiedName());
    }
@@ -842,7 +842,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public boolean hasInterface(final ReadJavaInterface<?> type)
+   public boolean hasInterface(final JavaInterface<?> type)
    {
       return hasInterface(type.getQualifiedName());
    }
@@ -869,7 +869,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public O removeInterface(final ReadJavaInterface<?> type)
+   public O removeInterface(final JavaInterface<?> type)
    {
       return removeInterface(type.getQualifiedName());
    }

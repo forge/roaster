@@ -7,17 +7,17 @@
 package org.jboss.forge.test.parser.java;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
+import org.jboss.forge.parser.java.source.JavaClassSource;
 import org.jboss.forge.test.parser.java.common.InterfacedTestBase;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class JavaClassInterfaceTest extends InterfacedTestBase<JavaClass>
+public class JavaClassInterfaceTest extends InterfacedTestBase<JavaClassSource>
 {
    @Override
-   protected JavaClass getSource()
+   protected JavaClassSource getSource()
    {
-      return JavaParser.parse(JavaClass.class, "public class MockClass {}");
+      return JavaParser.parse(JavaClassSource.class, "public class MockClass {}");
    }
 }

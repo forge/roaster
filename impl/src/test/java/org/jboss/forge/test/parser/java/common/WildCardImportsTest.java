@@ -9,7 +9,7 @@ package org.jboss.forge.test.parser.java.common;
 import static org.junit.Assert.assertTrue;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
+import org.jboss.forge.parser.java.source.JavaClassSource;
 import org.junit.Test;
 
 public class WildCardImportsTest
@@ -18,7 +18,7 @@ public class WildCardImportsTest
    @Test
    public void testImportWithWildCard() throws ClassNotFoundException
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class);
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.addImport("org.junit.Assert.*");
@@ -29,7 +29,7 @@ public class WildCardImportsTest
    @Test
    public void testImportStaticAndWithWildCard() throws ClassNotFoundException
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class);
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.addImport("org.junit.Assert.*")

@@ -11,10 +11,10 @@ import static org.junit.Assert.assertEquals;
 import java.util.List;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
-import org.jboss.forge.parser.java.ReadMethod.Method;
-import org.jboss.forge.parser.java.ReadParameter.Parameter;
 import org.jboss.forge.parser.java.Visibility;
+import org.jboss.forge.parser.java.source.JavaClassSource;
+import org.jboss.forge.parser.java.source.MethodSource;
+import org.jboss.forge.parser.java.source.ParameterSource;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,7 +26,7 @@ public class MethodSignatureTest
    @Test
    public void testEmptyMethodSignature() throws Exception
    {
-      Method<JavaClass> method = JavaParser.create(JavaClass.class).addMethod("public void hello()");
+      MethodSource<JavaClassSource> method = JavaParser.create(JavaClassSource.class).addMethod("public void hello()");
       String signature = method.toSignature();
       assertEquals("public hello() : void", signature);
    }
@@ -34,7 +34,7 @@ public class MethodSignatureTest
    @Test
    public void testMethodSignatureParams() throws Exception
    {
-      Method<JavaClass> method = JavaParser.create(JavaClass.class).addMethod("public void hello(String foo, int bar)");
+      MethodSource<JavaClassSource> method = JavaParser.create(JavaClassSource.class).addMethod("public void hello(String foo, int bar)");
       String signature = method.toSignature();
       assertEquals("public hello(String, int) : void", signature);
    }
@@ -42,8 +42,8 @@ public class MethodSignatureTest
    @Test
    public void testMethodParams() throws Exception
    {
-      Method<JavaClass> method = JavaParser.create(JavaClass.class).addMethod("public void hello(String foo, int bar)");
-      List<Parameter<JavaClass>> parameters = method.getParameters();
+      MethodSource<JavaClassSource> method = JavaParser.create(JavaClassSource.class).addMethod("public void hello(String foo, int bar)");
+      List<ParameterSource<JavaClassSource>> parameters = method.getParameters();
 
       Assert.assertEquals("String", parameters.get(0).getTypeInspector().toString());
       Assert.assertEquals("int", parameters.get(1).getTypeInspector().toString());
@@ -52,14 +52,14 @@ public class MethodSignatureTest
    @Test(expected = UnsupportedOperationException.class)
    public void testUnmodifiableMethodParams() throws Exception
    {
-      JavaParser.create(JavaClass.class).addMethod("public void hello(String foo, int bar)").getParameters().add(null);
+      JavaParser.create(JavaClassSource.class).addMethod("public void hello(String foo, int bar)").getParameters().add(null);
    }
 
    @Test
    public void testMethodVisibility() throws Exception {
-       JavaClass javaClass = JavaParser.create(JavaClass.class);
+       JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
 
-       Method<JavaClass> method = javaClass.addMethod("public void hello()");
+       MethodSource<JavaClassSource> method = javaClass.addMethod("public void hello()");
        assertVisibility(Visibility.PUBLIC, method);
        assertVisibility("public", method);
 
@@ -78,8 +78,8 @@ public class MethodSignatureTest
 
    @Test
    public void testMethodVisibilityWithSetter() throws Exception {
-       JavaClass javaClass = JavaParser.create(JavaClass.class);
-       Method<JavaClass> method = javaClass.addMethod().setName("hello");
+       JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
+       MethodSource<JavaClassSource> method = javaClass.addMethod().setName("hello");
        assertVisibility("", method);
 
        method.setVisibility(Visibility.PUBLIC);
@@ -95,11 +95,11 @@ public class MethodSignatureTest
        assertVisibility("", method);
    }
 
-   private void assertVisibility(Visibility visibility, Method<JavaClass> method) {
+   private void assertVisibility(Visibility visibility, MethodSource<JavaClassSource> method) {
        Assert.assertEquals(visibility, method.getVisibility());
    }
 
-   private void assertVisibility(String visibility, Method<JavaClass> method) {
+   private void assertVisibility(String visibility, MethodSource<JavaClassSource> method) {
        Assert.assertEquals(visibility, method.getVisibility().toString());
    }
 }
