@@ -17,13 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 
-import org.jboss.forge.parser.java.ReadJavaClass;
 import org.jboss.forge.parser.java.ReadJavaSource;
 import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 import org.jboss.forge.parser.spi.JavaParserProvider;
 
 /**
- * Responsible for parsing data into new {@link ReadJavaClass} instances.
+ * Responsible for parsing data into new {@link ReadJavaSource} instances.
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
@@ -70,7 +69,7 @@ public final class JavaParser
    }
 
    /**
-    * Open the given {@link File}, parsing its contents into a new {@link ReadJavaClass} instance.
+    * Open the given {@link File}, parsing its contents into a new {@link ReadJavaSource} instance.
     */
    public static ReadJavaSource<?> parse(final File file) throws FileNotFoundException
    {
@@ -86,7 +85,7 @@ public final class JavaParser
    }
 
    /**
-    * Read the given {@link InputStream} and parse the data into a new {@link ReadJavaClass} instance.
+    * Read the given {@link InputStream} and parse the data into a new {@link ReadJavaSource} instance.
     */
    public static ReadJavaSource<?> parse(final InputStream data)
    {
@@ -94,7 +93,7 @@ public final class JavaParser
    }
 
    /**
-    * Parse the given character array into a new {@link ReadJavaClass} instance.
+    * Parse the given character array into a new {@link ReadJavaSource} instance.
     */
    public static ReadJavaSource<?> parse(final char[] data)
    {
@@ -102,7 +101,7 @@ public final class JavaParser
    }
 
    /**
-    * Parse the given String data into a new {@link ReadJavaClass} instance.
+    * Parse the given String data into a new {@link ReadJavaSource} instance.
     */
    public static ReadJavaSource<?> parse(final String data)
    {
