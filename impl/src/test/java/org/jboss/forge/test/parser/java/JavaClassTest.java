@@ -9,7 +9,7 @@ package org.jboss.forge.test.parser.java;
 import java.io.InputStream;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.JavaClass;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
 import org.jboss.forge.test.parser.java.common.JavaClassTestBase;
 
 /**

@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.jboss.forge.parser.java.Annotation;
-import org.jboss.forge.parser.java.AnnotationTarget;
-import org.jboss.forge.parser.java.JavaSource;
+import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
+import org.jboss.forge.parser.java.ReadAnnotationTarget.AnnotationTarget;
+import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,7 +44,6 @@ public abstract class AnnotationTest<O extends JavaSource<O>, T>
    public void reset()
    {
       resetTests();
-      assertTrue(target.getOrigin().isEditable());
    }
 
    public abstract void resetTests();

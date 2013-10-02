@@ -15,9 +15,8 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jface.text.Document;
-import org.jboss.forge.parser.java.EnumConstant;
-import org.jboss.forge.parser.java.JavaEnum;
-import org.jboss.forge.parser.java.JavaSource;
+import org.jboss.forge.parser.java.ReadEnumConstant.EnumConstant;
+import org.jboss.forge.parser.java.ReadJavaEnum.JavaEnum;
 import org.jboss.forge.parser.java.SourceType;
 
 /**

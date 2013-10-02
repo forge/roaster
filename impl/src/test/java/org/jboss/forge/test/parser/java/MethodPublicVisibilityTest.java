@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.Method;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
+import org.jboss.forge.parser.java.ReadMethod.Method;
 import org.jboss.forge.test.parser.java.common.VisibilityTest;
 
 /**
@@ -20,12 +20,11 @@ import org.jboss.forge.test.parser.java.common.VisibilityTest;
 public class MethodPublicVisibilityTest extends VisibilityTest
 {
    @Override
-   @SuppressWarnings({ "rawtypes" })
    public void resetTests() throws IOException
    {
       URL url = MethodPublicVisibilityTest.class
                .getResource("/org/jboss/forge/grammar/java/MockAnnotatedMethod.java");
-      Method method = JavaParser.parse(JavaClass.class, url).getMethods().get(1);
+      Method<JavaClass> method = JavaParser.parse(JavaClass.class, url).getMethods().get(1);
       setTarget(method);
    }
 }

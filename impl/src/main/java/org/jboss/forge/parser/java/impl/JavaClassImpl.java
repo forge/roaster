@@ -12,9 +12,9 @@ import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jface.text.Document;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.JavaSource;
-import org.jboss.forge.parser.java.Method;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
+import org.jboss.forge.parser.java.ReadJavaSource;
+import org.jboss.forge.parser.java.ReadMethod.Method;
 import org.jboss.forge.parser.java.SourceType;
 import org.jboss.forge.parser.java.ast.ModifierAccessor;
 import org.jboss.forge.parser.java.util.Types;
@@ -97,7 +97,7 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClass> i
    }
 
    @Override
-   public JavaClass setSuperType(final JavaClass type)
+   public JavaClass setSuperType(final ReadJavaSource<?> type)
    {
       return setSuperType(type.getQualifiedName());
    }

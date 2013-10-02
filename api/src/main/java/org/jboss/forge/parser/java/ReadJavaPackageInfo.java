@@ -10,6 +10,9 @@ package org.jboss.forge.parser.java;
 /**
  * Represents a Java Package Info.
  */
-public interface JavaPackageInfo extends JavaSource<JavaPackageInfo>
+public interface ReadJavaPackageInfo<O extends ReadJavaPackageInfo<O>> extends ReadJavaSource<O>
 {
+   public interface JavaPackageInfo extends ReadJavaPackageInfo<JavaPackageInfo>, JavaSource<JavaPackageInfo>
+   {
+   }
 }

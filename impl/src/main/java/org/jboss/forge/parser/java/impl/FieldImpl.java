@@ -22,10 +22,12 @@ import org.eclipse.jdt.core.dom.PrimitiveType.Code;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Annotation;
-import org.jboss.forge.parser.java.Field;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.JavaSource;
+import org.jboss.forge.parser.java.ReadAnnotation;
+import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
+import org.jboss.forge.parser.java.ReadField.Field;
+import org.jboss.forge.parser.java.ReadJavaClass;
+import org.jboss.forge.parser.java.ReadJavaSource;
+import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 import org.jboss.forge.parser.java.Visibility;
 import org.jboss.forge.parser.java.ast.AnnotationAccessor;
 import org.jboss.forge.parser.java.ast.ModifierAccessor;
@@ -164,7 +166,7 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    }
 
    @Override
-   public Field<O> removeAnnotation(final Annotation<O> annotation)
+   public Field<O> removeAnnotation(final ReadAnnotation<O> annotation)
    {
       return annotations.removeAnnotation(this, field, annotation);
    }
@@ -393,7 +395,7 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    }
 
    @Override
-   public Field<O> setType(final JavaSource<?> source)
+   public Field<O> setType(final ReadJavaSource<?> source)
    {
       return setType(source.getQualifiedName());
    }
@@ -467,7 +469,7 @@ public class FieldImpl<O extends JavaSource<O>> implements Field<O>
    public Field<O> setLiteralInitializer(final String value)
    {
       String stub = "public class Stub { private String stub = " + value + " }";
-      JavaClass temp = (JavaClass) JavaParser.parse(stub);
+      ReadJavaClass<?> temp = JavaParser.parse(ReadJavaClass.class, stub);
       VariableDeclarationFragment tempFrag = (VariableDeclarationFragment) temp.getFields().get(0).getInternal();
       fragment.setInitializer((Expression) ASTNode.copySubtree(ast, tempFrag.getInitializer()));
       return this;

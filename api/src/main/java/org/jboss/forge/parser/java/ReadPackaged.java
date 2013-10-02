@@ -11,28 +11,30 @@ package org.jboss.forge.parser.java;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface Packaged<T>
+public interface ReadPackaged<T>
 {
    /**
-    * Get the package of this {@link T}, or return null if it is in the default
-    * package.
+    * Get the package of this {@link T}, or return null if it is in the default package.
     */
    public String getPackage();
-
-   /**
-    * Set this {@link T}' package.
-    */
-   public T setPackage(String name);
-
-   /**
-    * Set this {@link T} to be in the default package (removes any current
-    * package declaration.)
-    */
-   public T setDefaultPackage();
 
    /**
     * Return whether or not this {@link T} is in the default package.
     */
    public boolean isDefaultPackage();
 
+   public interface Packaged<T> extends ReadPackaged<T>
+   {
+
+      /**
+       * Set this {@link T}' package.
+       */
+      public T setPackage(String name);
+
+      /**
+       * Set this {@link T} to be in the default package (removes any current package declaration.)
+       */
+      public T setDefaultPackage();
+
+   }
 }

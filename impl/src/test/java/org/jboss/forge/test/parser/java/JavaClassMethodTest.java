@@ -14,10 +14,10 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.Member;
-import org.jboss.forge.parser.java.Method;
-import org.jboss.forge.parser.java.Parameter;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
+import org.jboss.forge.parser.java.ReadMember.Member;
+import org.jboss.forge.parser.java.ReadMethod.Method;
+import org.jboss.forge.parser.java.ReadParameter.Parameter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,7 +37,6 @@ public class JavaClassMethodTest
       javaClass = JavaParser.parse(JavaClass.class, stream);
       javaClass.addMethod("public URL rewriteURL(String pattern, String replacement) { return null; }");
       method = javaClass.getMethods().get(javaClass.getMethods().size() - 1);
-      assertTrue(method.getOrigin().isEditable());
    }
 
    @Test

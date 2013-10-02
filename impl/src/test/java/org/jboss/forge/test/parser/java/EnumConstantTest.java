@@ -14,11 +14,10 @@ import java.io.InputStream;
 import java.util.regex.Pattern;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.EnumConstant;
-import org.jboss.forge.parser.java.EnumConstant.Body;
-import org.jboss.forge.parser.java.Field;
-import org.jboss.forge.parser.java.JavaEnum;
-import org.jboss.forge.parser.java.Method;
+import org.jboss.forge.parser.java.ReadEnumConstant.EnumConstant;
+import org.jboss.forge.parser.java.ReadField.Field;
+import org.jboss.forge.parser.java.ReadJavaEnum.JavaEnum;
+import org.jboss.forge.parser.java.ReadMethod.Method;
 import org.jboss.forge.parser.java.util.Strings;
 import org.junit.Before;
 import org.junit.Test;
@@ -103,7 +102,7 @@ public class EnumConstantTest
    {
       EnumConstant<JavaEnum> foo = javaEnum.getEnumConstant("FOO");
       EnumConstant.Body body = foo.getBody();
-      Method<Body> fooAction = body.addMethod().setName("fooAction").setReturnType(Void.TYPE);
+      Method<EnumConstant.Body> fooAction = body.addMethod().setName("fooAction").setReturnType(Void.TYPE);
       assertEquals(fooAction, body.getMethods().get(0));
       assertEquals(fooAction, body.getMembers().get(0));
       body.removeMethod(fooAction);
@@ -115,7 +114,7 @@ public class EnumConstantTest
    {
       EnumConstant<JavaEnum> foo = javaEnum.getEnumConstant("FOO");
       EnumConstant.Body body = foo.getBody();
-      Field<Body> fooField = body.addField().setName("fooField").setType(String.class);
+      Field<EnumConstant.Body> fooField = body.addField().setName("fooField").setType(String.class);
       assertEquals(fooField, body.getFields().get(0));
       assertEquals(fooField, body.getMembers().get(0));
       body.removeField(fooField);

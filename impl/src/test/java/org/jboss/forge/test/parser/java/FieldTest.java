@@ -14,8 +14,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.InputStream;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Field;
-import org.jboss.forge.parser.java.JavaClass;
+import org.jboss.forge.parser.java.ReadField.Field;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,7 +34,6 @@ public class FieldTest
       stream = FieldTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedField.java");
       javaClass = JavaParser.parse(JavaClass.class, stream);
       field = javaClass.getFields().get(javaClass.getFields().size() - 1);
-      assertTrue(field.getOrigin().isEditable());
    }
 
    @Test

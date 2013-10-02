@@ -16,8 +16,8 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.TypeParameter;
 import org.eclipse.jface.text.Document;
-import org.jboss.forge.parser.java.GenericCapable;
-import org.jboss.forge.parser.java.JavaSource;
+import org.jboss.forge.parser.java.ReadGenericCapable.GenericCapable;
+import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 
 /**
  * 

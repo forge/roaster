@@ -8,8 +8,8 @@ package org.jboss.forge.parser.spi;
 
 import java.io.InputStream;
 
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.JavaSource;
+import org.jboss.forge.parser.java.ReadJavaSource;
+import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -18,20 +18,20 @@ import org.jboss.forge.parser.java.JavaSource;
 public interface JavaParserProvider
 {
    /**
-    * Create a new empty {@link JavaClass} instance.
+    * Create a new empty {@link JavaSource} instance.
     * 
     * @param type desired source type
     * @return instance of {@code T}, {@code null} if the {@link JavaSource} type is not supported by this
     *         {@link JavaParserProvider}.
     */
    public <T extends JavaSource<?>> T create(final Class<T> type);
-   
+
    /**
-    * Read the given {@link InputStream} and parse the data into a new {@link JavaSource} instance.
+    * Read the given {@link InputStream} and parse the data into a new {@link ReadJavaSource} instance.
     * 
     * @param data to parse
-    * @return {@link JavaSource}, {@code null} if the data format is not recognized by this {@link JavaParserProvider}.
+    * @return {@link ReadJavaSource}, {@code null} if the data format is not recognized by this {@link JavaParserProvider}.
     */
-   public JavaSource<?> parse(final InputStream data);
+   public ReadJavaSource<?> parse(final InputStream data);
 
 }

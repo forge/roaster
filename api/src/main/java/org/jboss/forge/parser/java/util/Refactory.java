@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jboss.forge.parser.java.Field;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.Method;
+import org.jboss.forge.parser.java.ReadField.Field;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
+import org.jboss.forge.parser.java.ReadMethod.Method;
 
 /**
  * Utility refactory methods for {@link JavaClass} objects

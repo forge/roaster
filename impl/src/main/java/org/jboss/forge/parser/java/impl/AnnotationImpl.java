@@ -24,10 +24,10 @@ import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeLiteral;
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Annotation;
-import org.jboss.forge.parser.java.AnnotationTarget;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.JavaSource;
+import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
+import org.jboss.forge.parser.java.ReadAnnotationTarget.AnnotationTarget;
+import org.jboss.forge.parser.java.ReadJavaClass;
+import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 import org.jboss.forge.parser.java.Type;
 import org.jboss.forge.parser.java.ValuePair;
 import org.jboss.forge.parser.java.util.Assert;
@@ -292,7 +292,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
          SingleMemberAnnotation sa = (SingleMemberAnnotation) annotation;
 
          String stub = "@" + getName() + "(" + value + ") public class Stub { }";
-         JavaClass temp = (JavaClass) JavaParser.parse(stub);
+         ReadJavaClass<?> temp = JavaParser.parse(ReadJavaClass.class, stub);
 
          SingleMemberAnnotation anno = (SingleMemberAnnotation) temp.getAnnotations().get(0).getInternal();
 
@@ -329,7 +329,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
       NormalAnnotation na = (NormalAnnotation) annotation;
 
       String stub = "@" + getName() + "(" + name + "=" + value + " ) public class Stub { }";
-      JavaClass temp = (JavaClass) JavaParser.parse(stub);
+      ReadJavaClass<?> temp = JavaParser.parse(ReadJavaClass.class, stub);
 
       NormalAnnotation anno = (NormalAnnotation) temp.getAnnotations().get(0).getInternal();
       MemberValuePair mvp = (MemberValuePair) anno.values().get(0);
@@ -559,7 +559,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements Annotation<O>
       Annotation<O> result = new Nested(this);
       
       String stub = "@" + getName() + "(" + name + "= 0 ) public class Stub { }";
-      JavaClass temp = (JavaClass) JavaParser.parse(stub);
+      ReadJavaClass<?> temp = JavaParser.parse(ReadJavaClass.class, stub);
 
       NormalAnnotation anno = (NormalAnnotation) temp.getAnnotations().get(0).getInternal();
       MemberValuePair mvp = (MemberValuePair) anno.values().get(0);

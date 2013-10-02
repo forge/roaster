@@ -13,7 +13,7 @@ import org.jboss.forge.parser.Internal;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface Import extends Internal
+public interface ReadImport extends Internal
 {
    public String getPackage();
 
@@ -21,12 +21,14 @@ public interface Import extends Internal
 
    public String getQualifiedName();
 
-   public Import setName(final String name);
-
    public boolean isStatic();
-
-   public Import setStatic(final boolean value);
 
    public boolean isWildcard();
 
+   public interface Import extends ReadImport
+   {
+      public Import setName(final String name);
+
+      public Import setStatic(final boolean value);
+   }
 }

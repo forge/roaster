@@ -11,25 +11,12 @@ package org.jboss.forge.parser.java;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface VisibilityScoped<T>
+public interface ReadAbstractable<T>
 {
-   boolean isPackagePrivate();
+   public abstract boolean isAbstract();
 
-   T setPackagePrivate();
-
-   boolean isPublic();
-
-   T setPublic();
-
-   boolean isPrivate();
-
-   T setPrivate();
-
-   boolean isProtected();
-
-   T setProtected();
-
-   Visibility getVisibility();
-
-   T setVisibility(Visibility scope);
+   public interface Abstractable<T> extends ReadAbstractable<T>
+   {
+      public abstract T setAbstract(boolean abstrct);
+   }
 }

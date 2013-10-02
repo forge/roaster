@@ -15,9 +15,9 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Import;
-import org.jboss.forge.parser.java.JavaInterface;
-import org.jboss.forge.parser.java.Member;
+import org.jboss.forge.parser.java.ReadImport.Import;
+import org.jboss.forge.parser.java.ReadJavaInterface.JavaInterface;
+import org.jboss.forge.parser.java.ReadMember.Member;
 import org.junit.Test;
 
 /**
@@ -56,7 +56,6 @@ public class JavaInterfaceTest
       assertFalse(foo.hasImport(bar));
       assertFalse(bar.hasImport(foo));
 
-      assertTrue(foo.isEditable());
       Import importBar = foo.addImport(bar);
       assertTrue(foo.hasImport(bar));
       assertFalse(bar.hasImport(foo));
@@ -73,7 +72,6 @@ public class JavaInterfaceTest
    public void testImportImport() throws Exception
    {
       JavaInterface foo = JavaParser.parse(JavaInterface.class, "public interface Foo{}");
-      assertTrue(foo.isEditable());
       Import i = foo.addImport(getClass());
 
       foo.removeImport(getClass());

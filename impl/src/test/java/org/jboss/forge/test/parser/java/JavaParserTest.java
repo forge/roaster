@@ -9,7 +9,7 @@ package org.jboss.forge.test.parser.java;
 
 import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.ParserException;
-import org.jboss.forge.parser.java.JavaClass;
+import org.jboss.forge.parser.java.ReadJavaClass;
 import org.junit.Test;
 
 /**
@@ -20,6 +20,6 @@ public class JavaParserTest
    @Test(expected = ParserException.class)
    public void testExceptionWhenBadFileParsed() throws Exception
    {
-      JavaParser.parse(JavaClass.class, "asdfa$%(*&#$%sdfdsf");
+      JavaParser.parse(ReadJavaClass.class, "asdfa$%(*&#$%sdfdsf");
    }
 }

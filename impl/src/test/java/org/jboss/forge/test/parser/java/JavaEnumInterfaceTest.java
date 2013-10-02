@@ -7,7 +7,7 @@
 package org.jboss.forge.test.parser.java;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.JavaEnum;
+import org.jboss.forge.parser.java.ReadJavaEnum.JavaEnum;
 import org.jboss.forge.test.parser.java.common.InterfacedTestBase;
 
 /**

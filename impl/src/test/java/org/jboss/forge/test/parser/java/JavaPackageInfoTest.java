@@ -6,9 +6,10 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Annotation;
-import org.jboss.forge.parser.java.Import;
-import org.jboss.forge.parser.java.JavaPackageInfo;
+import org.jboss.forge.parser.java.ReadAnnotation;
+import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
+import org.jboss.forge.parser.java.ReadImport;
+import org.jboss.forge.parser.java.ReadJavaPackageInfo.JavaPackageInfo;
 import org.jboss.forge.parser.java.ValuePair;
 import org.junit.Assert;
 import org.junit.Test;
@@ -41,12 +42,12 @@ public class JavaPackageInfoTest
       assertEquals("org.jboss.forge.test.parser.java", javaPkg.getPackage());
       Assert.assertEquals("package-info", javaPkg.getName());
       Assert.assertNotNull(javaPkg.getImport("javax.xml.bind.annotation.XmlSchema"));
-      Import XmlAccessTypeField = javaPkg.getImport("javax.xml.bind.annotation.XmlAccessType.FIELD");
+      ReadImport XmlAccessTypeField = javaPkg.getImport("javax.xml.bind.annotation.XmlAccessType.FIELD");
       Assert.assertNotNull(XmlAccessTypeField);
       Assert.assertTrue(XmlAccessTypeField.isStatic());
       List<Annotation<JavaPackageInfo>> annotations = javaPkg.getAnnotations();
       Assert.assertEquals(2, annotations.size());
-      Annotation<JavaPackageInfo> annotation = javaPkg.getAnnotation("XmlSchema");
+      ReadAnnotation<JavaPackageInfo> annotation = javaPkg.getAnnotation("XmlSchema");
       List<ValuePair> values = annotation.getValues();
       Assert.assertEquals(3, values.size());
       String namespace = annotation.getLiteralValue("namespace");

@@ -17,9 +17,10 @@ import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.IExtendedModifier;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.jboss.forge.parser.java.Annotation;
-import org.jboss.forge.parser.java.AnnotationTarget;
-import org.jboss.forge.parser.java.JavaSource;
+import org.jboss.forge.parser.java.ReadAnnotation;
+import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
+import org.jboss.forge.parser.java.ReadAnnotationTarget.AnnotationTarget;
+import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 import org.jboss.forge.parser.java.impl.AnnotationImpl;
 import org.jboss.forge.parser.java.util.Types;
 
@@ -121,20 +122,20 @@ public class AnnotationAccessor<O extends JavaSource<O>, T>
    }
 
    public <E extends AnnotationTarget<O, T>> E removeAnnotation(final E target, final ASTNode body,
-            final Annotation<O> annotation)
+            final ReadAnnotation<O> annotation)
    {
       return removeAnnotation(target, getModifiers(body), annotation);
    }
 
    public <E extends AnnotationTarget<O, T>> E removeAnnotation(final E target,
             final SingleVariableDeclaration variableDeclaration,
-            final Annotation<O> annotation)
+            final ReadAnnotation<O> annotation)
    {
       return removeAnnotation(target, variableDeclaration.modifiers(), annotation);
    }
 
    private <E extends AnnotationTarget<O, T>> E removeAnnotation(final E target, final List<?> modifiers,
-            final Annotation<O> annotation)
+            final ReadAnnotation<O> annotation)
    {
       for (Object object : modifiers)
       {

@@ -26,12 +26,13 @@ import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.util.Util;
 import org.eclipse.jface.text.Document;
 import org.jboss.forge.parser.ParserException;
-import org.jboss.forge.parser.java.JavaAnnotation;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.JavaEnum;
-import org.jboss.forge.parser.java.JavaInterface;
-import org.jboss.forge.parser.java.JavaPackageInfo;
-import org.jboss.forge.parser.java.JavaSource;
+import org.jboss.forge.parser.java.ReadJavaAnnotation.JavaAnnotation;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
+import org.jboss.forge.parser.java.ReadJavaEnum.JavaEnum;
+import org.jboss.forge.parser.java.ReadJavaInterface.JavaInterface;
+import org.jboss.forge.parser.java.ReadJavaPackageInfo.JavaPackageInfo;
+import org.jboss.forge.parser.java.ReadJavaSource;
+import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 import org.jboss.forge.parser.java.ast.TypeDeclarationFinderVisitor;
 import org.jboss.forge.parser.java.impl.JavaAnnotationImpl;
 import org.jboss.forge.parser.java.impl.JavaClassImpl;
@@ -46,26 +47,7 @@ public class JavaParserImpl implements JavaParserProvider
 {
 
    @Override
-   @SuppressWarnings("unchecked")
-   public <T extends JavaSource<?>> T create(final Class<T> type)
-   {
-      if (JavaClass.class.isAssignableFrom(type))
-         return (T) parse("public class JavaClass { }");
-
-      if (JavaEnum.class.isAssignableFrom(type))
-         return (T) parse("public enum JavaEnum { }");
-
-      if (JavaAnnotation.class.isAssignableFrom(type))
-         return (T) parse("public @interface JavaAnnotation { }");
-
-      if (JavaInterface.class.isAssignableFrom(type))
-         return (T) parse("public interface JavaInterface { }");
-
-      throw new ParserException("Unknown JavaSource type [" + type.getName() + "]");
-   }
-
-   @Override
-   public JavaSource<?> parse(final InputStream data)
+   public ReadJavaSource<?> parse(final InputStream data)
    {
       try
       {
@@ -83,7 +65,7 @@ public class JavaParserImpl implements JavaParserProvider
    }
 
    @SuppressWarnings({ "rawtypes", "unchecked" })
-   private JavaSource<?> parse(final String data)
+   private ReadJavaSource<?> parse(final String data)
    {
       Document document = new Document(data);
       ASTParser parser = ASTParser.newParser(AST.JLS4);
@@ -116,8 +98,8 @@ public class JavaParserImpl implements JavaParserProvider
    }
 
    /**
-    * Create a {@link JavaSource} instance from the given {@link Document}, {@link CompilationUnit},
-    * {@link TypeDeclaration}, and enclosing {@link JavaSource} type.
+    * Create a {@link ReadJavaSource} instance from the given {@link Document}, {@link CompilationUnit},
+    * {@link TypeDeclaration}, and enclosing {@link ReadJavaSource} type.
     */
    public static JavaSource<?> getJavaSource(JavaSource<?> enclosingType, Document document, CompilationUnit unit,
             ASTNode declaration)
@@ -153,6 +135,30 @@ public class JavaParserImpl implements JavaParserProvider
       {
          throw new ParserException("Unknown Java source type [" + declaration + "]");
       }
+   }
+
+   @Override
+   @SuppressWarnings("unchecked")
+   public <T extends JavaSource<?>> T create(final Class<T> type)
+   {
+      if (type != null)
+      {
+         if (type.isAssignableFrom(JavaClass.class))
+            return (T) parse("public class JavaClass { }");
+   
+         if (type.isAssignableFrom(JavaEnum.class))
+            return (T) parse("public enum JavaEnum { }");
+   
+         if (type.isAssignableFrom(JavaAnnotation.class))
+            return (T) parse("public @interface JavaAnnotation { }");
+   
+         if (type.isAssignableFrom(JavaInterface.class))
+            return (T) parse("public interface JavaInterface { }");
+   
+         if (type.isAssignableFrom(JavaPackageInfo.class))
+            return (T) parse("package org.example;");
+      }
+      return null;
    }
 
 }

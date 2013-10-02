@@ -11,9 +11,9 @@ import static org.junit.Assert.assertEquals;
 import java.util.List;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.Method;
-import org.jboss.forge.parser.java.Parameter;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
+import org.jboss.forge.parser.java.ReadMethod.Method;
+import org.jboss.forge.parser.java.ReadParameter.Parameter;
 import org.jboss.forge.parser.java.Visibility;
 import org.junit.Assert;
 import org.junit.Test;

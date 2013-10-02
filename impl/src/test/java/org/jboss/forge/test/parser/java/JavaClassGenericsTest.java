@@ -9,7 +9,7 @@ package org.jboss.forge.test.parser.java;
 import java.util.List;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.JavaClass;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -3,12 +3,12 @@ package org.jboss.forge.test.parser.java;
 import java.util.List;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Import;
-import org.jboss.forge.parser.java.JavaAnnotation;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.JavaEnum;
-import org.jboss.forge.parser.java.JavaInterface;
-import org.jboss.forge.parser.java.JavaSource;
+import org.jboss.forge.parser.java.ReadImport.Import;
+import org.jboss.forge.parser.java.ReadJavaAnnotation.JavaAnnotation;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
+import org.jboss.forge.parser.java.ReadJavaEnum.JavaEnum;
+import org.jboss.forge.parser.java.ReadJavaInterface.JavaInterface;
+import org.jboss.forge.parser.java.ReadJavaSource.JavaSource;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,8 +28,8 @@ public class NestedClassTest
    @Test
    public void testGetNestedClasses()
    {
-      JavaClass javaClass = (JavaClass) JavaParser
-               .parse("package org.example; public class OuterClass { " +
+      JavaClass javaClass = JavaParser
+               .parse(JavaClass.class, "package org.example; public class OuterClass { " +
                         "  public class InnerClass1{ " +
                         "    public class InnerClass3{}" +
                         "  } " +
@@ -54,8 +54,8 @@ public class NestedClassTest
    @Test
    public void testModifyNestedClassModifiesParentSource()
    {
-      JavaClass javaClass = (JavaClass) JavaParser
-               .parse("package org.example; public class OuterClass { " +
+      JavaClass javaClass = JavaParser
+               .parse(JavaClass.class, "package org.example; public class OuterClass { " +
                         "  public class InnerClass1{ " +
                         "    public class InnerClass3{}" +
                         "  } " +
@@ -64,7 +64,6 @@ public class NestedClassTest
 
       List<JavaSource<?>> nestedClasses = javaClass.getNestedClasses();
       JavaSource<?> inner1 = nestedClasses.get(0);
-      Assert.assertTrue(inner1.isEditable());
       inner1.addAnnotation(Deprecated.class);
 
       Assert.assertTrue(javaClass.toString().contains("@Deprecated"));
@@ -73,8 +72,8 @@ public class NestedClassTest
    @Test
    public void testInterfaceWithNestedClass()
    {
-      JavaInterface javaInterface = (JavaInterface) JavaParser
-               .parse("package org.example; public interface OuterInterface { " +
+      JavaInterface javaInterface = JavaParser
+               .parse(JavaInterface.class, "package org.example; public interface OuterInterface { " +
                         "  public class InnerClass1{ " +
                         "    public class InnerClass3{}" +
                         "  } " +
@@ -99,8 +98,8 @@ public class NestedClassTest
    @Test
    public void testEnumWithNestedClass()
    {
-      JavaEnum javaEnum = (JavaEnum) JavaParser
-               .parse("package org.example; public enum OuterEnum { " +
+      JavaEnum javaEnum = JavaParser
+               .parse(JavaEnum.class, "package org.example; public enum OuterEnum { " +
                         "  FOO, BAR, BAZ; " +
                         "  public class InnerClass1{ " +
                         "    public class InnerClass3{}" +
@@ -126,8 +125,8 @@ public class NestedClassTest
    @Test
    public void testClassWithNestedEnum()
    {
-      JavaClass javaClass = (JavaClass) JavaParser
-               .parse("package org.example; "
+      JavaClass javaClass = JavaParser
+               .parse(JavaClass.class, "package org.example; "
                         + "public class OuterClass { " +
                         "  public enum InnerEnum{A,B,C;} " +
                         "}");
@@ -145,8 +144,8 @@ public class NestedClassTest
    @Test
    public void testAnnotationWithNestedClass()
    {
-      JavaAnnotation javaAnnotation = (JavaAnnotation) JavaParser
-               .parse("package org.example; public @interface OuterAnnotation { " +
+      JavaAnnotation javaAnnotation = JavaParser
+               .parse(JavaAnnotation.class, "package org.example; public @interface OuterAnnotation { " +
                         "  public class InnerClass1{ " +
                         "    public class InnerClass3{}" +
                         "  } " +

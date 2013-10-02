@@ -12,9 +12,9 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Annotation;
-import org.jboss.forge.parser.java.Field;
-import org.jboss.forge.parser.java.JavaClass;
+import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
+import org.jboss.forge.parser.java.ReadField.Field;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
 import org.jboss.forge.test.parser.java.common.AnnotationTest;
 import org.jboss.forge.test.parser.java.common.MockEnumType;
 import org.junit.Test;

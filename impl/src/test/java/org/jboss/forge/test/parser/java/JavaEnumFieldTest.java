@@ -14,8 +14,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.InputStream;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Field;
-import org.jboss.forge.parser.java.JavaEnum;
+import org.jboss.forge.parser.java.ReadField.Field;
+import org.jboss.forge.parser.java.ReadJavaEnum.JavaEnum;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,7 +34,6 @@ public class JavaEnumFieldTest
       stream = JavaEnumFieldTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockEnum.java");
       javaEnum = JavaParser.parse(JavaEnum.class, stream);
       field = javaEnum.getFields().get(javaEnum.getFields().size() - 1);
-      assertTrue(field.getOrigin().isEditable());
    }
 
    @Test

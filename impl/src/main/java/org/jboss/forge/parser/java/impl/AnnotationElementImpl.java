@@ -21,10 +21,11 @@ import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.PrimitiveType.Code;
 import org.eclipse.jdt.core.dom.TypeLiteral;
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Annotation;
-import org.jboss.forge.parser.java.AnnotationElement;
-import org.jboss.forge.parser.java.JavaAnnotation;
-import org.jboss.forge.parser.java.JavaSource;
+import org.jboss.forge.parser.java.ReadAnnotation;
+import org.jboss.forge.parser.java.ReadAnnotation.Annotation;
+import org.jboss.forge.parser.java.ReadAnnotationElement.AnnotationElement;
+import org.jboss.forge.parser.java.ReadJavaAnnotation.JavaAnnotation;
+import org.jboss.forge.parser.java.ReadJavaSource;
 import org.jboss.forge.parser.java.Type;
 import org.jboss.forge.parser.java.ast.AnnotationAccessor;
 import org.jboss.forge.parser.java.util.Assert;
@@ -390,7 +391,7 @@ public class AnnotationElementImpl implements AnnotationElement
    }
 
    @Override
-   public AnnotationElement removeAnnotation(final Annotation<JavaAnnotation> annotation)
+   public AnnotationElement removeAnnotation(final ReadAnnotation<JavaAnnotation> annotation)
    {
       return annotations.removeAnnotation(this, member, annotation);
    }
@@ -487,7 +488,7 @@ public class AnnotationElementImpl implements AnnotationElement
    }
 
    @Override
-   public AnnotationElement setType(final JavaSource<?> source)
+   public AnnotationElement setType(final ReadJavaSource<?> source)
    {
       return setType(source.getQualifiedName());
    }

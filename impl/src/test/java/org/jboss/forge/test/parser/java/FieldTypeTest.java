@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Field;
-import org.jboss.forge.parser.java.JavaClass;
+import org.jboss.forge.parser.java.ReadField.Field;
+import org.jboss.forge.parser.java.ReadJavaClass.JavaClass;
 import org.jboss.forge.parser.java.Type;
 import org.junit.Assert;
 import org.junit.Test;
