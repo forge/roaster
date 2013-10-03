@@ -17,16 +17,17 @@ import org.eclipse.jdt.core.dom.ArrayType;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.TypeParameter;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jdt.core.dom.TypeParameter;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
 import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.java.Annotation;
 import org.jboss.forge.parser.java.JavaType;
 import org.jboss.forge.parser.java.Type;
+import org.jboss.forge.parser.java.TypeVariable;
 import org.jboss.forge.parser.java.Visibility;
 import org.jboss.forge.parser.java.ast.AnnotationAccessor;
 import org.jboss.forge.parser.java.ast.ModifierAccessor;
@@ -35,6 +36,8 @@ import org.jboss.forge.parser.java.source.JavaClassSource;
 import org.jboss.forge.parser.java.source.JavaSource;
 import org.jboss.forge.parser.java.source.MethodSource;
 import org.jboss.forge.parser.java.source.ParameterSource;
+import org.jboss.forge.parser.java.source.TypeVariableSource;
+import org.jboss.forge.parser.java.util.Strings;
 import org.jboss.forge.parser.java.util.Types;
 
 /**
@@ -620,48 +623,64 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    }
 
    @Override
-   public List<String> getGenericTypes()
+   public List<TypeVariableSource<O>> getTypeVariables()
    {
-      List<String> result = new ArrayList<String>();
+      List<TypeVariableSource<O>> result = new ArrayList<TypeVariableSource<O>>();
       @SuppressWarnings("unchecked")
       List<TypeParameter> typeParameters = method.typeParameters();
       if (typeParameters != null)
       {
          for (TypeParameter typeParameter : typeParameters)
          {
-            result.add(typeParameter.getName().getIdentifier());
+            result.add(new TypeVariableImpl<O>(parent, typeParameter));
          }
       }
       return Collections.unmodifiableList(result);
    }
 
+   @Override
+   public TypeVariableSource<O> getTypeVariable(String name)
+   {
+      @SuppressWarnings("unchecked")
+      List<TypeParameter> typeParameters = method.typeParameters();
+      for (TypeParameter typeParameter : typeParameters)
+      {
+         if (Strings.areEqual(name, typeParameter.getName().getIdentifier()))
+         {
+            return(new TypeVariableImpl<O>(parent, typeParameter));
+         }
+      }
+      return null;
+   }
+
    @SuppressWarnings("unchecked")
    @Override
-   public MethodSource<O> addGenericType(String genericType)
+   public TypeVariableSource<O> addTypeVariable()
    {
       TypeParameter tp2 = method.getAST().newTypeParameter();
-      tp2.setName(method.getAST().newSimpleName(genericType));
       method.typeParameters().add(tp2);
+      return new TypeVariableImpl<O>(parent, tp2);
+   }
+
+   @Override
+   public MethodSource<O> removeTypeVariable(String name)
+   {
+      @SuppressWarnings("unchecked")
+      List<TypeParameter> typeParameters = method.typeParameters();
+      for (Iterator<TypeParameter> iter = typeParameters.iterator(); iter.hasNext();)
+      {
+         if (Strings.areEqual(name, iter.next().getName().getIdentifier()))
+         {
+            iter.remove();
+            break;
+         }
+      }
       return this;
    }
 
    @Override
-   public MethodSource<O> removeGenericType(String genericType)
+   public MethodSource<O> removeTypeVariable(TypeVariable<?> typeVariable)
    {
-      @SuppressWarnings("unchecked")
-      List<TypeParameter> typeParameters = method.typeParameters();
-      if (typeParameters != null)
-      {
-         Iterator<TypeParameter> it = typeParameters.iterator();
-         while (it.hasNext())
-         {
-            TypeParameter typeParameter = it.next();
-            if (typeParameter.getName().getIdentifier().equals(genericType))
-            {
-               it.remove();
-            }
-         }
-      }
-      return this;
+      return removeTypeVariable(typeVariable.getName());
    }
 }

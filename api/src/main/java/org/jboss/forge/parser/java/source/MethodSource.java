@@ -12,9 +12,8 @@ import org.jboss.forge.parser.java.Method;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodSource<O>>,
-         AbstractableSource<MethodSource<O>>,
-         MemberSource<O, MethodSource<O>>, GenericCapableSource<MethodSource<O>>
+public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodSource<O>>, AbstractableSource<MethodSource<O>>,
+         MemberSource<O, MethodSource<O>>, GenericCapableSource<O, MethodSource<O>>
 {
    /**
     * Set this {@link Method} to return the given type.

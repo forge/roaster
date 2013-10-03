@@ -19,6 +19,6 @@ public interface JavaInterface<O extends JavaInterface<O>> extends
          InterfaceCapable,
          FieldHolder<O>,
          MethodHolder<O>,
-         GenericCapable
+         GenericCapable<O>
 {
 }

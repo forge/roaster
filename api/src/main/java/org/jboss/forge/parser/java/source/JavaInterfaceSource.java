@@ -13,7 +13,7 @@ public interface JavaInterfaceSource extends JavaInterface<JavaInterfaceSource>,
          JavaSource<JavaInterfaceSource>,
          FieldHolderSource<JavaInterfaceSource>,
          MethodHolderSource<JavaInterfaceSource>,
-         GenericCapableSource<JavaInterfaceSource>,
+         GenericCapableSource<JavaInterfaceSource, JavaInterfaceSource>,
          InterfaceCapableSource<JavaInterfaceSource>
 {
 }

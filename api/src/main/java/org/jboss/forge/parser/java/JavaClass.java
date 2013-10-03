@@ -20,7 +20,7 @@ public interface JavaClass<O extends JavaClass<O>> extends
          InterfaceCapable,
          FieldHolder<O>,
          MethodHolder<O>,
-         GenericCapable,
+         GenericCapable<O>,
          Extendable<O>,
          Abstractable<O>
 {
