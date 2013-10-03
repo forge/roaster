@@ -17,7 +17,6 @@ import org.eclipse.text.edits.TextEdit;
 import org.jboss.forge.parser.ParserException;
 import org.jboss.forge.parser.java.Annotation;
 import org.jboss.forge.parser.java.JavaType;
-import org.jboss.forge.parser.java.SourceType;
 import org.jboss.forge.parser.java.SyntaxError;
 import org.jboss.forge.parser.java.Visibility;
 import org.jboss.forge.parser.java.ast.AnnotationAccessor;
@@ -44,12 +43,6 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
       this.document = document;
       this.unit = unit;
       this.pkg = pkg;
-   }
-
-   @Override
-   public SourceType getSourceType()
-   {
-      return SourceType.PACKAGEINFO;
    }
 
    @Override

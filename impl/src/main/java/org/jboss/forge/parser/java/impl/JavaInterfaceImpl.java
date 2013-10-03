@@ -9,7 +9,6 @@ package org.jboss.forge.parser.java.impl;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jface.text.Document;
-import org.jboss.forge.parser.java.SourceType;
 import org.jboss.forge.parser.java.source.JavaInterfaceSource;
 import org.jboss.forge.parser.java.source.JavaSource;
 
@@ -31,9 +30,4 @@ public class JavaInterfaceImpl extends AbstractGenericCapableJavaSource<JavaInte
       return this;
    }
 
-   @Override
-   public SourceType getSourceType()
-   {
-      return SourceType.INTERFACE;
-   }
 }
