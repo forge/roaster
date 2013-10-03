@@ -17,22 +17,26 @@ public interface MethodHolderSource<O extends JavaSource<O>> extends MethodHolde
    /**
     * Return the {@link MethodSource} with the given name and zero parameters; otherwise return null.
     */
+   @Override
    public MethodSource<O> getMethod(final String name);
 
    /**
     * Return the {@link MethodSource} with the given name and signature types; otherwise return null.
     */
+   @Override
    public MethodSource<O> getMethod(final String name, String... paramTypes);
 
    /**
     * Return the {@link MethodSource} with the given name and signature types; otherwise return null.
     */
+   @Override
    public MethodSource<O> getMethod(final String name, Class<?>... paramTypes);
 
    /**
     * Get a {@link List} of all {@link MethodSource}s declared by this {@link O} instance, if any; otherwise, return an
     * empty {@link List}
     */
+   @Override
    public List<MethodSource<O>> getMethods();
 
    /**

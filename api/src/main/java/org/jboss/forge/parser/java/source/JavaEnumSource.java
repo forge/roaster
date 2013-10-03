@@ -22,11 +22,13 @@ public interface JavaEnumSource extends JavaEnum<JavaEnumSource>, JavaSource<Jav
     * @param name
     * @return
     */
+   @Override
    EnumConstantSource getEnumConstant(String name);
 
    /**
     * Return all declared {@link EnumConstant} types for this {@link JavaEnum}
     */
+   @Override
    List<EnumConstantSource> getEnumConstants();
 
    /**

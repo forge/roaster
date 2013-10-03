@@ -15,5 +15,6 @@ public interface MemberHolderSource<O extends JavaSource<O>> extends MemberHolde
    /**
     * Return a list of all class members (fields, methods, etc.)
     */
+   @Override
    public List<MemberSource<O, ?>> getMembers();
 }

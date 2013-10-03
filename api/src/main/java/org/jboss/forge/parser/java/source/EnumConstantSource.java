@@ -21,6 +21,7 @@ public interface EnumConstantSource extends EnumConstant<JavaEnumSource>, Annota
     */
    EnumConstantSource setConstructorArguments(String... literalArguments);
 
+   @Override
    EnumConstantSource.Body getBody();
 
    /**

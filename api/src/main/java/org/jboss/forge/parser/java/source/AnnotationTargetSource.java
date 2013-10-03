@@ -12,10 +12,13 @@ import org.jboss.forge.parser.java.AnnotationTarget;
  */
 public interface AnnotationTargetSource<O extends JavaSource<O>, T> extends AnnotationTarget<O>
 {
+   @Override
    public List<AnnotationSource<O>> getAnnotations();
 
+   @Override
    public AnnotationSource<O> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type);
 
+   @Override
    public AnnotationSource<O> getAnnotation(final String type);
 
    /**

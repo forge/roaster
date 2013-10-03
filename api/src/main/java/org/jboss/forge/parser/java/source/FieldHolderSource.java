@@ -35,11 +35,13 @@ public interface FieldHolderSource<O extends JavaSource<O>> extends FieldHolder<
    /**
     * Get the {@link Field} with the given name and return it, otherwise, return null.
     */
+   @Override
    public FieldSource<O> getField(String name);
    
    /**
     * Get a list of all {@link Field}s declared by this {@link O}, or return an empty list if no {@link Field}s
     * are declared.
     */
+   @Override
    public List<FieldSource<O>> getFields();
 }

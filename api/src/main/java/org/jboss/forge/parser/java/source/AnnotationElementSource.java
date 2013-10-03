@@ -17,6 +17,7 @@ public interface AnnotationElementSource extends AnnotationElement<JavaAnnotatio
     */
    public interface DefaultValue extends AnnotationElement.ReadDefaultValue<JavaAnnotationSource>
    {
+      @Override
       AnnotationSource<JavaAnnotationSource> getAnnotation();
 
       DefaultValue setLiteral(String value);
@@ -54,5 +55,6 @@ public interface AnnotationElementSource extends AnnotationElement<JavaAnnotatio
     */
    AnnotationElementSource setType(JavaType<?> entity);
 
+   @Override
    AnnotationElementSource.DefaultValue getDefaultValue();
 }

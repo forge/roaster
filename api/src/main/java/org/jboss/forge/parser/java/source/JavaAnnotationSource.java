@@ -17,12 +17,14 @@ public interface JavaAnnotationSource extends JavaAnnotation<JavaAnnotationSourc
    /**
     * Get the {@link AnnotationElementSource} with the given name and return it, otherwise, return null.
     */
+   @Override
    public AnnotationElementSource getAnnotationElement(String name);
 
    /**
     * Get a list of all {@link AnnotationElementSource}s declared by this {@link JavaAnnotation}, or return an empty
     * list if no {@link AnnotationElementSource}s are declared.
     */
+   @Override
    public List<AnnotationElementSource> getAnnotationElements();
 
    /**
