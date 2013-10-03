@@ -11,8 +11,10 @@ import org.jboss.forge.parser.java.JavaType;
 public interface AnnotationSource<O extends JavaType<O>> extends Annotation<O>
 {
 
+   @Override
    AnnotationSource<O> getAnnotationValue();
 
+   @Override
    AnnotationSource<O> getAnnotationValue(String name);
 
    AnnotationSource<O> removeValue(String name);

@@ -24,6 +24,7 @@ public interface JavaSource<T extends JavaSource<T>> extends JavaType<T>,
     * <code>this</code>. Any modification of returned {@link JavaSource} instances will result in modification of the
     * contents contained by <code>this</code> the parent instance.
     */
+   @Override
    public List<JavaSource<?>> getNestedClasses();
 
 }
