@@ -36,5 +36,4 @@ public interface Type<O extends JavaType<O>> extends Origin<O>
 
    public abstract boolean isWildcard();
 
-
 }

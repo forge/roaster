@@ -6,12 +6,16 @@
  */
 package org.jboss.forge.test.parser.java;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import org.jboss.forge.parser.JavaParser;
+import org.jboss.forge.parser.java.JavaInterface;
 import org.jboss.forge.parser.java.source.JavaClassSource;
+import org.jboss.forge.parser.java.source.JavaInterfaceSource;
 import org.jboss.forge.parser.java.source.MethodSource;
+import org.jboss.forge.parser.java.source.TypeVariableSource;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,10 +28,11 @@ public class MethodGenericsTest
       JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       
       MethodSource<JavaClassSource> method = javaClass.addMethod();
-      method.addGenericType("T");
+      method.addTypeVariable().setName("T");
       
       Assert.assertTrue(method.toString().contains("<T>"));
-      method.removeGenericType("T");
+      Assert.assertTrue(method.getTypeVariables().get(0).getBounds().isEmpty());
+      method.removeTypeVariable("T");
       Assert.assertFalse(method.toString().contains("<T>"));
    }
 
@@ -37,10 +42,10 @@ public class MethodGenericsTest
       JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       MethodSource<JavaClassSource> method = javaClass.addMethod();
 
-      method.addGenericType("I");
-      method.addGenericType("O");
+      method.addTypeVariable().setName("I");
+      method.addTypeVariable().setName("O");
       Assert.assertTrue(Pattern.compile("<I, *O>").matcher(method.toString()).find());
-      method.removeGenericType("I");
+      method.removeTypeVariable("I");
       Assert.assertTrue(method.toString().contains("<O>"));
    }
 
@@ -50,13 +55,57 @@ public class MethodGenericsTest
       JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       MethodSource<JavaClassSource> method = javaClass.addMethod();
 
-      method.addGenericType("I");
-      method.addGenericType("O");
-      List<String> genericTypes = method.getGenericTypes();
-      Assert.assertNotNull(genericTypes);
-      Assert.assertEquals(2, genericTypes.size());
-      Assert.assertTrue(genericTypes.contains("I"));
-      Assert.assertTrue(genericTypes.contains("O"));
+      method.addTypeVariable().setName("I");
+      method.addTypeVariable().setName("O");
+      List<TypeVariableSource<JavaClassSource>> typeVariables = method.getTypeVariables();
+      Assert.assertNotNull(typeVariables);
+      Assert.assertEquals(2, typeVariables.size());
+      Assert.assertEquals("I", typeVariables.get(0).getName());
+      Assert.assertTrue(typeVariables.get(0).getBounds().isEmpty());
+      Assert.assertEquals("O", typeVariables.get(1).getName());
+      Assert.assertTrue(typeVariables.get(1).getBounds().isEmpty());
    }
 
+   @Test
+   public void classTypeVariableBounds() throws ClassNotFoundException
+   {
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> method = javaClass.addMethod();
+      method.addTypeVariable().setName("T").setBounds(CharSequence.class);
+      Assert.assertTrue(method.toString().contains("<T extends CharSequence>"));
+      method.getTypeVariable("T").
+               setBounds(CharSequence.class, Serializable.class);
+      Assert.assertTrue(method.toString().contains("<T extends CharSequence & Serializable>"));
+      method.getTypeVariable("T").removeBounds();
+      Assert.assertTrue(method.toString().contains("<T>"));
+   }
+
+   @Test
+   public void javaTypeTypeVariableBounds() throws ClassNotFoundException
+   {
+      JavaInterface<?> foo = JavaParser.create(JavaInterfaceSource.class).setPackage("it.coopservice.test").setName("Foo");
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> method = javaClass.addMethod();
+      method.addTypeVariable().setName("T").setBounds(foo);
+      Assert.assertTrue(method.toString().contains("<T extends Foo>"));
+      JavaInterface<?> bar = JavaParser.create(JavaInterfaceSource.class).setPackage("it.coopservice.test").setName("Bar");
+      method.getTypeVariable("T").setBounds(foo, bar);
+      Assert.assertTrue(method.toString().contains("<T extends Foo & Bar>"));
+      method.getTypeVariable("T").removeBounds();
+      Assert.assertTrue(method.toString().contains("<T>"));
+   }
+
+   @Test
+   public void stringTypeVariableBounds() throws ClassNotFoundException
+   {
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> method = javaClass.addMethod();
+      method.addTypeVariable().setName("T").setBounds("com.something.Foo");
+      Assert.assertTrue(method.toString().contains("<T extends com.something.Foo>"));
+      method.getTypeVariable("T").setBounds("com.something.Foo", "com.something.Bar<T>");
+      Assert.assertTrue(method.toString().contains("<T extends com.something.Foo & com.something.Bar<T>>"));
+      method.getTypeVariable("T").removeBounds();
+      Assert.assertTrue(method.toString().contains("<T>"));
+   }
+   
 }

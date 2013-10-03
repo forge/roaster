@@ -17,8 +17,9 @@ import org.jboss.forge.parser.Origin;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface Method<O extends JavaType<O>, T extends Method<O, T>> extends Abstractable<T>, Member<O>,
-         GenericCapable,
+public interface Method<O extends JavaType<O>, T extends Method<O, T>> extends Abstractable<T>,
+         Member<O>,
+         GenericCapable<O>,
          Origin<O>
 {
    /**

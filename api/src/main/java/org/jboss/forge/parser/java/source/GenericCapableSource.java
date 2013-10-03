@@ -1,28 +1,45 @@
 package org.jboss.forge.parser.java.source;
 
+import java.util.List;
+
 import org.jboss.forge.parser.java.GenericCapable;
+import org.jboss.forge.parser.java.TypeVariable;
 
 /**
  * Represents a Java source element that may define type variables.
  * 
  * @author mbenson
- *
+ * 
  */
-public interface GenericCapableSource<T> extends GenericCapable
+public interface GenericCapableSource<O extends JavaSource<O>, T> extends
+         GenericCapable<O>
 {
-   /**
-    * Adds a generic type
-    * 
-    * @param genericType should never be null
-    * @return
-    */
-   T addGenericType(String genericType);
+   @Override
+   List<TypeVariableSource<O>> getTypeVariables();
+
+   @Override
+   TypeVariableSource<O> getTypeVariable(String name);
 
    /**
-    * Removes a generic type
+    * Adds a type variable.
     * 
-    * @param genericType should never be null
-    * @return
+    * @return {@link TypeVariableSource}
     */
-   T removeGenericType(String genericType);
+   TypeVariableSource<O> addTypeVariable();
+
+   /**
+    * Removes a type variable.
+    * 
+    * @param name should never be null
+    * @return this
+    */
+   T removeTypeVariable(String name);
+
+   /**
+    * Removes a type variable.
+    * 
+    * @param typeVariable should never be null
+    * @return this
+    */
+   T removeTypeVariable(TypeVariable<?> typeVariable);
 }
