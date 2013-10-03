@@ -18,6 +18,7 @@ import org.jboss.forge.parser.Origin;
  * 
  */
 public interface Method<O extends JavaType<O>, T extends Method<O, T>> extends Abstractable<T>, Member<O>,
+         GenericCapable,
          Origin<O>
 {
    /**

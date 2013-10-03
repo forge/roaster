@@ -14,7 +14,6 @@ import java.util.List;
  * @author mbenson
  *
  */
-//TODO consider for methods; this would probably necessitate splitting constructors from methods
 public interface GenericCapable
 {
    /**
