@@ -13,7 +13,6 @@ import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jface.text.Document;
 import org.jboss.forge.parser.java.JavaType;
-import org.jboss.forge.parser.java.SourceType;
 import org.jboss.forge.parser.java.ast.ModifierAccessor;
 import org.jboss.forge.parser.java.source.JavaClassSource;
 import org.jboss.forge.parser.java.source.JavaSource;
@@ -161,9 +160,4 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
       return this;
    }
 
-   @Override
-   public SourceType getSourceType()
-   {
-      return SourceType.CLASS;
-   }
 }

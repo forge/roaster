@@ -84,8 +84,4 @@ public interface JavaType<T extends JavaType<T>> extends
     */
    public List<? extends JavaType<?>> getNestedClasses();
 
-   /**
-    * Return the {@link SourceType} of this {@link JavaType} instance.
-    */
-   public SourceType getSourceType();
 }

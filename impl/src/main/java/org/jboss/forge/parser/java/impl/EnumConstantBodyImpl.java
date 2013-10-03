@@ -28,13 +28,13 @@ import org.jboss.forge.parser.java.Field;
 import org.jboss.forge.parser.java.JavaType;
 import org.jboss.forge.parser.java.Method;
 import org.jboss.forge.parser.java.Parameter;
-import org.jboss.forge.parser.java.SourceType;
 import org.jboss.forge.parser.java.SyntaxError;
 import org.jboss.forge.parser.java.Visibility;
 import org.jboss.forge.parser.java.ast.MethodFinderVisitor;
 import org.jboss.forge.parser.java.ast.TypeDeclarationFinderVisitor;
 import org.jboss.forge.parser.java.source.AnnotationSource;
 import org.jboss.forge.parser.java.source.EnumConstantSource;
+import org.jboss.forge.parser.java.source.EnumConstantSource.Body;
 import org.jboss.forge.parser.java.source.FieldSource;
 import org.jboss.forge.parser.java.source.Import;
 import org.jboss.forge.parser.java.source.JavaClassSource;
@@ -43,7 +43,6 @@ import org.jboss.forge.parser.java.source.JavaSource;
 import org.jboss.forge.parser.java.source.MemberSource;
 import org.jboss.forge.parser.java.source.MethodSource;
 import org.jboss.forge.parser.java.source.ParameterSource;
-import org.jboss.forge.parser.java.source.EnumConstantSource.Body;
 import org.jboss.forge.parser.java.util.Strings;
 import org.jboss.forge.parser.java.util.Types;
 import org.jboss.forge.parser.spi.JavaParserImpl;
@@ -134,12 +133,6 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
          }
       }
       return result;
-   }
-
-   @Override
-   public SourceType getSourceType()
-   {
-      return SourceType.CLASS;
    }
 
    @Override

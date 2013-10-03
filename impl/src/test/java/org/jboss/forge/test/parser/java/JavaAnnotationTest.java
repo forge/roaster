@@ -17,7 +17,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.InputStream;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.SourceType;
 import org.jboss.forge.parser.java.Type;
 import org.jboss.forge.parser.java.source.AnnotationSource;
 import org.jboss.forge.parser.java.source.AnnotationElementSource;
@@ -65,8 +64,6 @@ public class JavaAnnotationTest
    public void testCanParseInnerAnnotation() throws Exception
    {
       assertEquals(1, javaAnnotation.getNestedClasses().size());
-      assertSame(SourceType.ANNOTATION,
-               javaAnnotation.getNestedClasses().get(0).getSourceType());
       JavaAnnotationSource nestedAnnotation = (JavaAnnotationSource) javaAnnotation.getNestedClasses().get(0);
       assertEquals("MockNestedJavaAnnotationType", nestedAnnotation.getName());
       assertEquals(5, nestedAnnotation.getAnnotationElements().size());

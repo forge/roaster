@@ -16,7 +16,6 @@ import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jface.text.Document;
 import org.jboss.forge.parser.java.AnnotationElement;
-import org.jboss.forge.parser.java.SourceType;
 import org.jboss.forge.parser.java.source.AnnotationElementSource;
 import org.jboss.forge.parser.java.source.JavaAnnotationSource;
 import org.jboss.forge.parser.java.source.JavaSource;
@@ -39,12 +38,6 @@ public class JavaAnnotationImpl extends AbstractJavaSource<JavaAnnotationSource>
    protected JavaAnnotationSource updateTypeNames(final String name)
    {
       return this;
-   }
-
-   @Override
-   public SourceType getSourceType()
-   {
-      return SourceType.ANNOTATION;
    }
 
    @Override

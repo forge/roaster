@@ -15,7 +15,6 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jface.text.Document;
-import org.jboss.forge.parser.java.SourceType;
 import org.jboss.forge.parser.java.source.EnumConstantSource;
 import org.jboss.forge.parser.java.source.JavaEnumSource;
 import org.jboss.forge.parser.java.source.JavaSource;
@@ -91,9 +90,4 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnumSource>
       return this;
    }
 
-   @Override
-   public SourceType getSourceType()
-   {
-      return SourceType.ENUM;
-   }
 }
