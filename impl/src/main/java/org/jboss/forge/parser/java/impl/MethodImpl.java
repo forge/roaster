@@ -8,6 +8,7 @@ package org.jboss.forge.parser.java.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
@@ -16,6 +17,7 @@ import org.eclipse.jdt.core.dom.ArrayType;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.TypeParameter;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
@@ -614,6 +616,52 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
          }
       }
 
+      return this;
+   }
+
+   @Override
+   public List<String> getGenericTypes()
+   {
+      List<String> result = new ArrayList<String>();
+      @SuppressWarnings("unchecked")
+      List<TypeParameter> typeParameters = method.typeParameters();
+      if (typeParameters != null)
+      {
+         for (TypeParameter typeParameter : typeParameters)
+         {
+            result.add(typeParameter.getName().getIdentifier());
+         }
+      }
+      return Collections.unmodifiableList(result);
+   }
+
+   @SuppressWarnings("unchecked")
+   @Override
+   public MethodSource<O> addGenericType(String genericType)
+   {
+      TypeParameter tp2 = method.getAST().newTypeParameter();
+      tp2.setName(method.getAST().newSimpleName(genericType));
+      method.typeParameters().add(tp2);
+      return this;
+   }
+
+   @Override
+   public MethodSource<O> removeGenericType(String genericType)
+   {
+      @SuppressWarnings("unchecked")
+      List<TypeParameter> typeParameters = method.typeParameters();
+      if (typeParameters != null)
+      {
+         Iterator<TypeParameter> it = typeParameters.iterator();
+         while (it.hasNext())
+         {
+            TypeParameter typeParameter = it.next();
+            if (typeParameter.getName().getIdentifier().equals(genericType))
+            {
+               it.remove();
+            }
+         }
+      }
       return this;
    }
 }
