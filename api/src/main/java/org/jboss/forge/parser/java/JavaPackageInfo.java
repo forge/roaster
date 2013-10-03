@@ -10,7 +10,6 @@ package org.jboss.forge.parser.java;
 /**
  * Represents a Java Package Info descriptor.
  */
-// TODO annotation targets
 public interface JavaPackageInfo<O extends JavaPackageInfo<O>> extends JavaType<O>
 {
 }
