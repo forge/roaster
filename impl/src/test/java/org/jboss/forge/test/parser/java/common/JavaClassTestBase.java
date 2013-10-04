@@ -221,6 +221,7 @@ public abstract class JavaClassTestBase
       assertFalse(source.requiresImport(JavaClassTestBase.class));
       assertFalse(source.requiresImport(String.class));
       assertTrue(source.requiresImport(Annotation.class));
+      assertFalse(source.requiresImport(source.getPackage() + ".Foo"));
    }
 
    @Test

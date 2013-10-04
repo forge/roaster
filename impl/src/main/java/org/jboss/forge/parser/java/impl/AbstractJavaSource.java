@@ -288,7 +288,8 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       }
       if (!validImport(resultType)
                || hasImport(resultType)
-               || Types.isJavaLang(resultType))
+               || Types.isJavaLang(resultType)
+               || Strings.areEqual(getPackage(), Types.getPackage(resultType)))
       {
          return false;
       }
