@@ -212,11 +212,18 @@ public class Types
 
    public static boolean isJavaLang(final String type)
    {
-      if (type.startsWith("java.lang."))
+      final String javaLang = "java.lang.";
+      
+      String check;
+      if (type.startsWith(javaLang))
       {
-         return true;
+         check = type.substring(javaLang.length());
       }
-      return LANG_TYPES.contains(type);
+      else
+      {
+         check = type;
+      }
+      return LANG_TYPES.contains(check);
    }
 
    public static boolean isBasicType(String idType)

@@ -11,6 +11,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -218,6 +219,8 @@ public abstract class JavaClassTestBase
       source.addImport(JavaClassTestBase.class);
       assertTrue(source.hasImport(JavaClassTestBase.class));
       assertFalse(source.requiresImport(JavaClassTestBase.class));
+      assertFalse(source.requiresImport(String.class));
+      assertTrue(source.requiresImport(Annotation.class));
    }
 
    @Test
