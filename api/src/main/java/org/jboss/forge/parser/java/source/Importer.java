@@ -30,12 +30,12 @@ public interface Importer<O extends JavaSource<O>>
    boolean hasImport(String type);
 
    /**
-    * Return whether or not this {@link O} could accept an import for the given {@link Class} type.
+    * Return whether or not this {@link O} would require an import to reference the given {@link Class} type.
     */
    boolean requiresImport(Class<?> type);
 
    /**
-    * Return whether or not this {@link O} could accept an import for the given fully-qualified class name.
+    * Return whether or not this {@link O} would require an import to reference the given fully-qualified class name.
     */
    boolean requiresImport(String type);
 
