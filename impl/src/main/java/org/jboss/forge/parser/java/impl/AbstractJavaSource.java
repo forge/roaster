@@ -37,7 +37,6 @@ import org.jboss.forge.parser.java.ast.TypeDeclarationFinderVisitor;
 import org.jboss.forge.parser.java.source.AnnotationSource;
 import org.jboss.forge.parser.java.source.Import;
 import org.jboss.forge.parser.java.source.JavaSource;
-import org.jboss.forge.parser.java.source.MemberSource;
 import org.jboss.forge.parser.java.util.Formatter;
 import org.jboss.forge.parser.java.util.Strings;
 import org.jboss.forge.parser.java.util.Types;
@@ -423,14 +422,6 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
          unit.imports().remove(internal);
       }
       return (O) this;
-   }
-
-   @Override
-   public List<MemberSource<O, ?>> getMembers()
-   {
-      List<MemberSource<O, ?>> result = new ArrayList<MemberSource<O, ?>>();
-
-      return result;
    }
 
    protected AbstractTypeDeclaration getBodyDeclaration()

@@ -22,7 +22,6 @@ public interface JavaType<T extends JavaType<T>> extends
          Named,
          VisibilityScoped,
          AnnotationTarget<T>,
-         MemberHolder<T>,
          Origin<T>
 {
    /**

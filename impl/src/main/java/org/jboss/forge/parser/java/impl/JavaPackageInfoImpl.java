@@ -26,7 +26,6 @@ import org.jboss.forge.parser.java.source.AnnotationSource;
 import org.jboss.forge.parser.java.source.Import;
 import org.jboss.forge.parser.java.source.JavaPackageInfoSource;
 import org.jboss.forge.parser.java.source.JavaSource;
-import org.jboss.forge.parser.java.source.MemberSource;
 import org.jboss.forge.parser.java.util.Formatter;
 import org.jboss.forge.parser.java.util.Strings;
 import org.jboss.forge.parser.java.util.Types;
@@ -413,12 +412,6 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
          unit.imports().remove(internal);
       }
       return this;
-   }
-
-   @Override
-   public List<MemberSource<JavaPackageInfoSource, ?>> getMembers()
-   {
-      return Collections.emptyList();
    }
 
    protected PackageDeclaration getPackageDeclaration()
