@@ -14,7 +14,6 @@ import java.util.ServiceLoader;
 
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.IProblem;
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
@@ -23,15 +22,12 @@ import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
-import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
-import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.ParserException;
 import org.jboss.forge.parser.java.Annotation;
-import org.jboss.forge.parser.java.JavaInterface;
 import org.jboss.forge.parser.java.JavaType;
 import org.jboss.forge.parser.java.SyntaxError;
 import org.jboss.forge.parser.java.Visibility;
@@ -40,7 +36,6 @@ import org.jboss.forge.parser.java.ast.ModifierAccessor;
 import org.jboss.forge.parser.java.ast.TypeDeclarationFinderVisitor;
 import org.jboss.forge.parser.java.source.AnnotationSource;
 import org.jboss.forge.parser.java.source.Import;
-import org.jboss.forge.parser.java.source.InterfaceCapableSource;
 import org.jboss.forge.parser.java.source.JavaSource;
 import org.jboss.forge.parser.java.source.MemberSource;
 import org.jboss.forge.parser.java.util.Formatter;
@@ -56,7 +51,7 @@ import org.jboss.forge.parser.spi.WildcardImportResolver;
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
-         JavaSource<O>, InterfaceCapableSource<O>
+         JavaSource<O>
 {
    private final AnnotationAccessor<O, O> annotations = new AnnotationAccessor<O, O>();
    private final ModifierAccessor modifiers = new ModifierAccessor();
@@ -69,7 +64,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    public static ServiceLoader<WildcardImportResolver> loader = ServiceLoader.load(WildcardImportResolver.class);
    private static List<WildcardImportResolver> resolvers;
 
-   public AbstractJavaSource(JavaSource<?> enclosingType, final Document document, final CompilationUnit unit,
+   protected AbstractJavaSource(JavaSource<?> enclosingType, final Document document, final CompilationUnit unit,
             BodyDeclaration body)
    {
       this.enclosingType = enclosingType == null ? this : enclosingType;
@@ -764,116 +759,6 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    /*
     * Interfaced Methods
     */
-
-   @Override
-   public List<String> getInterfaces()
-   {
-      List<String> result = new ArrayList<String>();
-      List<Type> superTypes = JDTHelper.getInterfaces(getBodyDeclaration());
-      for (Type type : superTypes)
-      {
-         String name = JDTHelper.getTypeName(type);
-         if (Types.isSimpleName(name) && this.hasImport(name))
-         {
-            Import imprt = this.getImport(name);
-            String pkg = imprt.getPackage();
-            if (!Strings.isNullOrEmpty(pkg))
-            {
-               name = pkg + "." + name;
-            }
-         }
-         result.add(name);
-      }
-      return result;
-   }
-
-   @Override
-   public O addInterface(final String type)
-   {
-      if (!this.hasInterface(type))
-      {
-         Type interfaceType = JDTHelper.getInterfaces(
-                  JavaParser.parse(JavaInterfaceImpl.class,
-                           "public interface Mock extends " + Types.toSimpleName(type)
-                                    + " {}").getBodyDeclaration()).get(0);
-
-         if (this.hasInterface(Types.toSimpleName(type)) || this.hasImport(Types.toSimpleName(type)))
-         {
-            interfaceType = JDTHelper.getInterfaces(JavaParser.parse(JavaInterfaceImpl.class,
-                     "public interface Mock extends " + type + " {}").getBodyDeclaration()).get(0);
-         }
-
-         this.addImport(type);
-
-         ASTNode node = ASTNode.copySubtree(unit.getAST(), interfaceType);
-         JDTHelper.getInterfaces(getBodyDeclaration()).add((Type) node);
-      }
-      return (O) this;
-   }
-
-   @Override
-   public O addInterface(final Class<?> type)
-   {
-      return addInterface(type.getName());
-   }
-
-   @Override
-   public O addInterface(final JavaInterface<?> type)
-   {
-      return addInterface(type.getQualifiedName());
-   }
-
-   @Override
-   public boolean hasInterface(final String type)
-   {
-      for (String name : getInterfaces())
-      {
-         if (Types.areEquivalent(name, type))
-         {
-            return true;
-         }
-      }
-      return false;
-   }
-
-   @Override
-   public boolean hasInterface(final Class<?> type)
-   {
-      return hasInterface(type.getName());
-   }
-
-   @Override
-   public boolean hasInterface(final JavaInterface<?> type)
-   {
-      return hasInterface(type.getQualifiedName());
-   }
-
-   @Override
-   public O removeInterface(final String type)
-   {
-      List<Type> interfaces = JDTHelper.getInterfaces(getBodyDeclaration());
-      for (Type i : interfaces)
-      {
-         if (Types.areEquivalent(i.toString(), type))
-         {
-            interfaces.remove(i);
-            break;
-         }
-      }
-      return (O) this;
-   }
-
-   @Override
-   public O removeInterface(final Class<?> type)
-   {
-      return removeInterface(type.getName());
-   }
-
-   @Override
-   public O removeInterface(final JavaInterface<?> type)
-   {
-      return removeInterface(type.getQualifiedName());
-   }
 
    @Override
    public List<JavaSource<?>> getNestedClasses()

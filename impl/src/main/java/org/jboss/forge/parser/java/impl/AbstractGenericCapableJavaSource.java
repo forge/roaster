@@ -33,7 +33,7 @@ public abstract class AbstractGenericCapableJavaSource<O extends JavaSource<O>> 
          implements GenericCapableSource<O, O>
 {
 
-   public AbstractGenericCapableJavaSource(JavaSource<?> enclosingType, Document document, CompilationUnit unit,
+   protected AbstractGenericCapableJavaSource(JavaSource<?> enclosingType, Document document, CompilationUnit unit,
             BodyDeclaration declaration)
    {
       super(enclosingType, document, unit, declaration);
