@@ -7,6 +7,7 @@
 package org.jboss.forge.parser.java.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
@@ -84,7 +85,6 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    @SuppressWarnings("unchecked")
    public List<Type<O>> getTypeArguments()
    {
-      List<Type<O>> result = new ArrayList<Type<O>>();
       org.eclipse.jdt.core.dom.Type type = this.type;
 
       if (type instanceof ArrayType)
@@ -94,13 +94,15 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
 
       if (type instanceof ParameterizedType)
       {
+         List<Type<O>> result = new ArrayList<Type<O>>();
          List<org.eclipse.jdt.core.dom.Type> arguments = ((ParameterizedType) type).typeArguments();
          for (org.eclipse.jdt.core.dom.Type t : arguments)
          {
             result.add(new TypeImpl<O>(origin, this, t));
          }
+         return Collections.unmodifiableList(result);
       }
-      return result;
+      return Collections.emptyList();
    }
 
    @Override
@@ -108,11 +110,11 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    {
       int extraDimensions = 0;
       ASTNode parent = type.getParent();
-      if(parent instanceof FieldDeclaration)
+      if (parent instanceof FieldDeclaration)
       {
-         for(Object f: ((FieldDeclaration) parent).fragments())
+         for (Object f : ((FieldDeclaration) parent).fragments())
          {
-            if(f instanceof VariableDeclarationFragment)
+            if (f instanceof VariableDeclarationFragment)
             {
                extraDimensions = ((VariableDeclarationFragment) f).getExtraDimensions();
             }
