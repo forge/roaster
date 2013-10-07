@@ -7,6 +7,7 @@
 package org.jboss.forge.parser.java.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -43,13 +44,17 @@ public class TypeVariableImpl<O extends JavaSource<O>> implements TypeVariableSo
    {
       @SuppressWarnings("unchecked")
       List<org.eclipse.jdt.core.dom.Type> typeBounds = internal.typeBounds();
+      if (typeBounds.isEmpty())
+      {
+         return Collections.emptyList();
+      }
       final List<Type<O>> result = new ArrayList<Type<O>>(typeBounds.size());
 
       for (org.eclipse.jdt.core.dom.Type type : typeBounds)
       {
          result.add(new TypeImpl<O>(origin, type));
       }
-      return result;
+      return Collections.unmodifiableList(result);
    }
 
    @Override
