@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.jboss.forge</groupId>
@@ -17,59 +18,19 @@
       <dependency>
          <groupId>org.eclipse.tycho</groupId>
          <artifactId>org.eclipse.jdt.core</artifactId>
-         <version>3.8.2.v20120814-155456</version>
+         <version>3.9.1.v20130905-0837</version>
       </dependency>
 
       <dependency>
          <groupId>org.eclipse.core</groupId>
-         <artifactId>resources</artifactId>
-         <version>3.3.0-v20070604</version>
-         <exclusions>
-            <exclusion>
-               <groupId>org.eclipse.core</groupId>
-               <artifactId>expressions</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.eclipse.core</groupId>
-               <artifactId>filesystem</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.eclipse.core</groupId>
-               <artifactId>runtime</artifactId>
-            </exclusion>
-         </exclusions>
+         <artifactId>org.eclipse.core.resources</artifactId>
+         <version>3.7.100</version>
       </dependency>
 
       <dependency>
-         <groupId>org.eclipse.core</groupId>
-         <artifactId>runtime</artifactId>
-         <version>3.3.100-v20070530</version>
-         <exclusions>
-            <exclusion>
-               <groupId>org.eclipse.equinox</groupId>
-               <artifactId>registry</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.eclipse.equinox</groupId>
-               <artifactId>app</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-
-      <dependency>
-         <groupId>org.eclipse</groupId>
-         <artifactId>text</artifactId>
-         <version>3.3.0-v20070606-0010</version>
-         <exclusions>
-            <exclusion>
-               <groupId>org.eclipse.core</groupId>
-               <artifactId>commands</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.eclipse.equinox</groupId>
-               <artifactId>common</artifactId>
-            </exclusion>
-         </exclusions>
+         <groupId>org.eclipse.text</groupId>
+         <artifactId>org.eclipse.text</artifactId>
+         <version>3.5.101</version>
       </dependency>
    </dependencies>
 </project>
