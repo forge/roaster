@@ -25,12 +25,36 @@
          <groupId>org.eclipse.core</groupId>
          <artifactId>org.eclipse.core.resources</artifactId>
          <version>3.7.100</version>
+         <exclusions>
+            <exclusion>
+               <artifactId>org.eclipse.core.filesystem</artifactId>
+               <groupId>org.eclipse.core</groupId>
+            </exclusion>
+            <exclusion>
+               <artifactId>org.eclipse.equinox.registry</artifactId>
+               <groupId>org.eclipse.equinox</groupId>
+            </exclusion>
+            <exclusion>
+               <artifactId>org.eclipse.core.expressions</artifactId>
+               <groupId>org.eclipse.core</groupId>
+            </exclusion>
+            <exclusion>
+               <artifactId>org.eclipse.equinox.app</artifactId>
+               <groupId>org.eclipse.equinox</groupId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
          <groupId>org.eclipse.text</groupId>
          <artifactId>org.eclipse.text</artifactId>
          <version>3.5.101</version>
+         <exclusions>
+            <exclusion>
+               <artifactId>org.eclipse.core.commands</artifactId>
+               <groupId>org.eclipse.core</groupId>
+            </exclusion>
+         </exclusions>
       </dependency>
    </dependencies>
 </project>
