@@ -118,7 +118,7 @@ public class EnumConstantImpl implements EnumConstantSource
    @Override
    public Body getBody()
    {
-      return new EnumConstantBodyImpl((JavaEnum) parent, this);
+      return new EnumConstantBodyImpl(this);
    }
 
    @Override
@@ -205,7 +205,7 @@ public class EnumConstantImpl implements EnumConstantSource
       {
          return false;
       }
-      final EnumConstantImpl<?> other = (EnumConstantImpl<?>) obj;
+      final EnumConstantImpl other = (EnumConstantImpl) obj;
       return other.enumConstant == enumConstant || other.enumConstant != null
                && other.enumConstant.equals(enumConstant);
    }

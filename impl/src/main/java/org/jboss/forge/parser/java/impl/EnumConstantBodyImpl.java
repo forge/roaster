@@ -54,8 +54,8 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
 
    EnumConstantBodyImpl(EnumConstantSource enumConstant)
    {
-      this.javaEnum = javaEnum;
       this.enumConstant = enumConstant;
+      this.javaEnum = enumConstant.getOrigin();
       getBody();
    }
 
