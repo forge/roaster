@@ -9,8 +9,8 @@ package org.jboss.forge.parser.java.impl;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
-import org.jboss.forge.parser.java.Import;
-import org.jboss.forge.parser.java.JavaSource;
+import org.jboss.forge.parser.java.source.Import;
+import org.jboss.forge.parser.java.source.JavaSource;
 import org.jboss.forge.parser.java.util.Types;
 
 /**

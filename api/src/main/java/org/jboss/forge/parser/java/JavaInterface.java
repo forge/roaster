@@ -6,12 +6,19 @@
  */
 package org.jboss.forge.parser.java;
 
-/**
- * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
- * 
- */
-public interface JavaInterface extends JavaType<JavaInterface>,
-         InterfaceCapable<JavaInterface>
-{
+import org.jboss.forge.parser.JavaParser;
 
+/**
+ * Represents a Java {@code interface} type. See {@link JavaParser} for various options in generating
+ * {@link JavaInterface} instances.
+ * 
+ * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+ */
+public interface JavaInterface<O extends JavaInterface<O>> extends
+         JavaType<O>,
+         InterfaceCapable,
+         FieldHolder<O>,
+         MethodHolder<O>,
+         GenericCapable<O>
+{
 }

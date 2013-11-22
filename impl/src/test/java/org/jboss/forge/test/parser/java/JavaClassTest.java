@@ -9,7 +9,7 @@ package org.jboss.forge.test.parser.java;
 import java.io.InputStream;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.JavaClass;
+import org.jboss.forge.parser.java.source.JavaClassSource;
 import org.jboss.forge.test.parser.java.common.JavaClassTestBase;
 
 /**
@@ -18,9 +18,9 @@ import org.jboss.forge.test.parser.java.common.JavaClassTestBase;
 public class JavaClassTest extends JavaClassTestBase
 {
    @Override
-   public JavaClass getSource()
+   public JavaClassSource getSource()
    {
       InputStream stream = JavaClassTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockClass.java");
-      return JavaParser.parse(JavaClass.class, stream);
+      return JavaParser.parse(JavaClassSource.class, stream);
    }
 }

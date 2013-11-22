@@ -8,28 +8,20 @@
 package org.jboss.forge.parser.java;
 
 /**
+ * Represents a Java element that has a certain visibility scope.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface VisibilityScoped<T>
+public interface VisibilityScoped
 {
    boolean isPackagePrivate();
 
-   T setPackagePrivate();
-
    boolean isPublic();
-
-   T setPublic();
 
    boolean isPrivate();
 
-   T setPrivate();
-
    boolean isProtected();
 
-   T setProtected();
-
    Visibility getVisibility();
-
-   T setVisibility(Visibility scope);
 }

@@ -14,8 +14,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.InputStream;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Field;
-import org.jboss.forge.parser.java.JavaClass;
+import org.jboss.forge.parser.java.source.FieldSource;
+import org.jboss.forge.parser.java.source.JavaClassSource;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,14 +25,14 @@ import org.junit.Test;
 public class FieldTest
 {
    private InputStream stream;
-   private JavaClass javaClass;
-   private Field<JavaClass> field;
+   private JavaClassSource javaClass;
+   private FieldSource<JavaClassSource> field;
 
    @Before
    public void reset()
    {
       stream = FieldTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedField.java");
-      javaClass = JavaParser.parse(JavaClass.class, stream);
+      javaClass = JavaParser.parse(JavaClassSource.class, stream);
       field = javaClass.getFields().get(javaClass.getFields().size() - 1);
    }
 
@@ -65,7 +65,7 @@ public class FieldTest
    @Test
    public void testIsTypeChecksImports() throws Exception
    {
-      Field<JavaClass> field = javaClass.addField().setType(FieldTest.class).setPublic().setName("test");
+      FieldSource<JavaClassSource> field = javaClass.addField().setType(FieldTest.class).setPublic().setName("test");
       assertTrue(field.isType(FieldTest.class));
       assertTrue(field.isType(FieldTest.class.getName()));
       assertTrue(javaClass.hasImport(FieldTest.class));
@@ -74,7 +74,7 @@ public class FieldTest
    @Test
    public void testIsTypeChecksImportsIgnoresJavaLang() throws Exception
    {
-      Field<JavaClass> field = javaClass.addField("private Boolean bar;").setPublic().setName("test");
+      FieldSource<JavaClassSource> field = javaClass.addField("private Boolean bar;").setPublic().setName("test");
       assertTrue(field.isType(Boolean.class));
       assertTrue(field.isType("Boolean"));
       assertTrue(field.isType(Boolean.class.getName()));
@@ -84,7 +84,7 @@ public class FieldTest
    @Test
    public void testIsTypeStringChecksImports() throws Exception
    {
-      Field<JavaClass> field = javaClass.addField().setType(FieldTest.class.getName()).setPublic().setName("test");
+      FieldSource<JavaClassSource> field = javaClass.addField().setType(FieldTest.class.getName()).setPublic().setName("test");
       assertTrue(field.isType(FieldTest.class.getSimpleName()));
       assertTrue(javaClass.hasImport(FieldTest.class));
    }
@@ -92,8 +92,8 @@ public class FieldTest
    @Test
    public void testIsTypeChecksImportsTypes() throws Exception
    {
-      Field<JavaClass> field = javaClass.addField("private org.jboss.FieldTest test;");
-      Field<JavaClass> field2 = javaClass.addField().setType(FieldTest.class).setName("test2").setPrivate();
+      FieldSource<JavaClassSource> field = javaClass.addField("private org.jboss.FieldTest test;");
+      FieldSource<JavaClassSource> field2 = javaClass.addField().setType(FieldTest.class).setName("test2").setPrivate();
 
       assertTrue(field.isType(FieldTest.class.getSimpleName()));
       assertFalse(field.isType(FieldTest.class));
@@ -107,7 +107,7 @@ public class FieldTest
    @Test
    public void testSetTypeSimpleNameDoesNotAddImport() throws Exception
    {
-      Field<JavaClass> field = javaClass.addField().setType(FieldTest.class.getSimpleName()).setPublic()
+      FieldSource<JavaClassSource> field = javaClass.addField().setType(FieldTest.class.getSimpleName()).setPublic()
                .setName("test");
       assertFalse(field.isType(FieldTest.class));
       assertFalse(javaClass.hasImport(FieldTest.class));
@@ -157,7 +157,7 @@ public class FieldTest
    public void testAddField() throws Exception
    {
       javaClass.addField("public Boolean flag = false;");
-      Field<JavaClass> fld = javaClass.getFields().get(javaClass.getFields().size() - 1);
+      FieldSource<JavaClassSource> fld = javaClass.getFields().get(javaClass.getFields().size() - 1);
       fld.getOrigin();
 
       assertTrue(fld.toString().contains("Boolean"));
@@ -176,8 +176,8 @@ public class FieldTest
    @Test
    public void testIsPrimitive() throws Exception
    {
-      Field<JavaClass> objectField = javaClass.addField("public Boolean flag = false;");
-      Field<JavaClass> primitiveField = javaClass.addField("public boolean flag = false;");
+      FieldSource<JavaClassSource> objectField = javaClass.addField("public Boolean flag = false;");
+      FieldSource<JavaClassSource> primitiveField = javaClass.addField("public boolean flag = false;");
 
       assertFalse(objectField.isPrimitive());
       assertTrue(primitiveField.isPrimitive());
@@ -186,8 +186,8 @@ public class FieldTest
    @Test
    public void testIsTransient() throws Exception
    {
-      Field<JavaClass> transientField = javaClass.addField("public transient boolean flag = false;");
-      Field<JavaClass> nonTransientField = javaClass.addField("public boolean flag = false;");
+      FieldSource<JavaClassSource> transientField = javaClass.addField("public transient boolean flag = false;");
+      FieldSource<JavaClassSource> nonTransientField = javaClass.addField("public boolean flag = false;");
 
       assertTrue(transientField.isTransient());
       assertFalse(nonTransientField.isTransient());
@@ -196,8 +196,8 @@ public class FieldTest
    @Test
    public void testIsVolatile() throws Exception
    {
-      Field<JavaClass> volatileField = javaClass.addField("public volatile boolean flag = false;");
-      Field<JavaClass> nonVolatileField = javaClass.addField("public boolean flag = false;");
+      FieldSource<JavaClassSource> volatileField = javaClass.addField("public volatile boolean flag = false;");
+      FieldSource<JavaClassSource> nonVolatileField = javaClass.addField("public boolean flag = false;");
 
       assertTrue(volatileField.isVolatile());
       assertFalse(nonVolatileField.isVolatile());
@@ -207,7 +207,7 @@ public class FieldTest
    public void testAddFieldInitializerLiteral() throws Exception
    {
       javaClass.addField("public int flag;").setLiteralInitializer("1234").setPrivate();
-      Field<JavaClass> fld = javaClass.getFields().get(javaClass.getFields().size() - 1);
+      FieldSource<JavaClassSource> fld = javaClass.getFields().get(javaClass.getFields().size() - 1);
 
       assertEquals("int", fld.getType());
       assertEquals("flag", fld.getName());
@@ -220,7 +220,7 @@ public class FieldTest
    public void testAddFieldInitializerLiteralIgnoresTerminator() throws Exception
    {
       javaClass.addField("public int flag;").setLiteralInitializer("1234;").setPrivate();
-      Field<JavaClass> fld = javaClass.getFields().get(javaClass.getFields().size() - 1);
+      FieldSource<JavaClassSource> fld = javaClass.getFields().get(javaClass.getFields().size() - 1);
 
       assertEquals("int", fld.getType());
       assertEquals("flag", fld.getName());
@@ -233,7 +233,7 @@ public class FieldTest
    public void testAddFieldInitializerString() throws Exception
    {
       javaClass.addField("public String flag;").setStringInitializer("american");
-      Field<JavaClass> fld = javaClass.getFields().get(javaClass.getFields().size() - 1);
+      FieldSource<JavaClassSource> fld = javaClass.getFields().get(javaClass.getFields().size() - 1);
       fld.getOrigin();
 
       assertEquals("String", fld.getType());
@@ -248,7 +248,7 @@ public class FieldTest
    {
       javaClass.addField().setName("flag").setType(String.class.getName()).setStringInitializer("american")
                .setPrivate();
-      Field<JavaClass> fld = javaClass.getFields().get(javaClass.getFields().size() - 1);
+      FieldSource<JavaClassSource> fld = javaClass.getFields().get(javaClass.getFields().size() - 1);
       fld.getOrigin();
 
       assertEquals(String.class.getName(), fld.getQualifiedType());
@@ -264,10 +264,10 @@ public class FieldTest
    {
       javaClass.addField().setName("flag").setType(String.class.getName()).setStringInitializer("american")
                .setPrivate();
-      Field<JavaClass> fld = javaClass.getFields().get(javaClass.getFields().size() - 1);
+      FieldSource<JavaClassSource> fld = javaClass.getFields().get(javaClass.getFields().size() - 1);
       assertTrue(javaClass.hasField(fld));
 
-      Field<JavaClass> notFld = JavaParser.parse(JavaClass.class, "public class Foo {}")
+      FieldSource<JavaClassSource> notFld = JavaParser.parse(JavaClassSource.class, "public class Foo {}")
                .addField("private int foobar;");
       assertFalse(javaClass.hasField(notFld));
 

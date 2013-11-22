@@ -7,6 +7,7 @@
 
 package org.jboss.forge.parser.java;
 
+import org.jboss.forge.parser.java.source.VisibilityScopedSource;
 import org.jboss.forge.parser.java.util.Assert;
 
 /**
@@ -35,7 +36,7 @@ public enum Visibility
       return scope;
    }
 
-   public static Visibility getFrom(VisibilityScoped<?> target)
+   public static Visibility getFrom(VisibilityScoped target)
    {
       Assert.notNull(target, "VisibilityScoped<T> target must not be null.");
 
@@ -62,25 +63,28 @@ public enum Visibility
       return scope;
    }
 
-   public static <T extends VisibilityScoped<?>> T set(T target, Visibility scope)
+   public static <T extends VisibilityScopedSource<?>> T set(T target, Visibility scope)
    {
       Assert.notNull(target, "VisibilityScoped<T> target must not be null.");
       Assert.notNull(scope, "Visibility scope must not be null");
 
-      if (PRIVATE.equals(scope))
-         target.setPrivate();
-      else if (PACKAGE_PRIVATE.equals(scope))
-         target.setPackagePrivate();
-      else if (PROTECTED.equals(scope))
-         target.setProtected();
-      else if (PUBLIC.equals(scope))
-         target.setPublic();
-
-      else
+      switch (scope)
       {
+      case PRIVATE:
+         target.setPrivate();
+         break;
+      case PACKAGE_PRIVATE:
+         target.setPackagePrivate();
+         break;
+      case PROTECTED:
+         target.setProtected();
+         break;
+      case PUBLIC:
+         target.setPublic();
+         break;
+      default:
          throw new IllegalStateException("Unknown Visibility scope.");
       }
-
       return target;
    }
 }

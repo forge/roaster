@@ -16,70 +16,86 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.TypeParameter;
 import org.eclipse.jface.text.Document;
-import org.jboss.forge.parser.java.GenericCapable;
-import org.jboss.forge.parser.java.JavaSource;
+import org.jboss.forge.parser.java.TypeVariable;
+import org.jboss.forge.parser.java.source.GenericCapableSource;
+import org.jboss.forge.parser.java.source.JavaSource;
+import org.jboss.forge.parser.java.source.TypeVariableSource;
+import org.jboss.forge.parser.java.util.Strings;
 
 /**
  * 
  * @author mbenson
- *
+ * 
  * @param <O>
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractGenericCapableJavaSource<O extends JavaSource<O>> extends AbstractJavaSourceMemberHolder<O>
-         implements GenericCapable<O>
+         implements GenericCapableSource<O, O>
 {
 
-   public AbstractGenericCapableJavaSource(JavaSource<?> enclosingType, Document document, CompilationUnit unit,
+   protected AbstractGenericCapableJavaSource(JavaSource<?> enclosingType, Document document, CompilationUnit unit,
             BodyDeclaration declaration)
    {
       super(enclosingType, document, unit, declaration);
    }
 
    @Override
-   public List<String> getGenericTypes()
+   public List<TypeVariableSource<O>> getTypeVariables()
    {
-      List<String> result = new ArrayList<String>();
       TypeDeclaration type = (TypeDeclaration) body;
       List<TypeParameter> typeParameters = type.typeParameters();
-      if (typeParameters != null)
+      List<TypeVariableSource<O>> result = new ArrayList<TypeVariableSource<O>>();
+      for (TypeParameter typeParameter : typeParameters)
       {
-         for (TypeParameter typeParameter : typeParameters)
-         {
-            result.add(typeParameter.getName().getIdentifier());
-         }
+         result.add(new TypeVariableImpl<O>((O) this, typeParameter));
       }
       return Collections.unmodifiableList(result);
    }
 
    @Override
-   public O addGenericType(String genericType)
+   public TypeVariableSource<O> getTypeVariable(String name)
+   {
+      TypeDeclaration type = (TypeDeclaration) body;
+      List<TypeParameter> typeParameters = type.typeParameters();
+      for (TypeParameter typeParameter : typeParameters)
+      {
+         if (Strings.areEqual(name, typeParameter.getName().getIdentifier()))
+         {
+            return new TypeVariableImpl<O>((O) this, typeParameter);
+         }
+      }
+      return null;
+   }
+
+   @Override
+   public TypeVariableSource<O> addTypeVariable()
    {
       TypeDeclaration type = (TypeDeclaration) body;
       TypeParameter tp2 = unit.getAST().newTypeParameter();
-      tp2.setName(unit.getAST().newSimpleName(genericType));
       type.typeParameters().add(tp2);
+      return new TypeVariableImpl<O>((O) this, tp2);
+   }
+
+   @Override
+   public O removeTypeVariable(String name)
+   {
+      TypeDeclaration type = (TypeDeclaration) body;
+      List<TypeParameter> typeParameters = type.typeParameters();
+      for (Iterator<TypeParameter> iter = typeParameters.iterator(); iter.hasNext();)
+      {
+         if (Strings.areEqual(name, iter.next().getName().getIdentifier()))
+         {
+            iter.remove();
+            break;
+         }
+      }
       return (O) this;
    }
 
    @Override
-   public O removeGenericType(String genericType)
+   public O removeTypeVariable(TypeVariable<?> typeVariable)
    {
-      TypeDeclaration type = (TypeDeclaration) body;
-      List<TypeParameter> typeParameters = type.typeParameters();
-      if (typeParameters != null)
-      {
-         Iterator<TypeParameter> it = typeParameters.iterator();
-         while (it.hasNext())
-         {
-            TypeParameter typeParameter = it.next();
-            if (typeParameter.getName().getIdentifier().equals(genericType))
-            {
-               it.remove();
-            }
-         }
-      }
-      return (O) this;
+      return removeTypeVariable(typeVariable.getName());
    }
 
 }

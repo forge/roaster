@@ -14,11 +14,11 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.JavaEnum;
-import org.jboss.forge.parser.java.Member;
-import org.jboss.forge.parser.java.Method;
-import org.jboss.forge.parser.java.Parameter;
+import org.jboss.forge.parser.java.source.JavaClassSource;
+import org.jboss.forge.parser.java.source.JavaEnumSource;
+import org.jboss.forge.parser.java.source.MemberSource;
+import org.jboss.forge.parser.java.source.MethodSource;
+import org.jboss.forge.parser.java.source.ParameterSource;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,14 +28,14 @@ import org.junit.Test;
 public class JavaEnumMethodTest
 {
    private InputStream stream;
-   private JavaEnum javaEnum;
-   private Method<JavaEnum> method;
+   private JavaEnumSource javaEnum;
+   private MethodSource<JavaEnumSource> method;
 
    @Before
    public void reset()
    {
       stream = JavaEnumMethodTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockEnum.java");
-      javaEnum = JavaParser.parse(JavaEnum.class, stream);
+      javaEnum = JavaParser.parse(JavaEnumSource.class, stream);
       javaEnum.addMethod("public URL rewriteURL(String pattern, String replacement) { return null; }");
       method = javaEnum.getMethods().get(javaEnum.getMethods().size() - 1);
    }
@@ -86,7 +86,7 @@ public class JavaEnumMethodTest
    public void testSetParameters() throws Exception
    {
       method.setParameters("final int foo, final String bar");
-      List<Parameter<JavaEnum>> parameters = method.getParameters();
+      List<ParameterSource<JavaEnumSource>> parameters = method.getParameters();
       assertEquals(2, parameters.size());
       assertEquals("foo", parameters.get(0).getName());
       assertEquals("bar", parameters.get(1).getName());
@@ -96,7 +96,7 @@ public class JavaEnumMethodTest
    public void testGetParameterType() throws Exception
    {
       method.setParameters("final int foo, final String bar");
-      List<Parameter<JavaEnum>> parameters = method.getParameters();
+      List<ParameterSource<JavaEnumSource>> parameters = method.getParameters();
       assertEquals(2, parameters.size());
       assertEquals("int", parameters.get(0).getType());
       assertEquals("String", parameters.get(1).getType());
@@ -120,9 +120,9 @@ public class JavaEnumMethodTest
    @Test
    public void testGetMembers() throws Exception
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class).addMethod("public void doSomething();").getOrigin()
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class).addMethod("public void doSomething();").getOrigin()
                .addField("private int id;").getOrigin();
-      List<Member<JavaClass, ?>> members = javaClass.getMembers();
+      List<MemberSource<JavaClassSource, ?>> members = javaClass.getMembers();
       assertEquals(2, members.size());
    }
 }

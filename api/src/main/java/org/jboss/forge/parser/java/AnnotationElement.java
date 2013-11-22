@@ -10,15 +10,18 @@ package org.jboss.forge.parser.java;
 import org.jboss.forge.parser.Origin;
 
 /**
+ * Represents an element definition of a {@link JavaAnnotation}.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * @author Matt Benson
  */
-public interface AnnotationElement extends AnnotationTarget<JavaAnnotation, AnnotationElement>, Origin<JavaAnnotation>, Named<AnnotationElement>
+public interface AnnotationElement<O extends JavaAnnotation<O>> extends AnnotationTarget<O>,
+         Origin<O>, Named
 {
    /**
-    * Represents the default value of a given annotation element and provides mechanisms to set that value.
+    * Represents the default value of a given {@link AnnotationElement}.
     */
-   public interface DefaultValue
+   public interface ReadDefaultValue<O extends JavaAnnotation<O>>
    {
       String getString();
 
@@ -28,28 +31,13 @@ public interface AnnotationElement extends AnnotationTarget<JavaAnnotation, Anno
 
       <T extends Enum<T>> T[] getEnumArray(Class<T> type);
 
-      Annotation<JavaAnnotation> getAnnotation();
+      Annotation<O> getAnnotation();
 
       Class<?> getSingleClass();
 
       Class<?>[] getClassArray();
-
-      DefaultValue setLiteral(String value);
-
-      DefaultValue setString(String value);
-
-      <T extends Enum<T>> DefaultValue setEnum(T value);
-
-      <T extends Enum<T>> DefaultValue setEnumArray(T... values);
-
-      Annotation<JavaAnnotation> setAnnotation();
-
-      DefaultValue setSingleClass(Class<?> value);
-
-      DefaultValue setClassArray(Class<?>... values);
-
    }
-
+   
    /**
     * Get this annotation element's type.
     */
@@ -63,7 +51,7 @@ public interface AnnotationElement extends AnnotationTarget<JavaAnnotation, Anno
    /**
     * Get this annotation element's {@link Type}
     */
-   Type<JavaAnnotation> getTypeInspector();
+   Type<O> getTypeInspector();
 
    /**
     * Attempt to determine if this annotation element is of the same type as the given type.
@@ -75,24 +63,5 @@ public interface AnnotationElement extends AnnotationTarget<JavaAnnotation, Anno
     */
    boolean isType(String type);
 
-   /**
-    * Set the type of this {@link AnnotationElement} to the given {@link Class} type. Attempt to add an import statement
-    * to this annotation element's base {@link O} if required.
-    */
-   AnnotationElement setType(Class<?> clazz);
-
-   /**
-    * Set the type of this {@link AnnotationElement} to the given type. Attempt to add an import statement to this
-    * annotation element's base {@link O} if required. (Note that the given className must be fully-qualified in order
-    * to properly import required classes)
-    */
-   AnnotationElement setType(String type);
-
-   /**
-    * Set the type of this {@link AnnotationElement} to the given {@link JavaSource<?>} type. Attempt to add an import
-    * statement to this field's base {@link O} if required.
-    */
-   AnnotationElement setType(JavaSource<?> entity);
-
-   DefaultValue getDefaultValue();
+   ReadDefaultValue<O> getDefaultValue();
 }

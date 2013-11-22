@@ -11,18 +11,19 @@ import java.util.List;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.jboss.forge.parser.java.Annotation;
-import org.jboss.forge.parser.java.JavaSource;
-import org.jboss.forge.parser.java.Parameter;
 import org.jboss.forge.parser.java.Type;
 import org.jboss.forge.parser.java.ast.AnnotationAccessor;
+import org.jboss.forge.parser.java.source.AnnotationSource;
+import org.jboss.forge.parser.java.source.JavaSource;
+import org.jboss.forge.parser.java.source.ParameterSource;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public class ParameterImpl<O extends JavaSource<O>> implements Parameter<O>
+public class ParameterImpl<O extends JavaSource<O>> implements ParameterSource<O>
 {
-   private final AnnotationAccessor<O, Parameter<O>> annotations = new AnnotationAccessor<O, Parameter<O>>();
+   private final AnnotationAccessor<O, ParameterSource<O>> annotations = new AnnotationAccessor<O, ParameterSource<O>>();
    private final O parent;
    private final SingleVariableDeclaration param;
 
@@ -63,13 +64,13 @@ public class ParameterImpl<O extends JavaSource<O>> implements Parameter<O>
    }
 
    @Override
-   public Annotation<O> addAnnotation()
+   public AnnotationSource<O> addAnnotation()
    {
       return annotations.addAnnotation(this, param);
    }
 
    @Override
-   public Annotation<O> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
+   public AnnotationSource<O> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
    {
       if (parent.requiresImport(clazz))
       {
@@ -79,13 +80,13 @@ public class ParameterImpl<O extends JavaSource<O>> implements Parameter<O>
    }
 
    @Override
-   public Annotation<O> addAnnotation(final String className)
+   public AnnotationSource<O> addAnnotation(final String className)
    {
       return annotations.addAnnotation(this, param, className);
    }
 
    @Override
-   public List<Annotation<O>> getAnnotations()
+   public List<AnnotationSource<O> > getAnnotations()
    {
       return annotations.getAnnotations(this, param);
    }
@@ -103,19 +104,19 @@ public class ParameterImpl<O extends JavaSource<O>> implements Parameter<O>
    }
 
    @Override
-   public Annotation<O> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
+   public AnnotationSource<O> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
    {
       return annotations.getAnnotation(this, param, type);
    }
 
    @Override
-   public Annotation<O> getAnnotation(final String type)
+   public AnnotationSource<O> getAnnotation(final String type)
    {
       return annotations.getAnnotation(this, param, type);
    }
 
    @Override
-   public Parameter<O> removeAnnotation(final Annotation<O> annotation)
+   public ParameterSource<O> removeAnnotation(final Annotation<O> annotation)
    {
       return annotations.removeAnnotation(this, param, annotation);
    }

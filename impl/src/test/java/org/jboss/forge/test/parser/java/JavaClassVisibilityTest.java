@@ -9,7 +9,7 @@ package org.jboss.forge.test.parser.java;
 import java.io.InputStream;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.JavaClass;
+import org.jboss.forge.parser.java.source.JavaClassSource;
 import org.jboss.forge.test.parser.java.common.VisibilityTest;
 
 /**
@@ -22,7 +22,7 @@ public class JavaClassVisibilityTest extends VisibilityTest
    {
       InputStream stream = JavaClassVisibilityTest.class
                .getResourceAsStream("/org/jboss/forge/grammar/java/MockClass.java");
-      JavaClass clazz = JavaParser.parse(JavaClass.class, stream);
+      JavaClassSource clazz = JavaParser.parse(JavaClassSource.class, stream);
       setTarget(clazz);
    }
 }

@@ -10,8 +10,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.Method;
+import org.jboss.forge.parser.java.source.JavaClassSource;
+import org.jboss.forge.parser.java.source.MethodSource;
 import org.junit.Test;
 
 /**
@@ -22,14 +22,14 @@ public class MethodThrowsExceptionsTest
    @Test
    public void testParseThrowsNone() throws Exception
    {
-      Method<JavaClass> method = JavaParser.create(JavaClass.class).addMethod("public void hello()");
+      MethodSource<JavaClassSource> method = JavaParser.create(JavaClassSource.class).addMethod("public void hello()");
       assertTrue(method.getThrownExceptions().isEmpty());
    }
 
    @Test
    public void testParseThrowsOne() throws Exception, RuntimeException
    {
-      Method<JavaClass> method = JavaParser.create(JavaClass.class).addMethod(
+      MethodSource<JavaClassSource> method = JavaParser.create(JavaClassSource.class).addMethod(
                "public void hello(String foo, int bar) throws Exception");
       assertEquals(1, method.getThrownExceptions().size());
    }
@@ -37,7 +37,7 @@ public class MethodThrowsExceptionsTest
    @Test
    public void testParseThrowsMany() throws Exception
    {
-      Method<JavaClass> method = JavaParser.create(JavaClass.class).addMethod(
+      MethodSource<JavaClassSource> method = JavaParser.create(JavaClassSource.class).addMethod(
                "public void hello(String foo, int bar) throws Exception, RuntimeException");
       assertEquals(2, method.getThrownExceptions().size());
    }
@@ -45,7 +45,7 @@ public class MethodThrowsExceptionsTest
    @Test
    public void testAddThrowsOne() throws Exception, RuntimeException
    {
-      Method<JavaClass> method = JavaParser.create(JavaClass.class).addMethod(
+      MethodSource<JavaClassSource> method = JavaParser.create(JavaClassSource.class).addMethod(
                "public void hello(String foo, int bar)").addThrows(Exception.class);
       assertEquals(1, method.getThrownExceptions().size());
       assertTrue(method.getOrigin().hasImport(Exception.class));
@@ -54,7 +54,7 @@ public class MethodThrowsExceptionsTest
    @Test
    public void testAddThrowsMany() throws Exception
    {
-      Method<JavaClass> method = JavaParser.create(JavaClass.class).addMethod(
+      MethodSource<JavaClassSource> method = JavaParser.create(JavaClassSource.class).addMethod(
                "public void hello(String foo, int bar)").addThrows(Exception.class).addThrows(RuntimeException.class);
       assertEquals(2, method.getThrownExceptions().size());
    }
@@ -62,7 +62,7 @@ public class MethodThrowsExceptionsTest
    @Test
    public void testRemoveThrowsNone() throws Exception, RuntimeException
    {
-      Method<JavaClass> method = JavaParser.create(JavaClass.class).addMethod(
+      MethodSource<JavaClassSource> method = JavaParser.create(JavaClassSource.class).addMethod(
                "public void hello(String foo, int bar)").removeThrows(Exception.class);
       assertEquals(0, method.getThrownExceptions().size());
    }
@@ -70,7 +70,7 @@ public class MethodThrowsExceptionsTest
    @Test
    public void testRemoveThrowsOne() throws Exception, RuntimeException
    {
-      Method<JavaClass> method = JavaParser.create(JavaClass.class).addMethod(
+      MethodSource<JavaClassSource> method = JavaParser.create(JavaClassSource.class).addMethod(
                "public void hello(String foo, int bar) throws Exception").removeThrows(Exception.class);
       assertEquals(0, method.getThrownExceptions().size());
    }
@@ -78,7 +78,7 @@ public class MethodThrowsExceptionsTest
    @Test
    public void testRemoveThrowsMany() throws Exception
    {
-      Method<JavaClass> method = JavaParser.create(JavaClass.class).addMethod(
+      MethodSource<JavaClassSource> method = JavaParser.create(JavaClassSource.class).addMethod(
                "public void hello(String foo, int bar) throws Exception, RuntimeException")
                .removeThrows(Exception.class);
       assertEquals(1, method.getThrownExceptions().size());

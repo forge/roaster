@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.JavaClass;
+import org.jboss.forge.parser.java.source.JavaClassSource;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -19,12 +19,12 @@ import org.junit.Test;
  */
 public class JavaClassCreationTest
 {
-   private static JavaClass jc;
+   private static JavaClassSource jc;
 
    @BeforeClass
    public static void testCreateClass() throws Exception
    {
-      jc = JavaParser.create(JavaClass.class);
+      jc = JavaParser.create(JavaClassSource.class);
    }
 
    @Test

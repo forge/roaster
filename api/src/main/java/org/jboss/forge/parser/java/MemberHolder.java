@@ -10,13 +10,15 @@ package org.jboss.forge.parser.java;
 import java.util.List;
 
 /**
+ * Represents a {@link JavaType} that may declare fields or methods.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface MemberHolder<O extends JavaSource<O>, T>
+public interface MemberHolder<O extends JavaType<O>>
 {
    /**
     * Return a list of all class members (fields, methods, etc.)
     */
-   public List<Member<O, ?>> getMembers();
+   public List<? extends Member<O>> getMembers();
 }

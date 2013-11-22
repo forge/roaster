@@ -9,28 +9,18 @@ package org.jboss.forge.parser.java;
 import java.util.List;
 
 /**
+ * Represents a {@link JavaType} that may implement one or more interfaces.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface InterfaceCapable<T extends JavaSource<T>>
+public interface InterfaceCapable
 {
    List<String> getInterfaces();
-
-   T addInterface(String type);
-
-   T addInterface(Class<?> type);
-
-   T addInterface(JavaInterface type);
 
    boolean hasInterface(String type);
 
    boolean hasInterface(Class<?> type);
 
-   boolean hasInterface(JavaInterface type);
-
-   T removeInterface(String type);
-
-   T removeInterface(Class<?> type);
-
-   T removeInterface(JavaInterface type);
+   boolean hasInterface(JavaInterface<?> type);
 }

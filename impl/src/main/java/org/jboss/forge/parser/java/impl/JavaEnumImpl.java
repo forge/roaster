@@ -15,17 +15,16 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jface.text.Document;
-import org.jboss.forge.parser.java.EnumConstant;
-import org.jboss.forge.parser.java.JavaEnum;
-import org.jboss.forge.parser.java.JavaSource;
-import org.jboss.forge.parser.java.SourceType;
+import org.jboss.forge.parser.java.source.EnumConstantSource;
+import org.jboss.forge.parser.java.source.JavaEnumSource;
+import org.jboss.forge.parser.java.source.JavaSource;
 
 /**
  * Represents a Java Source File containing an Enum Type.
  *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnum> implements JavaEnum
+public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnumSource> implements JavaEnumSource
 {
    public JavaEnumImpl(JavaSource<?> enclosingType, final Document document, final CompilationUnit unit,
             BodyDeclaration body)
@@ -34,14 +33,14 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnum> imple
    }
 
    @Override
-   public List<EnumConstant<JavaEnum>> getEnumConstants()
+   public List<EnumConstantSource> getEnumConstants()
    {
-      List<EnumConstant<JavaEnum>> result = new ArrayList<EnumConstant<JavaEnum>>();
+      List<EnumConstantSource> result = new ArrayList<EnumConstantSource>();
 
       for (Object o : (((EnumDeclaration) getBodyDeclaration()).enumConstants()))
       {
          EnumConstantDeclaration constant = (EnumConstantDeclaration) o;
-         result.add(new EnumConstantImpl<JavaEnum>(this, constant));
+         result.add(new EnumConstantImpl(this, constant));
       }
 
       return Collections.unmodifiableList(result);
@@ -49,9 +48,9 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnum> imple
 
    @Override
    @SuppressWarnings("unchecked")
-   public EnumConstant<JavaEnum> addEnumConstant()
+   public EnumConstantSource addEnumConstant()
    {
-      EnumConstantImpl<JavaEnum> enumConst = new EnumConstantImpl<JavaEnum>(this);
+      EnumConstantImpl enumConst = new EnumConstantImpl(this);
       EnumDeclaration enumDeclaration = (EnumDeclaration) getBodyDeclaration();
       List<EnumConstantDeclaration> constants = enumDeclaration.enumConstants();
       constants.add((EnumConstantDeclaration) enumConst.getInternal());
@@ -61,9 +60,9 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnum> imple
 
    @Override
    @SuppressWarnings("unchecked")
-   public EnumConstant<JavaEnum> addEnumConstant(final String declaration)
+   public EnumConstantSource addEnumConstant(final String declaration)
    {
-      EnumConstantImpl<JavaEnum> enumConst = new EnumConstantImpl<JavaEnum>(this, declaration);
+      EnumConstantImpl enumConst = new EnumConstantImpl(this, declaration);
 
       EnumDeclaration enumDeclaration = (EnumDeclaration) getBodyDeclaration();
       List<EnumConstantDeclaration> constants = enumDeclaration.enumConstants();
@@ -73,9 +72,9 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnum> imple
    }
 
    @Override
-   public EnumConstant<JavaEnum> getEnumConstant(String name)
+   public EnumConstantSource getEnumConstant(String name)
    {
-      for (EnumConstant<JavaEnum> enumConst : getEnumConstants())
+      for (EnumConstantSource enumConst : getEnumConstants())
       {
          if (enumConst.getName().equals(name))
          {
@@ -86,14 +85,9 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnum> imple
    }
 
    @Override
-   protected JavaEnum updateTypeNames(final String newName)
+   protected JavaEnumSource updateTypeNames(final String newName)
    {
       return this;
    }
 
-   @Override
-   public SourceType getSourceType()
-   {
-      return SourceType.ENUM;
-   }
 }

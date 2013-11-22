@@ -7,6 +7,7 @@
 package org.jboss.forge.parser.java.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
@@ -18,16 +19,17 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.JavaSource;
-import org.jboss.forge.parser.java.Method;
+import org.jboss.forge.parser.java.JavaType;
 import org.jboss.forge.parser.java.Type;
+import org.jboss.forge.parser.java.source.Importer;
+import org.jboss.forge.parser.java.source.JavaClassSource;
+import org.jboss.forge.parser.java.source.MethodSource;
 import org.jboss.forge.parser.java.util.Types;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class TypeImpl<O extends JavaSource<O>> implements Type<O>
+public class TypeImpl<O extends JavaType<O>> implements Type<O>
 {
    private O origin = null;
    private final Type<O> parent;
@@ -58,8 +60,8 @@ public class TypeImpl<O extends JavaSource<O>> implements Type<O>
       this.parent = parent;
 
       String stub = "public class Stub { private " + type + " getType(){return null;} }";
-      JavaClass temp = (JavaClass) JavaParser.parse(stub);
-      List<Method<JavaClass>> methods = temp.getMethods();
+      JavaClassSource temp = (JavaClassSource) JavaParser.parse(stub);
+      List<MethodSource<JavaClassSource>> methods = temp.getMethods();
       MethodDeclaration newMethod = (MethodDeclaration) methods.get(0).getInternal();
       org.eclipse.jdt.core.dom.Type subtree = (org.eclipse.jdt.core.dom.Type) ASTNode.copySubtree(cu.getAST(),
                newMethod.getReturnType2());
@@ -83,7 +85,6 @@ public class TypeImpl<O extends JavaSource<O>> implements Type<O>
    @SuppressWarnings("unchecked")
    public List<Type<O>> getTypeArguments()
    {
-      List<Type<O>> result = new ArrayList<Type<O>>();
       org.eclipse.jdt.core.dom.Type type = this.type;
 
       if (type instanceof ArrayType)
@@ -93,13 +94,15 @@ public class TypeImpl<O extends JavaSource<O>> implements Type<O>
 
       if (type instanceof ParameterizedType)
       {
+         List<Type<O>> result = new ArrayList<Type<O>>();
          List<org.eclipse.jdt.core.dom.Type> arguments = ((ParameterizedType) type).typeArguments();
          for (org.eclipse.jdt.core.dom.Type t : arguments)
          {
             result.add(new TypeImpl<O>(origin, this, t));
          }
+         return Collections.unmodifiableList(result);
       }
-      return result;
+      return Collections.emptyList();
    }
 
    @Override
@@ -107,11 +110,11 @@ public class TypeImpl<O extends JavaSource<O>> implements Type<O>
    {
       int extraDimensions = 0;
       ASTNode parent = type.getParent();
-      if(parent instanceof FieldDeclaration)
+      if (parent instanceof FieldDeclaration)
       {
-         for(Object f: ((FieldDeclaration) parent).fragments())
+         for (Object f : ((FieldDeclaration) parent).fragments())
          {
-            if(f instanceof VariableDeclarationFragment)
+            if (f instanceof VariableDeclarationFragment)
             {
                extraDimensions = ((VariableDeclarationFragment) f).getExtraDimensions();
             }
@@ -183,7 +186,11 @@ public class TypeImpl<O extends JavaSource<O>> implements Type<O>
    public String getQualifiedName()
    {
       String result = type.toString();
-      return origin.resolveType(result);
+      if (origin instanceof Importer<?>)
+      {
+         return ((Importer<?>) origin).resolveType(result);
+      }
+      return result;
    }
 
    @Override

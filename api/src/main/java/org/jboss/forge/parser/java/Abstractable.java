@@ -8,12 +8,12 @@
 package org.jboss.forge.parser.java;
 
 /**
+ * Represents a Java element that may be declared {@code abstract}.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
 public interface Abstractable<T>
 {
    public abstract boolean isAbstract();
-
-   public abstract T setAbstract(boolean abstrct);
 }

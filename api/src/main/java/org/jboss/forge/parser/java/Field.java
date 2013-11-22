@@ -7,11 +7,14 @@
 
 package org.jboss.forge.parser.java;
 
+
 /**
+ * Represents a field of a {@link JavaClass}, {@link JavaInterface}, or {@link JavaEnum}.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
- *
+ * 
  */
-public interface Field<O extends JavaSource<O>> extends Member<O, Field<O>>
+public interface Field<O extends JavaType<O>> extends Member<O>
 {
    /**
     * Get this field's type.
@@ -38,49 +41,25 @@ public interface Field<O extends JavaSource<O>> extends Member<O, Field<O>>
     */
    boolean isType(String type);
 
-   /**
-    * Set the type of this {@link Field} to the given {@link Class} type. Attempt to add an import statement to this
-    * field's base {@link O} if required.
-    */
-   Field<O> setType(Class<?> clazz);
-
-   /**
-    * Set the type of this {@link Field} to the given type. Attempt to add an import statement to this field's base
-    * {@link O} if required. (Note that the given className must be fully-qualified in order to properly import required
-    * classes)
-    */
-   Field<O> setType(String type);
-
-   /**
-    * Set the type of this {@link Field} to the given {@link JavaSource<?>} type. Attempt to add an import statement to
-    * this field's base {@link O} if required.
-    */
-   Field<O> setType(JavaSource<?> entity);
-
    String getStringInitializer();
 
    String getLiteralInitializer();
 
-   Field<O> setLiteralInitializer(String value);
-
-   Field<O> setStringInitializer(String value);
-
    /**
     * 
-    * @return True if the type of the field is a primitive type 
+    * @return True if the type of the field is a primitive type
     */
    boolean isPrimitive();
-   
+
    /**
     * 
     * @return True if the field is transient
     */
    boolean isTransient();
-   
+
    /**
     * 
     * @return True if the field is volatile
     */
    boolean isVolatile();
-   
 }

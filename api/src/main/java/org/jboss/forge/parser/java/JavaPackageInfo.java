@@ -8,8 +8,8 @@
 package org.jboss.forge.parser.java;
 
 /**
- * Represents a Java Package Info.
+ * Represents a Java Package Info descriptor.
  */
-public interface JavaPackageInfo extends JavaSource<JavaPackageInfo>
+public interface JavaPackageInfo<O extends JavaPackageInfo<O>> extends JavaType<O>
 {
 }

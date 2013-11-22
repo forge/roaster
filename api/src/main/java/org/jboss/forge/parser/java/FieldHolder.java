@@ -10,25 +10,13 @@ package org.jboss.forge.parser.java;
 import java.util.List;
 
 /**
+ * Represents a {@link JavaType} that may contain field definitions.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-@SuppressWarnings("rawtypes")
-public interface FieldHolder<O extends JavaSource<O>> extends MemberHolder<O, Member>
+public interface FieldHolder<O extends JavaType<O>> extends MemberHolder<O>
 {
-   /**
-    * Add a new Java {@link Field} to this {@link O} instance. This field will be a stub until further modified.
-    */
-   public Field<O> addField();
-
-   /**
-    * Add a new {@link Field} declaration to this {@link O} instance, using the given {@link String} as the declaration.
-    * <p/>
-    * <strong>For example:</strong><br>
-    * <code>Field f = javaClass.addField("private String newField;");</code>
-    */
-   public Field<O> addField(final String declaration);
-
    /**
     * Return whether or not this {@link O} declares a {@link Field} with the given name.
     */
@@ -45,13 +33,9 @@ public interface FieldHolder<O extends JavaSource<O>> extends MemberHolder<O, Me
    public Field<O> getField(String name);
 
    /**
-    * Get a list of all {@link Field}s declared by this {@link O}, or return an empty list if no {@link Field}s are
-    * declared.
+    * Get a list of all {@link Field}s declared by this {@link O}, or return an empty list if no {@link Field}s
+    * are declared.
     */
-   public List<Field<O>> getFields();
-
-   /**
-    * Remove the given {@link Field} from this {@link O} instance, if it exists; otherwise, do nothing.
-    */
-   public O removeField(final Field<O> field);
+   public List<? extends Field<O>> getFields();
 }
+

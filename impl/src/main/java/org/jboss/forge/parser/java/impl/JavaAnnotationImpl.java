@@ -16,16 +16,16 @@ import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jface.text.Document;
 import org.jboss.forge.parser.java.AnnotationElement;
-import org.jboss.forge.parser.java.JavaAnnotation;
-import org.jboss.forge.parser.java.JavaSource;
-import org.jboss.forge.parser.java.SourceType;
+import org.jboss.forge.parser.java.source.AnnotationElementSource;
+import org.jboss.forge.parser.java.source.JavaAnnotationSource;
+import org.jboss.forge.parser.java.source.JavaSource;
 import org.jboss.forge.parser.java.util.Strings;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public class JavaAnnotationImpl extends AbstractJavaSource<JavaAnnotation> implements JavaAnnotation
+public class JavaAnnotationImpl extends AbstractJavaSource<JavaAnnotationSource> implements JavaAnnotationSource
 {
 
    public JavaAnnotationImpl(JavaSource<?> enclosingType, final Document document, final CompilationUnit unit,
@@ -35,30 +35,24 @@ public class JavaAnnotationImpl extends AbstractJavaSource<JavaAnnotation> imple
    }
 
    @Override
-   protected JavaAnnotation updateTypeNames(final String name)
+   protected JavaAnnotationSource updateTypeNames(final String name)
    {
       return this;
    }
 
    @Override
-   public SourceType getSourceType()
-   {
-      return SourceType.ANNOTATION;
-   }
-
-   @Override
-   public AnnotationElement addAnnotationElement()
+   public AnnotationElementSource addAnnotationElement()
    {
       return add(new AnnotationElementImpl(this));
    }
 
    @Override
-   public AnnotationElement addAnnotationElement(String declaration)
+   public AnnotationElementSource addAnnotationElement(String declaration)
    {
       return add(new AnnotationElementImpl(this, declaration));
    }
 
-   private AnnotationElement add(AnnotationElement annotationElement)
+   private AnnotationElementSource add(AnnotationElementSource annotationElement)
    {
       @SuppressWarnings("unchecked")
       final ListIterator<BodyDeclaration> members = getBodyDeclaration().bodyDeclarations().listIterator();
@@ -89,7 +83,7 @@ public class JavaAnnotationImpl extends AbstractJavaSource<JavaAnnotation> imple
    @Override
    public boolean hasAnnotationElement(String name)
    {
-      for (AnnotationElement annotationElement : getAnnotationElements())
+      for (AnnotationElementSource annotationElement : getAnnotationElements())
       {
          if (Strings.areEqual(name, annotationElement.getName()))
          {
@@ -100,15 +94,15 @@ public class JavaAnnotationImpl extends AbstractJavaSource<JavaAnnotation> imple
    }
 
    @Override
-   public boolean hasAnnotationElement(AnnotationElement annotationElement)
+   public boolean hasAnnotationElement(AnnotationElement<?> annotationElement)
    {
       return getAnnotationElements().contains(annotationElement);
    }
 
    @Override
-   public AnnotationElement getAnnotationElement(String name)
+   public AnnotationElementSource getAnnotationElement(String name)
    {
-      for (AnnotationElement annotationElement : getAnnotationElements())
+      for (AnnotationElementSource annotationElement : getAnnotationElements())
       {
          if (Strings.areEqual(name, annotationElement.getName()))
          {
@@ -119,9 +113,9 @@ public class JavaAnnotationImpl extends AbstractJavaSource<JavaAnnotation> imple
    }
 
    @Override
-   public List<AnnotationElement> getAnnotationElements()
+   public List<AnnotationElementSource> getAnnotationElements()
    {
-      List<AnnotationElement> result = new ArrayList<AnnotationElement>();
+      List<AnnotationElementSource> result = new ArrayList<AnnotationElementSource>();
       @SuppressWarnings("unchecked")
       List<BodyDeclaration> bodyDeclarations = getBodyDeclaration().bodyDeclarations();
       for (BodyDeclaration bodyDeclaration : bodyDeclarations)
@@ -136,7 +130,7 @@ public class JavaAnnotationImpl extends AbstractJavaSource<JavaAnnotation> imple
    }
 
    @Override
-   public JavaAnnotation removeAnnotationElement(AnnotationElement annotationElement)
+   public JavaAnnotationSource removeAnnotationElement(AnnotationElement<?> annotationElement)
    {
       getBodyDeclaration().bodyDeclarations().remove(annotationElement.getInternal());
       return this;

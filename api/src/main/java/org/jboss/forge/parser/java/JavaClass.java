@@ -10,14 +10,18 @@ package org.jboss.forge.parser.java;
 import org.jboss.forge.parser.JavaParser;
 
 /**
- * Represents a Java {@link Class} or interface source file as an in-memory modifiable element. See {@link JavaParser}
- * for various options in generating {@link JavaClass} instances.
+ * Represents a Java {@code class} type. See {@link JavaParser} for various options in generating {@link JavaClass}
+ * instances.
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public interface JavaClass extends
-         JavaType<JavaClass>,
-         Extendable<JavaClass>,
-         Abstractable<JavaClass>
+public interface JavaClass<O extends JavaClass<O>> extends
+         JavaType<O>,
+         InterfaceCapable,
+         FieldHolder<O>,
+         MethodHolder<O>,
+         GenericCapable<O>,
+         Extendable<O>,
+         Abstractable<O>
 {
 }

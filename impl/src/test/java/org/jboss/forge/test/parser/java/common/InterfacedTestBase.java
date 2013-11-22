@@ -14,9 +14,9 @@ import static org.junit.Assert.fail;
 import java.io.Serializable;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.InterfaceCapable;
-import org.jboss.forge.parser.java.JavaInterface;
-import org.jboss.forge.parser.java.JavaSource;
+import org.jboss.forge.parser.java.source.InterfaceCapableSource;
+import org.jboss.forge.parser.java.source.JavaInterfaceSource;
+import org.jboss.forge.parser.java.source.JavaSource;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,7 +24,7 @@ import org.junit.Test;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  *
  */
-public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapable<T>>
+public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapableSource<T>>
 {
 
    private T source;
@@ -57,7 +57,7 @@ public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapa
    @Test
    public void testAddInterfaceJavaInterface() throws Exception
    {
-      JavaInterface i2 = JavaParser.parse(JavaInterface.class, "package com.foo; public interface Bar<T> {}");
+      JavaInterfaceSource i2 = JavaParser.parse(JavaInterfaceSource.class, "package com.foo; public interface Bar<T> {}");
       assertFalse(this.source.hasInterface(i2));
       this.source.addInterface(i2);
       assertTrue(this.source.hasImport(i2));

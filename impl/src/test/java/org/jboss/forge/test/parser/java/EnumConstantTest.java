@@ -14,11 +14,10 @@ import java.io.InputStream;
 import java.util.regex.Pattern;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.EnumConstant;
-import org.jboss.forge.parser.java.EnumConstant.Body;
-import org.jboss.forge.parser.java.Field;
-import org.jboss.forge.parser.java.JavaEnum;
-import org.jboss.forge.parser.java.Method;
+import org.jboss.forge.parser.java.source.EnumConstantSource;
+import org.jboss.forge.parser.java.source.FieldSource;
+import org.jboss.forge.parser.java.source.JavaEnumSource;
+import org.jboss.forge.parser.java.source.MethodSource;
 import org.jboss.forge.parser.java.util.Strings;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,13 +27,13 @@ import org.junit.Test;
  */
 public class EnumConstantTest
 {
-   private JavaEnum javaEnum;
+   private JavaEnumSource javaEnum;
 
    @Before
    public void reset()
    {
       InputStream stream = EnumConstantTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockEnum.java");
-      javaEnum = JavaParser.parse(JavaEnum.class, stream);
+      javaEnum = JavaParser.parse(JavaEnumSource.class, stream);
    }
 
    @Test
@@ -43,7 +42,7 @@ public class EnumConstantTest
       int i = javaEnum.getMethods().size();
       javaEnum.addMethod().setConstructor(true).setParameters("int n, String s");
       assertEquals("int", javaEnum.getMethods().get(i).getParameters().get(0).getType());
-      EnumConstant<JavaEnum> foo = javaEnum.getEnumConstant("FOO");
+      EnumConstantSource foo = javaEnum.getEnumConstant("FOO");
       assertTrue(foo.getConstructorArguments().isEmpty());
       foo.setConstructorArguments("666", "null");
       assertEquals(2, foo.getConstructorArguments().size());
@@ -62,7 +61,7 @@ public class EnumConstantTest
    @Test
    public void testAddRemoveBody()
    {
-      EnumConstant<JavaEnum> foo = javaEnum.getEnumConstant("FOO");
+      EnumConstantSource foo = javaEnum.getEnumConstant("FOO");
       final Pattern emptyBody = Pattern.compile("\\{\\s*\\}$");
       assertFalse(emptyBody.matcher(foo.toString()).find());
       foo.getBody();
@@ -74,8 +73,8 @@ public class EnumConstantTest
    @Test
    public void testBodyAssertions()
    {
-      EnumConstant<JavaEnum> foo = javaEnum.getEnumConstant("FOO");
-      EnumConstant.Body body = foo.getBody();
+      EnumConstantSource foo = javaEnum.getEnumConstant("FOO");
+      EnumConstantSource.Body body = foo.getBody();
       assertTrue(body.isClass());
       assertFalse(body.isInterface());
       assertFalse(body.isEnum());
@@ -86,8 +85,8 @@ public class EnumConstantTest
    @Test
    public void testAddRemoveBodyImports()
    {
-      EnumConstant<JavaEnum> foo = javaEnum.getEnumConstant("FOO");
-      EnumConstant.Body body = foo.getBody();
+      EnumConstantSource foo = javaEnum.getEnumConstant("FOO");
+      EnumConstantSource.Body body = foo.getBody();
       assertFalse(body.hasImport(Strings.class));
       assertFalse(javaEnum.hasImport(Strings.class));
       body.addImport(Strings.class);
@@ -101,9 +100,9 @@ public class EnumConstantTest
    @Test
    public void testAddRemoveBodyMethod()
    {
-      EnumConstant<JavaEnum> foo = javaEnum.getEnumConstant("FOO");
-      EnumConstant.Body body = foo.getBody();
-      Method<Body> fooAction = body.addMethod().setName("fooAction").setReturnType(Void.TYPE);
+      EnumConstantSource foo = javaEnum.getEnumConstant("FOO");
+      EnumConstantSource.Body body = foo.getBody();
+      MethodSource<EnumConstantSource.Body> fooAction = body.addMethod().setName("fooAction").setReturnType(Void.TYPE);
       assertEquals(fooAction, body.getMethods().get(0));
       assertEquals(fooAction, body.getMembers().get(0));
       body.removeMethod(fooAction);
@@ -113,9 +112,9 @@ public class EnumConstantTest
    @Test
    public void testAddRemoveBodyField()
    {
-      EnumConstant<JavaEnum> foo = javaEnum.getEnumConstant("FOO");
-      EnumConstant.Body body = foo.getBody();
-      Field<Body> fooField = body.addField().setName("fooField").setType(String.class);
+      EnumConstantSource foo = javaEnum.getEnumConstant("FOO");
+      EnumConstantSource.Body body = foo.getBody();
+      FieldSource<EnumConstantSource.Body> fooField = body.addField().setName("fooField").setType(String.class);
       assertEquals(fooField, body.getFields().get(0));
       assertEquals(fooField, body.getMembers().get(0));
       body.removeField(fooField);

@@ -14,7 +14,7 @@ import org.jboss.forge.parser.Origin;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  *
  */
-public interface Type<O extends JavaSource<O>> extends Origin<O>
+public interface Type<O extends JavaType<O>> extends Origin<O>
 {
    public abstract List<Type<O>> getTypeArguments();
 
@@ -35,6 +35,5 @@ public interface Type<O extends JavaSource<O>> extends Origin<O>
    public abstract boolean isQualified();
 
    public abstract boolean isWildcard();
-
 
 }

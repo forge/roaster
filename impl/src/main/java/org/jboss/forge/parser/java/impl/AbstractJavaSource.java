@@ -14,7 +14,6 @@ import java.util.ServiceLoader;
 
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.IProblem;
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
@@ -23,24 +22,21 @@ import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
-import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
-import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.ParserException;
 import org.jboss.forge.parser.java.Annotation;
-import org.jboss.forge.parser.java.Import;
-import org.jboss.forge.parser.java.InterfaceCapable;
-import org.jboss.forge.parser.java.JavaInterface;
-import org.jboss.forge.parser.java.JavaSource;
-import org.jboss.forge.parser.java.Member;
+import org.jboss.forge.parser.java.JavaType;
 import org.jboss.forge.parser.java.SyntaxError;
 import org.jboss.forge.parser.java.Visibility;
 import org.jboss.forge.parser.java.ast.AnnotationAccessor;
 import org.jboss.forge.parser.java.ast.ModifierAccessor;
 import org.jboss.forge.parser.java.ast.TypeDeclarationFinderVisitor;
+import org.jboss.forge.parser.java.source.AnnotationSource;
+import org.jboss.forge.parser.java.source.Import;
+import org.jboss.forge.parser.java.source.JavaSource;
 import org.jboss.forge.parser.java.util.Formatter;
 import org.jboss.forge.parser.java.util.Strings;
 import org.jboss.forge.parser.java.util.Types;
@@ -49,12 +45,12 @@ import org.jboss.forge.parser.spi.WildcardImportResolver;
 
 /**
  * Represents a Java Source File
- *
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
-         JavaSource<O>, InterfaceCapable<O>
+         JavaSource<O>
 {
    private final AnnotationAccessor<O, O> annotations = new AnnotationAccessor<O, O>();
    private final ModifierAccessor modifiers = new ModifierAccessor();
@@ -67,7 +63,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    public static ServiceLoader<WildcardImportResolver> loader = ServiceLoader.load(WildcardImportResolver.class);
    private static List<WildcardImportResolver> resolvers;
 
-   public AbstractJavaSource(JavaSource<?> enclosingType, final Document document, final CompilationUnit unit,
+   protected AbstractJavaSource(JavaSource<?> enclosingType, final Document document, final CompilationUnit unit,
             BodyDeclaration body)
    {
       this.enclosingType = enclosingType == null ? this : enclosingType;
@@ -86,25 +82,25 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
     * Annotation modifiers
     */
    @Override
-   public Annotation<O> addAnnotation()
+   public AnnotationSource<O> addAnnotation()
    {
       return annotations.addAnnotation(this, getBodyDeclaration());
    }
 
    @Override
-   public Annotation<O> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
+   public AnnotationSource<O> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
    {
       return annotations.addAnnotation(this, getBodyDeclaration(), clazz.getName());
    }
 
    @Override
-   public Annotation<O> addAnnotation(final String className)
+   public AnnotationSource<O> addAnnotation(final String className)
    {
       return annotations.addAnnotation(this, getBodyDeclaration(), className);
    }
 
    @Override
-   public List<Annotation<O>> getAnnotations()
+   public List<AnnotationSource<O>> getAnnotations()
    {
       return annotations.getAnnotations(this, getBodyDeclaration());
    }
@@ -128,13 +124,13 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public Annotation<O> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
+   public AnnotationSource<O> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
    {
       return annotations.getAnnotation(this, getBodyDeclaration(), type);
    }
 
    @Override
-   public Annotation<O> getAnnotation(final String type)
+   public AnnotationSource<O> getAnnotation(final String type)
    {
       return annotations.getAnnotation(this, getBodyDeclaration(), type);
    }
@@ -150,7 +146,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public <T extends JavaSource<?>> Import addImport(final T type)
+   public <T extends JavaType<?>> Import addImport(final T type)
    {
       String qualifiedName = type.getQualifiedName();
       return this.addImport(qualifiedName);
@@ -209,7 +205,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public <T extends JavaSource<?>> Import getImport(final T type)
+   public <T extends JavaType<?>> Import getImport(final T type)
    {
       return getImport(type.getQualifiedName());
    }
@@ -240,7 +236,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public <T extends JavaSource<T>> boolean hasImport(final T type)
+   public <T extends JavaType<T>> boolean hasImport(final T type)
    {
       return hasImport(type.getQualifiedName());
    }
@@ -286,7 +282,8 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       }
       if (!validImport(resultType)
                || hasImport(resultType)
-               || Types.isJavaLang(resultType))
+               || Types.isJavaLang(resultType)
+               || Strings.areEqual(getPackage(), Types.getPackage(resultType)))
       {
          return false;
       }
@@ -411,7 +408,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public <T extends JavaSource<?>> O removeImport(final T type)
+   public <T extends JavaType<?>> O removeImport(final T type)
    {
       return removeImport(type.getQualifiedName());
    }
@@ -425,14 +422,6 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
          unit.imports().remove(internal);
       }
       return (O) this;
-   }
-
-   @Override
-   public List<Member<O, ?>> getMembers()
-   {
-      List<Member<O, ?>> result = new ArrayList<Member<O, ?>>();
-
-      return result;
    }
 
    protected AbstractTypeDeclaration getBodyDeclaration()
@@ -463,7 +452,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    {
       String result = getName();
 
-      JavaSource<?> enclosingType = this;
+      JavaType<?> enclosingType = this;
       while (enclosingType != enclosingType.getEnclosingType())
       {
          enclosingType = getEnclosingType();
@@ -487,7 +476,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    {
       String result = getName();
 
-      JavaSource<?> enclosingType = this;
+      JavaType<?> enclosingType = this;
       while (enclosingType != enclosingType.getEnclosingType())
       {
          enclosingType = getEnclosingType();
@@ -616,7 +605,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
     * Non-manipulation methods.
     */
    /**
-    * Return this {@link JavaSource} file as a String
+    * Return this {@link JavaType} file as a String
     */
    @Override
    public String toString()
@@ -761,116 +750,6 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    /*
     * Interfaced Methods
     */
-
-   @Override
-   public List<String> getInterfaces()
-   {
-      List<String> result = new ArrayList<String>();
-      List<Type> superTypes = JDTHelper.getInterfaces(getBodyDeclaration());
-      for (Type type : superTypes)
-      {
-         String name = JDTHelper.getTypeName(type);
-         if (Types.isSimpleName(name) && this.hasImport(name))
-         {
-            Import imprt = this.getImport(name);
-            String pkg = imprt.getPackage();
-            if (!Strings.isNullOrEmpty(pkg))
-            {
-               name = pkg + "." + name;
-            }
-         }
-         result.add(name);
-      }
-      return result;
-   }
-
-   @Override
-   public O addInterface(final String type)
-   {
-      if (!this.hasInterface(type))
-      {
-         Type interfaceType = JDTHelper.getInterfaces(
-                  JavaParser.parse(JavaInterfaceImpl.class,
-                           "public interface Mock extends " + Types.toSimpleName(type)
-                                    + " {}").getBodyDeclaration()).get(0);
-
-         if (this.hasInterface(Types.toSimpleName(type)) || this.hasImport(Types.toSimpleName(type)))
-         {
-            interfaceType = JDTHelper.getInterfaces(JavaParser.parse(JavaInterfaceImpl.class,
-                     "public interface Mock extends " + type + " {}").getBodyDeclaration()).get(0);
-         }
-
-         this.addImport(type);
-
-         ASTNode node = ASTNode.copySubtree(unit.getAST(), interfaceType);
-         JDTHelper.getInterfaces(getBodyDeclaration()).add((Type) node);
-      }
-      return (O) this;
-   }
-
-   @Override
-   public O addInterface(final Class<?> type)
-   {
-      return addInterface(type.getName());
-   }
-
-   @Override
-   public O addInterface(final JavaInterface type)
-   {
-      return addInterface(type.getQualifiedName());
-   }
-
-   @Override
-   public boolean hasInterface(final String type)
-   {
-      for (String name : getInterfaces())
-      {
-         if (Types.areEquivalent(name, type))
-         {
-            return true;
-         }
-      }
-      return false;
-   }
-
-   @Override
-   public boolean hasInterface(final Class<?> type)
-   {
-      return hasInterface(type.getName());
-   }
-
-   @Override
-   public boolean hasInterface(final JavaInterface type)
-   {
-      return hasInterface(type.getQualifiedName());
-   }
-
-   @Override
-   public O removeInterface(final String type)
-   {
-      List<Type> interfaces = JDTHelper.getInterfaces(getBodyDeclaration());
-      for (Type i : interfaces)
-      {
-         if (Types.areEquivalent(i.toString(), type))
-         {
-            interfaces.remove(i);
-            break;
-         }
-      }
-      return (O) this;
-   }
-
-   @Override
-   public O removeInterface(final Class<?> type)
-   {
-      return removeInterface(type.getName());
-   }
-
-   @Override
-   public O removeInterface(final JavaInterface type)
-   {
-      return removeInterface(type.getQualifiedName());
-   }
 
    @Override
    public List<JavaSource<?>> getNestedClasses()

@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Field;
-import org.jboss.forge.parser.java.JavaClass;
 import org.jboss.forge.parser.java.Type;
+import org.jboss.forge.parser.java.source.FieldSource;
+import org.jboss.forge.parser.java.source.JavaClassSource;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,7 +24,7 @@ public class FieldTypeTest
    @Test
    public void testGetReturnTypeReturnsFullTypeForJavaLang() throws Exception
    {
-      Field<JavaClass> field = JavaParser.create(JavaClass.class).addField("public Long l;");
+      FieldSource<JavaClassSource> field = JavaParser.create(JavaClassSource.class).addField("public Long l;");
       Assert.assertEquals("java.lang.Long", field.getQualifiedType());
       Assert.assertEquals("Long", field.getType());
    }
@@ -32,7 +32,7 @@ public class FieldTypeTest
    @Test
    public void testGetReturnTypeReturnsFullTypeForJavaLangGeneric() throws Exception
    {
-      Field<JavaClass> field = JavaParser.create(JavaClass.class)
+      FieldSource<JavaClassSource> field = JavaParser.create(JavaClassSource.class)
                .addField("public List<Long> list;");
       field.getOrigin().addImport(List.class);
       Assert.assertEquals("java.util.List", field.getQualifiedType());
@@ -42,10 +42,10 @@ public class FieldTypeTest
    @Test
    public void testGetReturnTypeObjectArray() throws Exception
    {
-      Field<JavaClass> field = JavaParser.create(JavaClass.class)
+      FieldSource<JavaClassSource> field = JavaParser.create(JavaClassSource.class)
                .addField("public List[] field;");
       field.getOrigin().addImport(List.class);
-      Type<JavaClass> type = field.getTypeInspector();
+      Type<JavaClassSource> type = field.getTypeInspector();
       Assert.assertEquals("java.util.List", type.getQualifiedName());
       Assert.assertFalse(type.isParameterized());
       Assert.assertFalse(type.isWildcard());
@@ -53,7 +53,7 @@ public class FieldTypeTest
       Assert.assertFalse(type.isQualified());
       Assert.assertTrue(type.isArray());
 
-      List<Type<JavaClass>> arguments = type.getTypeArguments();
+      List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
       Assert.assertEquals(0, arguments.size());
    }
@@ -61,10 +61,10 @@ public class FieldTypeTest
    @Test
    public void testGetReturnTypeObjectArrayParameterized() throws Exception
    {
-      Field<JavaClass> field = JavaParser.create(JavaClass.class)
+      FieldSource<JavaClassSource> field = JavaParser.create(JavaClassSource.class)
                .addField("public List<Long>[] list;");
       field.getOrigin().addImport(List.class);
-      Type<JavaClass> type = field.getTypeInspector();
+      Type<JavaClassSource> type = field.getTypeInspector();
       Assert.assertEquals("java.util.List", type.getQualifiedName());
       Assert.assertTrue(type.isParameterized());
       Assert.assertFalse(type.isWildcard());
@@ -72,7 +72,7 @@ public class FieldTypeTest
       Assert.assertFalse(type.isQualified());
       Assert.assertTrue(type.isArray());
 
-      List<Type<JavaClass>> arguments = type.getTypeArguments();
+      List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
       Assert.assertEquals(1, arguments.size());
    }
@@ -80,7 +80,7 @@ public class FieldTypeTest
    @Test
    public void testGetReturnTypeObjectUnparameterized() throws Exception
    {
-      Field<JavaClass> field = JavaParser.create(JavaClass.class)
+      FieldSource<JavaClassSource> field = JavaParser.create(JavaClassSource.class)
                .addField("public List list;");
       field.getOrigin().addImport(List.class);
       Assert.assertEquals("java.util.List", field.getTypeInspector().getQualifiedName());
@@ -90,14 +90,14 @@ public class FieldTypeTest
    @Test
    public void testGetReturnTypeObjectParameterized() throws Exception
    {
-      Field<JavaClass> field = JavaParser.create(JavaClass.class)
+      FieldSource<JavaClassSource> field = JavaParser.create(JavaClassSource.class)
                .addField("public List<Long> list;");
       field.getOrigin().addImport(List.class);
-      Type<JavaClass> type = field.getTypeInspector();
+      Type<JavaClassSource> type = field.getTypeInspector();
       Assert.assertEquals("java.util.List", type.getQualifiedName());
       Assert.assertTrue(type.isParameterized());
 
-      List<Type<JavaClass>> arguments = type.getTypeArguments();
+      List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
       Assert.assertEquals(1, arguments.size());
       Assert.assertEquals("Long", arguments.get(0).getName());
@@ -107,14 +107,14 @@ public class FieldTypeTest
    @Test
    public void testGetReturnTypeObjectWildcard() throws Exception
    {
-      Field<JavaClass> field = JavaParser.create(JavaClass.class)
+      FieldSource<JavaClassSource> field = JavaParser.create(JavaClassSource.class)
                .addField("public List<?> list;");
       field.getOrigin().addImport(List.class);
-      Type<JavaClass> type = field.getTypeInspector();
+      Type<JavaClassSource> type = field.getTypeInspector();
       Assert.assertEquals("java.util.List", type.getQualifiedName());
       Assert.assertTrue(type.isParameterized());
 
-      List<Type<JavaClass>> arguments = type.getTypeArguments();
+      List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
       Assert.assertEquals(1, arguments.size());
       Assert.assertEquals("?", arguments.get(0).getName());
@@ -124,14 +124,14 @@ public class FieldTypeTest
    @Test
    public void testGetReturnTypeObjectParameterizedMultiple() throws Exception
    {
-      Field<JavaClass> field = JavaParser.create(JavaClass.class)
+      FieldSource<JavaClassSource> field = JavaParser.create(JavaClassSource.class)
                .addField("public Map<String, Long> map;");
       field.getOrigin().addImport(Map.class);
-      Type<JavaClass> type = field.getTypeInspector();
+      Type<JavaClassSource> type = field.getTypeInspector();
       Assert.assertEquals("java.util.Map", type.getQualifiedName());
       Assert.assertTrue(type.isParameterized());
 
-      List<Type<JavaClass>> arguments = type.getTypeArguments();
+      List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
       Assert.assertEquals(2, arguments.size());
       Assert.assertEquals("String", arguments.get(0).getName());
@@ -144,14 +144,14 @@ public class FieldTypeTest
    @Test
    public void testGetReturnTypeObjectParameterizedNested() throws Exception
    {
-      Field<JavaClass> field = JavaParser.create(JavaClass.class)
+      FieldSource<JavaClassSource> field = JavaParser.create(JavaClassSource.class)
                .addField("public List<List<Long>> map;");
       field.getOrigin().addImport(List.class);
-      Type<JavaClass> type = field.getTypeInspector();
+      Type<JavaClassSource> type = field.getTypeInspector();
       Assert.assertEquals("java.util.List", type.getQualifiedName());
       Assert.assertTrue(type.isParameterized());
 
-      List<Type<JavaClass>> arguments = type.getTypeArguments();
+      List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
       Assert.assertEquals(1, arguments.size());
       Assert.assertEquals("List", arguments.get(0).getName());
@@ -165,15 +165,15 @@ public class FieldTypeTest
    @Test
    public void testGetReturnTypeObjectParameterizedMultipleNested() throws Exception
    {
-      Field<JavaClass> field = JavaParser.create(JavaClass.class)
+      FieldSource<JavaClassSource> field = JavaParser.create(JavaClassSource.class)
                .addField("public Map<String, List<Long>> map;");
       field.getOrigin().addImport(List.class);
       field.getOrigin().addImport(Map.class);
-      Type<JavaClass> type = field.getTypeInspector();
+      Type<JavaClassSource> type = field.getTypeInspector();
       Assert.assertEquals("java.util.Map", type.getQualifiedName());
       Assert.assertTrue(type.isParameterized());
 
-      List<Type<JavaClass>> arguments = type.getTypeArguments();
+      List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
       Assert.assertEquals(2, arguments.size());
       Assert.assertEquals("String", arguments.get(0).getName());
@@ -186,15 +186,15 @@ public class FieldTypeTest
    @Test
    public void testGetReturnTypeObjectParameterizedArrayMultipleNested() throws Exception
    {
-      Field<JavaClass> field = JavaParser.create(JavaClass.class)
+      FieldSource<JavaClassSource> field = JavaParser.create(JavaClassSource.class)
                .addField("public Map<String, List<Long>>[] maps;");
       field.getOrigin().addImport(List.class);
       field.getOrigin().addImport(Map.class);
-      Type<JavaClass> type = field.getTypeInspector();
+      Type<JavaClassSource> type = field.getTypeInspector();
       Assert.assertEquals("java.util.Map", type.getQualifiedName());
       Assert.assertTrue(type.isParameterized());
 
-      List<Type<JavaClass>> arguments = type.getTypeArguments();
+      List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
       Assert.assertEquals(2, arguments.size());
       Assert.assertEquals("String", arguments.get(0).getName());
@@ -207,8 +207,8 @@ public class FieldTypeTest
    @Test
    public void testFieldTypeByteArrayTest()
    {
-      final JavaClass javaClass = JavaParser.create(JavaClass.class);
-      final Field<JavaClass> field = javaClass.addField();
+      final JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
+      final FieldSource<JavaClassSource> field = javaClass.addField();
       field.setName("content");
       field.setType(byte[].class);
       Assert.assertEquals("byte[]", field.getQualifiedType());
@@ -218,12 +218,12 @@ public class FieldTypeTest
    @Test
    public void testFieldMultidimensionalArray()
    {
-      final JavaClass javaClass = JavaParser.create(JavaClass.class);
-      final Field<JavaClass> field = javaClass.addField();
+      final JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
+      final FieldSource<JavaClassSource> field = javaClass.addField();
       field.setName("content");
       field.setType(byte[][][].class);
       Assert.assertEquals("byte[][][]", field.getQualifiedType());
-      Type<JavaClass> typeInspector = field.getTypeInspector();
+      Type<JavaClassSource> typeInspector = field.getTypeInspector();
       Assert.assertTrue(typeInspector.isArray());
       Assert.assertEquals(3, typeInspector.getArrayDimensions());
    }
@@ -232,12 +232,12 @@ public class FieldTypeTest
    @Test
    public void testFieldMultidimensionalArray2()
    {
-      final JavaClass javaClass = JavaParser.create(JavaClass.class);
-      final Field<JavaClass> field = javaClass.addField();
+      final JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
+      final FieldSource<JavaClassSource> field = javaClass.addField();
       field.setName("content");
       field.setType(java.util.Vector[][][].class);
       Assert.assertEquals("java.util.Vector[][][]", field.getQualifiedType());
-      Type<JavaClass> typeInspector = field.getTypeInspector();
+      Type<JavaClassSource> typeInspector = field.getTypeInspector();
       Assert.assertTrue(typeInspector.isArray());
       Assert.assertEquals(3, typeInspector.getArrayDimensions());
       Assert.assertEquals("Vector[][][]", field.getType());
@@ -246,8 +246,8 @@ public class FieldTypeTest
    @Test
    public void testFieldTypeByteArrayAlternativeDeclarationTest()
    {
-      final JavaClass javaClass = JavaParser.create(JavaClass.class);
-      final Field<JavaClass> field = javaClass.addField("public byte content[];");
+      final JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
+      final FieldSource<JavaClassSource> field = javaClass.addField("public byte content[];");
       Assert.assertEquals("byte[]", field.getQualifiedType());
       Assert.assertEquals("byte[]", field.getType());
       Assert.assertTrue(field.getTypeInspector().isArray());
@@ -256,8 +256,8 @@ public class FieldTypeTest
    @Test
    public void testFieldTypeObjectArrayAlternativeDeclarationTest()
    {
-      final JavaClass javaClass = JavaParser.create(JavaClass.class);
-      final Field<JavaClass> field = javaClass.addField("public Long content[];");
+      final JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
+      final FieldSource<JavaClassSource> field = javaClass.addField("public Long content[];");
       Assert.assertEquals("java.lang.Long[]", field.getQualifiedType());
       Assert.assertEquals("Long[]", field.getType());
       Assert.assertTrue(field.getTypeInspector().isArray());
@@ -266,8 +266,8 @@ public class FieldTypeTest
    @Test
    public void testFieldTypeObjectArrayMixedDimensionTest()
    {
-      final JavaClass javaClass = JavaParser.create(JavaClass.class);
-      final Field<JavaClass> field = javaClass.addField("public Long[] content[];");
+      final JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
+      final FieldSource<JavaClassSource> field = javaClass.addField("public Long[] content[];");
       Assert.assertEquals("java.lang.Long[][]", field.getQualifiedType());
       Assert.assertEquals("Long[][]", field.getType());
       Assert.assertTrue(field.getTypeInspector().isArray());

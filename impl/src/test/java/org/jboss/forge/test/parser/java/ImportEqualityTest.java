@@ -3,8 +3,9 @@ package org.jboss.forge.test.parser.java;
 import static org.junit.Assert.*;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Import;
 import org.jboss.forge.parser.java.impl.ImportImpl;
+import org.jboss.forge.parser.java.source.Import;
+import org.jboss.forge.parser.java.source.JavaSource;
 import org.junit.Test;
 
 public class ImportEqualityTest {
@@ -103,6 +104,6 @@ public class ImportEqualityTest {
     }
 
     private Import buildImport(String importName) {
-        return new ImportImpl(JavaParser.parse("public class MockClass {}")).setName(importName);
+        return new ImportImpl(JavaParser.parse(JavaSource.class, "public class MockClass {}")).setName(importName);
     }
 }

@@ -3,15 +3,15 @@ package org.jboss.forge.test.parser.java;
 import java.io.InputStream;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.JavaClass;
+import org.jboss.forge.parser.java.source.JavaClassSource;
 
 public class NestedJavaClassTest extends JavaClassTest
 {
    @Override
-   public JavaClass getSource()
+   public JavaClassSource getSource()
    {
       InputStream stream = JavaClassTest.class
                .getResourceAsStream("/org/jboss/forge/grammar/java/NestedMockClass.java");
-      return (JavaClass) JavaParser.parse(JavaClass.class, stream).getNestedClasses().get(0);
+      return (JavaClassSource) JavaParser.parse(JavaClassSource.class, stream).getNestedClasses().get(0);
    }
 }

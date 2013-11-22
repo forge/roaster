@@ -6,10 +6,14 @@
  */
 package org.jboss.forge.test.parser.java;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.JavaClass;
+import org.jboss.forge.parser.java.JavaInterface;
+import org.jboss.forge.parser.java.source.JavaClassSource;
+import org.jboss.forge.parser.java.source.JavaInterfaceSource;
+import org.jboss.forge.parser.java.source.TypeVariableSource;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,19 +23,20 @@ public class JavaClassGenericsTest
    @Test
    public void addAndRemoveGenericType() throws ClassNotFoundException
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class);
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
-      javaClass.addGenericType("T");
+      javaClass.addTypeVariable().setName("T");
+      Assert.assertTrue(javaClass.getTypeVariables().get(0).getBounds().isEmpty());
       Assert.assertTrue(javaClass.toString().contains("<T>"));
-      javaClass.removeGenericType("T");
-      Assert.assertTrue(!javaClass.toString().contains("<T>"));
+      javaClass.removeTypeVariable("T");
+      Assert.assertFalse(javaClass.toString().contains("<T>"));
    }
 
    @Test
    public void addGenericSuperTypeWithPackage() throws ClassNotFoundException
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class);
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.setSuperType("it.coopservice.test.Bar<T>");
@@ -42,7 +47,7 @@ public class JavaClassGenericsTest
    @Test
    public void addConcreteGenericSuperTypeWithPackage() throws ClassNotFoundException
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class);
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.setSuperType("it.coopservice.test.Bar<com.coopservice.test.MyConcreteSuperClass>");
@@ -54,7 +59,7 @@ public class JavaClassGenericsTest
    @Test
    public void addMultipleConcreteGenericSuperTypeWithPackage() throws ClassNotFoundException
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class);
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.setSuperType("it.coopservice.test.Bar<com.coopservice.test.MyConcreteSuperClass,com.coopservice.test.MyOtherClass>");
@@ -67,7 +72,7 @@ public class JavaClassGenericsTest
    @Test
    public void addGenericSuperTypeWithoutPackage() throws ClassNotFoundException
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class);
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.setSuperType("Bar<T>");
@@ -78,7 +83,7 @@ public class JavaClassGenericsTest
    @Test
    public void removeGenericSuperType() throws ClassNotFoundException
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class);
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.addImport("it.coopservice.test.Bar");
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
@@ -91,29 +96,76 @@ public class JavaClassGenericsTest
    @Test
    public void addMultipleGenerics() throws ClassNotFoundException
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class);
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
-      javaClass.addGenericType("I");
-      javaClass.addGenericType("O");
+      javaClass.addTypeVariable().setName("I");
+      javaClass.addTypeVariable().setName("O");
       Assert.assertTrue(javaClass.toString().contains("<I, O>"));
-      javaClass.removeGenericType("I");
+      javaClass.removeTypeVariable("I");
       Assert.assertTrue(javaClass.toString().contains("<O>"));
    }
 
    @Test
-   public void getClassGenerics() throws ClassNotFoundException
+   public void classTypeVariableBounds() throws ClassNotFoundException
    {
-      JavaClass javaClass = JavaParser.create(JavaClass.class);
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
-      javaClass.addGenericType("I");
-      javaClass.addGenericType("O");
-      List<String> genericTypes = javaClass.getGenericTypes();
-      Assert.assertNotNull(genericTypes);
-      Assert.assertEquals(2, genericTypes.size());
-      Assert.assertTrue(genericTypes.contains("I"));
-      Assert.assertTrue(genericTypes.contains("O"));
+      javaClass.addTypeVariable().setName("T").setBounds(CharSequence.class);
+      Assert.assertTrue(javaClass.toString().contains("<T extends CharSequence>"));
+      javaClass.getTypeVariable("T").
+               setBounds(CharSequence.class, Serializable.class);
+      Assert.assertTrue(javaClass.toString().contains("<T extends CharSequence & Serializable>"));
+      javaClass.getTypeVariable("T").removeBounds();
+      Assert.assertTrue(javaClass.toString().contains("<T>"));
+   }
+   
+   @Test
+   public void javaTypeTypeVariableBounds() throws ClassNotFoundException
+   {
+	   JavaInterface<?> foo = JavaParser.create(JavaInterfaceSource.class).setPackage("it.coopservice.test").setName("Foo");
+	   JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
+	   javaClass.setPackage("it.coopservice.test");
+	   javaClass.setName("SimpleClass");
+	   javaClass.addTypeVariable().setName("T").setBounds(foo);
+	   Assert.assertTrue(javaClass.toString().contains("<T extends Foo>"));
+	   JavaInterface<?> bar = JavaParser.create(JavaInterfaceSource.class).setPackage("it.coopservice.test").setName("Bar");
+	   javaClass.getTypeVariable("T").setBounds(foo, bar);
+	   Assert.assertTrue(javaClass.toString().contains("<T extends Foo & Bar>"));
+	   javaClass.getTypeVariable("T").removeBounds();
+	   Assert.assertTrue(javaClass.toString().contains("<T>"));
+   }
+
+   @Test
+   public void stringTypeVariableBounds() throws ClassNotFoundException
+   {
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
+      javaClass.setPackage("it.coopservice.test");
+      javaClass.setName("SimpleClass");
+      javaClass.addTypeVariable().setName("T").setBounds("com.something.Foo");
+      Assert.assertTrue(javaClass.toString().contains("<T extends com.something.Foo>"));
+      javaClass.getTypeVariable("T").setBounds("com.something.Foo", "com.something.Bar<T>");
+      Assert.assertTrue(javaClass.toString().contains("<T extends com.something.Foo & com.something.Bar<T>>"));
+      javaClass.getTypeVariable("T").removeBounds();
+      Assert.assertTrue(javaClass.toString().contains("<T>"));
+   }
+   
+   @Test
+   public void getClassGenerics() throws ClassNotFoundException
+   {
+      JavaClassSource javaClass = JavaParser.create(JavaClassSource.class);
+      javaClass.setPackage("it.coopservice.test");
+      javaClass.setName("SimpleClass");
+      javaClass.addTypeVariable().setName("I");
+      javaClass.addTypeVariable().setName("O");
+      List<TypeVariableSource<JavaClassSource>> typeVariables = javaClass.getTypeVariables();
+      Assert.assertNotNull(typeVariables);
+      Assert.assertEquals(2, typeVariables.size());
+      Assert.assertEquals("I", typeVariables.get(0).getName());
+      Assert.assertTrue(typeVariables.get(0).getBounds().isEmpty());
+      Assert.assertEquals("O", typeVariables.get(1).getName());
+      Assert.assertTrue(typeVariables.get(1).getBounds().isEmpty());
    }
 
 }

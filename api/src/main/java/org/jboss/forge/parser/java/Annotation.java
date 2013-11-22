@@ -12,9 +12,11 @@ import org.jboss.forge.parser.Internal;
 import org.jboss.forge.parser.Origin;
 
 /**
+ * Represents an annotation on some Java element.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public interface Annotation<O extends JavaSource<O>> extends Internal, Origin<O>
+public interface Annotation<O extends JavaType<O>> extends Internal, Origin<O>
 {
    boolean isSingleValue();
 
@@ -44,35 +46,9 @@ public interface Annotation<O extends JavaSource<O>> extends Internal, Origin<O>
 
    String getStringValue(String name);
 
-   Annotation<O> removeValue(String name);
-
-   Annotation<O> removeAllValues();
-
-   Annotation<O> setName(String className);
-
-   Annotation<O> setEnumValue(String name, Enum<?> value);
-
-   Annotation<O> setEnumValue(Enum<?>... value);
-
-   Annotation<O> setEnumArrayValue(String name, Enum<?>... values);
-   
-   Annotation<O> setEnumArrayValue(Enum<?>... values);
-
-   Annotation<O> setLiteralValue(String value);
-
-   Annotation<O> setLiteralValue(String name, String value);
-
-   Annotation<O> setStringValue(String value);
-
-   Annotation<O> setStringValue(String name, String value);
-
    Annotation<O> getAnnotationValue();
 
    Annotation<O> getAnnotationValue(String name);
-
-   Annotation<O> setAnnotationValue();
-
-   Annotation<O> setAnnotationValue(String name);
 
    Class<?> getClassValue();
 
@@ -81,13 +57,4 @@ public interface Annotation<O extends JavaSource<O>> extends Internal, Origin<O>
    Class<?>[] getClassArrayValue();
 
    Class<?>[] getClassArrayValue(String name);
-
-   Annotation<O> setClassValue(String name, Class<?> value);
-
-   Annotation<O> setClassValue(Class<?> value);
-
-   Annotation<O> setClassArrayValue(String name, Class<?>... values);
-
-   Annotation<O> setClassArrayValue(Class<?>... values);
-
 }

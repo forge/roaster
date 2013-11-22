@@ -11,15 +11,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.jboss.forge.parser.JavaParser;
-import org.jboss.forge.parser.java.Import;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.Method;
+import org.jboss.forge.parser.java.source.Import;
+import org.jboss.forge.parser.java.source.JavaClassSource;
+import org.jboss.forge.parser.java.source.MethodSource;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,7 +29,7 @@ import org.junit.Test;
  */
 public abstract class JavaClassTestBase
 {
-   private JavaClass source;
+   private JavaClassSource source;
 
    @Before
    public void reset()
@@ -36,7 +37,7 @@ public abstract class JavaClassTestBase
       this.source = getSource();
    }
 
-   protected abstract JavaClass getSource();
+   protected abstract JavaClassSource getSource();
 
    @Test
    public void testApplyChangesNotRequiredForModification() throws Exception
@@ -84,7 +85,7 @@ public abstract class JavaClassTestBase
    @Test
    public void testSetNameUpdatesConstructorNames() throws Exception
    {
-      Method<JavaClass> constructor = source.addMethod().setConstructor(true).setPublic();
+      MethodSource<JavaClassSource> constructor = source.addMethod().setConstructor(true).setPublic();
       assertEquals("MockClass", source.getName());
       assertEquals("MockClass", constructor.getName());
       source.setName("Telephone");
@@ -218,6 +219,9 @@ public abstract class JavaClassTestBase
       source.addImport(JavaClassTestBase.class);
       assertTrue(source.hasImport(JavaClassTestBase.class));
       assertFalse(source.requiresImport(JavaClassTestBase.class));
+      assertFalse(source.requiresImport(String.class));
+      assertTrue(source.requiresImport(Annotation.class));
+      assertFalse(source.requiresImport(source.getPackage() + ".Foo"));
    }
 
    @Test
@@ -234,8 +238,8 @@ public abstract class JavaClassTestBase
    public void testAddMethod() throws Exception
    {
       int size = source.getMethods().size();
-      Method<JavaClass> method = source.addMethod().setName("testMethod").setReturnTypeVoid().setBody("");
-      List<Method<JavaClass>> methods = source.getMethods();
+      MethodSource<JavaClassSource> method = source.addMethod().setName("testMethod").setReturnTypeVoid().setBody("");
+      List<MethodSource<JavaClassSource>> methods = source.getMethods();
       assertEquals(size + 1, methods.size());
       assertNull(method.getReturnType());
    }
@@ -244,10 +248,10 @@ public abstract class JavaClassTestBase
    public void testAddMethodFromString() throws Exception
    {
       int size = source.getMethods().size();
-      Method<JavaClass> method = source.addMethod(
+      MethodSource<JavaClassSource> method = source.addMethod(
                "public URL rewriteURL(String pattern, String replacement) { return null; }")
                .setPackagePrivate();
-      List<Method<JavaClass>> methods = source.getMethods();
+      List<MethodSource<JavaClassSource>> methods = source.getMethods();
       assertEquals(size + 1, methods.size());
       assertEquals("URL", method.getReturnType());
       assertEquals("rewriteURL", method.getName());
@@ -260,7 +264,7 @@ public abstract class JavaClassTestBase
    public void testRemoveMethod() throws Exception
    {
       int size = source.getMethods().size();
-      List<Method<JavaClass>> methods = source.getMethods();
+      List<MethodSource<JavaClassSource>> methods = source.getMethods();
       source.removeMethod(methods.get(0));
       methods = source.getMethods();
       assertEquals(size - 1, methods.size());
@@ -270,7 +274,7 @@ public abstract class JavaClassTestBase
    public void testAddConstructor() throws Exception
    {
       int size = source.getMethods().size();
-      Method<JavaClass> method = source.addMethod().setName("testMethod").setConstructor(true).setProtected()
+      MethodSource<JavaClassSource> method = source.addMethod().setName("testMethod").setConstructor(true).setProtected()
                .setReturnType(String.class)
                .setBody("System.out.println(\"I am a constructor!\");");
       assertEquals(size + 1, source.getMethods().size());
@@ -283,10 +287,10 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testAddConstructorIngoresReturnTypeAndName() throws Exception
+   public void testAddConstructorIgnoresReturnTypeAndName() throws Exception
    {
       int size = source.getMethods().size();
-      Method<JavaClass> method = source.addMethod().setName("testMethod").setConstructor(true).setPrivate()
+      MethodSource<JavaClassSource> method = source.addMethod().setName("testMethod").setConstructor(true).setPrivate()
                .setReturnType(String.class)
                .setBody("System.out.println(\"I am a constructor!\");");
       assertEquals(size + 1, source.getMethods().size());
@@ -301,7 +305,7 @@ public abstract class JavaClassTestBase
    @Test
    public void testSuperType() throws Exception
    {
-      JavaClass source = JavaParser.parse(JavaClass.class, "public class Base extends Super {}");
+      JavaClassSource source = JavaParser.parse(JavaClassSource.class, "public class Base extends Super {}");
       assertEquals("Super", source.getSuperType());
 
       source.setSuperType(getClass());
@@ -311,7 +315,7 @@ public abstract class JavaClassTestBase
    @Test
    public void testSuperTypeJavaLang() throws Exception
    {
-      JavaClass source = JavaParser.parse(JavaClass.class, "public class Base extends Integer {}");
+      JavaClassSource source = JavaParser.parse(JavaClassSource.class, "public class Base extends Integer {}");
       assertEquals("java.lang.Integer", source.getSuperType());
 
       source.setSuperType(getClass());

@@ -8,26 +8,23 @@ package org.jboss.forge.parser.java;
 
 import java.util.List;
 
-public interface GenericCapable<T>
+/**
+ * Represents a Java element that may define type variables.
+ * 
+ * @author mbenson
+ *
+ */
+public interface GenericCapable<O extends JavaType<O>>
 {
-   /**
-    * Adds a generic type
-    *
-    * @param genericType should never be null
-    * @return
-    */
-   T addGenericType(String genericType);
-
-   /**
-    * Removes a generic type
-    *
-    * @param genericType should never be null
-    * @return
-    */
-   T removeGenericType(String genericType);
-
    /**
     * Returns all the generic types associated with this object
     */
-   List<String> getGenericTypes();
+   List<? extends TypeVariable<O>> getTypeVariables();
+   
+   /**
+    * Returns the named {@link TypeVariable}.
+    * @param name
+    * @return TypeVariable or {@code null}
+    */
+   TypeVariable<O> getTypeVariable(String name);
 }

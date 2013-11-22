@@ -7,13 +7,8 @@
 
 package org.jboss.forge.parser.spi;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -31,18 +26,19 @@ import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.util.Util;
 import org.eclipse.jface.text.Document;
 import org.jboss.forge.parser.ParserException;
-import org.jboss.forge.parser.java.JavaAnnotation;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.JavaEnum;
-import org.jboss.forge.parser.java.JavaInterface;
-import org.jboss.forge.parser.java.JavaPackageInfo;
-import org.jboss.forge.parser.java.JavaSource;
+import org.jboss.forge.parser.java.JavaType;
 import org.jboss.forge.parser.java.ast.TypeDeclarationFinderVisitor;
 import org.jboss.forge.parser.java.impl.JavaAnnotationImpl;
 import org.jboss.forge.parser.java.impl.JavaClassImpl;
 import org.jboss.forge.parser.java.impl.JavaEnumImpl;
 import org.jboss.forge.parser.java.impl.JavaInterfaceImpl;
 import org.jboss.forge.parser.java.impl.JavaPackageInfoImpl;
+import org.jboss.forge.parser.java.source.JavaAnnotationSource;
+import org.jboss.forge.parser.java.source.JavaClassSource;
+import org.jboss.forge.parser.java.source.JavaEnumSource;
+import org.jboss.forge.parser.java.source.JavaInterfaceSource;
+import org.jboss.forge.parser.java.source.JavaPackageInfoSource;
+import org.jboss.forge.parser.java.source.JavaSource;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -51,37 +47,16 @@ public class JavaParserImpl implements JavaParserProvider
 {
 
    @Override
-   public JavaSource<?> parse(final File file) throws FileNotFoundException
-   {
-      FileInputStream stream = null;
-      try
-      {
-         stream = new FileInputStream(file);
-         return parse(new BufferedInputStream(stream));
-      }
-      finally
-      {
-         Streams.closeQuietly(stream);
-      }
-   }
-
-   @Override
-   public JavaSource<?> parse(URL url) throws IOException
-   {
-      return parse(url.openStream());
-   }
-
-   @Override
-   public JavaSource<?> parse(final InputStream data)
+   public JavaType<?> parse(final InputStream data)
    {
       try
       {
          char[] source = Util.getInputStreamAsCharArray(data, data.available(), "ISO8859_1");
-         return parse(source);
+         return parse(new String(source));
       }
       catch (IOException e)
       {
-         throw new IllegalArgumentException("InputStream must be a parsable java file: ", e);
+         return null;
       }
       finally
       {
@@ -89,15 +64,8 @@ public class JavaParserImpl implements JavaParserProvider
       }
    }
 
-   @Override
-   public JavaSource<?> parse(final char[] data)
-   {
-      return parse(new String(data));
-   }
-
-   @Override
    @SuppressWarnings({ "rawtypes", "unchecked" })
-   public JavaSource<?> parse(final String data)
+   private JavaType<?> parse(final String data)
    {
       Document document = new Document(data);
       ASTParser parser = ASTParser.newParser(AST.JLS4);
@@ -130,8 +98,8 @@ public class JavaParserImpl implements JavaParserProvider
    }
 
    /**
-    * Create a {@link JavaSource} instance from the given {@link Document}, {@link CompilationUnit},
-    * {@link TypeDeclaration}, and enclosing {@link JavaSource} type.
+    * Create a {@link JavaType} instance from the given {@link Document}, {@link CompilationUnit},
+    * {@link TypeDeclaration}, and enclosing {@link JavaType} type.
     */
    public static JavaSource<?> getJavaSource(JavaSource<?> enclosingType, Document document, CompilationUnit unit,
             ASTNode declaration)
@@ -173,88 +141,24 @@ public class JavaParserImpl implements JavaParserProvider
    @SuppressWarnings("unchecked")
    public <T extends JavaSource<?>> T create(final Class<T> type)
    {
-      if (JavaClass.class.isAssignableFrom(type))
-         return (T) parse("public class JavaClass { }");
-
-      if (JavaEnum.class.isAssignableFrom(type))
-         return (T) parse("public enum JavaEnum { }");
-
-      if (JavaAnnotation.class.isAssignableFrom(type))
-         return (T) parse("public @interface JavaAnnotation { }");
-
-      if (JavaInterface.class.isAssignableFrom(type))
-         return (T) parse("public interface JavaInterface { }");
-
-      if (JavaPackageInfo.class.isAssignableFrom(type))
-         return (T) parse("package org.example;");
-
-      throw new ParserException("Unknown JavaSource type [" + type.getName() + "]");
-   }
-
-   @Override
-   @SuppressWarnings("unchecked")
-   public <T extends JavaSource<?>> T parse(final Class<T> type, final InputStream data)
-   {
-
-      JavaSource<?> source = parse(data);
-      if (type.isAssignableFrom(source.getClass()))
+      if (type != null)
       {
-         return (T) source;
+         if (type.isAssignableFrom(JavaClassSource.class))
+            return (T) parse("public class JavaClass { }");
+   
+         if (type.isAssignableFrom(JavaEnumSource.class))
+            return (T) parse("public enum JavaEnum { }");
+   
+         if (type.isAssignableFrom(JavaAnnotationSource.class))
+            return (T) parse("public @interface JavaAnnotation { }");
+   
+         if (type.isAssignableFrom(JavaInterfaceSource.class))
+            return (T) parse("public interface JavaInterface { }");
+   
+         if (type.isAssignableFrom(JavaPackageInfoSource.class))
+            return (T) parse("package org.example;");
       }
-      throw new ParserException("Source does not represent a [" + type.getSimpleName() + "], instead was ["
-               + source.getClass().getSimpleName() + "] - Cannot convert.");
-   }
-
-   @Override
-   @SuppressWarnings("unchecked")
-   public <T extends JavaSource<?>> T parse(final Class<T> type, final char[] data)
-   {
-      JavaSource<?> source = parse(data);
-      if (type.isAssignableFrom(source.getClass()))
-      {
-         return (T) source;
-      }
-      throw new ParserException("Source does not represent a [" + type.getSimpleName() + "], instead was ["
-               + source.getClass().getSimpleName() + "] - Cannot convert.");
-   }
-
-   @Override
-   @SuppressWarnings("unchecked")
-   public <T extends JavaSource<?>> T parse(final Class<T> type, final String data)
-   {
-      JavaSource<?> source = parse(data);
-      if (type.isAssignableFrom(source.getClass()))
-      {
-         return (T) source;
-      }
-      throw new ParserException("Source does not represent a [" + type.getSimpleName() + "], instead was ["
-               + source.getClass().getSimpleName() + "] - Cannot convert.");
-   }
-
-   @Override
-   @SuppressWarnings("unchecked")
-   public <T extends JavaSource<?>> T parse(final Class<T> type, final File file) throws FileNotFoundException
-   {
-      JavaSource<?> source = parse(file);
-      if (type.isAssignableFrom(source.getClass()))
-      {
-         return (T) source;
-      }
-      throw new ParserException("Source does not represent a [" + type.getSimpleName() + "], instead was ["
-               + source.getClass().getSimpleName() + "] - Cannot convert.");
-   }
-
-   @Override
-   @SuppressWarnings("unchecked")
-   public <T extends JavaSource<?>> T parse(final Class<T> type, final URL url) throws IOException
-   {
-      JavaSource<?> source = parse(url.openStream());
-      if (type.isAssignableFrom(source.getClass()))
-      {
-         return (T) source;
-      }
-      throw new ParserException("Source does not represent a [" + type.getSimpleName() + "], instead was ["
-               + source.getClass().getSimpleName() + "] - Cannot convert.");
+      return null;
    }
 
 }

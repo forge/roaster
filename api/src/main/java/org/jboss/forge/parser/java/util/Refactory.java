@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jboss.forge.parser.java.Field;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.Method;
+import org.jboss.forge.parser.java.source.FieldSource;
+import org.jboss.forge.parser.java.source.JavaClassSource;
+import org.jboss.forge.parser.java.source.MethodSource;
 
 /**
- * Utility refactory methods for {@link JavaClass} objects
+ * Utility refactory methods for {@link JavaClassSource} objects
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
@@ -29,7 +29,7 @@ public class Refactory
     * @param clazz
     * @param field
     */
-   public static void createGetterAndSetter(final JavaClass clazz, final Field<JavaClass> field)
+   public static void createGetterAndSetter(final JavaClassSource clazz, final FieldSource<JavaClassSource> field)
    {
       if (!clazz.hasField(field))
       {
@@ -55,11 +55,11 @@ public class Refactory
    /**
     * Create a <i>hashCode</i> and <i>equals</i> implementation for the given class and fields
     * 
-    * @deprecated Use {@link Refactory#createHashCodeAndEquals(JavaClass, Field...)} instead, since this method relies
+    * @deprecated Use {@link Refactory#createHashCodeAndEquals(JavaClass, Field<O>...)} instead, since this method relies
     *             on the existence of the id field
     */
    @Deprecated
-   public static void createHashCodeAndEquals(final JavaClass clazz)
+   public static void createHashCodeAndEquals(final JavaClassSource clazz)
    {
       clazz.addMethod(
                "public boolean equals(Object that) { " +
@@ -91,7 +91,7 @@ public class Refactory
     * @param clazz class to be changed
     * @param fields fields to be used in the equals/hashCode methods
     */
-   public static void createHashCodeAndEquals(final JavaClass clazz, final Field<?>... fields)
+   public static void createHashCodeAndEquals(final JavaClassSource clazz, final FieldSource<?>... fields)
    {
       if (clazz == null)
       {
@@ -113,7 +113,7 @@ public class Refactory
       boolean isTempFieldCreated = false;
       StringBuilder fieldEqualityChecks = new StringBuilder();
       StringBuilder hashCodeComputation = new StringBuilder();
-      for (Field<?> field : fields)
+      for (FieldSource<?> field : fields)
       {
          if(field == null)
          {
@@ -265,9 +265,9 @@ public class Refactory
     * 
     * @param clazz
     */
-   public static void createToStringFromFields(final JavaClass clazz)
+   public static void createToStringFromFields(final JavaClassSource clazz)
    {
-      List<Field<JavaClass>> fields = clazz.getFields();
+      List<FieldSource<JavaClassSource>> fields = clazz.getFields();
       createToStringFromFields(clazz, fields);
    }
 
@@ -277,7 +277,7 @@ public class Refactory
     * @param clazz
     * @param fields
     */
-   public static void createToStringFromFields(final JavaClass clazz, final Field<JavaClass>... fields)
+   public static void createToStringFromFields(final JavaClassSource clazz, final FieldSource<JavaClassSource>... fields)
    {
       createToStringFromFields(clazz, Arrays.asList(fields));
    }
@@ -288,16 +288,16 @@ public class Refactory
     * @param clazz
     * @param fields
     */
-   public static void createToStringFromFields(final JavaClass clazz, final List<Field<JavaClass>> fields)
+   public static void createToStringFromFields(final JavaClassSource clazz, final List<FieldSource<JavaClassSource>> fields)
    {
-      Method<JavaClass> method = clazz.addMethod().setName("toString").setReturnType(String.class)
+      MethodSource<JavaClassSource> method = clazz.addMethod().setName("toString").setReturnType(String.class)
                .setPublic();
       method.addAnnotation(Override.class);
 
       List<String> list = new ArrayList<String>();
 
       String delimeter = "\n";
-      for (Field<JavaClass> field : fields)
+      for (FieldSource<JavaClassSource> field : fields)
       {
          if (clazz.hasField(field))
          {

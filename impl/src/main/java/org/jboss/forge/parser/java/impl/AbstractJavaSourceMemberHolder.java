@@ -11,22 +11,31 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jface.text.Document;
 import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.java.Field;
-import org.jboss.forge.parser.java.FieldHolder;
-import org.jboss.forge.parser.java.JavaClass;
-import org.jboss.forge.parser.java.JavaSource;
-import org.jboss.forge.parser.java.Member;
+import org.jboss.forge.parser.java.JavaInterface;
+import org.jboss.forge.parser.java.JavaType;
 import org.jboss.forge.parser.java.Method;
-import org.jboss.forge.parser.java.MethodHolder;
 import org.jboss.forge.parser.java.Parameter;
 import org.jboss.forge.parser.java.ast.MethodFinderVisitor;
+import org.jboss.forge.parser.java.source.FieldHolderSource;
+import org.jboss.forge.parser.java.source.FieldSource;
+import org.jboss.forge.parser.java.source.Import;
+import org.jboss.forge.parser.java.source.InterfaceCapableSource;
+import org.jboss.forge.parser.java.source.JavaClassSource;
+import org.jboss.forge.parser.java.source.JavaSource;
+import org.jboss.forge.parser.java.source.MemberSource;
+import org.jboss.forge.parser.java.source.MethodHolderSource;
+import org.jboss.forge.parser.java.source.MethodSource;
+import org.jboss.forge.parser.java.source.ParameterSource;
 import org.jboss.forge.parser.java.util.Strings;
 import org.jboss.forge.parser.java.util.Types;
 
@@ -34,10 +43,11 @@ import org.jboss.forge.parser.java.util.Types;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> extends AbstractJavaSource<O> implements
-         MethodHolder<O>, FieldHolder<O>
+public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> extends AbstractJavaSource<O>
+         implements InterfaceCapableSource<O>,
+         MethodHolderSource<O>, FieldHolderSource<O>
 {
-   public AbstractJavaSourceMemberHolder(JavaSource<?> enclosingType, final Document document,
+   protected AbstractJavaSourceMemberHolder(JavaSource<?> enclosingType, final Document document,
             final CompilationUnit unit, BodyDeclaration declaration)
    {
       super(enclosingType, document, unit, declaration);
@@ -48,25 +58,25 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
     */
    @Override
    @SuppressWarnings("unchecked")
-   public Field<O> addField()
+   public FieldSource<O> addField()
    {
-      Field<O> field = new FieldImpl<O>((O) this);
+      FieldSource<O> field = new FieldImpl<O>((O) this);
       addField(field);
       return field;
    }
 
    @Override
    @SuppressWarnings("unchecked")
-   public Field<O> addField(final String declaration)
+   public FieldSource<O> addField(final String declaration)
    {
       String stub = "public class Stub { " + declaration + " }";
-      JavaClass temp = (JavaClass) JavaParser.parse(stub);
-      List<Field<JavaClass>> fields = temp.getFields();
-      Field<O> result = null;
-      for (Field<JavaClass> stubField : fields)
+      JavaClassSource temp = (JavaClassSource) JavaParser.parse(stub);
+      List<FieldSource<JavaClassSource>> fields = temp.getFields();
+      FieldSource<O> result = null;
+      for (FieldSource<JavaClassSource> stubField : fields)
       {
          Object variableDeclaration = stubField.getInternal();
-         Field<O> field = new FieldImpl<O>((O) this, variableDeclaration, true);
+         FieldSource<O> field = new FieldImpl<O>((O) this, variableDeclaration, true);
          addField(field);
          if (result == null)
          {
@@ -93,9 +103,9 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
    }
 
    @Override
-   public List<Member<O, ?>> getMembers()
+   public List<MemberSource<O, ?>> getMembers()
    {
-      List<Member<O, ?>> result = new ArrayList<Member<O, ?>>();
+      List<MemberSource<O, ?>> result = new ArrayList<MemberSource<O, ?>>();
 
       result.addAll(getFields());
       result.addAll(getMethods());
@@ -105,9 +115,9 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
 
    @Override
    @SuppressWarnings("unchecked")
-   public List<Field<O>> getFields()
+   public List<FieldSource<O>> getFields()
    {
-      List<Field<O>> result = new ArrayList<Field<O>>();
+      List<FieldSource<O>> result = new ArrayList<FieldSource<O>>();
 
       List<BodyDeclaration> bodyDeclarations = getBodyDeclaration().bodyDeclarations();
       for (BodyDeclaration bodyDeclaration : bodyDeclarations)
@@ -127,9 +137,9 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
    }
 
    @Override
-   public Field<O> getField(final String name)
+   public FieldSource<O> getField(final String name)
    {
-      for (Field<O> field : getFields())
+      for (FieldSource<O> field : getFields())
       {
          if (field.getName().equals(name))
          {
@@ -142,7 +152,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
    @Override
    public boolean hasField(final String name)
    {
-      for (Field<O> field : getFields())
+      for (FieldSource<O> field : getFields())
       {
          if (field.getName().equals(name))
          {
@@ -192,7 +202,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
    }
 
    @Override
-   public boolean hasMethod(final Method<O> method)
+   public boolean hasMethod(final Method<O, ?> method)
    {
       return getMethods().contains(method);
    }
@@ -227,9 +237,9 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
    }
 
    @Override
-   public Method<O> getMethod(final String name)
+   public MethodSource<O> getMethod(final String name)
    {
-      for (Method<O> method : getMethods())
+      for (MethodSource<O> method : getMethods())
       {
          if (method.getName().equals(name) && (method.getParameters().size() == 0))
          {
@@ -240,13 +250,13 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
    }
 
    @Override
-   public Method<O> getMethod(final String name, final String... paramTypes)
+   public MethodSource<O> getMethod(final String name, final String... paramTypes)
    {
-      for (Method<O> local : getMethods())
+      for (MethodSource<O> local : getMethods())
       {
          if (local.getName().equals(name))
          {
-            List<Parameter<O>> localParams = local.getParameters();
+            List<ParameterSource<O>> localParams = local.getParameters();
             if (paramTypes != null)
             {
                if (localParams.isEmpty() || (localParams.size() == paramTypes.length))
@@ -254,7 +264,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
                   boolean matches = true;
                   for (int i = 0; i < localParams.size(); i++)
                   {
-                     Parameter<O> localParam = localParams.get(i);
+                     ParameterSource<O> localParam = localParams.get(i);
                      String type = paramTypes[i];
                      if (!Types.areEquivalent(localParam.getType(), type))
                      {
@@ -271,7 +281,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
    }
 
    @Override
-   public Method<O> getMethod(final String name, Class<?>... paramTypes)
+   public MethodSource<O> getMethod(final String name, Class<?>... paramTypes)
    {
       if (paramTypes == null)
       {
@@ -288,14 +298,14 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
    }
 
    @Override
-   public boolean hasMethodSignature(final Method<?> method)
+   public boolean hasMethodSignature(final Method<?, ?> method)
    {
-      for (Method<O> local : getMethods())
+      for (MethodSource<O> local : getMethods())
       {
          if (local.getName().equals(method.getName()))
          {
-            Iterator<Parameter<O>> localParams = local.getParameters().iterator();
-            for (Parameter<? extends JavaSource<?>> methodParam : method.getParameters())
+            Iterator<ParameterSource<O>> localParams = local.getParameters().iterator();
+            for (Parameter<? extends JavaType<?>> methodParam : method.getParameters())
             {
                if (localParams.hasNext() && Strings.areEqual(localParams.next().getType(), methodParam.getType()))
                {
@@ -311,7 +321,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
 
    @Override
    @SuppressWarnings("unchecked")
-   public O removeMethod(final Method<O> method)
+   public O removeMethod(final Method<O, ?> method)
    {
       getBodyDeclaration().bodyDeclarations().remove(method.getInternal());
       return (O) this;
@@ -319,27 +329,27 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
 
    @Override
    @SuppressWarnings("unchecked")
-   public Method<O> addMethod()
+   public MethodSource<O> addMethod()
    {
-      Method<O> m = new MethodImpl<O>((O) this);
+      MethodSource<O> m = new MethodImpl<O>((O) this);
       getBodyDeclaration().bodyDeclarations().add(m.getInternal());
       return m;
    }
 
    @Override
    @SuppressWarnings("unchecked")
-   public Method<O> addMethod(final String method)
+   public MethodSource<O> addMethod(final String method)
    {
-      Method<O> m = new MethodImpl<O>((O) this, method);
+      MethodSource<O> m = new MethodImpl<O>((O) this, method);
       getBodyDeclaration().bodyDeclarations().add(m.getInternal());
       return m;
    }
 
    @Override
    @SuppressWarnings("unchecked")
-   public List<Method<O>> getMethods()
+   public List<MethodSource<O>> getMethods()
    {
-      List<Method<O>> result = new ArrayList<Method<O>>();
+      List<MethodSource<O>> result = new ArrayList<MethodSource<O>>();
 
       MethodFinderVisitor methodFinderVisitor = new MethodFinderVisitor();
       body.accept(methodFinderVisitor);
@@ -350,5 +360,117 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
          result.add(new MethodImpl<O>((O) this, methodDeclaration));
       }
       return Collections.unmodifiableList(result);
+   }
+
+   @Override
+   public List<String> getInterfaces()
+   {
+      List<String> result = new ArrayList<String>();
+      List<Type> superTypes = JDTHelper.getInterfaces(getBodyDeclaration());
+      for (Type type : superTypes)
+      {
+         String name = JDTHelper.getTypeName(type);
+         if (Types.isSimpleName(name) && this.hasImport(name))
+         {
+            Import imprt = this.getImport(name);
+            String pkg = imprt.getPackage();
+            if (!Strings.isNullOrEmpty(pkg))
+            {
+               name = pkg + "." + name;
+            }
+         }
+         result.add(name);
+      }
+      return result;
+   }
+
+   @SuppressWarnings("unchecked")
+   @Override
+   public O addInterface(final String type)
+   {
+      if (!this.hasInterface(type))
+      {
+         Type interfaceType = JDTHelper.getInterfaces(
+                  JavaParser.parse(JavaInterfaceImpl.class,
+                           "public interface Mock extends " + Types.toSimpleName(type)
+                                    + " {}").getBodyDeclaration()).get(0);
+   
+         if (this.hasInterface(Types.toSimpleName(type)) || this.hasImport(Types.toSimpleName(type)))
+         {
+            interfaceType = JDTHelper.getInterfaces(JavaParser.parse(JavaInterfaceImpl.class,
+                     "public interface Mock extends " + type + " {}").getBodyDeclaration()).get(0);
+         }
+   
+         this.addImport(type);
+   
+         ASTNode node = ASTNode.copySubtree(unit.getAST(), interfaceType);
+         JDTHelper.getInterfaces(getBodyDeclaration()).add((Type) node);
+      }
+      return (O) this;
+   }
+
+   @Override
+   public O addInterface(final Class<?> type)
+   {
+      return addInterface(type.getName());
+   }
+
+   @Override
+   public O addInterface(final JavaInterface<?> type)
+   {
+      return addInterface(type.getQualifiedName());
+   }
+
+   @Override
+   public boolean hasInterface(final String type)
+   {
+      for (String name : getInterfaces())
+      {
+         if (Types.areEquivalent(name, type))
+         {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   @Override
+   public boolean hasInterface(final Class<?> type)
+   {
+      return hasInterface(type.getName());
+   }
+
+   @Override
+   public boolean hasInterface(final JavaInterface<?> type)
+   {
+      return hasInterface(type.getQualifiedName());
+   }
+
+   @SuppressWarnings("unchecked")
+   @Override
+   public O removeInterface(final String type)
+   {
+      List<Type> interfaces = JDTHelper.getInterfaces(getBodyDeclaration());
+      for (Type i : interfaces)
+      {
+         if (Types.areEquivalent(i.toString(), type))
+         {
+            interfaces.remove(i);
+            break;
+         }
+      }
+      return (O) this;
+   }
+
+   @Override
+   public O removeInterface(final Class<?> type)
+   {
+      return removeInterface(type.getName());
+   }
+
+   @Override
+   public O removeInterface(final JavaInterface<?> type)
+   {
+      return removeInterface(type.getQualifiedName());
    }
 }

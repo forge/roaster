@@ -8,31 +8,20 @@
 package org.jboss.forge.parser.java;
 
 /**
+ * Represents a {@link JavaType} that may be declared as belonging to a particular Java {@code package}.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
 public interface Packaged<T>
 {
    /**
-    * Get the package of this {@link T}, or return null if it is in the default
-    * package.
+    * Get the package of this {@link T}, or return null if it is in the default package.
     */
    public String getPackage();
-
-   /**
-    * Set this {@link T}' package.
-    */
-   public T setPackage(String name);
-
-   /**
-    * Set this {@link T} to be in the default package (removes any current
-    * package declaration.)
-    */
-   public T setDefaultPackage();
 
    /**
     * Return whether or not this {@link T} is in the default package.
     */
    public boolean isDefaultPackage();
-
 }

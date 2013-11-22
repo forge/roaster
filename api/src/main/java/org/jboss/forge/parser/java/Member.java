@@ -10,18 +10,15 @@ package org.jboss.forge.parser.java;
 import org.jboss.forge.parser.Origin;
 
 /**
- * Represents a {@link JavaClass} member. (E.g.: a {@link Field} or {@link Method})
+ * Represents a {@link JavaType} member. (I.e.: a {@link Field} or {@link Method})
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface Member<O extends JavaSource<O>, T> extends VisibilityScoped<T>, AnnotationTarget<O, T>, Origin<O>, Named<T>
+public interface Member<O extends JavaType<O>> extends VisibilityScoped, AnnotationTarget<O>,
+         Origin<O>, Named
 {
    public boolean isFinal();
 
-   public T setFinal(boolean finl);
-
    public boolean isStatic();
-
-   public T setStatic(boolean statc);
 }

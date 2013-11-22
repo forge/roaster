@@ -12,33 +12,25 @@ import java.util.List;
 import org.jboss.forge.parser.JavaParser;
 
 /**
- * Represents a Java {@link Enum} source file as an in-memory modifiable element. See {@link JavaParser} for various
- * options in generating {@link JavaEnum} instances.
+ * Represents a Java {@code enum} type. See {@link JavaParser} for various options in generating {@link JavaEnum}
+ * instances.
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public interface JavaEnum extends JavaSource<JavaEnum>, InterfaceCapable<JavaEnum>, FieldHolder<JavaEnum>,
-         MethodHolder<JavaEnum>
+public interface JavaEnum<O extends JavaEnum<O>> extends JavaType<O>, InterfaceCapable,
+         FieldHolder<O>,
+         MethodHolder<O>
 {
    /**
-    * Add a new {@link EnumConstant}
-    */
-   EnumConstant<JavaEnum> addEnumConstant();
-   
-   /**
-    * Add a new {@link EnumConstant} using the given declaration.
-    */
-   EnumConstant<JavaEnum> addEnumConstant(String declaration);
-   
-   /**
     * Return the {@link EnumConstant} with the given name, or return null if no such constant exists.
+    * 
     * @param name
     * @return
     */
-   EnumConstant<JavaEnum> getEnumConstant(String name);
+   EnumConstant<O> getEnumConstant(String name);
 
    /**
     * Return all declared {@link EnumConstant} types for this {@link JavaEnum}
     */
-   List<EnumConstant<JavaEnum>> getEnumConstants();
+   List<? extends EnumConstant<O>> getEnumConstants();
 }

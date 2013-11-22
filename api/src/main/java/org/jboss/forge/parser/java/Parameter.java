@@ -6,11 +6,14 @@
  */
 package org.jboss.forge.parser.java;
 
+
 /**
+ * Represents a parameter of a {@link Method}.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface Parameter<O extends JavaSource<O>> extends AnnotationTarget<O, Parameter<O>>
+public interface Parameter<O extends JavaType<O>> extends AnnotationTarget<O>
 {
    String getName();
 

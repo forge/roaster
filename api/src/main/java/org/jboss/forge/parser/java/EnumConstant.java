@@ -11,13 +11,17 @@ import java.util.List;
 import org.jboss.forge.parser.Internal;
 import org.jboss.forge.parser.Origin;
 
-public interface EnumConstant<O extends JavaSource<O>> extends Internal, Origin<O>,
-         AnnotationTarget<O, EnumConstant<O>>, Named<EnumConstant<O>>
+/**
+ * Represents one of the constant members of a {@link JavaEnum}.
+ */
+public interface EnumConstant<O extends JavaEnum<O>> extends Internal, Origin<O>,
+         AnnotationTarget<O>, Named
 {
    /**
-    * Represents the anonymous subclass "body" of an enum constant.
+    * Represents the anonymous subclass "body" of a {@link EnumConstant}.
     */
-   public interface Body extends JavaSource<Body>, FieldHolder<Body>, MethodHolder<Body> {
+   public interface ReadBody<O extends ReadBody<O>> extends JavaType<O>, FieldHolder<O>, MethodHolder<O>
+   {
    }
 
    /**
@@ -26,17 +30,7 @@ public interface EnumConstant<O extends JavaSource<O>> extends Internal, Origin<
    List<String> getConstructorArguments();
 
    /**
-    * Set the constructor arguments for this enum constant.
-    */
-   EnumConstant<O> setConstructorArguments(String... literalArguments);
-
-   /**
     * Get the {@link Body} of this enum constant.
     */
-   Body getBody();
-
-   /**
-    * Remove the {@link Body} of this enum constant.
-    */
-   EnumConstant<O> removeBody();
+   ReadBody<?> getBody();
 }

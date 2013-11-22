@@ -14,10 +14,10 @@ import java.io.InputStream;
 
 import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.java.EnumConstant;
-import org.jboss.forge.parser.java.Field;
-import org.jboss.forge.parser.java.JavaEnum;
-import org.jboss.forge.parser.java.Method;
 import org.jboss.forge.parser.java.Visibility;
+import org.jboss.forge.parser.java.source.FieldSource;
+import org.jboss.forge.parser.java.source.JavaEnumSource;
+import org.jboss.forge.parser.java.source.MethodSource;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,13 +26,13 @@ import org.junit.Test;
  */
 public class JavaEnumTest
 {
-   private JavaEnum javaEnum;
+   private JavaEnumSource javaEnum;
 
    @Before
    public void reset()
    {
       InputStream stream = JavaEnumTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockEnum.java");
-      javaEnum = JavaParser.parse(JavaEnum.class, stream);
+      javaEnum = JavaParser.parse(JavaEnumSource.class, stream);
    }
 
    @Test
@@ -65,7 +65,7 @@ public class JavaEnumTest
    public void testAddEnumField()
    {
       int i = javaEnum.getFields().size();
-      Field<JavaEnum> fld = javaEnum.addField().setName("fld").setType(Integer.TYPE).setVisibility(Visibility.PRIVATE);
+      FieldSource<JavaEnumSource> fld = javaEnum.addField().setName("fld").setType(Integer.TYPE).setVisibility(Visibility.PRIVATE);
       assertEquals(i + 1, javaEnum.getFields().size());
       assertEquals("fld", fld.getName());
       assertEquals(Integer.TYPE.getName(), fld.getType());
@@ -76,7 +76,7 @@ public class JavaEnumTest
    public void testAddEnumMethod()
    {
       int i = javaEnum.getMethods().size();
-      Method<JavaEnum> method = javaEnum.addMethod().setName("something").setReturnType(Void.TYPE)
+      MethodSource<JavaEnumSource> method = javaEnum.addMethod().setName("something").setReturnType(Void.TYPE)
                .setVisibility(Visibility.PUBLIC);
       assertEquals(i + 1, javaEnum.getMethods().size());
       assertEquals("something", method.getName());
