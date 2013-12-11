@@ -71,6 +71,11 @@ public class Strings
       return (string == null) || string.isEmpty();
    }
 
+   public static boolean isBlank(final String string)
+   {
+      return string == null || string.trim().isEmpty();
+   }
+   
    public static boolean isTrue(final String value)
    {
       return value == null ? false : "true".equalsIgnoreCase(value.trim());

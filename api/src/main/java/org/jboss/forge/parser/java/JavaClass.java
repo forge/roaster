@@ -17,9 +17,7 @@ import org.jboss.forge.parser.JavaParser;
  */
 public interface JavaClass<O extends JavaClass<O>> extends
          JavaType<O>,
-         InterfaceCapable,
-         FieldHolder<O>,
-         MethodHolder<O>,
+         PropertyHolder<O>,
          GenericCapable<O>,
          Extendable<O>,
          Abstractable<O>

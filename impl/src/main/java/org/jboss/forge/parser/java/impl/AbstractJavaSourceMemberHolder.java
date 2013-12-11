@@ -9,7 +9,9 @@ package org.jboss.forge.parser.java.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
@@ -25,17 +27,19 @@ import org.jboss.forge.parser.java.JavaInterface;
 import org.jboss.forge.parser.java.JavaType;
 import org.jboss.forge.parser.java.Method;
 import org.jboss.forge.parser.java.Parameter;
+import org.jboss.forge.parser.java.Property;
 import org.jboss.forge.parser.java.ast.MethodFinderVisitor;
-import org.jboss.forge.parser.java.source.FieldHolderSource;
 import org.jboss.forge.parser.java.source.FieldSource;
 import org.jboss.forge.parser.java.source.Import;
 import org.jboss.forge.parser.java.source.InterfaceCapableSource;
 import org.jboss.forge.parser.java.source.JavaClassSource;
 import org.jboss.forge.parser.java.source.JavaSource;
 import org.jboss.forge.parser.java.source.MemberSource;
-import org.jboss.forge.parser.java.source.MethodHolderSource;
 import org.jboss.forge.parser.java.source.MethodSource;
 import org.jboss.forge.parser.java.source.ParameterSource;
+import org.jboss.forge.parser.java.source.PropertyHolderSource;
+import org.jboss.forge.parser.java.source.PropertySource;
+import org.jboss.forge.parser.java.util.Assert;
 import org.jboss.forge.parser.java.util.Strings;
 import org.jboss.forge.parser.java.util.Types;
 
@@ -43,9 +47,8 @@ import org.jboss.forge.parser.java.util.Types;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> extends AbstractJavaSource<O>
-         implements InterfaceCapableSource<O>,
-         MethodHolderSource<O>, FieldHolderSource<O>
+public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & PropertyHolderSource<O>> extends AbstractJavaSource<O>
+         implements InterfaceCapableSource<O>, PropertyHolderSource<O>
 {
    protected AbstractJavaSourceMemberHolder(JavaSource<?> enclosingType, final Document document,
             final CompilationUnit unit, BodyDeclaration declaration)
@@ -472,5 +475,106 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
    public O removeInterface(final JavaInterface<?> type)
    {
       return removeInterface(type.getQualifiedName());
+   }
+
+   @Override
+   public final boolean hasProperty(String name)
+   {
+      return getProperty(name) != null;
+   }
+
+   @Override
+   public final boolean hasProperty(Property<O> property)
+   {
+      return getProperties().contains(property);
+   }
+
+   @Override
+   public final PropertySource<O> addProperty(String type, String name)
+   {
+      Assert.isFalse(hasProperty(name), "Cannot create existing property " + name);
+
+      final org.jboss.forge.parser.java.Type<O> typeObject = new TypeImpl<O>(getOrigin(), null, type);
+      final PropertySource<O> result = new PropertyImpl<O>(name, getOrigin())
+      {
+         @Override
+         public org.jboss.forge.parser.java.Type<O> getType()
+         {
+            final org.jboss.forge.parser.java.Type<O> result = super.getType();
+            return result == null ? typeObject : result;
+         }
+      };
+
+      if (!isInterface())
+      {
+         result.createField();
+      }
+      result.setAccessible(true);
+      result.setMutable(!isEnum());
+
+      return getProperty(name);
+   }
+
+   @Override
+   public final AbstractJavaSourceMemberHolder<O> removeProperty(Property<O> property)
+   {
+      if (hasProperty(property))
+      {
+         getProperty(property.getName()).setMutable(false).setAccessible(false).removeField();
+      }
+      return this;
+   }
+
+   @Override
+   public final PropertySource<O> getProperty(String name)
+   {
+      Assert.notNull(name, "name is null");
+      final PropertyImpl<O> result = new PropertyImpl<O>(name, getOrigin());
+      return result.isValid() ? result : null;
+   }
+   
+   @Override
+   public final List<PropertySource<O>> getProperties()
+   {
+      final Set<String> propertyNames = new LinkedHashSet<String>();
+      for (MethodSource<O> method : getMethods())
+      {
+         if (isAccessor(method) || isMutator(method))
+         {
+            propertyNames.add(extractPropertyName(method));
+         }
+      }
+      for (FieldSource<O> field : getFields())
+      {
+         if (!field.isStatic())
+         {
+            propertyNames.add(field.getName());
+         }
+      }
+      final List<PropertySource<O>> result = new ArrayList<PropertySource<O>>(propertyNames.size());
+      for (String name : propertyNames)
+      {
+         result.add(new PropertyImpl<O>(name, getOrigin()));
+      }
+      return result;
+   }
+
+   private boolean isAccessor(Method<O, ?> method)
+   {
+      return extractPropertyName(method) != null && method.getParameters().isEmpty() && !method.isReturnTypeVoid();
+   }
+
+   private boolean isMutator(Method<O, ?> method)
+   {
+      return extractPropertyName(method) != null && method.getParameters().size() == 1 && method.isReturnTypeVoid();
+   }
+   
+   private String extractPropertyName(Method<O, ?> method)
+   {
+      if (method.getName().matches("^[gs]et.+$"))
+      {
+         return method.getName().substring(3);
+      }
+      return null;
    }
 }

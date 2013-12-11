@@ -52,7 +52,7 @@ public class ParameterImpl<O extends JavaSource<O>> implements ParameterSource<O
 
    @Override
    @SuppressWarnings({ "rawtypes", "unchecked" })
-   public Type<?> getType()
+   public Type<O> getType()
    {
       return new TypeImpl(parent, param.getType());
    }

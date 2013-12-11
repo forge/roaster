@@ -17,9 +17,7 @@ import org.jboss.forge.parser.JavaParser;
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public interface JavaEnum<O extends JavaEnum<O>> extends JavaType<O>, InterfaceCapable,
-         FieldHolder<O>,
-         MethodHolder<O>
+public interface JavaEnum<O extends JavaEnum<O>> extends JavaType<O>, PropertyHolder<O>
 {
    /**
     * Return the {@link EnumConstant} with the given name, or return null if no such constant exists.

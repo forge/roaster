@@ -19,6 +19,7 @@ import org.eclipse.jface.text.Document;
 import org.jboss.forge.parser.java.TypeVariable;
 import org.jboss.forge.parser.java.source.GenericCapableSource;
 import org.jboss.forge.parser.java.source.JavaSource;
+import org.jboss.forge.parser.java.source.PropertyHolderSource;
 import org.jboss.forge.parser.java.source.TypeVariableSource;
 import org.jboss.forge.parser.java.util.Strings;
 
@@ -29,7 +30,7 @@ import org.jboss.forge.parser.java.util.Strings;
  * @param <O>
  */
 @SuppressWarnings("unchecked")
-public abstract class AbstractGenericCapableJavaSource<O extends JavaSource<O>> extends AbstractJavaSourceMemberHolder<O>
+public abstract class AbstractGenericCapableJavaSource<O extends JavaSource<O> & PropertyHolderSource<O>> extends AbstractJavaSourceMemberHolder<O>
          implements GenericCapableSource<O, O>
 {
 

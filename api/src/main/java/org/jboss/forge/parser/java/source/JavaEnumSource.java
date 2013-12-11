@@ -21,7 +21,8 @@ import org.jboss.forge.parser.java.JavaEnum;
  */
 public interface JavaEnumSource extends JavaEnum<JavaEnumSource>, JavaSource<JavaEnumSource>, InterfaceCapableSource<JavaEnumSource>,
          FieldHolderSource<JavaEnumSource>,
-         MethodHolderSource<JavaEnumSource>
+         MethodHolderSource<JavaEnumSource>,
+         PropertyHolderSource<JavaEnumSource>
 {
    /**
     * Return the {@link EnumConstant} with the given name, or return null if no such constant exists.

@@ -199,7 +199,7 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    @Override
    public boolean isStatic()
    {
-      return modifiers.hasModifier(field, ModifierKeyword.STATIC_KEYWORD);
+      return getOrigin().isInterface() || modifiers.hasModifier(field, ModifierKeyword.STATIC_KEYWORD);
    }
 
    @Override
