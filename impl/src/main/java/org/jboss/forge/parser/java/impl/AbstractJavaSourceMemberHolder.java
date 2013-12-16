@@ -266,7 +266,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
                   {
                      ParameterSource<O> localParam = localParams.get(i);
                      String type = paramTypes[i];
-                     if (!Types.areEquivalent(localParam.getType(), type))
+                     if (!Types.areEquivalent(localParam.getType().getName(), type))
                      {
                         matches = false;
                      }
@@ -307,7 +307,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O>> ex
             Iterator<ParameterSource<O>> localParams = local.getParameters().iterator();
             for (Parameter<? extends JavaType<?>> methodParam : method.getParameters())
             {
-               if (localParams.hasNext() && Strings.areEqual(localParams.next().getType(), methodParam.getType()))
+               if (localParams.hasNext() && Strings.areEqual(localParams.next().getType().getName(), methodParam.getType().getName()))
                {
                   continue;
                }

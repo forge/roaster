@@ -45,8 +45,8 @@ public class MethodSignatureTest
       MethodSource<JavaClassSource> method = JavaParser.create(JavaClassSource.class).addMethod("public void hello(String foo, int bar)");
       List<ParameterSource<JavaClassSource>> parameters = method.getParameters();
 
-      Assert.assertEquals("String", parameters.get(0).getTypeInspector().toString());
-      Assert.assertEquals("int", parameters.get(1).getTypeInspector().toString());
+      Assert.assertEquals("String", parameters.get(0).getType().toString());
+      Assert.assertEquals("int", parameters.get(1).getType().toString());
    }
 
    @Test(expected = UnsupportedOperationException.class)

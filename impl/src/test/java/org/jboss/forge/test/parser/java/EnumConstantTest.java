@@ -41,7 +41,7 @@ public class EnumConstantTest
    {
       int i = javaEnum.getMethods().size();
       javaEnum.addMethod().setConstructor(true).setParameters("int n, String s");
-      assertEquals("int", javaEnum.getMethods().get(i).getParameters().get(0).getType());
+      assertEquals("int", javaEnum.getMethods().get(i).getParameters().get(0).getType().getName());
       EnumConstantSource foo = javaEnum.getEnumConstant("FOO");
       assertTrue(foo.getConstructorArguments().isEmpty());
       foo.setConstructorArguments("666", "null");

@@ -13,7 +13,6 @@ import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.ArrayType;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
@@ -95,14 +94,14 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       List<ParameterSource<O>> parameters = this.getParameters();
       for (ParameterSource<O> p : parameters)
       {
-         signature += p.getType();
+         signature += p.getType().getName();
          if (parameters.indexOf(p) < (parameters.size() - 1))
          {
             signature += ", ";
          }
       }
 
-      signature += ") : " + (this.getReturnType() == null ? "void" : this.getReturnType());
+      signature += ") : " + (this.getReturnType() == null ? "void" : this.getReturnType().getName());
       return signature;
    }
 
@@ -219,55 +218,32 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    }
 
    @Override
-   public String getReturnType()
+   public Type<O> getReturnType()
    {
-      return Types.toSimpleName(getQualifiedReturnType());
-   }
-
-   @Override
-   public String getQualifiedReturnType()
-   {
-      String result = null;
-      org.eclipse.jdt.core.dom.Type returnType = method.getReturnType2();
-
-      if (returnType != null)
+      if (isConstructor())
       {
-         if ("void".equals(returnType.toString()))
-         {
-            return null;
-         }
-         else if (!isConstructor())
-         {
-            result = returnType.toString();
-         }
+         return null;
       }
-
-      result = parent.resolveType(result);
-      if (returnType != null && returnType.isArrayType())
-      {
-         // FIXME: This is a hack and needs fixing in the design of the Forge parser.
-         // The resolved type lacks information about arrays since arrays would be stripped from it
-         // We recreate it using the dimensions in the JDT Type to ensure that arrays are not lost in the return type.
-         int dimensions = ((ArrayType) returnType).getDimensions();
-         for (int ctr = 0; ctr < dimensions; ctr++)
-         {
-            result += "[]";
-         }
-      }
-
-      return result;
-   }
-
-   @Override
-   public Type<O> getReturnTypeInspector()
-   {
       return new TypeImpl<O>(parent, method.getReturnType2());
+   }
+   
+   @Override
+   public boolean isReturnTypeVoid()
+   {
+      return getReturnType().isType(Void.TYPE);
    }
 
    @Override
    public MethodSource<O> setReturnType(final Class<?> type)
    {
+      // TODO add import?
       return setReturnType(type.getSimpleName());
+   }
+
+   @Override
+   public MethodSource<O> setReturnTypeVoid()
+   {
+      return setReturnType(Void.TYPE);
    }
 
    @Override
@@ -288,19 +264,6 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    public MethodSource<O> setReturnType(final JavaType<?> type)
    {
       return setReturnType(type.getName());
-   }
-
-   @Override
-   public boolean isReturnTypeVoid()
-   {
-      return getReturnType() == null;
-   }
-
-   @Override
-   public MethodSource<O> setReturnTypeVoid()
-   {
-      method.setReturnType2(null);
-      return this;
    }
 
    /*

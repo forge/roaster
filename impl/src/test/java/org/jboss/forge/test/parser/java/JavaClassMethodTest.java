@@ -50,18 +50,17 @@ public class JavaClassMethodTest
    @Test
    public void testSetReturnType() throws Exception
    {
-      assertEquals("java.net.URL", method.getQualifiedReturnType());
+      assertEquals("java.net.URL", method.getReturnType().getQualifiedName());
       method.setReturnType(Class.class);
-      assertEquals("Class", method.getReturnType());
+      assertEquals("Class", method.getReturnType().getName());
       assertFalse(method.isReturnTypeVoid());
    }
 
    @Test
    public void testSetReturnTypeVoid() throws Exception
    {
-      assertEquals("java.net.URL", method.getQualifiedReturnType());
+      assertEquals("java.net.URL", method.getReturnType().getQualifiedName());
       method.setReturnTypeVoid();
-      assertEquals(null, method.getReturnType());
       assertTrue(method.isReturnTypeVoid());
    }
 
@@ -97,8 +96,8 @@ public class JavaClassMethodTest
       method.setParameters("final int foo, final String bar");
       List<ParameterSource<JavaClassSource>> parameters = method.getParameters();
       assertEquals(2, parameters.size());
-      assertEquals("int", parameters.get(0).getType());
-      assertEquals("String", parameters.get(1).getType());
+      assertEquals("int", parameters.get(0).getType().getName());
+      assertEquals("String", parameters.get(1).getType().getName());
       assertFalse(javaClass.hasMethodSignature(method.getName()));
    }
 

@@ -25,45 +25,35 @@ public interface Method<O extends JavaType<O>, T extends Method<O, T>> extends A
    /**
     * Get the inner body of this {@link Method}
     */
-   public String getBody();
+   String getBody();
 
    /**
     * Return true if this {@link Method} is a constructor for the class in which it is defined.
     */
-   public boolean isConstructor();
+   boolean isConstructor();
 
    /**
-    * Get the return type of this {@link Method} or return null if the return type is void.
+    * Get the return {@link Type} of this {@link Method}.
     */
-   public String getReturnType();
+   Type<O> getReturnType();
 
    /**
-    * Get the fully qualified return type of this {@link Method} or return null if the return type is void.
+    * Convenience method to learn whether the {@link Method} has a primitive {@code void} return type.
     */
-   public String getQualifiedReturnType();
-
-   /**
-    * Get the return {@link Type} of this {@link Method} or return null if the return type is void.
-    */
-   public Type<O> getReturnTypeInspector();
-
-   /**
-    * Return true if this {@link Method} has a return type of 'void'
-    */
-   public boolean isReturnTypeVoid();
+   boolean isReturnTypeVoid();
 
    /**
     * Get a list of this {@link Method}'s parameters.
     */
-   public List<? extends Parameter<O>> getParameters();
+   List<? extends Parameter<O>> getParameters();
 
    /**
     * Convert this {@link Method} into a string representing its unique signature.
     */
-   public String toSignature();
+   String toSignature();
 
    /**
     * Get a list of qualified (if possible) {@link Exception} class names thrown by this method.
     */
-   public List<String> getThrownExceptions();
+   List<String> getThrownExceptions();
 }

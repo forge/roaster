@@ -17,39 +17,13 @@ package org.jboss.forge.parser.java;
 public interface Field<O extends JavaType<O>> extends Member<O>
 {
    /**
-    * Get this field's type.
+    * Get this field's {@link Type}.
     */
-   String getType();
-
-   /**
-    * Get this field's fully qualified type.
-    */
-   String getQualifiedType();
-
-   /**
-    * Get this field's {@link Type}
-    */
-   Type<O> getTypeInspector();
-
-   /**
-    * Attempt to determine if this field is of the same type as the given type.
-    */
-   boolean isType(Class<?> type);
-
-   /**
-    * Attempt to determine if this field is of the same type as the given type.
-    */
-   boolean isType(String type);
+   Type<O> getType();
 
    String getStringInitializer();
 
    String getLiteralInitializer();
-
-   /**
-    * 
-    * @return True if the type of the field is a primitive type
-    */
-   boolean isPrimitive();
 
    /**
     * 

@@ -420,61 +420,10 @@ public class AnnotationElementImpl implements AnnotationElementSource
    }
 
    @Override
-   public String getType()
-   {
-      return Types.toSimpleName(getQualifiedType());
-   }
-
-   @Override
-   public String getQualifiedType()
-   {
-      Object type = member.getStructuralProperty(AnnotationTypeMemberDeclaration.TYPE_PROPERTY);
-      return parent.resolveType(type.toString());
-   }
-
-   @Override
-   public org.jboss.forge.parser.java.Type<JavaAnnotationSource> getTypeInspector()
+   public Type<JavaAnnotationSource> getType()
    {
       return new TypeImpl<JavaAnnotationSource>(parent,
                member.getStructuralProperty(AnnotationTypeMemberDeclaration.TYPE_PROPERTY));
-   }
-
-   @Override
-   public boolean isType(final Class<?> type)
-   {
-      if (Strings.areEqual(type.getName(), getQualifiedType()))
-      {
-         return true;
-      }
-
-      if (getTypeInspector().isPrimitive() && type.getSimpleName().equals(getType()))
-      {
-         return true;
-      }
-
-      String simpleName = type.getSimpleName();
-      if (Strings.areEqual(simpleName, getQualifiedType())
-               && (getOrigin().hasImport(type) || !getOrigin().requiresImport(type)))
-      {
-         return true;
-      }
-      return false;
-   }
-
-   @Override
-   public boolean isType(final String name)
-   {
-      if (Strings.areEqual(name, getQualifiedType()))
-      {
-         return true;
-      }
-
-      if ((!Types.isQualified(name) || getOrigin().hasImport(name) || !getOrigin().requiresImport(name))
-               && Types.areEquivalent(name, getQualifiedType()))
-      {
-         return true;
-      }
-      return false;
    }
 
    @Override

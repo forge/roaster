@@ -24,6 +24,7 @@ import org.jboss.forge.parser.java.Type;
 import org.jboss.forge.parser.java.source.Importer;
 import org.jboss.forge.parser.java.source.JavaClassSource;
 import org.jboss.forge.parser.java.source.MethodSource;
+import org.jboss.forge.parser.java.util.Strings;
 import org.jboss.forge.parser.java.util.Types;
 
 /**
@@ -87,7 +88,7 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    {
       org.eclipse.jdt.core.dom.Type type = this.type;
 
-      if (type instanceof ArrayType)
+      if (type.isArrayType())
       {
          type = ((ArrayType) type).getComponentType();
       }
@@ -108,25 +109,13 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    @Override
    public boolean isArray()
    {
-      int extraDimensions = 0;
-      ASTNode parent = type.getParent();
-      if (parent instanceof FieldDeclaration)
-      {
-         for (Object f : ((FieldDeclaration) parent).fragments())
-         {
-            if (f instanceof VariableDeclarationFragment)
-            {
-               extraDimensions = ((VariableDeclarationFragment) f).getExtraDimensions();
-            }
-         }
-      }
-      return type.isArrayType() || extraDimensions > 0;
+      return getArrayDimensions() > 0;
    }
 
    @Override
    public boolean isParameterized()
    {
-      if (type instanceof ArrayType)
+      if (type.isArrayType())
       {
          return ((ArrayType) type).getComponentType().isParameterizedType();
       }
@@ -136,7 +125,7 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    @Override
    public boolean isPrimitive()
    {
-      if (type instanceof ArrayType)
+      if (type.isArrayType())
       {
          return ((ArrayType) type).getComponentType().isPrimitiveType();
       }
@@ -146,7 +135,7 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    @Override
    public boolean isQualified()
    {
-      if (type instanceof ArrayType)
+      if (type.isArrayType())
       {
          return ((ArrayType) type).getComponentType().isQualifiedType();
       }
@@ -156,7 +145,7 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    @Override
    public boolean isWildcard()
    {
-      if (type instanceof ArrayType)
+      if (type.isArrayType())
       {
          return ((ArrayType) type).getComponentType().isWildcardType();
       }
@@ -169,15 +158,22 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
       String result = type.toString();
       if (isParameterized())
       {
+         // strip type parameters after stripping array dimensions
          if (isArray())
          {
             result = Types.stripArray(result);
          }
          result = Types.stripGenerics(result);
-         if (isArray())
+         // restore array dimensions
+         for (int i = 0, dim = getArrayDimensions(); i < dim; i++)
          {
             result += "[]";
          }
+         return result;
+      }
+      for (int i = 0, dim = getExtraDimensions(); i < dim; i++)
+      {
+         result += "[]";
       }
       return result;
    }
@@ -202,11 +198,57 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    @Override
    public int getArrayDimensions()
    {
-      if (isArray())
+      int result = 0;
+      
+      if (type.isArrayType())
       {
-         return ((ArrayType) type).getDimensions();
+         result += ((ArrayType) type).getDimensions();
       }
-      return -1;
+      result += getExtraDimensions();
+      return result;
+   }
+
+   @Override
+   public boolean isType(final Class<?> type)
+   {
+      final String qualifiedName = getQualifiedName();
+
+      if (Strings.areEqual(type.getName(), qualifiedName))
+      {
+         return true;
+      }
+
+      final String simpleName = type.getSimpleName();
+
+      if (isPrimitive() && type.isPrimitive() && simpleName.equals(getName()))
+      {
+         return true;
+      }
+
+      if (getOrigin() instanceof Importer<?> && Strings.areEqual(simpleName, qualifiedName))
+      {
+         return !((Importer<?>) getOrigin()).requiresImport(type);
+      }
+      return false;
+   }
+
+   @Override
+   public boolean isType(final String name)
+   {
+      if (Strings.areEqual(name, getQualifiedName()))
+      {
+         return true;
+      }
+
+      if (Types.areEquivalent(name, getQualifiedName()))
+      {
+         if (!Types.isQualified(name))
+         {
+            return true;
+         }
+         return getOrigin() instanceof Importer<?> && !((Importer<?>) getOrigin()).requiresImport(name);
+      }
+      return false;
    }
 
    @Override
@@ -215,4 +257,19 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
       return type.toString();
    }
 
+   private int getExtraDimensions()
+   {
+      ASTNode parent = type.getParent();
+      if (parent instanceof FieldDeclaration)
+      {
+         for (Object f : ((FieldDeclaration) parent).fragments())
+         {
+            if (f instanceof VariableDeclarationFragment)
+            {
+               return ((VariableDeclarationFragment) f).getExtraDimensions();
+            }
+         }
+      }
+      return 0;
+   }
 }

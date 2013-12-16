@@ -17,7 +17,5 @@ public interface Parameter<O extends JavaType<O>> extends AnnotationTarget<O>
 {
    String getName();
 
-   String getType();
-
-   Type<?> getTypeInspector();
+   Type<?> getType();
 }

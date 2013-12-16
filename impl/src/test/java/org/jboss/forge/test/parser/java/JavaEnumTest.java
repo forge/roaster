@@ -68,7 +68,7 @@ public class JavaEnumTest
       FieldSource<JavaEnumSource> fld = javaEnum.addField().setName("fld").setType(Integer.TYPE).setVisibility(Visibility.PRIVATE);
       assertEquals(i + 1, javaEnum.getFields().size());
       assertEquals("fld", fld.getName());
-      assertEquals(Integer.TYPE.getName(), fld.getType());
+      assertEquals(Integer.TYPE.getName(), fld.getType().getName());
       assertSame(Visibility.PRIVATE, fld.getVisibility());
    }
 

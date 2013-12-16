@@ -41,7 +41,7 @@ public class JavaEnumFieldTest
    {
       assertNotNull(field);
       assertEquals("field", field.getName());
-      assertEquals("String", field.getType());
+      assertEquals("String", field.getType().getName());
    }
 
    @Test
@@ -66,8 +66,8 @@ public class JavaEnumFieldTest
    public void testIsTypeChecksImports() throws Exception
    {
       FieldSource<JavaEnumSource> field = javaEnum.addField().setType(JavaEnumFieldTest.class).setPublic().setName("test");
-      assertTrue(field.isType(JavaEnumFieldTest.class));
-      assertTrue(field.isType(JavaEnumFieldTest.class.getName()));
+      assertTrue(field.getType().isType(JavaEnumFieldTest.class));
+      assertTrue(field.getType().isType(JavaEnumFieldTest.class.getName()));
       assertTrue(javaEnum.hasImport(JavaEnumFieldTest.class));
    }
 
@@ -75,9 +75,9 @@ public class JavaEnumFieldTest
    public void testIsTypeChecksImportsIgnoresJavaLang() throws Exception
    {
       FieldSource<JavaEnumSource> field = javaEnum.addField("private Boolean bar;").setPublic().setName("test");
-      assertTrue(field.isType(Boolean.class));
-      assertTrue(field.isType("Boolean"));
-      assertTrue(field.isType(Boolean.class.getName()));
+      assertTrue(field.getType().isType(Boolean.class));
+      assertTrue(field.getType().isType("Boolean"));
+      assertTrue(field.getType().isType(Boolean.class.getName()));
       assertFalse(javaEnum.hasImport(Boolean.class));
    }
 
@@ -85,7 +85,7 @@ public class JavaEnumFieldTest
    public void testIsTypeStringChecksImports() throws Exception
    {
       FieldSource<JavaEnumSource> field = javaEnum.addField().setType(JavaEnumFieldTest.class.getName()).setPublic().setName("test");
-      assertTrue(field.isType(JavaEnumFieldTest.class.getSimpleName()));
+      assertTrue(field.getType().isType(JavaEnumFieldTest.class.getSimpleName()));
       assertTrue(javaEnum.hasImport(JavaEnumFieldTest.class));
    }
 
@@ -95,13 +95,13 @@ public class JavaEnumFieldTest
       FieldSource<JavaEnumSource> field = javaEnum.addField("private org.jboss.JavaEnumFieldTest test;");
       FieldSource<JavaEnumSource> field2 = javaEnum.addField().setType(JavaEnumFieldTest.class).setName("test2").setPrivate();
 
-      assertTrue(field.isType(JavaEnumFieldTest.class.getSimpleName()));
-      assertFalse(field.isType(JavaEnumFieldTest.class));
-      assertTrue(field.isType("org.jboss.JavaEnumFieldTest"));
+      assertTrue(field.getType().isType(JavaEnumFieldTest.class.getSimpleName()));
+      assertFalse(field.getType().isType(JavaEnumFieldTest.class));
+      assertTrue(field.getType().isType("org.jboss.JavaEnumFieldTest"));
 
-      assertTrue(field2.isType(JavaEnumFieldTest.class.getSimpleName()));
-      assertTrue(field2.isType(JavaEnumFieldTest.class));
-      assertFalse(field2.isType("org.jboss.JavaEnumFieldTest"));
+      assertTrue(field2.getType().isType(JavaEnumFieldTest.class.getSimpleName()));
+      assertTrue(field2.getType().isType(JavaEnumFieldTest.class));
+      assertFalse(field2.getType().isType("org.jboss.JavaEnumFieldTest"));
    }
 
    @Test
@@ -109,7 +109,7 @@ public class JavaEnumFieldTest
    {
       FieldSource<JavaEnumSource> field = javaEnum.addField().setType(JavaEnumFieldTest.class.getSimpleName()).setPublic()
                .setName("test");
-      assertFalse(field.isType(JavaEnumFieldTest.class));
+      assertFalse(field.getType().isType(JavaEnumFieldTest.class));
       assertFalse(javaEnum.hasImport(JavaEnumFieldTest.class));
    }
 
@@ -120,7 +120,7 @@ public class JavaEnumFieldTest
       field.setType(JavaEnumFieldTest.class);
       field.getOrigin();
       assertTrue(field.toString().contains("JavaEnumFieldTest"));
-      assertEquals(JavaEnumFieldTest.class.getName(), field.getQualifiedType());
+      assertEquals(JavaEnumFieldTest.class.getName(), field.getType().getQualifiedName());
    }
 
    @Test
@@ -130,7 +130,7 @@ public class JavaEnumFieldTest
       field.setType("int");
       field.getOrigin();
       assertTrue(field.toString().contains("int"));
-      assertEquals("int", field.getType());
+      assertEquals("int", field.getType().getName());
    }
 
    @Test
@@ -140,7 +140,7 @@ public class JavaEnumFieldTest
       field.setType(int.class.getName());
       field.getOrigin();
       assertTrue(field.toString().contains("int"));
-      assertEquals("int", field.getType());
+      assertEquals("int", field.getType().getName());
    }
 
    @Test
@@ -150,7 +150,7 @@ public class JavaEnumFieldTest
       field.setType("FooBarType");
       field.getOrigin();
       assertTrue(field.toString().contains("FooBarType"));
-      assertEquals("FooBarType", field.getType());
+      assertEquals("FooBarType", field.getType().getName());
    }
 
    @Test
@@ -161,7 +161,7 @@ public class JavaEnumFieldTest
       fld.getOrigin();
 
       assertTrue(fld.toString().contains("Boolean"));
-      assertEquals("java.lang.Boolean", fld.getQualifiedType());
+      assertEquals("java.lang.Boolean", fld.getType().getQualifiedName());
       assertEquals("flag", fld.getName());
       assertEquals("false", fld.getLiteralInitializer());
    }
@@ -179,8 +179,8 @@ public class JavaEnumFieldTest
       FieldSource<JavaEnumSource> objectField = javaEnum.addField("public Boolean flag = false;");
       FieldSource<JavaEnumSource> primitiveField = javaEnum.addField("public boolean flag = false;");
 
-      assertFalse(objectField.isPrimitive());
-      assertTrue(primitiveField.isPrimitive());
+      assertFalse(objectField.getType().isPrimitive());
+      assertTrue(primitiveField.getType().isPrimitive());
 
    }
 
@@ -190,7 +190,7 @@ public class JavaEnumFieldTest
       javaEnum.addField("public int flag;").setLiteralInitializer("1234").setPrivate();
       FieldSource<JavaEnumSource> fld = javaEnum.getFields().get(javaEnum.getFields().size() - 1);
 
-      assertEquals("int", fld.getType());
+      assertEquals("int", fld.getType().getName());
       assertEquals("flag", fld.getName());
       assertEquals("1234", fld.getLiteralInitializer());
       assertEquals("1234", fld.getStringInitializer());
@@ -203,7 +203,7 @@ public class JavaEnumFieldTest
       javaEnum.addField("public int flag;").setLiteralInitializer("1234;").setPrivate();
       FieldSource<JavaEnumSource> fld = javaEnum.getFields().get(javaEnum.getFields().size() - 1);
 
-      assertEquals("int", fld.getType());
+      assertEquals("int", fld.getType().getName());
       assertEquals("flag", fld.getName());
       assertEquals("1234", fld.getLiteralInitializer());
       assertEquals("1234", fld.getStringInitializer());
@@ -217,7 +217,7 @@ public class JavaEnumFieldTest
       FieldSource<JavaEnumSource> fld = javaEnum.getFields().get(javaEnum.getFields().size() - 1);
       fld.getOrigin();
 
-      assertEquals("String", fld.getType());
+      assertEquals("String", fld.getType().getName());
       assertEquals("flag", fld.getName());
       assertEquals("\"american\"", fld.getLiteralInitializer());
       assertEquals("american", fld.getStringInitializer());
@@ -232,7 +232,7 @@ public class JavaEnumFieldTest
       FieldSource<JavaEnumSource> fld = javaEnum.getFields().get(javaEnum.getFields().size() - 1);
       fld.getOrigin();
 
-      assertEquals(String.class.getName(), fld.getQualifiedType());
+      assertEquals(String.class.getName(), fld.getType().getQualifiedName());
       assertFalse(javaEnum.hasImport(String.class));
       assertEquals("flag", fld.getName());
       assertEquals("\"american\"", fld.getLiteralInitializer());

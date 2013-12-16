@@ -37,31 +37,11 @@ public interface AnnotationElement<O extends JavaAnnotation<O>> extends Annotati
 
       Class<?>[] getClassArray();
    }
-   
-   /**
-    * Get this annotation element's type.
-    */
-   String getType();
 
    /**
-    * Get this annotation element's fully qualified type.
+    * Get this annotation element's {@link Type}.
     */
-   String getQualifiedType();
-
-   /**
-    * Get this annotation element's {@link Type}
-    */
-   Type<O> getTypeInspector();
-
-   /**
-    * Attempt to determine if this annotation element is of the same type as the given type.
-    */
-   boolean isType(Class<?> type);
-
-   /**
-    * Attempt to determine if this annotation element is of the same type as the given type.
-    */
-   boolean isType(String type);
+   Type<O> getType();
 
    ReadDefaultValue<O> getDefaultValue();
 }

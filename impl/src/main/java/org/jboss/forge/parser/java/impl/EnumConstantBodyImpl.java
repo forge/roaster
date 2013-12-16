@@ -658,7 +658,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
                   boolean matches = true;
                   for (int i = 0; i < localParams.size(); i++)
                   {
-                     if (!Types.areEquivalent(localParams.get(i).getType(), paramTypes[i]))
+                     if (!Types.areEquivalent(localParams.get(i).getType().getName(), paramTypes[i]))
                      {
                         matches = false;
                      }
@@ -696,7 +696,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
             final Iterator<ParameterSource<Body>> localParams = local.getParameters().iterator();
             for (Parameter<? extends JavaType<?>> methodParam : method.getParameters())
             {
-               if (localParams.hasNext() && Strings.areEqual(localParams.next().getType(), methodParam.getType()))
+               if (localParams.hasNext() && Strings.areEqual(localParams.next().getType().getName(), methodParam.getType().getName()))
                {
                   continue;
                }

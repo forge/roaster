@@ -52,7 +52,7 @@ public class JavaAnnotationTest
       assertTrue(javaAnnotation.hasAnnotationElement(value));
       assertEquals("value", value.getName());
       assertEquals("org.jboss.forge.grammar.java.MockNestedJavaAnnotationType",
-               value.getTypeInspector().getQualifiedName());
+               value.getType().getQualifiedName());
       AnnotationSource<JavaAnnotationSource> valueDefaultValueAnnotation = value.getDefaultValue().getAnnotation();
       assertEquals("MockNestedJavaAnnotationType",
                valueDefaultValueAnnotation.getName());
@@ -72,15 +72,15 @@ public class JavaAnnotationTest
       AnnotationElementSource value = nestedAnnotation.getAnnotationElement("value");
       assertTrue(nestedAnnotation.hasAnnotationElement(value));
       assertEquals("value", value.getName());
-      assertEquals("int", value.getType());
-      assertTrue(value.getTypeInspector().isPrimitive());
+      assertEquals("int", value.getType().getName());
+      assertTrue(value.getType().isPrimitive());
       assertNull(value.getDefaultValue().getLiteral());
 
       assertTrue(nestedAnnotation.hasAnnotationElement("charSequenceType"));
       AnnotationElementSource charSequenceType = nestedAnnotation.getAnnotationElement("charSequenceType");
       assertTrue(nestedAnnotation.hasAnnotationElement(charSequenceType));
       assertEquals("charSequenceType", charSequenceType.getName());
-      Type<JavaAnnotationSource> charSequenceTypeType = charSequenceType.getTypeInspector();
+      Type<JavaAnnotationSource> charSequenceTypeType = charSequenceType.getType();
       assertEquals(Class.class.getSimpleName(), charSequenceTypeType.getName());
       assertTrue(charSequenceTypeType.isParameterized());
       assertEquals(1,
@@ -95,7 +95,7 @@ public class JavaAnnotationTest
       AnnotationElementSource metasyntacticVariable = nestedAnnotation.getAnnotationElement("metasyntacticVariable");
       assertTrue(nestedAnnotation.hasAnnotationElement(metasyntacticVariable));
       assertEquals("metasyntacticVariable", metasyntacticVariable.getName());
-      Type<JavaAnnotationSource> metasyntacticVariableType = metasyntacticVariable.getTypeInspector();
+      Type<JavaAnnotationSource> metasyntacticVariableType = metasyntacticVariable.getType();
       assertEquals("org.jboss.forge.test.parser.java.common.MockEnumType", metasyntacticVariableType.getQualifiedName());
       assertFalse(metasyntacticVariableType.isArray());
       assertEquals(1, metasyntacticVariable.getAnnotations().size());
@@ -107,7 +107,7 @@ public class JavaAnnotationTest
       AnnotationElementSource numberTypes = nestedAnnotation.getAnnotationElement("numberTypes");
       assertTrue(nestedAnnotation.hasAnnotationElement(numberTypes));
       assertEquals("numberTypes", numberTypes.getName());
-      Type<JavaAnnotationSource> numberTypesType = numberTypes.getTypeInspector();
+      Type<JavaAnnotationSource> numberTypesType = numberTypes.getType();
       assertEquals(Class.class.getSimpleName() + "[]", numberTypesType.getName());
       assertTrue(numberTypesType.isParameterized());
       assertEquals(1, numberTypesType.getTypeArguments().size());
@@ -121,7 +121,7 @@ public class JavaAnnotationTest
       AnnotationElementSource metasyntacticVariables = nestedAnnotation.getAnnotationElement("metasyntacticVariables");
       assertTrue(nestedAnnotation.hasAnnotationElement(metasyntacticVariables));
       assertEquals("metasyntacticVariables", metasyntacticVariables.getName());
-      Type<JavaAnnotationSource> metasyntacticVariablesType = metasyntacticVariables.getTypeInspector();
+      Type<JavaAnnotationSource> metasyntacticVariablesType = metasyntacticVariables.getType();
       assertEquals("org.jboss.forge.test.parser.java.common.MockEnumType",
                metasyntacticVariablesType.getQualifiedName());
       assertTrue(metasyntacticVariablesType.isArray());
@@ -139,7 +139,7 @@ public class JavaAnnotationTest
       assertTrue(javaAnnotation.hasAnnotationElement(someElement));
 
       assertEquals("someElement", someElement.getName());
-      Type<JavaAnnotationSource> someElementType = someElement.getTypeInspector();
+      Type<JavaAnnotationSource> someElementType = someElement.getType();
       assertTrue(someElementType.isArray());
       assertEquals(1, someElementType.getArrayDimensions());
       assertEquals("String[]", someElementType.getName());
@@ -152,7 +152,7 @@ public class JavaAnnotationTest
       assertTrue(javaAnnotation.hasAnnotationElement(someElement));
 
       assertEquals("someElement", someElement.getName());
-      Type<JavaAnnotationSource> someElementType = someElement.getTypeInspector();
+      Type<JavaAnnotationSource> someElementType = someElement.getType();
       assertTrue(someElementType.isArray());
       assertEquals(1, someElementType.getArrayDimensions());
       assertEquals("String[]", someElementType.getName());
@@ -166,7 +166,7 @@ public class JavaAnnotationTest
       assertTrue(javaAnnotation.hasAnnotationElement(someElement));
 
       assertEquals("someElement", someElement.getName());
-      Type<JavaAnnotationSource> someElementType = someElement.getTypeInspector();
+      Type<JavaAnnotationSource> someElementType = someElement.getType();
       assertTrue(someElementType.isArray());
       assertEquals(1, someElementType.getArrayDimensions());
       assertEquals("String[]", someElementType.getName());
@@ -181,7 +181,7 @@ public class JavaAnnotationTest
       assertTrue(javaAnnotation.hasAnnotationElement(someElement));
 
       assertEquals("someElement", someElement.getName());
-      Type<JavaAnnotationSource> someElementType = someElement.getTypeInspector();
+      Type<JavaAnnotationSource> someElementType = someElement.getType();
       assertTrue(someElementType.isArray());
       assertEquals(1, someElementType.getArrayDimensions());
       assertEquals("String[]", someElementType.getName());
@@ -195,7 +195,7 @@ public class JavaAnnotationTest
       assertTrue(javaAnnotation.hasAnnotationElement(someElement));
 
       assertEquals("someElement", someElement.getName());
-      Type<JavaAnnotationSource> someElementType = someElement.getTypeInspector();
+      Type<JavaAnnotationSource> someElementType = someElement.getType();
       assertTrue(someElementType.isArray());
       assertEquals(1, someElementType.getArrayDimensions());
       assertEquals("String[]", someElementType.getName());

@@ -12,19 +12,18 @@ import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.ArrayType;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.PrimitiveType.Code;
-import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.jboss.forge.parser.JavaParser;
 import org.jboss.forge.parser.java.Annotation;
 import org.jboss.forge.parser.java.JavaClass;
 import org.jboss.forge.parser.java.JavaType;
+import org.jboss.forge.parser.java.Type;
 import org.jboss.forge.parser.java.Visibility;
 import org.jboss.forge.parser.java.ast.AnnotationAccessor;
 import org.jboss.forge.parser.java.ast.ModifierAccessor;
@@ -308,80 +307,9 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    }
 
    @Override
-   public String getType()
-   {
-      return Types.toSimpleName(getQualifiedType());
-   }
-
-   @Override
-   public String getQualifiedType()
-   {
-      Type fieldType = field.getType();
-      String result = parent.resolveType(fieldType.toString());
-      int extraDimensions = fragment.getExtraDimensions();
-      if (fieldType != null)
-      {
-         if (fieldType.isArrayType())
-         {
-            // The resolved type lacks information about arrays since arrays would be stripped from it
-            // We recreate it using the dimensions in the JDT Type to ensure that arrays are not lost in the return
-            // value.
-            int dimensions = ((ArrayType) fieldType).getDimensions();
-            for (int ctr = 0; ctr < dimensions; ctr++)
-            {
-               result += "[]";
-            }
-         }
-         for (int dimensionsToAdd = 0; dimensionsToAdd < extraDimensions; dimensionsToAdd++)
-         {
-            result += "[]";
-         }
-      }
-      return result;
-   }
-
-   @Override
-   public org.jboss.forge.parser.java.Type<O> getTypeInspector()
+   public Type<O> getType()
    {
       return new TypeImpl<O>(parent, field.getStructuralProperty(FieldDeclaration.TYPE_PROPERTY));
-   }
-
-   @Override
-   public boolean isType(final Class<?> type)
-   {
-      if (Strings.areEqual(type.getName(), getQualifiedType()))
-      {
-         return true;
-      }
-
-      if (isPrimitive() && type.getSimpleName().equals(getType()))
-      {
-         return true;
-      }
-
-      String simpleName = type.getSimpleName();
-      if (Strings.areEqual(simpleName, getQualifiedType())
-               && (getOrigin().hasImport(type) || !getOrigin().requiresImport(type)))
-      {
-         return true;
-      }
-      return false;
-   }
-
-   @Override
-   public boolean isType(final String name)
-   {
-      if (Strings.areEqual(name, getQualifiedType()))
-      {
-         return true;
-      }
-
-      if ((!Types.isQualified(name) || getOrigin().hasImport(name) || !getOrigin().requiresImport(name))
-               && Types.areEquivalent(name, getQualifiedType()))
-      {
-         return true;
-      }
-      return false;
    }
 
    @Override
@@ -413,7 +341,7 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
 
       Code primitive = PrimitiveType.toCode(typeName);
 
-      Type type = null;
+      org.eclipse.jdt.core.dom.Type type = null;
       if (primitive != null)
       {
          type = ast.newPrimitiveType(primitive);
@@ -506,7 +434,7 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
          if (other.field != null)
             return false;
       }
-      else if (!field.equals(other.field))
+      else if (!field.equals(other.field ))
          return false;
       if (fragment == null)
       {
@@ -516,21 +444,6 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
       else if (!fragment.equals(other.fragment))
          return false;
       return true;
-   }
-
-   /**
-    * TODO: Should we deprecate this method in favor of {@link Field#getTypeInspector()#isPrimitive()} ?
-    */
-   @Override
-   public boolean isPrimitive()
-   {
-      boolean result = false;
-      Type type = field.getType();
-      if (type != null)
-      {
-         result = type.isPrimitiveType();
-      }
-      return result;
    }
 
    @Override

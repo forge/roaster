@@ -97,11 +97,14 @@ public class RefactoryTest
 
       assertEquals("getNames", getter.getName());
       assertTrue(getter.getParameters().isEmpty());
-      assertEquals("Set", getter.getReturnType());
-      assertEquals("Set<String>", getter.getReturnTypeInspector().toString());
+      assertEquals("Set", getter.getReturnType().getName());
+      assertEquals("Set<String>", getter.getReturnType().toString());
       assertEquals("setNames", setter.getName());
       assertFalse(setter.getParameters().isEmpty());
-      assertEquals("Set<String>", setter.getParameters().get(0).getType());
+      assertEquals("Set<String>", setter.getParameters().get(0).getType().toString());
+      assertEquals("Set", setter.getParameters().get(0).getType().getName());
+      assertTrue(setter.getParameters().get(0).getType().isParameterized());
+      assertEquals("String", setter.getParameters().get(0).getType().getTypeArguments().get(0).getName());
       assertFalse(javaClass.hasSyntaxErrors());
    }
 
@@ -164,7 +167,7 @@ public class RefactoryTest
 
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
-      assertEquals("int", hashcode.getReturnType());
+      assertEquals("int", hashcode.getReturnType().getName());
       assertThat(hashcode.getBody(), containsString("result=prime * result + (aBoolean ? 1231 : 1237);"));
       assertThat(hashcode.getBody(), containsString("result=prime * result + aByte;"));
       assertThat(hashcode.getBody(), containsString("result=prime * result + aChar;"));
@@ -199,7 +202,7 @@ public class RefactoryTest
 
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
-      assertEquals("int", hashcode.getReturnType());
+      assertEquals("int", hashcode.getReturnType().getName());
       assertThat(hashcode.getBody(), containsString("result=prime * result + Arrays.hashCode(flags);"));
       assertThat(hashcode.getBody(), containsString("result=prime * result + Arrays.hashCode(objects);"));
       assertFalse(aClass.hasSyntaxErrors());
@@ -229,7 +232,7 @@ public class RefactoryTest
 
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
-      assertEquals("int", hashcode.getReturnType());
+      assertEquals("int", hashcode.getReturnType().getName());
       assertThat(hashcode.getBody(),
                containsString("result=prime * result + ((object == null) ? 0 : object.hashCode());"));
       assertThat(hashcode.getBody(), containsString("result=prime * result + ((date == null) ? 0 : date.hashCode());"));
@@ -251,7 +254,7 @@ public class RefactoryTest
 
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
-      assertEquals("int", hashcode.getReturnType());
+      assertEquals("int", hashcode.getReturnType().getName());
       assertFalse(javaClass.hasSyntaxErrors());
    }
 
@@ -275,7 +278,7 @@ public class RefactoryTest
 
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
-      assertEquals("int", hashcode.getReturnType());
+      assertEquals("int", hashcode.getReturnType().getName());
       assertThat(hashcode.getBody(), containsString("int result=super.hashCode();"));
       assertFalse(subClass.hasSyntaxErrors());
    }
@@ -300,7 +303,7 @@ public class RefactoryTest
 
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
-      assertEquals("int", hashcode.getReturnType());
+      assertEquals("int", hashcode.getReturnType().getName());
       assertThat(hashcode.getBody(), containsString("result=prime * result + ((bar == null) ? 0 : bar.hashCode());"));
       assertFalse(outerClass.hasSyntaxErrors());
    }
@@ -364,7 +367,7 @@ public class RefactoryTest
 
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
-      assertEquals("int", hashcode.getReturnType());
+      assertEquals("int", hashcode.getReturnType().getName());
       assertThat(hashcode.getBody(), containsString("long temp;"));
       assertEquals(1, Strings.countNumberOfOccurences(hashcode.getBody(), "long temp;"));
       assertThat(hashcode.getBody(), containsString("temp=Double.doubleToLongBits(firstDouble);"));

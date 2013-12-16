@@ -40,14 +40,14 @@ public class Refactory
 
       String fieldName = field.getName();
       String methodNameSuffix = Strings.capitalize(fieldName);
-      clazz.addMethod().setReturnType(field.getTypeInspector().toString()).setName("get" + methodNameSuffix)
+      clazz.addMethod().setReturnType(field.getType().toString()).setName("get" + methodNameSuffix)
                .setPublic()
                .setBody("return this." + fieldName + ";");
 
       if (!field.isFinal())
       {
          clazz.addMethod().setReturnTypeVoid().setName("set" + methodNameSuffix).setPublic()
-                  .setParameters("final " + field.getTypeInspector().toString() + " " + fieldName)
+                  .setParameters("final " + field.getType().toString() + " " + fieldName)
                   .setBody("this." + fieldName + " = " + fieldName + ";");
       }
    }
@@ -115,7 +115,7 @@ public class Refactory
       StringBuilder hashCodeComputation = new StringBuilder();
       for (FieldSource<?> field : fields)
       {
-         if(field == null)
+         if (field == null)
          {
             throw new IllegalArgumentException("A supplied field was null. The equals and hashCode computation will be aborted.");
          }
@@ -125,9 +125,21 @@ public class Refactory
          }
 
          String fieldName = field.getName();
-         if (field.isPrimitive())
+         if (field.getType().isArray())
          {
-            if (field.isType("float"))
+            // if(!Arrays.equals(array, other.array)) {
+            //    return false;
+            // }
+            fieldEqualityChecks.append("if (!Arrays.equals(").append(fieldName).append(", other.").append(fieldName)
+                     .append(")) {");
+            fieldEqualityChecks.append(" return false; }");
+
+            // result = prime * result + Arrays.hashCode(array);
+            hashCodeComputation.append("result = prime * result + Arrays.hashCode(").append(fieldName).append(");");
+         }
+         else if (field.getType().isPrimitive())
+         {
+            if (field.getType().isType("float"))
             {
                // if(Float.floatToIntBits(floatValue) != Float.floatToIntBits(other.floatValue)) {
                //   return false;
@@ -142,7 +154,7 @@ public class Refactory
                hashCodeComputation.append("result = prime * result + ").append("Float.floatToIntBits(")
                         .append(fieldName).append(");");
             }
-            else if (field.isType("double"))
+            else if (field.getType().isType("double"))
             {
                // if(Double.doubleToLongBits(doubleValue) != Double.doubleToLongBits(other.doubleValue)) {
                //   return false;
@@ -174,13 +186,13 @@ public class Refactory
                fieldEqualityChecks.append(" return false;");
                fieldEqualityChecks.append("} ");
 
-               if (field.isType("long"))
+               if (field.getType().isType("long"))
                {
                   // result = prime * result + (int) (longValue ^ (longValue >>> 32));
                   hashCodeComputation.append("result = prime * result + (int) (").append(fieldName).append(" ^ (")
                            .append(fieldName).append(" >>> 32));");
                }
-               else if (field.isType("boolean"))
+               else if (field.getType().isType("boolean"))
                {
                   // result = prime * result + (booleanValue : 1231 : 1237);
                   hashCodeComputation.append("result = prime * result + (").append(fieldName)
@@ -193,18 +205,6 @@ public class Refactory
                   hashCodeComputation.append("result = prime * result + ").append(fieldName).append(";");
                }
             }
-         }
-         else if (field.getTypeInspector().isArray())
-         {
-            // if(!Arrays.equals(array, other.array)) {
-            //    return false;
-            // }
-            fieldEqualityChecks.append("if (!Arrays.equals(").append(fieldName).append(", other.").append(fieldName)
-                     .append(")) {");
-            fieldEqualityChecks.append(" return false; }");
-
-            // result = prime * result + Arrays.hashCode(array);
-            hashCodeComputation.append("result = prime * result + Arrays.hashCode(").append(fieldName).append(");");
          }
          else
          {
@@ -303,8 +303,8 @@ public class Refactory
          {
             StringBuilder line = new StringBuilder();
 
-            if (!field.isPrimitive())
-               if (field.isType(String.class))
+            if (!field.getType().isPrimitive())
+               if (field.getType().isType(String.class))
                {
                   line.append("if(").append(field.getName()).append(" != null && !").append(field.getName())
                            .append(".trim().isEmpty())\n");

@@ -241,7 +241,7 @@ public abstract class JavaClassTestBase
       MethodSource<JavaClassSource> method = source.addMethod().setName("testMethod").setReturnTypeVoid().setBody("");
       List<MethodSource<JavaClassSource>> methods = source.getMethods();
       assertEquals(size + 1, methods.size());
-      assertNull(method.getReturnType());
+      assertTrue(method.isReturnTypeVoid());
    }
 
    @Test
@@ -253,7 +253,7 @@ public abstract class JavaClassTestBase
                .setPackagePrivate();
       List<MethodSource<JavaClassSource>> methods = source.getMethods();
       assertEquals(size + 1, methods.size());
-      assertEquals("URL", method.getReturnType());
+      assertEquals("URL", method.getReturnType().getName());
       assertEquals("rewriteURL", method.getName());
 
       String body = method.getBody();
