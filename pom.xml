@@ -3,13 +3,16 @@
    <parent>
       <groupId>org.jboss</groupId>
       <artifactId>jboss-parent</artifactId>
-      <version>10</version>
+      <version>12</version>
    </parent>
    <groupId>org.jboss.forge</groupId>
-   <artifactId>java-parser-parent</artifactId>
+   <artifactId>roaster-parent</artifactId>
    <version>2.0.0-SNAPSHOT</version>
    <packaging>pom</packaging>
-   <name>Forge - Java Parser Parent</name>
+   <name>Forge Roaster - Parent</name>
+   <description>
+      Forge Roaster is a library for inspecting and manipulating Java types.
+   </description>
    <licenses>
       <license>
          <name>Eclipse Public License version 1.0</name>
@@ -56,12 +59,12 @@
       <dependencies>
          <dependency>
             <groupId>org.jboss.forge</groupId>
-            <artifactId>java-parser-api</artifactId>
+            <artifactId>roaster-api</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
             <groupId>org.jboss.forge</groupId>
-            <artifactId>java-parser-impl</artifactId>
+            <artifactId>roaster-impl</artifactId>
             <version>${project.version}</version>
          </dependency>
       </dependencies>
@@ -77,10 +80,25 @@
    </dependencies>
 
    <scm>
-      <connection>scm:git:git://github.com/forge/java-parser.git</connection>
-      <developerConnection>scm:git:git@github.com:forge/java-parser.git</developerConnection>
-      <url>http://github.com/forge/java-parser</url>
+      <connection>scm:git:git://github.com/forge/roaster.git</connection>
+      <developerConnection>scm:git:git@github.com:forge/roaster.git</developerConnection>
+      <url>http://github.com/forge/roaster</url>
      <tag>HEAD</tag>
   </scm>
+
+  <build>
+     <plugins>
+        <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-compiler-plugin</artifactId>
+           <inherited>true</inherited>
+           <configuration>
+              <source>${maven.compiler.source}</source>
+              <target>${maven.compiler.target}</target>
+              <encoding>UTF-8</encoding>
+           </configuration>
+        </plugin>
+     </plugins>
+  </build>
 </project>
 

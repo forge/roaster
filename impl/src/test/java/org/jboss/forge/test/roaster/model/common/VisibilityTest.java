@@ -1,0 +1,75 @@
+/*
+ * Copyright 2012 Red Hat, Inc. and/or its affiliates.
+ *
+ * Licensed under the Eclipse Public License version 1.0, available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
+package org.jboss.forge.test.roaster.model.common;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.jboss.forge.roaster.model.source.VisibilityScopedSource;
+import org.junit.Before;
+import org.junit.Test;
+
+/**
+ * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+ */
+public abstract class VisibilityTest
+{
+   private VisibilityScopedSource<?> target;
+
+   public void setTarget(VisibilityScopedSource<?> target)
+   {
+      this.target = target;
+   }
+
+   @Before
+   public void reset() throws Exception
+   {
+      resetTests();
+   }
+
+   public abstract void resetTests() throws Exception;
+
+   @Test
+   public void testSetPublic() throws Exception
+   {
+      target.setPublic();
+      assertTrue(target.isPublic());
+      assertFalse(target.isPackagePrivate());
+      assertFalse(target.isPrivate());
+      assertFalse(target.isProtected());
+   }
+
+   @Test
+   public void testSetPrivate() throws Exception
+   {
+      target.setPrivate();
+      assertFalse(target.isPublic());
+      assertFalse(target.isPackagePrivate());
+      assertTrue(target.isPrivate());
+      assertFalse(target.isProtected());
+   }
+
+   @Test
+   public void testSetProtected() throws Exception
+   {
+      target.setProtected();
+      assertFalse(target.isPublic());
+      assertFalse(target.isPackagePrivate());
+      assertFalse(target.isPrivate());
+      assertTrue(target.isProtected());
+   }
+
+   @Test
+   public void testSetPackagePrivate() throws Exception
+   {
+      target.setPackagePrivate();
+      assertFalse(target.isPublic());
+      assertTrue(target.isPackagePrivate());
+      assertFalse(target.isPrivate());
+      assertFalse(target.isProtected());
+   }
+}

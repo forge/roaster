@@ -1,6 +1,6 @@
 package org.jboss.forge.grammar.java;
 
-import org.jboss.forge.test.parser.java.common.MockEnumType;
+import org.jboss.forge.test.roaster.model.common.MockEnumType;
 
 public @interface MockJavaAnnotationType
 {
