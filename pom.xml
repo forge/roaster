@@ -64,7 +64,7 @@
          </dependency>
          <dependency>
             <groupId>org.jboss.forge</groupId>
-            <artifactId>roaster-impl</artifactId>
+            <artifactId>roaster-jdt</artifactId>
             <version>${project.version}</version>
          </dependency>
       </dependencies>

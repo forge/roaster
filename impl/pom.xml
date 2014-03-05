@@ -6,8 +6,8 @@
       <version>2.0.1-SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
-   <artifactId>roaster-impl</artifactId>
-   <name>Forge Roaster Implementation</name>
+   <artifactId>roaster-jdt</artifactId>
+   <name>Forge Roaster JDT Implementation</name>
    <dependencies>
       <dependency>
          <groupId>org.jboss.forge</groupId>
