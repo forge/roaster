@@ -45,7 +45,7 @@ import org.jboss.forge.roaster.model.util.Types;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
- * 
+ *
  */
 public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & PropertyHolderSource<O>> extends AbstractJavaSource<O>
          implements InterfaceCapableSource<O>, PropertyHolderSource<O>
@@ -397,15 +397,15 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
                   Roaster.parse(JavaInterfaceImpl.class,
                            "public interface Mock extends " + Types.toSimpleName(type)
                                     + " {}").getBodyDeclaration()).get(0);
-   
+
          if (this.hasInterface(Types.toSimpleName(type)) || this.hasImport(Types.toSimpleName(type)))
          {
             interfaceType = JDTHelper.getInterfaces(Roaster.parse(JavaInterfaceImpl.class,
                      "public interface Mock extends " + type + " {}").getBodyDeclaration()).get(0);
          }
-   
+
          this.addImport(type);
-   
+
          ASTNode node = ASTNode.copySubtree(unit.getAST(), interfaceType);
          JDTHelper.getInterfaces(getBodyDeclaration()).add((Type) node);
       }
@@ -532,7 +532,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
       final PropertyImpl<O> result = new PropertyImpl<O>(name, getOrigin());
       return result.isValid() ? result : null;
    }
-   
+
    @Override
    public final List<PropertySource<O>> getProperties()
    {
@@ -568,12 +568,12 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    {
       return extractPropertyName(method) != null && method.getParameters().size() == 1 && method.isReturnTypeVoid();
    }
-   
+
    private String extractPropertyName(Method<O, ?> method)
    {
       if (method.getName().matches("^[gs]et.+$"))
       {
-         return method.getName().substring(3);
+         return Strings.uncapitalize(method.getName().substring(3));
       }
       return null;
    }
