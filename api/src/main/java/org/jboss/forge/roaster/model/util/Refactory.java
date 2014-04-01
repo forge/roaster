@@ -16,7 +16,7 @@ import org.jboss.forge.roaster.model.source.MethodSource;
 
 /**
  * Utility refactory methods for {@link JavaClassSource} objects
- * 
+ *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
  * @author <a href="mailto:vreynolds@redhat.com">Vineet Reynolds</a>
@@ -25,7 +25,7 @@ public class Refactory
 {
    /**
     * Generates a getXXX and setXXX method for the supplied field
-    * 
+    *
     * @param clazz
     * @param field
     */
@@ -54,7 +54,7 @@ public class Refactory
 
    /**
     * Create a <i>hashCode</i> and <i>equals</i> implementation for the given class and fields
-    * 
+    *
     * @deprecated Use {@link Refactory#createHashCodeAndEquals(JavaClass, Field<O>...)} instead, since this method relies
     *             on the existence of the id field
     */
@@ -83,11 +83,11 @@ public class Refactory
     * Create a <i>hashCode</i> and <i>equals</i> implementation for the given class and fields. Callers must verify that
     * the types of the fields override the default identity based equals and hashcode implementations. No warnings are
     * issued in an event where the field type uses the implementation of java.lang.Object.
-    * 
+    *
     * This method ignores static fields for generating the equals and hashCode methods, since they are ideally not meant
     * to be used in these cases. Although transient fields could also be ignored, they are not since there is no
     * mechanism to convey warnings (not errors) in this case.
-    * 
+    *
     * @param clazz class to be changed
     * @param fields fields to be used in the equals/hashCode methods
     */
@@ -262,7 +262,7 @@ public class Refactory
 
    /**
     * Create a <i>toString</i> implementation using all the fields in this class
-    * 
+    *
     * @param clazz
     */
    public static void createToStringFromFields(final JavaClassSource clazz)
@@ -273,10 +273,11 @@ public class Refactory
 
    /**
     * Create a <i>toString</i> implementation using the supplied fields
-    * 
+    *
     * @param clazz
     * @param fields
     */
+   @SuppressWarnings("unchecked")
    public static void createToStringFromFields(final JavaClassSource clazz, final FieldSource<JavaClassSource>... fields)
    {
       createToStringFromFields(clazz, Arrays.asList(fields));
@@ -284,7 +285,7 @@ public class Refactory
 
    /**
     * Create a <i>toString</i> implementation using the supplied fields
-    * 
+    *
     * @param clazz
     * @param fields
     */

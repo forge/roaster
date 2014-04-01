@@ -12,7 +12,7 @@ import org.jboss.forge.roaster.model.JavaType;
 
 /**
  * Represents an element definition of a {@link JavaAnnotationSource}.
- * 
+ *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * @author Matt Benson
  */
@@ -33,6 +33,7 @@ public interface AnnotationElementSource extends AnnotationElement<JavaAnnotatio
 
       <T extends Enum<T>> AnnotationElementSource.DefaultValue setEnum(T value);
 
+      @SuppressWarnings("unchecked")
       <T extends Enum<T>> AnnotationElementSource.DefaultValue setEnumArray(T... values);
 
       AnnotationSource<JavaAnnotationSource> setAnnotation();
