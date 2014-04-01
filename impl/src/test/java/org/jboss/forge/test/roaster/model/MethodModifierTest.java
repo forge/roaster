@@ -1,9 +1,5 @@
 package org.jboss.forge.test.roaster.model;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.InputStream;
-
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.impl.MethodImpl;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
@@ -15,7 +11,7 @@ import org.junit.Test;
  * @author <a href="mailto:salemelrahal@gmail.com">Salem Elrahal</a>
  */
 public class MethodModifierTest {
-	
+
 	   @Test
 	   public void testDuplicateMethodModifier() throws Exception
 	   {

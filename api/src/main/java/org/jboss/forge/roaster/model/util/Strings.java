@@ -38,7 +38,7 @@ public class Strings
       {
          result = value.replaceAll("\"(.*)\"", "$1");
       }
-      return result;
+      return StringEscapeUtils.unescapeJava(result);
    }
 
    public static String enquote(final String value)
@@ -46,7 +46,7 @@ public class Strings
       String result = null;
       if (value != null)
       {
-         result = "\"" + value + "\"";
+         result = "\"" + StringEscapeUtils.escapeJava(value) + "\"";
       }
       return result;
    }
@@ -75,7 +75,7 @@ public class Strings
    {
       return string == null || string.trim().isEmpty();
    }
-   
+
    public static boolean isTrue(final String value)
    {
       return value == null ? false : "true".equalsIgnoreCase(value.trim());
@@ -424,7 +424,7 @@ public class Strings
       {
          return count;
       }
-      
+
       String wholeText = text;
       int idx = 0;
       while((idx = wholeText.indexOf(toMatch, idx)) != -1)

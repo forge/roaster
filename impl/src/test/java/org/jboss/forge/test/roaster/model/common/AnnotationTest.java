@@ -521,4 +521,13 @@ public abstract class AnnotationTest<O extends JavaSource<O>, T>
       assertEquals(null, annotation.getLiteralValue());
       assertEquals("baz", annotation.getLiteralValue("foo"));
    }
+
+   @Test
+   public void testParseRegularExp()
+   {
+      AnnotationSource<O> annotation = target.addAnnotation("MyAnnotation");
+      annotation.setStringValue("regexp", "^\\d{9}[\\d|X]$");
+      assertEquals("^\\d{9}[\\d|X]$", annotation.getStringValue("regexp"));
+   }
+
 }
