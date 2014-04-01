@@ -12,10 +12,10 @@ import org.jboss.forge.roaster.Origin;
 
 /**
  * A {@link Property} is a convenience construct depicting a simple Java bean property.
- * 
+ *
  * @param <O>
  */
-public interface Property<O extends JavaType<O>> extends Internal, Origin<O>, Named
+public interface Property<O extends JavaType<O>> extends Internal, Origin<O>, Named, AnnotationTarget<O>
 {
    /**
     * Get this property's {@link Type}.

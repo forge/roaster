@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.jboss.forge.roaster.Roaster;
+import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaEnumSource;
@@ -198,7 +199,7 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
    public void testSetAccessibleTrue()
    {
       assumeFalse(existingItems.contains(PropertyComponent.ACCESSOR));
-      
+
       final PropertySource<O> property = source.getProperty(name);
       property.setAccessible(true);
       assertTrue(property.isAccessible());
@@ -455,6 +456,186 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       property.getMutator().setName("foo");
 
       assertFalse(property.isMutable());
+   }
+
+   @Test
+   public void testPropertyHasAnnotationField()
+   {
+      assumeTrue(existingItems.contains(PropertyComponent.FIELD));
+      final PropertySource<O> property = source.getProperty(name);
+      assertFalse(property.hasAnnotation(Deprecated.class));
+
+      AnnotationSource<O> ann = property.getField().addAnnotation(Deprecated.class);
+      assertTrue(property.hasAnnotation(Deprecated.class));
+      property.getField().removeAnnotation(ann);
+   }
+
+   @Test
+   public void testPropertyHasAnnotationAccessor()
+   {
+      assumeTrue(existingItems.contains(PropertyComponent.ACCESSOR));
+      final PropertySource<O> property = source.getProperty(name);
+      assertFalse(property.hasAnnotation(Deprecated.class));
+
+      AnnotationSource<O> ann = property.getAccessor().addAnnotation(Deprecated.class);
+      assertTrue(property.hasAnnotation(Deprecated.class));
+      property.getAccessor().removeAnnotation(ann);
+   }
+
+   @Test
+   public void testPropertyHasAnnotationMutator()
+   {
+      assumeTrue(existingItems.contains(PropertyComponent.MUTATOR));
+      final PropertySource<O> property = source.getProperty(name);
+      assertFalse(property.hasAnnotation(Deprecated.class));
+
+      AnnotationSource<O> ann = property.getMutator().addAnnotation(Deprecated.class);
+      assertTrue(property.hasAnnotation(Deprecated.class));
+      property.getMutator().removeAnnotation(ann);
+   }
+
+   @Test
+   public void testPropertyHasAnnotationTypeField()
+   {
+      assumeTrue(existingItems.contains(PropertyComponent.FIELD));
+      final PropertySource<O> property = source.getProperty(name);
+      assertFalse(property.hasAnnotation(Deprecated.class.getName()));
+
+      AnnotationSource<O> ann = property.getField().addAnnotation(Deprecated.class.getName());
+      assertTrue(property.hasAnnotation(Deprecated.class.getName()));
+      property.getField().removeAnnotation(ann);
+   }
+
+   @Test
+   public void testPropertyHasAnnotationTypeAccessor()
+   {
+      assumeTrue(existingItems.contains(PropertyComponent.ACCESSOR));
+      final PropertySource<O> property = source.getProperty(name);
+      assertFalse(property.hasAnnotation(Deprecated.class.getName()));
+
+      AnnotationSource<O> ann = property.getAccessor().addAnnotation(Deprecated.class.getName());
+      assertTrue(property.hasAnnotation(Deprecated.class.getName()));
+      property.getAccessor().removeAnnotation(ann);
+   }
+
+   @Test
+   public void testPropertyHasAnnotationTypeMutator()
+   {
+      assumeTrue(existingItems.contains(PropertyComponent.MUTATOR));
+      final PropertySource<O> property = source.getProperty(name);
+      assertFalse(property.hasAnnotation(Deprecated.class.getName()));
+
+      AnnotationSource<O> ann = property.getMutator().addAnnotation(Deprecated.class.getName());
+      assertTrue(property.hasAnnotation(Deprecated.class.getName()));
+      property.getMutator().removeAnnotation(ann);
+   }
+
+   @Test
+   public void testPropertyGetAnnotationTypeField()
+   {
+      assumeTrue(existingItems.contains(PropertyComponent.FIELD));
+      final PropertySource<O> property = source.getProperty(name);
+      assertFalse(property.hasAnnotation(Deprecated.class.getName()));
+
+      AnnotationSource<O> ann = property.getField().addAnnotation(Deprecated.class.getName());
+      assertNotNull(property.getAnnotation(Deprecated.class.getName()));
+      property.getField().removeAnnotation(ann);
+   }
+
+   @Test
+   public void testPropertyGetAnnotationTypeAccessor()
+   {
+      assumeTrue(existingItems.contains(PropertyComponent.ACCESSOR));
+      final PropertySource<O> property = source.getProperty(name);
+      assertFalse(property.hasAnnotation(Deprecated.class.getName()));
+
+      AnnotationSource<O> ann = property.getAccessor().addAnnotation(Deprecated.class.getName());
+      assertNotNull(property.getAnnotation(Deprecated.class.getName()));
+      property.getAccessor().removeAnnotation(ann);
+   }
+
+   @Test
+   public void testPropertyGetAnnotationTypeMutator()
+   {
+      assumeTrue(existingItems.contains(PropertyComponent.MUTATOR));
+      final PropertySource<O> property = source.getProperty(name);
+      assertFalse(property.hasAnnotation(Deprecated.class.getName()));
+
+      AnnotationSource<O> ann = property.getMutator().addAnnotation(Deprecated.class.getName());
+      assertNotNull(property.getAnnotation(Deprecated.class.getName()));
+      property.getMutator().removeAnnotation(ann);
+   }
+
+   @Test
+   public void testPropertyGetAnnotationField()
+   {
+      assumeTrue(existingItems.contains(PropertyComponent.FIELD));
+      final PropertySource<O> property = source.getProperty(name);
+      assertFalse(property.hasAnnotation(Deprecated.class));
+
+      AnnotationSource<O> ann = property.getField().addAnnotation(Deprecated.class);
+      assertNotNull(property.getAnnotation(Deprecated.class));
+      property.getField().removeAnnotation(ann);
+   }
+
+   @Test
+   public void testPropertyGetAnnotationAccessor()
+   {
+      assumeTrue(existingItems.contains(PropertyComponent.ACCESSOR));
+      final PropertySource<O> property = source.getProperty(name);
+      assertFalse(property.hasAnnotation(Deprecated.class));
+
+      AnnotationSource<O> ann = property.getAccessor().addAnnotation(Deprecated.class);
+      assertNotNull(property.getAnnotation(Deprecated.class));
+      property.getAccessor().removeAnnotation(ann);
+   }
+
+   @Test
+   public void testPropertyGetAnnotationMutator()
+   {
+      assumeTrue(existingItems.contains(PropertyComponent.MUTATOR));
+      final PropertySource<O> property = source.getProperty(name);
+      assertFalse(property.hasAnnotation(Deprecated.class));
+
+      AnnotationSource<O> ann = property.getMutator().addAnnotation(Deprecated.class);
+      assertNotNull(property.getAnnotation(Deprecated.class));
+      property.getMutator().removeAnnotation(ann);
+   }
+
+   @Test
+   public void testPropertyGetAnnotationsField()
+   {
+      assumeTrue(existingItems.contains(PropertyComponent.FIELD));
+      final PropertySource<O> property = source.getProperty(name);
+      assertFalse(property.hasAnnotation(Deprecated.class));
+
+      AnnotationSource<O> ann = property.getField().addAnnotation(Deprecated.class);
+      assertEquals(1,property.getAnnotations().size());
+      property.getField().removeAnnotation(ann);
+   }
+
+   @Test
+   public void testPropertyGetAnnotationsAccessor()
+   {
+      assumeTrue(existingItems.contains(PropertyComponent.ACCESSOR));
+      final PropertySource<O> property = source.getProperty(name);
+      assertFalse(property.hasAnnotation(Deprecated.class));
+
+      AnnotationSource<O> ann = property.getAccessor().addAnnotation(Deprecated.class);
+      assertEquals(1,property.getAnnotations().size());
+      property.getAccessor().removeAnnotation(ann);
+   }
+
+   @Test
+   public void testPropertyGetAnnotationsMutator()
+   {
+      assumeTrue(existingItems.contains(PropertyComponent.MUTATOR));
+      final PropertySource<O> property = source.getProperty(name);
+      assertFalse(property.hasAnnotation(Deprecated.class));
+
+      AnnotationSource<O> ann = property.getMutator().addAnnotation(Deprecated.class);
+      assertEquals(1,property.getAnnotations().size());
+      property.getMutator().removeAnnotation(ann);
    }
 
    private boolean sourceHasPropertyField(String fieldName)

@@ -123,6 +123,7 @@ public class AnnotationElementImpl implements AnnotationElementSource
          return setEnumArray(values);
       }
 
+      @SuppressWarnings("unchecked")
       @Override
       public <T extends Enum<T>> DefaultValue setEnumArray(T... values)
       {
@@ -221,7 +222,7 @@ public class AnnotationElementImpl implements AnnotationElementSource
             }
          }
          return null;
-         
+
       }
 
       @Override
@@ -256,7 +257,7 @@ public class AnnotationElementImpl implements AnnotationElementSource
          }
          return null;
       }
-      
+
       private Class<?> resolveTypeLiteral(TypeLiteral typeLiteral)
       {
          final Type<JavaAnnotationSource> type = new TypeImpl<JavaAnnotationSource>(getOrigin(), typeLiteral.getType());

@@ -8,16 +8,20 @@
 package org.jboss.forge.roaster.model.impl;
 
 import java.text.ParsePosition;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.TextElement;
+import org.jboss.forge.roaster.model.Annotation;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.Method;
 import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.Visibility;
+import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
@@ -28,9 +32,10 @@ import org.jboss.forge.roaster.model.util.Strings;
 
 /**
  * Implementation of PropertySource.
- * 
+ *
  * @author mbenson
- * 
+ * @author <a href="ggastald@redhat.com">George Gastaldi</a>
+ *
  * @param <O>
  */
 class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements PropertySource<O>
@@ -389,7 +394,7 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
       }
       return this;
    }
-   
+
    private PropertySource<O> removeAccessor()
    {
       if (isAccessible())
@@ -496,4 +501,140 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
       return prefix + Strings.capitalize(property);
    }
 
+   @Override
+   public Annotation<O> getAnnotation(Class<? extends java.lang.annotation.Annotation> type)
+   {
+      Annotation<O> ann = null;
+      FieldSource<O> field = getField();
+      if (field != null)
+      {
+         ann = field.getAnnotation(type);
+      }
+      if (ann == null)
+      {
+         MethodSource<O> accessor = getAccessor();
+         if (accessor != null)
+         {
+            ann = accessor.getAnnotation(type);
+         }
+      }
+      if (ann == null)
+      {
+         MethodSource<O> mutator = getMutator();
+         if (mutator != null)
+         {
+            ann = mutator.getAnnotation(type);
+         }
+      }
+      return ann;
+   }
+
+   @Override
+   public Annotation<O> getAnnotation(String type)
+   {
+      Annotation<O> ann = null;
+      FieldSource<O> field = getField();
+      if (field != null)
+      {
+         ann = field.getAnnotation(type);
+      }
+      if (ann == null)
+      {
+         MethodSource<O> accessor = getAccessor();
+         if (accessor != null)
+         {
+            ann = accessor.getAnnotation(type);
+         }
+      }
+      if (ann == null)
+      {
+         MethodSource<O> mutator = getMutator();
+         if (mutator != null)
+         {
+            ann = mutator.getAnnotation(type);
+         }
+      }
+      return ann;
+   }
+
+   @Override
+   public List<? extends Annotation<O>> getAnnotations()
+   {
+      List<Annotation<O>> annotations = new ArrayList<>();
+      FieldSource<O> field = getField();
+      if (field != null)
+      {
+         List<AnnotationSource<O>> fieldAnnotations = field.getAnnotations();
+         annotations.addAll(fieldAnnotations);
+      }
+      MethodSource<O> accessor = getAccessor();
+      if (accessor != null)
+      {
+         List<AnnotationSource<O>> accessorAnnotations = accessor.getAnnotations();
+         annotations.addAll(accessorAnnotations);
+      }
+      MethodSource<O> mutator = getMutator();
+      if (mutator != null)
+      {
+         List<AnnotationSource<O>> mutatorAnnotations = mutator.getAnnotations();
+         annotations.addAll(mutatorAnnotations);
+      }
+      return annotations;
+   }
+
+   @Override
+   public boolean hasAnnotation(Class<? extends java.lang.annotation.Annotation> type)
+   {
+      boolean hasAnnotation = false;
+      FieldSource<O> field = getField();
+      if (field != null)
+      {
+         hasAnnotation = field.hasAnnotation(type);
+      }
+      if (!hasAnnotation)
+      {
+         MethodSource<O> accessor = getAccessor();
+         if (accessor != null)
+         {
+            hasAnnotation = accessor.hasAnnotation(type);
+         }
+      }
+      if (!hasAnnotation)
+      {
+         MethodSource<O> mutator = getMutator();
+         if (mutator != null)
+         {
+            hasAnnotation = mutator.hasAnnotation(type);
+         }
+      }
+      return hasAnnotation;
+   }
+
+   @Override
+   public boolean hasAnnotation(String type)
+   {
+      boolean hasAnnotation = false;
+      FieldSource<O> field = getField();
+      if (field != null)
+      {
+         hasAnnotation = field.hasAnnotation(type);
+      }
+      if (!hasAnnotation)
+      {
+         MethodSource<O> accessor = getAccessor();
+         if (accessor != null)
+         {
+            hasAnnotation = accessor.hasAnnotation(type);
+         }
+      }
+      if (!hasAnnotation)
+      {
+         MethodSource<O> mutator = getMutator();
+         if (mutator != null)
+         {
+            hasAnnotation = mutator.hasAnnotation(type);
+         }
+      }
+      return hasAnnotation;
+   }
 }
