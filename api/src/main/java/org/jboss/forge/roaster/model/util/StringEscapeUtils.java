@@ -1,4 +1,3 @@
-/**
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -45,6 +44,8 @@ import java.util.Locale;
  * @since 2.0
  * @version $Id: StringEscapeUtils.java 1057072 2011-01-10 01:55:57Z niallp $
  */
+// *** THIS FILE HAS BEEN MODIFIED FROM THE ORIGINAL VERSION. IT PROVIDES ***
+// *** ONLY THE REQUIRED FUNCTIONALITY, WITH REDUCED ACCESSIBILITY.       ***
 class StringEscapeUtils
 {
 
