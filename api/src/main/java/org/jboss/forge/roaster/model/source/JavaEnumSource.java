@@ -16,17 +16,18 @@ import org.jboss.forge.roaster.model.JavaEnum;
 /**
  * Represents a Java {@code enum} source file as an in-memory modifiable element. See {@link Roaster} for various
  * options in generating {@link JavaEnumSource} instances.
- * 
+ *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public interface JavaEnumSource extends JavaEnum<JavaEnumSource>, JavaSource<JavaEnumSource>, InterfaceCapableSource<JavaEnumSource>,
+public interface JavaEnumSource extends JavaEnum<JavaEnumSource>, JavaSource<JavaEnumSource>,
+         InterfaceCapableSource<JavaEnumSource>,
          FieldHolderSource<JavaEnumSource>,
          MethodHolderSource<JavaEnumSource>,
-         PropertyHolderSource<JavaEnumSource>
+         PropertyHolderSource<JavaEnumSource>, TypeHolderSource<JavaEnumSource>
 {
    /**
     * Return the {@link EnumConstant} with the given name, or return null if no such constant exists.
-    * 
+    *
     * @param name
     * @return
     */

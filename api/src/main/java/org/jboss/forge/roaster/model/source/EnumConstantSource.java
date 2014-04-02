@@ -19,7 +19,7 @@ public interface EnumConstantSource extends EnumConstant<JavaEnumSource>, Annota
     * Represents the anonymous subclass "body" of an {@link EnumConstantSource}.
     */
    public interface Body extends EnumConstant.ReadBody<Body>, JavaSource<Body>, FieldHolderSource<Body>,
-            MethodHolderSource<Body>
+            MethodHolderSource<Body>, TypeHolderSource<Body>
    {
    }
 

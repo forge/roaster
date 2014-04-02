@@ -34,6 +34,7 @@ import org.jboss.forge.roaster.model.ast.MethodFinderVisitor;
 import org.jboss.forge.roaster.model.ast.TypeDeclarationFinderVisitor;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.EnumConstantSource;
+import org.jboss.forge.roaster.model.source.EnumConstantSource.Body;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
@@ -42,11 +43,11 @@ import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MemberSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
-import org.jboss.forge.roaster.model.source.EnumConstantSource.Body;
 import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.model.util.Types;
 import org.jboss.forge.roaster.spi.JavaParserImpl;
 
+@SuppressWarnings("unchecked")
 class EnumConstantBodyImpl implements EnumConstantSource.Body
 {
    private final EnumConstantSource enumConstant;
@@ -105,34 +106,6 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    public boolean isAnnotation()
    {
       return false;
-   }
-
-   @Override
-   public JavaSource<?> getEnclosingType()
-   {
-      return javaEnum;
-   }
-
-   @Override
-   public List<JavaSource<?>> getNestedClasses()
-   {
-      final JavaEnumImpl parentImpl = (JavaEnumImpl) javaEnum;
-      Document document = parentImpl.document;
-      CompilationUnit unit = parentImpl.unit;
-
-      final List<JavaSource<?>> result = new ArrayList<JavaSource<?>>();
-
-      @SuppressWarnings("unchecked")
-      final List<BodyDeclaration> bodyDeclarations = getBody().bodyDeclarations();
-      for (BodyDeclaration body : bodyDeclarations)
-      {
-         final List<AbstractTypeDeclaration> declarations = getNestedDeclarations(body);
-         for (AbstractTypeDeclaration declaration : declarations)
-         {
-            result.add(JavaParserImpl.getJavaSource(this, document, unit, declaration));
-         }
-      }
-      return result;
    }
 
    @Override
@@ -497,7 +470,6 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
       return result;
    }
 
-   @SuppressWarnings("unchecked")
    private void addField(Field<Body> field)
    {
       final List<BodyDeclaration> bodyDeclarations = getBody().bodyDeclarations();
@@ -514,7 +486,6 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    }
 
    @Override
-   @SuppressWarnings("unchecked")
    public List<FieldSource<Body>> getFields()
    {
       final List<FieldSource<Body>> result = new ArrayList<FieldSource<Body>>();
@@ -567,7 +538,6 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
       return getFields().contains(field);
    }
 
-   @SuppressWarnings("unchecked")
    @Override
    public Body removeField(final Field<Body> field)
    {
@@ -696,7 +666,8 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
             final Iterator<ParameterSource<Body>> localParams = local.getParameters().iterator();
             for (Parameter<? extends JavaType<?>> methodParam : method.getParameters())
             {
-               if (localParams.hasNext() && Strings.areEqual(localParams.next().getType().getName(), methodParam.getType().getName()))
+               if (localParams.hasNext()
+                        && Strings.areEqual(localParams.next().getType().getName(), methodParam.getType().getName()))
                {
                   continue;
                }
@@ -716,7 +687,6 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    }
 
    @Override
-   @SuppressWarnings("unchecked")
    public MethodSource<Body> addMethod()
    {
       final MethodSource<Body> m = new MethodImpl<Body>(this);
@@ -725,7 +695,6 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    }
 
    @Override
-   @SuppressWarnings("unchecked")
    public MethodSource<Body> addMethod(final String method)
    {
       final MethodSource<Body> m = new MethodImpl<Body>(this, method);
@@ -748,6 +717,33 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
       return Collections.unmodifiableList(result);
    }
 
+   @Override
+   public JavaSource<?> getEnclosingType()
+   {
+      return javaEnum;
+   }
+
+   @Override
+   public List<JavaSource<?>> getNestedClasses()
+   {
+      final JavaEnumImpl parentImpl = (JavaEnumImpl) javaEnum;
+      Document document = parentImpl.document;
+      CompilationUnit unit = parentImpl.unit;
+
+      final List<JavaSource<?>> result = new ArrayList<JavaSource<?>>();
+
+      final List<BodyDeclaration> bodyDeclarations = getBody().bodyDeclarations();
+      for (BodyDeclaration body : bodyDeclarations)
+      {
+         final List<AbstractTypeDeclaration> declarations = getNestedDeclarations(body);
+         for (AbstractTypeDeclaration declaration : declarations)
+         {
+            result.add(JavaParserImpl.getJavaSource(this, document, unit, declaration));
+         }
+      }
+      return result;
+   }
+
    private List<AbstractTypeDeclaration> getNestedDeclarations(BodyDeclaration body)
    {
       final TypeDeclarationFinderVisitor typeDeclarationFinder = new TypeDeclarationFinderVisitor();
@@ -766,6 +762,119 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
          }
       }
       return result;
+   }
+
+   @Override
+   public boolean hasNestedType(String name)
+   {
+      for (JavaSource<?> nested : getNestedClasses())
+      {
+         if (nested.getName().equals(name))
+         {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   @Override
+   public boolean hasNestedType(JavaType<?> type)
+   {
+      if (!type.isClass())
+      {
+         return false;
+      }
+      for (JavaSource<?> nested : getNestedClasses())
+      {
+         if (Strings.areEqual(nested.getQualifiedName(), type.getQualifiedName())
+                  || Strings.areEqual(nested.getName(), type.getName()))
+         {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   @Override
+   public JavaSource<?> getNestedType(String name)
+   {
+      for (JavaSource<?> nested : getNestedClasses())
+      {
+         if (Strings.areEqual(nested.getName(), name) || Strings.areEqual(nested.getQualifiedName(), name))
+         {
+            return nested;
+         }
+      }
+      return null;
+   }
+
+   @Override
+   public boolean hasNestedType(Class<?> type)
+   {
+      for (JavaSource<?> nested : getNestedClasses())
+      {
+         if (Strings.areEqual(nested.getName(), type.getSimpleName())
+                  || Strings.areEqual(nested.getQualifiedName(), type.getName()))
+         {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   @Override
+   public <NESTEDTYPE extends JavaSource<?>> NESTEDTYPE addNestedType(Class<NESTEDTYPE> type)
+   {
+      if (type != JavaClassSource.class)
+      {
+         throw new IllegalArgumentException("Enum constants body allow only classes to be added ");
+      }
+      JavaSource<?> nestedType = Roaster.create(type);
+      return (NESTEDTYPE) addNestedType(nestedType);
+   }
+
+   @Override
+   public <NESTEDTYPE extends JavaSource<?>> NESTEDTYPE addNestedType(String declaration)
+   {
+      JavaType<?> source = Roaster.parse(declaration);
+      if (!source.isClass())
+      {
+         throw new IllegalArgumentException("Enum constants body allow only classes to be added ");
+      }
+      JavaSource<?> nestedType = Roaster.parse(JavaSource.class, declaration);
+      return (NESTEDTYPE) addNestedType(nestedType);
+   }
+
+   @Override
+   public Body removeNestedType(JavaSource<?> type)
+   {
+      if (type instanceof AbstractJavaSource)
+      {
+         BodyDeclaration bodyDeclaration = ((AbstractJavaSource<?>) type).body;
+         List<Object> bodyDeclarations = getBody().bodyDeclarations();
+         bodyDeclarations.remove(bodyDeclaration);
+      }
+      return this;
+   }
+
+   @Override
+   public <NESTEDTYPE extends JavaSource<?>> NESTEDTYPE addNestedType(NESTEDTYPE type)
+   {
+      if (!type.isClass())
+      {
+         throw new IllegalArgumentException("Enum constants body allow only classes to be added ");
+      }
+      if (type instanceof AbstractJavaSource)
+      {
+         List<Object> bodyDeclarations = getBody().bodyDeclarations();
+         BodyDeclaration nestedBody = ((AbstractJavaSource<?>) type).body;
+         bodyDeclarations.add(ASTNode.copySubtree(getBody().getAST(), nestedBody));
+      }
+      else
+      {
+         throw new IllegalArgumentException("type must be an AbstractJavaSource instance");
+      }
+      return (NESTEDTYPE) getNestedType(type.getName());
    }
 
 }

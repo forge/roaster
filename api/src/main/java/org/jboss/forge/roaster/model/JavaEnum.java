@@ -14,14 +14,14 @@ import org.jboss.forge.roaster.Roaster;
 /**
  * Represents a Java {@code enum} type. See {@link Roaster} for various options in generating {@link JavaEnum}
  * instances.
- * 
+ *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public interface JavaEnum<O extends JavaEnum<O>> extends JavaType<O>, PropertyHolder<O>
+public interface JavaEnum<O extends JavaEnum<O>> extends JavaType<O>, PropertyHolder<O>, TypeHolder<O>
 {
    /**
     * Return the {@link EnumConstant} with the given name, or return null if no such constant exists.
-    * 
+    *
     * @param name
     * @return
     */

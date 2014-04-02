@@ -7,7 +7,6 @@ import java.util.ServiceLoader;
 
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
@@ -21,7 +20,6 @@ import org.jboss.forge.roaster.model.SyntaxError;
 import org.jboss.forge.roaster.model.Visibility;
 import org.jboss.forge.roaster.model.ast.AnnotationAccessor;
 import org.jboss.forge.roaster.model.ast.ModifierAccessor;
-import org.jboss.forge.roaster.model.ast.TypeDeclarationFinderVisitor;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaPackageInfoSource;
@@ -29,7 +27,6 @@ import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.util.Formatter;
 import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.model.util.Types;
-import org.jboss.forge.roaster.spi.JavaParserImpl;
 import org.jboss.forge.roaster.spi.WildcardImportResolver;
 
 public class JavaPackageInfoImpl implements JavaPackageInfoSource
@@ -77,7 +74,8 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    }
 
    @Override
-   public AnnotationSource<JavaPackageInfoSource> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
+   public AnnotationSource<JavaPackageInfoSource> addAnnotation(
+            final Class<? extends java.lang.annotation.Annotation> clazz)
    {
       return annotations.addAnnotation(this, getPackageDeclaration(), clazz.getName());
    }
@@ -113,7 +111,8 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    }
 
    @Override
-   public AnnotationSource<JavaPackageInfoSource> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
+   public AnnotationSource<JavaPackageInfoSource> getAnnotation(
+            final Class<? extends java.lang.annotation.Annotation> type)
    {
       return annotations.getAnnotation(this, getPackageDeclaration(), type);
    }
@@ -710,39 +709,4 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    {
       return false;
    }
-
-   @Override
-   public List<JavaSource<?>> getNestedClasses()
-   {
-      List<AbstractTypeDeclaration> declarations = getNestedDeclarations(pkg);
-
-      List<JavaSource<?>> result = new ArrayList<JavaSource<?>>();
-      for (AbstractTypeDeclaration declaration : declarations)
-      {
-         result.add(JavaParserImpl.getJavaSource(this, document, unit, declaration));
-      }
-      return result;
-   }
-
-   private List<AbstractTypeDeclaration> getNestedDeclarations(ASTNode body)
-   {
-
-      TypeDeclarationFinderVisitor typeDeclarationFinder = new TypeDeclarationFinderVisitor();
-      body.accept(typeDeclarationFinder);
-      List<AbstractTypeDeclaration> declarations = typeDeclarationFinder.getTypeDeclarations();
-
-      List<AbstractTypeDeclaration> result = new ArrayList<AbstractTypeDeclaration>(declarations);
-      if (!declarations.isEmpty())
-      {
-         // We don't want to return the current class' declaration.
-         result.remove(declarations.remove(0));
-         for (AbstractTypeDeclaration declaration : declarations)
-         {
-            result.removeAll(getNestedDeclarations(declaration));
-         }
-      }
-
-      return result;
-   }
-
 }

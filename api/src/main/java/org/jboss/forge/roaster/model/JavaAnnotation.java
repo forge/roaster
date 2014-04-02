@@ -14,10 +14,10 @@ import org.jboss.forge.roaster.Roaster;
 /**
  * Represents a Java {@code @interface} annotation type. See {@link Roaster} for various options in generating
  * {@link JavaAnnotation} instances.
- * 
+ *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public interface JavaAnnotation<O extends JavaAnnotation<O>> extends JavaType<O>
+public interface JavaAnnotation<O extends JavaAnnotation<O>> extends JavaType<O>, TypeHolder<O>
 {
 
    /**
