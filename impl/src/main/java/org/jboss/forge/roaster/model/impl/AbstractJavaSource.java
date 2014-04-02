@@ -14,6 +14,7 @@ import java.util.ServiceLoader;
 
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.IProblem;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
@@ -27,6 +28,7 @@ import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 import org.jboss.forge.roaster.ParserException;
+import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.Annotation;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.SyntaxError;
@@ -37,6 +39,7 @@ import org.jboss.forge.roaster.model.ast.TypeDeclarationFinderVisitor;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaSource;
+import org.jboss.forge.roaster.model.source.TypeHolderSource;
 import org.jboss.forge.roaster.model.util.Formatter;
 import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.model.util.Types;
@@ -45,12 +48,12 @@ import org.jboss.forge.roaster.spi.WildcardImportResolver;
 
 /**
  * Represents a Java Source File
- * 
+ *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
-         JavaSource<O>
+         JavaSource<O>, TypeHolderSource<O>
 {
    private final AnnotationAccessor<O, O> annotations = new AnnotationAccessor<O, O>();
    private final ModifierAccessor modifiers = new ModifierAccessor();
@@ -764,9 +767,104 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       return result;
    }
 
+   @Override
+   public boolean hasNestedType(JavaType<?> type)
+   {
+      for (JavaSource<?> nested : getNestedClasses())
+      {
+         if (Strings.areEqual(nested.getQualifiedName(), type.getQualifiedName())
+                  || Strings.areEqual(nested.getName(), type.getName()))
+         {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   @Override
+   public boolean hasNestedType(String name)
+   {
+      for (JavaSource<?> nested : getNestedClasses())
+      {
+         if (Strings.areEqual(nested.getName(), name) || Strings.areEqual(nested.getQualifiedName(), name))
+         {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   @Override
+   public boolean hasNestedType(Class<?> type)
+   {
+      for (JavaSource<?> nested : getNestedClasses())
+      {
+         if (Strings.areEqual(nested.getName(), type.getSimpleName())
+                  || Strings.areEqual(nested.getQualifiedName(), type.getName()))
+         {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   @Override
+   public JavaSource<?> getNestedType(String name)
+   {
+      for (JavaSource<?> nested : getNestedClasses())
+      {
+         if (Strings.areEqual(nested.getName(), name) || Strings.areEqual(nested.getQualifiedName(), name))
+         {
+            return nested;
+         }
+      }
+      return null;
+   }
+
+   @Override
+   public <NESTEDTYPE extends JavaSource<?>> NESTEDTYPE addNestedType(NESTEDTYPE type)
+   {
+      if (type instanceof AbstractJavaSource)
+      {
+         List<Object> bodyDeclarations = getBodyDeclaration().bodyDeclarations();
+         BodyDeclaration nestedBody = ((AbstractJavaSource<?>) type).body;
+         bodyDeclarations.add(ASTNode.copySubtree(unit.getAST(), nestedBody));
+      }
+      else
+      {
+         throw new IllegalArgumentException("type must be an AbstractJavaSource instance");
+      }
+      return (NESTEDTYPE) getNestedType(type.getName());
+   }
+
+   @Override
+   public O removeNestedType(JavaSource<?> type)
+   {
+      if (type instanceof AbstractJavaSource)
+      {
+         BodyDeclaration bodyDeclaration = ((AbstractJavaSource<?>) type).body;
+         List<Object> bodyDeclarations = getBodyDeclaration().bodyDeclarations();
+         bodyDeclarations.remove(bodyDeclaration);
+      }
+      return (O) this;
+   }
+
+   @Override
+   public <NESTEDTYPE extends JavaSource<?>> NESTEDTYPE addNestedType(Class<NESTEDTYPE> type)
+   {
+      JavaSource<?> nestedType = Roaster.create(type);
+      return (NESTEDTYPE) addNestedType(nestedType);
+   }
+
+   @Override
+   public <NESTEDTYPE extends JavaSource<?>> NESTEDTYPE addNestedType(String declaration)
+   {
+      JavaSource<?> nestedType = Roaster.parse(JavaSource.class, declaration);
+      return (NESTEDTYPE) addNestedType(nestedType);
+   }
+
    private List<AbstractTypeDeclaration> getNestedDeclarations(BodyDeclaration body)
    {
-
       TypeDeclarationFinderVisitor typeDeclarationFinder = new TypeDeclarationFinderVisitor();
       body.accept(typeDeclarationFinder);
       List<AbstractTypeDeclaration> declarations = typeDeclarationFinder.getTypeDeclarations();

@@ -12,7 +12,7 @@ import org.jboss.forge.roaster.Roaster;
 /**
  * Represents a Java {@code class} type. See {@link Roaster} for various options in generating {@link JavaClass}
  * instances.
- * 
+ *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 public interface JavaClass<O extends JavaClass<O>> extends
@@ -20,6 +20,6 @@ public interface JavaClass<O extends JavaClass<O>> extends
          PropertyHolder<O>,
          GenericCapable<O>,
          Extendable<O>,
-         Abstractable<O>
+         Abstractable<O>, TypeHolder<O>
 {
 }

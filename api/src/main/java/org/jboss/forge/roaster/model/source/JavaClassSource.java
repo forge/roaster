@@ -13,7 +13,7 @@ import org.jboss.forge.roaster.model.JavaClass;
 /**
  * Represents a Java {@code class} source file as an in-memory modifiable element. See {@link Roaster} for various
  * options in generating {@link JavaClassSource} instances.
- * 
+ *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 public interface JavaClassSource extends JavaClass<JavaClassSource>,
@@ -24,6 +24,6 @@ public interface JavaClassSource extends JavaClass<JavaClassSource>,
          GenericCapableSource<JavaClassSource, JavaClassSource>,
          ExtendableSource<JavaClassSource>,
          AbstractableSource<JavaClassSource>,
-         PropertyHolderSource<JavaClassSource>
+         PropertyHolderSource<JavaClassSource>, TypeHolderSource<JavaClassSource>
 {
 }

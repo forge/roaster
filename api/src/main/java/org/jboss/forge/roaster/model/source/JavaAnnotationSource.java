@@ -16,10 +16,10 @@ import org.jboss.forge.roaster.model.JavaAnnotation;
 /**
  * Represents a Java {@code @interface} annotation source file as an in-memory modifiable element. See
  * {@link Roaster} for various options in generating {@link JavaAnnotationSource} instances.
- * 
+ *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public interface JavaAnnotationSource extends JavaAnnotation<JavaAnnotationSource>, JavaSource<JavaAnnotationSource>
+public interface JavaAnnotationSource extends JavaAnnotation<JavaAnnotationSource>, JavaSource<JavaAnnotationSource>, TypeHolderSource<JavaAnnotationSource>
 {
    /**
     * Get the {@link AnnotationElementSource} with the given name and return it, otherwise, return null.
