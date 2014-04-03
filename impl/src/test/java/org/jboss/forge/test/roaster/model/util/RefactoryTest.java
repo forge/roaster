@@ -316,7 +316,7 @@ public class RefactoryTest
       JavaClassSource outerClass = Roaster
                .parse(JavaClassSource.class,
                         "public class Foo { private Foo.Bar bar; class Bar{ private Boolean flag; } }");
-      JavaClassSource innerClass = (JavaClassSource) outerClass.getNestedClasses().get(0);
+      JavaClassSource innerClass = (JavaClassSource) outerClass.getNestedTypes().get(0);
       FieldSource<JavaClassSource> innerField = innerClass.getField("flag");
       Refactory.createHashCodeAndEquals(innerClass, innerField);
 

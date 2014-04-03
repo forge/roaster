@@ -63,8 +63,8 @@ public class JavaAnnotationTest
    @Test
    public void testCanParseInnerAnnotation() throws Exception
    {
-      assertEquals(1, javaAnnotation.getNestedClasses().size());
-      JavaAnnotationSource nestedAnnotation = (JavaAnnotationSource) javaAnnotation.getNestedClasses().get(0);
+      assertEquals(1, javaAnnotation.getNestedTypes().size());
+      JavaAnnotationSource nestedAnnotation = (JavaAnnotationSource) javaAnnotation.getNestedTypes().get(0);
       assertEquals("MockNestedJavaAnnotationType", nestedAnnotation.getName());
       assertEquals(5, nestedAnnotation.getAnnotationElements().size());
 

@@ -724,7 +724,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    }
 
    @Override
-   public List<JavaSource<?>> getNestedClasses()
+   public List<JavaSource<?>> getNestedTypes()
    {
       final JavaEnumImpl parentImpl = (JavaEnumImpl) javaEnum;
       Document document = parentImpl.document;
@@ -767,7 +767,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    @Override
    public boolean hasNestedType(String name)
    {
-      for (JavaSource<?> nested : getNestedClasses())
+      for (JavaSource<?> nested : getNestedTypes())
       {
          if (nested.getName().equals(name))
          {
@@ -784,7 +784,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
       {
          return false;
       }
-      for (JavaSource<?> nested : getNestedClasses())
+      for (JavaSource<?> nested : getNestedTypes())
       {
          if (Strings.areEqual(nested.getQualifiedName(), type.getQualifiedName())
                   || Strings.areEqual(nested.getName(), type.getName()))
@@ -798,7 +798,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    @Override
    public JavaSource<?> getNestedType(String name)
    {
-      for (JavaSource<?> nested : getNestedClasses())
+      for (JavaSource<?> nested : getNestedTypes())
       {
          if (Strings.areEqual(nested.getName(), name) || Strings.areEqual(nested.getQualifiedName(), name))
          {
@@ -811,7 +811,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    @Override
    public boolean hasNestedType(Class<?> type)
    {
-      for (JavaSource<?> nested : getNestedClasses())
+      for (JavaSource<?> nested : getNestedTypes())
       {
          if (Strings.areEqual(nested.getName(), type.getSimpleName())
                   || Strings.areEqual(nested.getQualifiedName(), type.getName()))
@@ -875,6 +875,12 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
          throw new IllegalArgumentException("type must be an AbstractJavaSource instance");
       }
       return (NESTEDTYPE) getNestedType(type.getName());
+   }
+
+   @Override
+   public List<JavaSource<?>> getNestedClasses()
+   {
+      return getNestedTypes();
    }
 
 }

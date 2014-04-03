@@ -24,7 +24,8 @@ public interface TypeHolderSource<T extends JavaSource<T>> extends TypeHolder<T>
     * contents contained by <code>this</code> the parent instance.
     *
     */
-   List<JavaSource<?>> getNestedClasses();
+   @Override
+   List<JavaSource<?>> getNestedTypes();
 
    @Override
    JavaSource<?> getNestedType(String name);

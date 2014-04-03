@@ -38,7 +38,7 @@ public class NestedClassTest
                         "}");
 
       Assert.assertEquals("org.example.OuterClass", javaClass.getCanonicalName());
-      List<JavaSource<?>> nestedClasses = javaClass.getNestedClasses();
+      List<JavaSource<?>> nestedClasses = javaClass.getNestedTypes();
       JavaClassSource inner1 = (JavaClassSource) nestedClasses.get(0);
       JavaClassSource inner2 = (JavaClassSource) nestedClasses.get(1);
       Assert.assertEquals(javaClass, inner1.getEnclosingType());
@@ -63,7 +63,7 @@ public class NestedClassTest
                         "  public class InnerClass2{} " +
                         "}");
 
-      List<JavaSource<?>> nestedClasses = javaClass.getNestedClasses();
+      List<JavaSource<?>> nestedClasses = javaClass.getNestedTypes();
       JavaSource<?> inner1 = nestedClasses.get(0);
       inner1.addAnnotation(Deprecated.class);
 
@@ -82,7 +82,7 @@ public class NestedClassTest
                         "}");
 
       Assert.assertEquals("org.example.OuterInterface", javaInterface.getCanonicalName());
-      List<JavaSource<?>> nestedClasses = javaInterface.getNestedClasses();
+      List<JavaSource<?>> nestedClasses = javaInterface.getNestedTypes();
       JavaClassSource inner1 = (JavaClassSource) nestedClasses.get(0);
       JavaClassSource inner2 = (JavaClassSource) nestedClasses.get(1);
       Assert.assertEquals(javaInterface, inner1.getEnclosingType());
@@ -109,7 +109,7 @@ public class NestedClassTest
                         "}");
 
       Assert.assertEquals("org.example.OuterEnum", javaEnum.getCanonicalName());
-      List<JavaSource<?>> nestedClasses = javaEnum.getNestedClasses();
+      List<JavaSource<?>> nestedClasses = javaEnum.getNestedTypes();
       JavaClassSource inner1 = (JavaClassSource) nestedClasses.get(0);
       JavaClassSource inner2 = (JavaClassSource) nestedClasses.get(1);
       Assert.assertEquals(javaEnum, inner1.getEnclosingType());
@@ -133,7 +133,7 @@ public class NestedClassTest
                         "}");
 
       Assert.assertEquals("org.example.OuterClass", javaClass.getCanonicalName());
-      List<JavaSource<?>> nestedClasses = javaClass.getNestedClasses();
+      List<JavaSource<?>> nestedClasses = javaClass.getNestedTypes();
       JavaEnumSource inner1 = (JavaEnumSource) nestedClasses.get(0);
       Assert.assertEquals(javaClass, inner1.getEnclosingType());
       Assert.assertEquals("org.example.OuterClass.InnerEnum", inner1.getCanonicalName());
@@ -154,7 +154,7 @@ public class NestedClassTest
                         "}");
 
       Assert.assertEquals("org.example.OuterAnnotation", javaAnnotation.getCanonicalName());
-      List<JavaSource<?>> nestedClasses = javaAnnotation.getNestedClasses();
+      List<JavaSource<?>> nestedClasses = javaAnnotation.getNestedTypes();
       JavaClassSource inner1 = (JavaClassSource) nestedClasses.get(0);
       JavaClassSource inner2 = (JavaClassSource) nestedClasses.get(1);
       Assert.assertEquals(javaAnnotation, inner1.getEnclosingType());
@@ -196,7 +196,7 @@ public class NestedClassTest
       javaClass.removeNestedType(innerClass1);
       Assert.assertFalse(javaClass.hasNestedType("InnerClass1"));
       Assert.assertFalse(javaClass.hasNestedType(innerClass1));
-      Assert.assertEquals(1, javaClass.getNestedClasses().size());
+      Assert.assertEquals(1, javaClass.getNestedTypes().size());
    }
 
    public class NestedClass

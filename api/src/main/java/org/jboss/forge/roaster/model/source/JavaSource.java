@@ -7,6 +7,8 @@
 
 package org.jboss.forge.roaster.model.source;
 
+import java.util.List;
+
 import org.jboss.forge.roaster.model.JavaType;
 
 /**
@@ -23,5 +25,14 @@ public interface JavaSource<T extends JavaSource<T>> extends JavaType<T>,
 {
    @Override
    public JavaSource<?> getEnclosingType();
+
+   /**
+    * Return a list containing {@link JavaSource} instances for each nested {@link Class} declaration found within
+    * <code>this</code>. Any modification of returned {@link JavaSource} instances will result in modification of the
+    * contents contained by <code>this</code> the parent instance.
+    */
+   @Override
+   @Deprecated
+   public List<JavaSource<?>> getNestedClasses();
 
 }

@@ -709,4 +709,11 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    {
       return false;
    }
+
+   @Override
+   public List<JavaSource<?>> getNestedClasses()
+   {
+      return Collections.emptyList();
+   }
+
 }

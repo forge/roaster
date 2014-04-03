@@ -75,4 +75,13 @@ public interface JavaType<T extends JavaType<T>> extends
     * type, and is not a nested type, this object will return itself.
     */
    public JavaType<?> getEnclosingType();
+   
+   /**
+    * Return a list containing {@link JavaType} instances for each nested {@link Class} declaration found within
+    * <code>this</code>. Any modification of returned {@link JavaType} instances will result in modification of
+    * the contents contained by <code>this</code> the parent instance.
+    */
+   @Deprecated
+   public List<? extends JavaType<?>> getNestedClasses();
+
 }

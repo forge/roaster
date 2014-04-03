@@ -20,10 +20,8 @@ public interface TypeHolder<O extends JavaType<O>>
     * Return a list containing {@link JavaType} instances for each nested {@link Class} declaration found within
     * <code>this</code>. Any modification of returned {@link JavaType} instances will result in modification of the
     * contents contained by <code>this</code> the parent instance.
-    *
-    * TODO: Should be renamed to getNestedTypes()
     */
-   List<? extends JavaType<?>> getNestedClasses();
+   List<? extends JavaType<?>> getNestedTypes();
 
    /**
     * Return whether or not this {@link O} declares a type with the given name.

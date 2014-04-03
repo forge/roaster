@@ -12,6 +12,6 @@ public class NestedJavaClassTest extends JavaClassTest
    {
       InputStream stream = JavaClassTest.class
                .getResourceAsStream("/org/jboss/forge/grammar/java/NestedMockClass.java");
-      return (JavaClassSource) Roaster.parse(JavaClassSource.class, stream).getNestedClasses().get(0);
+      return (JavaClassSource) Roaster.parse(JavaClassSource.class, stream).getNestedTypes().get(0);
    }
 }

@@ -755,7 +755,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
     */
 
    @Override
-   public List<JavaSource<?>> getNestedClasses()
+   public List<JavaSource<?>> getNestedTypes()
    {
       List<AbstractTypeDeclaration> declarations = getNestedDeclarations(body);
 
@@ -770,7 +770,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    @Override
    public boolean hasNestedType(JavaType<?> type)
    {
-      for (JavaSource<?> nested : getNestedClasses())
+      for (JavaSource<?> nested : getNestedTypes())
       {
          if (Strings.areEqual(nested.getQualifiedName(), type.getQualifiedName())
                   || Strings.areEqual(nested.getName(), type.getName()))
@@ -784,7 +784,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    @Override
    public boolean hasNestedType(String name)
    {
-      for (JavaSource<?> nested : getNestedClasses())
+      for (JavaSource<?> nested : getNestedTypes())
       {
          if (Strings.areEqual(nested.getName(), name) || Strings.areEqual(nested.getQualifiedName(), name))
          {
@@ -797,7 +797,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    @Override
    public boolean hasNestedType(Class<?> type)
    {
-      for (JavaSource<?> nested : getNestedClasses())
+      for (JavaSource<?> nested : getNestedTypes())
       {
          if (Strings.areEqual(nested.getName(), type.getSimpleName())
                   || Strings.areEqual(nested.getQualifiedName(), type.getName()))
@@ -811,7 +811,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    @Override
    public JavaSource<?> getNestedType(String name)
    {
-      for (JavaSource<?> nested : getNestedClasses())
+      for (JavaSource<?> nested : getNestedTypes())
       {
          if (Strings.areEqual(nested.getName(), name) || Strings.areEqual(nested.getQualifiedName(), name))
          {
@@ -861,6 +861,12 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    {
       JavaSource<?> nestedType = Roaster.parse(JavaSource.class, declaration);
       return (NESTEDTYPE) addNestedType(nestedType);
+   }
+
+   @Override
+   public List<JavaSource<?>> getNestedClasses()
+   {
+      return getNestedTypes();
    }
 
    private List<AbstractTypeDeclaration> getNestedDeclarations(BodyDeclaration body)
