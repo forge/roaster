@@ -823,18 +823,18 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    }
 
    @Override
-   public <NESTEDTYPE extends JavaSource<?>> NESTEDTYPE addNestedType(Class<NESTEDTYPE> type)
+   public <NESTED_TYPE extends JavaSource<?>> NESTED_TYPE addNestedType(Class<NESTED_TYPE> type)
    {
       if (type != JavaClassSource.class)
       {
          throw new IllegalArgumentException("Enum constants body allow only classes to be added ");
       }
       JavaSource<?> nestedType = Roaster.create(type);
-      return (NESTEDTYPE) addNestedType(nestedType);
+      return (NESTED_TYPE) addNestedType(nestedType);
    }
 
    @Override
-   public <NESTEDTYPE extends JavaSource<?>> NESTEDTYPE addNestedType(String declaration)
+   public <NESTED_TYPE extends JavaSource<?>> NESTED_TYPE addNestedType(String declaration)
    {
       JavaType<?> source = Roaster.parse(declaration);
       if (!source.isClass())
@@ -842,7 +842,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
          throw new IllegalArgumentException("Enum constants body allow only classes to be added ");
       }
       JavaSource<?> nestedType = Roaster.parse(JavaSource.class, declaration);
-      return (NESTEDTYPE) addNestedType(nestedType);
+      return (NESTED_TYPE) addNestedType(nestedType);
    }
 
    @Override
@@ -858,7 +858,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    }
 
    @Override
-   public <NESTEDTYPE extends JavaSource<?>> NESTEDTYPE addNestedType(NESTEDTYPE type)
+   public <NESTED_TYPE extends JavaSource<?>> NESTED_TYPE addNestedType(NESTED_TYPE type)
    {
       if (!type.isClass())
       {
@@ -874,7 +874,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
       {
          throw new IllegalArgumentException("type must be an AbstractJavaSource instance");
       }
-      return (NESTEDTYPE) getNestedType(type.getName());
+      return (NESTED_TYPE) getNestedType(type.getName());
    }
 
    @Override

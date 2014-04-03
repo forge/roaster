@@ -822,7 +822,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public <NESTEDTYPE extends JavaSource<?>> NESTEDTYPE addNestedType(NESTEDTYPE type)
+   public <NESTED_TYPE extends JavaSource<?>> NESTED_TYPE addNestedType(NESTED_TYPE type)
    {
       if (type instanceof AbstractJavaSource)
       {
@@ -834,7 +834,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       {
          throw new IllegalArgumentException("type must be an AbstractJavaSource instance");
       }
-      return (NESTEDTYPE) getNestedType(type.getName());
+      return (NESTED_TYPE) getNestedType(type.getName());
    }
 
    @Override
@@ -850,17 +850,17 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public <NESTEDTYPE extends JavaSource<?>> NESTEDTYPE addNestedType(Class<NESTEDTYPE> type)
+   public <NESTED_TYPE extends JavaSource<?>> NESTED_TYPE addNestedType(Class<NESTED_TYPE> type)
    {
       JavaSource<?> nestedType = Roaster.create(type);
-      return (NESTEDTYPE) addNestedType(nestedType);
+      return (NESTED_TYPE) addNestedType(nestedType);
    }
 
    @Override
-   public <NESTEDTYPE extends JavaSource<?>> NESTEDTYPE addNestedType(String declaration)
+   public <NESTED_TYPE extends JavaSource<?>> NESTED_TYPE addNestedType(String declaration)
    {
       JavaSource<?> nestedType = Roaster.parse(JavaSource.class, declaration);
-      return (NESTEDTYPE) addNestedType(nestedType);
+      return (NESTED_TYPE) addNestedType(nestedType);
    }
 
    @Override
