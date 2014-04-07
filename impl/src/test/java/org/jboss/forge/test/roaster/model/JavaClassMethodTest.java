@@ -8,6 +8,7 @@ package org.jboss.forge.test.roaster.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
@@ -118,9 +119,46 @@ public class JavaClassMethodTest
    @Test
    public void testGetMembers() throws Exception
    {
-      JavaClassSource javaClass = Roaster.create(JavaClassSource.class).addMethod("public void doSomething();").getOrigin()
+      JavaClassSource javaClass = Roaster.create(JavaClassSource.class).addMethod("public void doSomething();")
+               .getOrigin()
                .addField("private int id;").getOrigin();
       List<MemberSource<JavaClassSource, ?>> members = javaClass.getMembers();
       assertEquals(2, members.size());
    }
+
+   @Test
+   public void testAddParameter() throws Exception
+   {
+      ParameterSource<JavaClassSource> param = method.addParameter(Number.class, "number");
+      assertNotNull(param);
+      assertEquals(3, method.getParameters().size());
+   }
+
+   @Test
+   public void testAddParameterStringType() throws Exception
+   {
+      ParameterSource<JavaClassSource> param = method.addParameter(Number.class.getName(), "number");
+      assertNotNull(param);
+      assertEquals(3, method.getParameters().size());
+   }
+
+   @Test
+   public void testAddParameterJavaType() throws Exception
+   {
+      JavaClassSource type = Roaster.create(JavaClassSource.class).setName("Mock").setPackage("mock.pkg");
+      ParameterSource<JavaClassSource> param = method.addParameter(type, "mock");
+      assertNotNull(param);
+      assertEquals(3, method.getParameters().size());
+      assertTrue(method.getOrigin().hasImport(type));
+   }
+
+   @Test
+   public void testRemoveParameter() throws Exception
+   {
+      ParameterSource<JavaClassSource> param = method.getParameters().get(0);
+      assertNotNull(param);
+      method.removeParameter(param);
+      assertEquals(1, method.getParameters().size());
+   }
+
 }
