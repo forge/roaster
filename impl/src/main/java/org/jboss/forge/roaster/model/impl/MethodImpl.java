@@ -653,6 +653,12 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       return addParameter(type.getName(), name);
    }
 
+   @Override
+   public ParameterSource<O> addParameter(JavaType<?> type, String name)
+   {
+      return addParameter(type.getQualifiedName(), name);
+   }
+
    @SuppressWarnings("unchecked")
    @Override
    public ParameterSource<O> addParameter(String type, String name)

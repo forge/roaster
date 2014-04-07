@@ -8,6 +8,7 @@ package org.jboss.forge.test.roaster.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
@@ -18,7 +19,6 @@ import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MemberSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -130,25 +130,35 @@ public class JavaClassMethodTest
    public void testAddParameter() throws Exception
    {
       ParameterSource<JavaClassSource> param = method.addParameter(Number.class, "number");
-      Assert.assertNotNull(param);
-      Assert.assertEquals(3, method.getParameters().size());
+      assertNotNull(param);
+      assertEquals(3, method.getParameters().size());
    }
 
    @Test
    public void testAddParameterStringType() throws Exception
    {
       ParameterSource<JavaClassSource> param = method.addParameter(Number.class.getName(), "number");
-      Assert.assertNotNull(param);
-      Assert.assertEquals(3, method.getParameters().size());
+      assertNotNull(param);
+      assertEquals(3, method.getParameters().size());
+   }
+
+   @Test
+   public void testAddParameterJavaType() throws Exception
+   {
+      JavaClassSource type = Roaster.create(JavaClassSource.class).setName("Mock").setPackage("mock.pkg");
+      ParameterSource<JavaClassSource> param = method.addParameter(type, "mock");
+      assertNotNull(param);
+      assertEquals(3, method.getParameters().size());
+      assertTrue(method.getOrigin().hasImport(type));
    }
 
    @Test
    public void testRemoveParameter() throws Exception
    {
       ParameterSource<JavaClassSource> param = method.getParameters().get(0);
-      Assert.assertNotNull(param);
+      assertNotNull(param);
       method.removeParameter(param);
-      Assert.assertEquals(1, method.getParameters().size());
+      assertEquals(1, method.getParameters().size());
    }
 
 }

@@ -96,6 +96,11 @@ public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodS
    ParameterSource<O> addParameter(String type, String name);
 
    /**
+    * Add a parameter with the specified {@link JavaType} type and name to this method
+    */
+   ParameterSource<O> addParameter(JavaType<?> type, String name);
+
+   /**
     * Remove a parameter from this method
     */
    MethodSource<O> removeParameter(ParameterSource<O> parameter);
