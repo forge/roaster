@@ -15,11 +15,12 @@ import org.jboss.forge.roaster.model.Method;
 
 /**
  * Represents a Java Method in source form.
- * 
+ *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
- * 
+ *
  */
-public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodSource<O>>, AbstractableSource<MethodSource<O>>,
+public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodSource<O>>,
+         AbstractableSource<MethodSource<O>>,
          MemberSource<O, MethodSource<O>>, GenericCapableSource<O, MethodSource<O>>
 {
    /**
@@ -33,8 +34,8 @@ public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodS
    MethodSource<O> setBody(final String body);
 
    /**
-    * Toggle this method as a constructor. If true, and the name of the {@link Method} is not the same as the name
-    * of its parent {@link JavaClass} , update the name of the to match.
+    * Toggle this method as a constructor. If true, and the name of the {@link Method} is not the same as the name of
+    * its parent {@link JavaClass} , update the name of the to match.
     */
    MethodSource<O> setConstructor(final boolean constructor);
 
@@ -84,4 +85,18 @@ public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodS
    @Override
    List<ParameterSource<O>> getParameters();
 
+   /**
+    * Add a parameter with the specified {@link Class} type and name to this method
+    */
+   ParameterSource<O> addParameter(Class<?> type, String name);
+
+   /**
+    * Add a parameter with the specified type and name to this method
+    */
+   ParameterSource<O> addParameter(String type, String name);
+
+   /**
+    * Remove a parameter from this method
+    */
+   MethodSource<O> removeParameter(ParameterSource<O> parameter);
 }

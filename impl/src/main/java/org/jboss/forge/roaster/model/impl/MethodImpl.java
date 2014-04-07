@@ -226,7 +226,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       }
       return new TypeImpl<O>(parent, method.getReturnType2());
    }
-   
+
    @Override
    public boolean isReturnTypeVoid()
    {
@@ -610,7 +610,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       {
          if (Strings.areEqual(name, typeParameter.getName().getIdentifier()))
          {
-            return(new TypeVariableImpl<O>(parent, typeParameter));
+            return (new TypeVariableImpl<O>(parent, typeParameter));
          }
       }
       return null;
@@ -645,5 +645,38 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    public MethodSource<O> removeTypeVariable(TypeVariable<?> typeVariable)
    {
       return removeTypeVariable(typeVariable.getName());
+   }
+
+   @Override
+   public ParameterSource<O> addParameter(Class<?> type, String name)
+   {
+      return addParameter(type.getName(), name);
+   }
+
+   @SuppressWarnings("unchecked")
+   @Override
+   public ParameterSource<O> addParameter(String type, String name)
+   {
+      getOrigin().addImport(type);
+      String stub = "public class Stub { public void method( " + Types.toSimpleName(type) + " " + name + " ) {} }";
+      JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
+      List<MethodSource<JavaClassSource>> methods = temp.getMethods();
+      List<VariableDeclaration> astParameters = ((MethodDeclaration) methods.get(0).getInternal()).parameters();
+
+      ParameterSource<O> param = null;
+      for (VariableDeclaration declaration : astParameters)
+      {
+         VariableDeclaration copy = (VariableDeclaration) ASTNode.copySubtree(method.getAST(), declaration);
+         method.parameters().add(copy);
+         param = new ParameterImpl<O>(parent, copy);
+      }
+      return param;
+   }
+
+   @Override
+   public MethodSource<O> removeParameter(ParameterSource<O> parameter)
+   {
+      method.parameters().remove(parameter.getInternal());
+      return this;
    }
 }

@@ -18,6 +18,7 @@ import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MemberSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -118,9 +119,36 @@ public class JavaClassMethodTest
    @Test
    public void testGetMembers() throws Exception
    {
-      JavaClassSource javaClass = Roaster.create(JavaClassSource.class).addMethod("public void doSomething();").getOrigin()
+      JavaClassSource javaClass = Roaster.create(JavaClassSource.class).addMethod("public void doSomething();")
+               .getOrigin()
                .addField("private int id;").getOrigin();
       List<MemberSource<JavaClassSource, ?>> members = javaClass.getMembers();
       assertEquals(2, members.size());
    }
+
+   @Test
+   public void testAddParameter() throws Exception
+   {
+      ParameterSource<JavaClassSource> param = method.addParameter(Number.class, "number");
+      Assert.assertNotNull(param);
+      Assert.assertEquals(3, method.getParameters().size());
+   }
+
+   @Test
+   public void testAddParameterStringType() throws Exception
+   {
+      ParameterSource<JavaClassSource> param = method.addParameter(Number.class.getName(), "number");
+      Assert.assertNotNull(param);
+      Assert.assertEquals(3, method.getParameters().size());
+   }
+
+   @Test
+   public void testRemoveParameter() throws Exception
+   {
+      ParameterSource<JavaClassSource> param = method.getParameters().get(0);
+      Assert.assertNotNull(param);
+      method.removeParameter(param);
+      Assert.assertEquals(1, method.getParameters().size());
+   }
+
 }
