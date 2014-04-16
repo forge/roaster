@@ -51,6 +51,11 @@
       <maven>3.0</maven>
    </prerequisites>
 
+  <properties>
+    <maven.compiler.target>1.6</maven.compiler.target>
+    <maven.compiler.source>1.6</maven.compiler.source>
+  </properties>
+
    <modules>
       <module>api</module>
       <module>impl</module>

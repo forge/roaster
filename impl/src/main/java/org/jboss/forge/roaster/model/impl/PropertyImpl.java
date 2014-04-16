@@ -9,8 +9,8 @@ package org.jboss.forge.roaster.model.impl;
 
 import java.text.ParsePosition;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
@@ -427,7 +427,9 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
    @Override
    public String toString()
    {
-      return "Property " + Objects.toString(name, "<missing>");
+      // incompatible with java 6: 
+      // return "Property " + Objects.toString(name, "<missing>");
+      return "Property: " + ((name != null) ? name.toString() : "<missing>");
    }
 
    @Override
@@ -448,7 +450,10 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
    @Override
    public int hashCode()
    {
-      return Objects.hash(getOrigin(), getName());
+      // incompatible with java 6: 
+      // return Objects.hash(getOrigin(), getName());
+      Object [] values = { getOrigin(), getName() };
+      return Arrays.hashCode(values);
    }
 
    /**
@@ -560,7 +565,7 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
    @Override
    public List<? extends Annotation<O>> getAnnotations()
    {
-      List<Annotation<O>> annotations = new ArrayList<>();
+      List<Annotation<O>> annotations = new ArrayList<Annotation<O>>();
       FieldSource<O> field = getField();
       if (field != null)
       {
