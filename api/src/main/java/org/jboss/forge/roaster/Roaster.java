@@ -23,7 +23,7 @@ import org.jboss.forge.roaster.spi.JavaParser;
 
 /**
  * Responsible for parsing data into new {@link JavaType} instances.
- * 
+ *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 public final class Roaster
@@ -34,10 +34,10 @@ public final class Roaster
    {
       synchronized (Roaster.class)
       {
-         if (parsers == null)
+         if (parsers == null || parsers.isEmpty())
          {
             parsers = new ArrayList<JavaParser>();
-            for (JavaParser p : ServiceLoader.load(JavaParser.class))
+            for (JavaParser p : ServiceLoader.load(JavaParser.class, Roaster.class.getClassLoader()))
             {
                parsers.add(p);
             }
@@ -110,7 +110,7 @@ public final class Roaster
 
    /**
     * Read the given {@link URL} and parse its data into a new {@link JavaType} instance of the given type.
-    * 
+    *
     * @throws FileNotFoundException
     */
    public static <T extends JavaType<?>> T parse(final Class<T> type, final URL url) throws IOException
@@ -120,7 +120,7 @@ public final class Roaster
 
    /**
     * Read the given {@link File} and parse its data into a new {@link JavaType} instance of the given type.
-    * 
+    *
     * @throws FileNotFoundException
     */
    public static <T extends JavaType<?>> T parse(final Class<T> type, final File file) throws FileNotFoundException
@@ -145,8 +145,8 @@ public final class Roaster
    }
 
    /**
-    * Read the given {@link InputStream} and parse its data into a new {@link JavaType} instance of the given type.
-    * The caller is responsible for closing the stream.
+    * Read the given {@link InputStream} and parse its data into a new {@link JavaType} instance of the given type. The
+    * caller is responsible for closing the stream.
     */
    public static <T extends JavaType<?>> T parse(final Class<T> type, final InputStream data)
    {
