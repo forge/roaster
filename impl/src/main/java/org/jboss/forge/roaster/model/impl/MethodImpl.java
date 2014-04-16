@@ -626,6 +626,12 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    }
 
    @Override
+   public TypeVariableSource<O> addTypeVariable(String name)
+   {
+      return addTypeVariable().setName(name);
+   }
+
+   @Override
    public MethodSource<O> removeTypeVariable(String name)
    {
       @SuppressWarnings("unchecked")

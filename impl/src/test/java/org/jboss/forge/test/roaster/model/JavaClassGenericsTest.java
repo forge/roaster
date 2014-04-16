@@ -43,7 +43,7 @@ public class JavaClassGenericsTest
       Assert.assertTrue(javaClass.toString().contains("Bar<T>"));
       Assert.assertNotNull(javaClass.getImport("it.coopservice.test.Bar"));
    }
-   
+
    @Test
    public void addConcreteGenericSuperTypeWithPackage() throws ClassNotFoundException
    {
@@ -55,7 +55,7 @@ public class JavaClassGenericsTest
       Assert.assertNotNull(javaClass.getImport("it.coopservice.test.Bar"));
       Assert.assertNotNull(javaClass.getImport("com.coopservice.test.MyConcreteSuperClass"));
    }
-   
+
    @Test
    public void addMultipleConcreteGenericSuperTypeWithPackage() throws ClassNotFoundException
    {
@@ -120,21 +120,21 @@ public class JavaClassGenericsTest
       javaClass.getTypeVariable("T").removeBounds();
       Assert.assertTrue(javaClass.toString().contains("<T>"));
    }
-   
+
    @Test
    public void javaTypeTypeVariableBounds() throws ClassNotFoundException
    {
-	   JavaInterface<?> foo = Roaster.create(JavaInterfaceSource.class).setPackage("it.coopservice.test").setName("Foo");
-	   JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
-	   javaClass.setPackage("it.coopservice.test");
-	   javaClass.setName("SimpleClass");
-	   javaClass.addTypeVariable().setName("T").setBounds(foo);
-	   Assert.assertTrue(javaClass.toString().contains("<T extends Foo>"));
-	   JavaInterface<?> bar = Roaster.create(JavaInterfaceSource.class).setPackage("it.coopservice.test").setName("Bar");
-	   javaClass.getTypeVariable("T").setBounds(foo, bar);
-	   Assert.assertTrue(javaClass.toString().contains("<T extends Foo & Bar>"));
-	   javaClass.getTypeVariable("T").removeBounds();
-	   Assert.assertTrue(javaClass.toString().contains("<T>"));
+      JavaInterface<?> foo = Roaster.create(JavaInterfaceSource.class).setPackage("it.coopservice.test").setName("Foo");
+      JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+      javaClass.setPackage("it.coopservice.test");
+      javaClass.setName("SimpleClass");
+      javaClass.addTypeVariable().setName("T").setBounds(foo);
+      Assert.assertTrue(javaClass.toString().contains("<T extends Foo>"));
+      JavaInterface<?> bar = Roaster.create(JavaInterfaceSource.class).setPackage("it.coopservice.test").setName("Bar");
+      javaClass.getTypeVariable("T").setBounds(foo, bar);
+      Assert.assertTrue(javaClass.toString().contains("<T extends Foo & Bar>"));
+      javaClass.getTypeVariable("T").removeBounds();
+      Assert.assertTrue(javaClass.toString().contains("<T>"));
    }
 
    @Test
@@ -150,7 +150,7 @@ public class JavaClassGenericsTest
       javaClass.getTypeVariable("T").removeBounds();
       Assert.assertTrue(javaClass.toString().contains("<T>"));
    }
-   
+
    @Test
    public void getClassGenerics() throws ClassNotFoundException
    {
@@ -159,6 +159,23 @@ public class JavaClassGenericsTest
       javaClass.setName("SimpleClass");
       javaClass.addTypeVariable().setName("I");
       javaClass.addTypeVariable().setName("O");
+      List<TypeVariableSource<JavaClassSource>> typeVariables = javaClass.getTypeVariables();
+      Assert.assertNotNull(typeVariables);
+      Assert.assertEquals(2, typeVariables.size());
+      Assert.assertEquals("I", typeVariables.get(0).getName());
+      Assert.assertTrue(typeVariables.get(0).getBounds().isEmpty());
+      Assert.assertEquals("O", typeVariables.get(1).getName());
+      Assert.assertTrue(typeVariables.get(1).getBounds().isEmpty());
+   }
+
+   @Test
+   public void getClassGenericsName() throws ClassNotFoundException
+   {
+      JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+      javaClass.setPackage("it.coopservice.test");
+      javaClass.setName("SimpleClass");
+      javaClass.addTypeVariable("I");
+      javaClass.addTypeVariable("O");
       List<TypeVariableSource<JavaClassSource>> typeVariables = javaClass.getTypeVariables();
       Assert.assertNotNull(typeVariables);
       Assert.assertEquals(2, typeVariables.size());

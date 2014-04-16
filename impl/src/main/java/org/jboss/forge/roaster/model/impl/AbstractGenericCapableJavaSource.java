@@ -24,9 +24,9 @@ import org.jboss.forge.roaster.model.source.TypeVariableSource;
 import org.jboss.forge.roaster.model.util.Strings;
 
 /**
- * 
+ *
  * @author mbenson
- * 
+ *
  * @param <O>
  */
 @SuppressWarnings("unchecked")
@@ -75,6 +75,12 @@ public abstract class AbstractGenericCapableJavaSource<O extends JavaSource<O> &
       TypeParameter tp2 = unit.getAST().newTypeParameter();
       type.typeParameters().add(tp2);
       return new TypeVariableImpl<O>((O) this, tp2);
+   }
+
+   @Override
+   public TypeVariableSource<O> addTypeVariable(String name)
+   {
+      return addTypeVariable().setName(name);
    }
 
    @Override

@@ -14,9 +14,9 @@ import org.jboss.forge.roaster.model.TypeVariable;
 
 /**
  * Represents a Java source element that may define type variables.
- * 
+ *
  * @author mbenson
- * 
+ *
  */
 public interface GenericCapableSource<O extends JavaSource<O>, T> extends
          GenericCapable<O>
@@ -29,14 +29,22 @@ public interface GenericCapableSource<O extends JavaSource<O>, T> extends
 
    /**
     * Adds a type variable.
-    * 
+    *
     * @return {@link TypeVariableSource}
     */
    TypeVariableSource<O> addTypeVariable();
 
    /**
+    * Shortcut to {@link TypeVariableSource#setName(String)}
+    *
+    * @param name
+    * @return {@link TypeVariableSource}
+    */
+   TypeVariableSource<O> addTypeVariable(String name);
+
+   /**
     * Removes a type variable.
-    * 
+    *
     * @param name should never be null
     * @return this
     */
@@ -44,7 +52,7 @@ public interface GenericCapableSource<O extends JavaSource<O>, T> extends
 
    /**
     * Removes a type variable.
-    * 
+    *
     * @param typeVariable should never be null
     * @return this
     */
