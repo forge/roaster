@@ -427,9 +427,7 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
    @Override
    public String toString()
    {
-      // incompatible with java 6: 
-      // return "Property " + Objects.toString(name, "<missing>");
-      return "Property: " + ((name != null) ? name.toString() : "<missing>");
+      return "Property: " + getName();
    }
 
    @Override
@@ -450,10 +448,8 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
    @Override
    public int hashCode()
    {
-      // incompatible with java 6: 
-      // return Objects.hash(getOrigin(), getName());
-      Object [] values = { getOrigin(), getName() };
-      return Arrays.hashCode(values);
+      // compatible with Java 6: 
+      return Arrays.hashCode(new Object[] { getOrigin(), getName() });
    }
 
    /**
