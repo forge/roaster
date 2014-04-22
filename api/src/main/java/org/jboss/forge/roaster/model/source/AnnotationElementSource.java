@@ -33,7 +33,6 @@ public interface AnnotationElementSource extends AnnotationElement<JavaAnnotatio
 
       <T extends Enum<T>> AnnotationElementSource.DefaultValue setEnum(T value);
 
-      @SuppressWarnings("unchecked")
       <T extends Enum<T>> AnnotationElementSource.DefaultValue setEnumArray(T... values);
 
       AnnotationSource<JavaAnnotationSource> setAnnotation();

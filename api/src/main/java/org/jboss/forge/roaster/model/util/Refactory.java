@@ -277,7 +277,6 @@ public class Refactory
     * @param clazz
     * @param fields
     */
-   @SuppressWarnings("unchecked")
    public static void createToStringFromFields(final JavaClassSource clazz, final FieldSource<JavaClassSource>... fields)
    {
       createToStringFromFields(clazz, Arrays.asList(fields));

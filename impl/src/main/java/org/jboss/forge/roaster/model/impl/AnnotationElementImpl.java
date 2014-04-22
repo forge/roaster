@@ -123,7 +123,6 @@ public class AnnotationElementImpl implements AnnotationElementSource
          return setEnumArray(values);
       }
 
-      @SuppressWarnings("unchecked")
       @Override
       public <T extends Enum<T>> DefaultValue setEnumArray(T... values)
       {
