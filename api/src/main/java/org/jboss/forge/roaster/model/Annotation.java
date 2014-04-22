@@ -13,7 +13,7 @@ import org.jboss.forge.roaster.Origin;
 
 /**
  * Represents an annotation on some Java element.
- * 
+ *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 public interface Annotation<O extends JavaType<O>> extends Internal, Origin<O>
@@ -45,6 +45,10 @@ public interface Annotation<O extends JavaType<O>> extends Internal, Origin<O>
    String getStringValue();
 
    String getStringValue(String name);
+
+   String[] getStringArrayValue();
+
+   String[] getStringArrayValue(String name);
 
    Annotation<O> getAnnotationValue();
 

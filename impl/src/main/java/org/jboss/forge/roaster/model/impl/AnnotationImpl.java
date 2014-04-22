@@ -468,7 +468,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       {
          throw new IllegalStateException("Cannot handle annotations attached to " + parentNode);
       }
-      
+
       int pos = modifiers.indexOf(annotation);
       if (pos >= 0)
       {
@@ -549,7 +549,8 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public AnnotationSource<O> setAnnotationValue(String name)
    {
-      if (!isNormal() && DEFAULT_VALUE.equals(name)) {
+      if (!isNormal() && DEFAULT_VALUE.equals(name))
+      {
          return setAnnotationValue();
       }
       if (!isNormal())
@@ -557,7 +558,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          convertTo(AnnotationType.NORMAL);
       }
       AnnotationSource<O> result = new Nested(this);
-      
+
       String stub = "@" + getName() + "(" + name + "= 0 ) public class Stub { }";
       JavaClass<?> temp = Roaster.parse(JavaClass.class, stub);
 
@@ -705,6 +706,29 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    }
 
    @Override
+   public String[] getStringArrayValue()
+   {
+      return getStringArrayValue(DEFAULT_VALUE);
+   }
+
+   @Override
+   public String[] getStringArrayValue(String name)
+   {
+      final List<String> result = new ArrayList<String>();
+      String literalValue = getLiteralValue(name);
+      // Remove {}
+      if (literalValue.startsWith("{") && literalValue.endsWith("}"))
+      {
+         literalValue = literalValue.substring(1, literalValue.length() - 1);
+      }
+      for (String value : literalValue.split(","))
+      {
+         result.add(Strings.unquote(value));
+      }
+      return result.toArray(new String[result.size()]);
+   }
+
+   @Override
    public AnnotationSource<O> setClassValue(String name, Class<?> value)
    {
       Assert.notNull(value, "null not accepted");
@@ -726,6 +750,28 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    public AnnotationSource<O> setClassArrayValue(Class<?>... values)
    {
       return setClassArrayValue(DEFAULT_VALUE, values);
+   }
+
+   @Override
+   public AnnotationSource<O> setStringArrayValue(String[] values)
+   {
+      return setStringArrayValue(DEFAULT_VALUE, values);
+   }
+
+   @Override
+   public AnnotationSource<O> setStringArrayValue(String name, String[] values)
+   {
+      Assert.notNull(values, "null array not accepted");
+
+      final List<String> literals = new ArrayList<String>();
+
+      for (String value : values)
+      {
+         Assert.notNull(value, "null value not accepted");
+         literals.add(Strings.enquote(value));
+      }
+      return setLiteralValue(name,
+               literals.size() == 1 ? literals.get(0) : String.format("{%s}", Strings.join(literals, ",")));
    }
 
    @Override
