@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.AnnotationTargetSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -528,6 +529,42 @@ public abstract class AnnotationTest<O extends JavaSource<O>, T>
       AnnotationSource<O> annotation = target.addAnnotation("MyAnnotation");
       annotation.setStringValue("regexp", "^\\d{9}[\\d|X]$");
       assertEquals("^\\d{9}[\\d|X]$", annotation.getStringValue("regexp"));
+   }
+
+   @Test
+   public void testStringArrayElement()
+   {
+      AnnotationSource<O> ann = target.addAnnotation("MyAnnotation");
+      String[] values = new String[] { "A", "B", "C" };
+      ann.setStringArrayValue(values);
+      Assert.assertArrayEquals(values, ann.getStringArrayValue());
+   }
+
+   @Test
+   public void testNamedStringArrayElement()
+   {
+      AnnotationSource<O> ann = target.addAnnotation("MyAnnotation");
+      String[] values = new String[] { "A", "B", "C" };
+      ann.setStringArrayValue("aName", values);
+      Assert.assertArrayEquals(values, ann.getStringArrayValue("aName"));
+   }
+
+   @Test
+   public void testSingleStringArrayElement()
+   {
+      AnnotationSource<O> ann = target.addAnnotation("MyAnnotation");
+      String[] values = new String[] { "A" };
+      ann.setStringValue("A");
+      Assert.assertArrayEquals(values, ann.getStringArrayValue());
+   }
+
+   @Test
+   public void testNamedSingleStringArrayElement()
+   {
+      AnnotationSource<O> ann = target.addAnnotation("MyAnnotation");
+      String[] values = new String[] { "A" };
+      ann.setStringValue("aName", "A");
+      Assert.assertArrayEquals(values, ann.getStringArrayValue("aName"));
    }
 
 }

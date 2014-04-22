@@ -12,7 +12,7 @@ import org.jboss.forge.roaster.model.JavaType;
 
 /**
  * Represents an annotation on some Java source element.
- * 
+ *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 public interface AnnotationSource<O extends JavaType<O>> extends Annotation<O>
@@ -57,4 +57,8 @@ public interface AnnotationSource<O extends JavaType<O>> extends Annotation<O>
    AnnotationSource<O> setClassArrayValue(String name, Class<?>... values);
 
    AnnotationSource<O> setClassArrayValue(Class<?>... values);
+
+   AnnotationSource<O> setStringArrayValue(String name, String[] values);
+
+   AnnotationSource<O> setStringArrayValue(String[] values);
 }
