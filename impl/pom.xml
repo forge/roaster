@@ -83,6 +83,7 @@
                         <filter>
                            <artifact>*:*</artifact>
                            <excludes>
+                              <exclude>org.eclipse.jdt.core.prefs</exclude>
                               <exclude>META-INF/*.SF</exclude>
                               <exclude>META-INF/*.DSA</exclude>
                               <exclude>META-INF/*.RSA</exclude>

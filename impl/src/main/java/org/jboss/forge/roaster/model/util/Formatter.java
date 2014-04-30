@@ -32,7 +32,7 @@ public abstract class Formatter
    public static String format(String source)
    {
        // TODO locate user's eclipse project settings, use those if we can.
-       Properties options = readConfig("eclipse.formatter.prefs");
+       Properties options = readConfig("org.eclipse.jdt.core.prefs");
 
        final CodeFormatter codeFormatter = ToolFactory.createCodeFormatter(options);
        return ensureCorrectNewLines(formatFile(source, codeFormatter));
