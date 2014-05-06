@@ -161,7 +161,8 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
       return null;
    }
 
-   private MethodSource<O> createAccessor()
+   @Override
+   public MethodSource<O> createAccessor()
    {
       Assert.isTrue(getAccessor() == null, "Accessor method already exists");
 
@@ -395,7 +396,8 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
       return this;
    }
 
-   private PropertySource<O> removeAccessor()
+   @Override
+   public PropertySource<O> removeAccessor()
    {
       if (isAccessible())
       {
