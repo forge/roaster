@@ -382,15 +382,15 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    @Override
    public String getLiteralInitializer()
    {
-      String result = fragment.getInitializer().toString();
-      return result;
+      Expression expression = fragment.getInitializer();
+      return expression != null ? expression.toString() : null;
    }
 
    @Override
    public String getStringInitializer()
    {
-      String result = Strings.unquote(fragment.getInitializer().toString());
-      return result;
+      Expression expression = fragment.getInitializer();
+      return expression != null ? Strings.unquote(expression.toString()) : null;
    }
 
    @Override
