@@ -7,6 +7,7 @@
 package org.jboss.forge.roaster.model.impl;
 
 import org.eclipse.jdt.core.compiler.IProblem;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.jboss.forge.roaster.Internal;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.SyntaxError;
@@ -19,6 +20,7 @@ public class SyntaxErrorImpl implements SyntaxError, Internal
 {
    private final JavaType<?> parent;
    private final IProblem problem;
+
 
    public SyntaxErrorImpl(final JavaType<?> parent, final Object internal)
    {
@@ -53,4 +55,30 @@ public class SyntaxErrorImpl implements SyntaxError, Internal
       return getDescription();
    }
 
+    @Override
+    public int getLine()
+    {
+        return problem.getSourceLineNumber();
+    }
+
+    @Override
+    public int getColumn()
+    {
+        int position = problem.getSourceStart();
+        if ( position >= 0 && parent != null && ( parent.getInternal() instanceof CompilationUnit ) ) {
+            return ((CompilationUnit)parent.getInternal()).getColumnNumber( position );
+        }
+        return -1;
+    }
+
+    @Override public boolean isError()
+    {
+        return problem.isError();
+    }
+
+    @Override
+    public boolean isWarning()
+    {
+        return problem.isWarning();
+    }
 }
