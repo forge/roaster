@@ -28,14 +28,14 @@ public abstract class Formatter
    {
       return format(javaClass.toString());
    }
-   
+
    public static String format(String source)
    {
-       // TODO locate user's eclipse project settings, use those if we can.
-       Properties options = readConfig("org.eclipse.jdt.core.prefs");
+      // TODO locate user's eclipse project settings, use those if we can.
+      Properties options = readConfig("org.eclipse.jdt.core.prefs");
 
-       final CodeFormatter codeFormatter = ToolFactory.createCodeFormatter(options);
-       return ensureCorrectNewLines(formatFile(source, codeFormatter));
+      final CodeFormatter codeFormatter = ToolFactory.createCodeFormatter(options);
+      return ensureCorrectNewLines(formatFile(source, codeFormatter));
    }
 
    private static String formatFile(String contents, CodeFormatter codeFormatter)
@@ -43,7 +43,8 @@ public abstract class Formatter
       IDocument doc = new Document(contents);
       try
       {
-         TextEdit edit = codeFormatter.format(CodeFormatter.K_COMPILATION_UNIT, contents, 0, contents.length(), 0, null);
+         TextEdit edit = codeFormatter
+                  .format(CodeFormatter.K_COMPILATION_UNIT, contents, 0, contents.length(), 0, null);
          if (edit != null)
          {
             edit.apply(doc);
@@ -63,10 +64,8 @@ public abstract class Formatter
 
    private static Properties readConfig(String filename)
    {
-      BufferedInputStream stream = null;
-      try
+      try (BufferedInputStream stream = new BufferedInputStream(Formatter.class.getResourceAsStream(filename)))
       {
-         stream = new BufferedInputStream(Formatter.class.getResourceAsStream(filename));
          final Properties formatterOptions = new Properties();
          formatterOptions.load(stream);
          return formatterOptions;
@@ -75,31 +74,16 @@ public abstract class Formatter
       {
          throw new RuntimeException(e);
       }
-      finally
-      {
-         if (stream != null)
-         {
-            try
-            {
-               stream.close();
-            }
-            catch (IOException e)
-            {
-               /* ignore */
-            }
-         }
-      }
    }
-   
-   
-   private static String ensureCorrectNewLines(String documentString) 
+
+   private static String ensureCorrectNewLines(String documentString)
    {
-       String newLine = System.getProperty("line.separator");
-       
-       if (documentString.indexOf("\n") != -1 && documentString.indexOf(newLine) == -1)       
-           return documentString.replaceAll("\n", newLine);
-       
-       return documentString;
+      String newLine = System.getProperty("line.separator");
+
+      if (documentString.indexOf("\n") != -1 && documentString.indexOf(newLine) == -1)
+         return documentString.replaceAll("\n", newLine);
+
+      return documentString;
    }
 
 }
