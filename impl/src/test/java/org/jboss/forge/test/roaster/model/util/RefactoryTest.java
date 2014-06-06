@@ -8,6 +8,7 @@ package org.jboss.forge.test.roaster.model.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -44,7 +45,7 @@ public class RefactoryTest
    {
       FieldSource<JavaClassSource> field = javaClass.getField("foo");
       Refactory.createGetterAndSetter(javaClass, field);
-
+      
       List<MethodSource<JavaClassSource>> methods = javaClass.getMethods();
       MethodSource<JavaClassSource> getter = methods.get(0);
       MethodSource<JavaClassSource> setter = methods.get(1);
@@ -128,6 +129,26 @@ public class RefactoryTest
       FieldSource<JavaClassSource> booleanField = aClass.getField("flag");
       Refactory.createHashCodeAndEquals(aClass, booleanField);
    }
+   
+   @Test(expected = IllegalArgumentException.class)
+   public void testCreateHashCodeForStatics() throws Exception
+   {
+      JavaClassSource aClass = Roaster
+               .parse(JavaClassSource.class,
+                        "public class Foo { private static boolean flag;}");
+      FieldSource<JavaClassSource> booleanField = aClass.getField("flag");
+      Refactory.createHashCode(aClass, booleanField);
+   }
+   
+   @Test(expected = IllegalArgumentException.class)
+   public void testCreateEqualsForStatics() throws Exception
+   {
+      JavaClassSource aClass = Roaster
+               .parse(JavaClassSource.class,
+                        "public class Foo { private static boolean flag;}");
+      FieldSource<JavaClassSource> booleanField = aClass.getField("flag");
+      Refactory.createEquals(aClass, booleanField);
+   }
 
    @Test
    public void testCreateHashCodeAndEqualsForPrimitives() throws Exception
@@ -145,11 +166,41 @@ public class RefactoryTest
       FieldSource<JavaClassSource> doubleField = aClass.getField("aDouble");
       Refactory.createHashCodeAndEquals(aClass, booleanField, byteField, charField, shortField, intField, longField,
                floatField, doubleField);
-
       List<MethodSource<JavaClassSource>> methods = aClass.getMethods();
+      assertTrue(aClass.getMethods().size() == 2);
       MethodSource<JavaClassSource> equals = methods.get(0);
       MethodSource<JavaClassSource> hashcode = methods.get(1);
+      assertEqualsForPrimitives(equals);
+      assertHashCodeForPrimitives(hashcode);
+      assertFalse(aClass.hasSyntaxErrors());
+      aClass.removeMethod(equals);
+      aClass.removeMethod(hashcode);
+      assertTrue(aClass.getMethods().size() == 0);
 
+      // equals only
+      Refactory.createEquals(aClass, booleanField, byteField, charField, shortField, intField, longField,
+               floatField, doubleField);
+      methods = aClass.getMethods();
+      assertTrue(aClass.getMethods().size() == 1);
+      equals = methods.get(0);
+      assertEqualsForPrimitives(equals);
+      assertFalse(aClass.hasSyntaxErrors());
+      aClass.removeMethod(equals);
+      assertTrue(aClass.getMethods().size() == 0);
+      // hashCode only
+      Refactory.createHashCode(aClass, booleanField, byteField, charField, shortField, intField, longField,
+               floatField, doubleField);
+      assertTrue(aClass.getMethods().size() == 1);
+      methods = aClass.getMethods();
+      equals = methods.get(0);
+      assertHashCodeForPrimitives(equals);
+      assertFalse(aClass.hasSyntaxErrors());
+      aClass.removeMethod(equals);
+      assertTrue(aClass.getMethods().size() == 0);
+   }
+
+   private void assertEqualsForPrimitives(MethodSource<JavaClassSource> equals)
+   {
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());
       assertThat(equals.getBody(), containsString("if (aBoolean != other.aBoolean) {\n  return false;\n}"));
@@ -164,7 +215,10 @@ public class RefactoryTest
       assertThat(
                equals.getBody(),
                containsString("if (Double.doubleToLongBits(aDouble) != Double.doubleToLongBits(other.aDouble)) {\n  return false;\n}"));
+   }
 
+   private void assertHashCodeForPrimitives(MethodSource<JavaClassSource> hashcode)
+   {
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
       assertEquals("int", hashcode.getReturnType().getName());
@@ -178,7 +232,7 @@ public class RefactoryTest
       assertThat(hashcode.getBody(), containsString("long temp;"));
       assertThat(hashcode.getBody(), containsString("temp=Double.doubleToLongBits(aDouble);"));
       assertThat(hashcode.getBody(), containsString("prime * result + (int)(temp ^ (temp >>> 32));"));
-      assertFalse(aClass.hasSyntaxErrors());
+
    }
 
    @Test
@@ -192,20 +246,51 @@ public class RefactoryTest
       Refactory.createHashCodeAndEquals(aClass, primitiveArrayField, objectArrayField);
 
       List<MethodSource<JavaClassSource>> methods = aClass.getMethods();
+      assertTrue(aClass.getMethods().size() == 2);
       MethodSource<JavaClassSource> equals = methods.get(0);
       MethodSource<JavaClassSource> hashcode = methods.get(1);
+      assertHashCodeForArrays(hashcode);
+      assertEqualsForArrays(equals);
+      assertFalse(aClass.hasSyntaxErrors());
+      aClass.removeMethod(equals);
+      aClass.removeMethod(hashcode);
+      assertTrue(aClass.getMethods().size() == 0);
 
-      assertEquals("equals", equals.getName());
-      assertEquals(1, equals.getParameters().size());
-      assertThat(equals.getBody(), containsString("if (!Arrays.equals(flags,other.flags)) {\n  return false;\n}"));
-      assertThat(equals.getBody(), containsString("if (!Arrays.equals(objects,other.objects)) {\n  return false;\n}"));
+      Refactory.createEquals(aClass, primitiveArrayField, objectArrayField);
+      assertTrue(aClass.getMethods().size() == 1);
+      methods = aClass.getMethods();
+      equals = methods.get(0);
+      assertEqualsForArrays(equals);
+      assertFalse(aClass.hasSyntaxErrors());
+      aClass.removeMethod(equals);
+      assertTrue(aClass.getMethods().size() == 0);
 
+      Refactory.createHashCode(aClass, primitiveArrayField, objectArrayField);
+      assertTrue(aClass.getMethods().size() == 1);
+      methods = aClass.getMethods();
+      hashcode = methods.get(0);
+      assertHashCodeForArrays(hashcode);
+      assertFalse(aClass.hasSyntaxErrors());
+      aClass.removeMethod(hashcode);
+      assertTrue(aClass.getMethods().size() == 0);
+
+   }
+
+   private void assertHashCodeForArrays(MethodSource<JavaClassSource> hashcode)
+   {
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
       assertEquals("int", hashcode.getReturnType().getName());
       assertThat(hashcode.getBody(), containsString("result=prime * result + Arrays.hashCode(flags);"));
       assertThat(hashcode.getBody(), containsString("result=prime * result + Arrays.hashCode(objects);"));
-      assertFalse(aClass.hasSyntaxErrors());
+   }
+
+   private void assertEqualsForArrays(MethodSource<JavaClassSource> equals)
+   {
+      assertEquals("equals", equals.getName());
+      assertEquals(1, equals.getParameters().size());
+      assertThat(equals.getBody(), containsString("if (!Arrays.equals(flags,other.flags)) {\n  return false;\n}"));
+      assertThat(equals.getBody(), containsString("if (!Arrays.equals(objects,other.objects)) {\n  return false;\n}"));
    }
 
    @Test
@@ -219,9 +304,49 @@ public class RefactoryTest
       Refactory.createHashCodeAndEquals(aClass, identityBasedField, nonIdentityBasedField);
 
       List<MethodSource<JavaClassSource>> methods = aClass.getMethods();
+      assertTrue(aClass.getMethods().size() == 2);
       MethodSource<JavaClassSource> equals = methods.get(0);
       MethodSource<JavaClassSource> hashcode = methods.get(1);
+      assertHashCodeForObjects(hashcode);
+      assertEqualsForObjects(equals);
+      assertFalse(aClass.hasSyntaxErrors());
+      aClass.removeMethod(equals);
+      aClass.removeMethod(hashcode);
+      assertTrue(aClass.getMethods().size() == 0);
 
+      Refactory.createHashCode(aClass, identityBasedField, nonIdentityBasedField);
+      assertTrue(aClass.getMethods().size() == 1);
+      methods = aClass.getMethods();
+      hashcode = methods.get(0);
+      assertHashCodeForObjects(hashcode);
+      assertFalse(aClass.hasSyntaxErrors());
+      aClass.removeMethod(hashcode);
+      assertTrue(aClass.getMethods().size() == 0);
+      
+      Refactory.createEquals(aClass, identityBasedField, nonIdentityBasedField);
+      assertTrue(aClass.getMethods().size() == 1);
+      methods = aClass.getMethods();
+      equals = methods.get(0);
+      assertEqualsForObjects(equals);
+      assertFalse(aClass.hasSyntaxErrors());
+      aClass.removeMethod(equals);
+      assertTrue(aClass.getMethods().size() == 0);
+
+   }
+
+   private void assertHashCodeForObjects(MethodSource<JavaClassSource> hashcode)
+   {
+      assertEquals("hashCode", hashcode.getName());
+      assertEquals(0, hashcode.getParameters().size());
+      assertEquals("int", hashcode.getReturnType().getName());
+      assertThat(hashcode.getBody(),
+               containsString("result=prime * result + ((object == null) ? 0 : object.hashCode());"));
+      assertThat(hashcode.getBody(), containsString("result=prime * result + ((date == null) ? 0 : date.hashCode());"));
+
+   }
+
+   private void assertEqualsForObjects(MethodSource<JavaClassSource> equals)
+   {
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());
       assertThat(
@@ -229,14 +354,6 @@ public class RefactoryTest
                containsString("if (object != null) {\n  if (!object.equals(other.object)) {\n    return false;\n  }\n}"));
       assertThat(equals.getBody(),
                containsString("if (date != null) {\n  if (!date.equals(other.date)) {\n    return false;\n  }\n}"));
-
-      assertEquals("hashCode", hashcode.getName());
-      assertEquals(0, hashcode.getParameters().size());
-      assertEquals("int", hashcode.getReturnType().getName());
-      assertThat(hashcode.getBody(),
-               containsString("result=prime * result + ((object == null) ? 0 : object.hashCode());"));
-      assertThat(hashcode.getBody(), containsString("result=prime * result + ((date == null) ? 0 : date.hashCode());"));
-      assertFalse(aClass.hasSyntaxErrors());
    }
 
    @SuppressWarnings("deprecation")
@@ -269,18 +386,49 @@ public class RefactoryTest
       Refactory.createHashCodeAndEquals(subClass, intField, stringField);
 
       List<MethodSource<JavaClassSource>> methods = subClass.getMethods();
+      assertTrue(subClass.getMethods().size() == 2);
       MethodSource<JavaClassSource> equals = methods.get(0);
       MethodSource<JavaClassSource> hashcode = methods.get(1);
-
-      assertEquals("equals", equals.getName());
-      assertEquals(1, equals.getParameters().size());
-      assertThat(equals.getBody(), containsString("if (!super.equals(obj)) {\n  return false;\n}"));
-
+      assertHashCodeForSubclass(hashcode);
+      assertEqualsForSubclass(equals);
+      assertFalse(subClass.hasSyntaxErrors());
+      subClass.removeMethod(equals);
+      subClass.removeMethod(hashcode);
+      assertTrue(subClass.getMethods().size() == 0);
+      
+      Refactory.createEquals(subClass, intField, stringField);
+      methods = subClass.getMethods();
+      assertTrue(subClass.getMethods().size() == 1);
+      equals = methods.get(0);
+      assertEqualsForSubclass(equals);
+      assertFalse(subClass.hasSyntaxErrors());
+      subClass.removeMethod(equals);
+      assertTrue(subClass.getMethods().size() == 0);
+      
+      Refactory.createHashCode(subClass, intField, stringField);
+      methods = subClass.getMethods();
+      assertTrue(subClass.getMethods().size() == 1);
+      hashcode = methods.get(0);
+      assertEqualsForSubclass(equals);
+      assertFalse(subClass.hasSyntaxErrors());
+      subClass.removeMethod(hashcode);
+      assertTrue(subClass.getMethods().size() == 0);
+   }
+   
+   private void assertHashCodeForSubclass(MethodSource<JavaClassSource> hashcode)
+   {
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
       assertEquals("int", hashcode.getReturnType().getName());
       assertThat(hashcode.getBody(), containsString("int result=super.hashCode();"));
-      assertFalse(subClass.hasSyntaxErrors());
+
+   }
+
+   private void assertEqualsForSubclass(MethodSource<JavaClassSource> equals)
+   {
+      assertEquals("equals", equals.getName());
+      assertEquals(1, equals.getParameters().size());
+      assertThat(equals.getBody(), containsString("if (!super.equals(obj)) {\n  return false;\n}"));
    }
 
    @Test
@@ -290,22 +438,54 @@ public class RefactoryTest
                .parse(JavaClassSource.class,
                         "public class Foo { private Foo.Bar bar; class Bar{ private Boolean flag; } }");
       FieldSource<JavaClassSource> outerField = outerClass.getField("bar");
+      
       Refactory.createHashCodeAndEquals(outerClass, outerField);
-
+      assertTrue(outerClass.getMethods().size() == 2);
       List<MethodSource<JavaClassSource>> methods = outerClass.getMethods();
       MethodSource<JavaClassSource> equals = methods.get(0);
       MethodSource<JavaClassSource> hashcode = methods.get(1);
-
-      assertEquals("equals", equals.getName());
-      assertEquals(1, equals.getParameters().size());
-      assertThat(equals.getBody(),
-               containsString("if (bar != null) {\n  if (!bar.equals(other.bar)) {\n    return false;\n  }\n}"));
-
+      assertHashCodeForOuterClass(hashcode);
+      assertEqualsForOuterClass(equals);
+      assertFalse(outerClass.hasSyntaxErrors());
+      outerClass.removeMethod(equals);
+      outerClass.removeMethod(hashcode);
+      assertTrue(outerClass.getMethods().size() == 0);
+      
+      Refactory.createEquals(outerClass, outerField);
+      assertTrue(outerClass.getMethods().size() == 1);
+      methods = outerClass.getMethods();
+      equals = methods.get(0);
+      assertEqualsForOuterClass(equals);
+      assertFalse(outerClass.hasSyntaxErrors());
+      outerClass.removeMethod(equals);
+      assertTrue(outerClass.getMethods().size() == 0);
+      
+      Refactory.createHashCode(outerClass, outerField);
+      assertTrue(outerClass.getMethods().size() == 1);
+      methods = outerClass.getMethods();
+      hashcode = methods.get(0);
+      assertHashCodeForOuterClass(hashcode);
+      assertFalse(outerClass.hasSyntaxErrors());
+      outerClass.removeMethod(hashcode);
+      assertTrue(outerClass.getMethods().size() == 0);
+  
+   }
+   
+   private void assertHashCodeForOuterClass(MethodSource<JavaClassSource> hashcode)
+   {
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
       assertEquals("int", hashcode.getReturnType().getName());
       assertThat(hashcode.getBody(), containsString("result=prime * result + ((bar == null) ? 0 : bar.hashCode());"));
-      assertFalse(outerClass.hasSyntaxErrors());
+
+   }
+
+   private void assertEqualsForOuterClass(MethodSource<JavaClassSource> equals)
+   {
+      assertEquals("equals", equals.getName());
+      assertEquals(1, equals.getParameters().size());
+      assertThat(equals.getBody(),
+               containsString("if (bar != null) {\n  if (!bar.equals(other.bar)) {\n    return false;\n  }\n}"));
    }
 
    @Test
@@ -321,12 +501,48 @@ public class RefactoryTest
       Refactory.createHashCodeAndEquals(innerClass, innerField);
 
       List<MethodSource<JavaClassSource>> methods = innerClass.getMethods();
+      assertTrue(innerClass.getMethods().size() == 2);
       MethodSource<JavaClassSource> equals = methods.get(0);
       MethodSource<JavaClassSource> hashcode = methods.get(1);
       MethodSource<JavaClassSource> outerTypeAccessor = methods.get(2);
-
+      assertEqualsForInnerClass(equals);
+      assertHashCodeForInnerClass(hashcode);
       assertEquals("getOuterType", outerTypeAccessor.getName());
+      assertFalse(outerClass.hasSyntaxErrors());
+      innerClass.removeMethod(equals);
+      innerClass.removeMethod(hashcode);
+      
+      Refactory.createEquals(innerClass, innerField);
+      methods = innerClass.getMethods();
+      assertTrue(innerClass.getMethods().size() == 1);
+      equals = methods.get(0);
+      assertEqualsForInnerClass(equals);
+      assertFalse(outerClass.hasSyntaxErrors());
+      innerClass.removeMethod(equals);
+      assertTrue(innerClass.getMethods().size() == 0);
+      
+      Refactory.createHashCode(innerClass, innerField);
+      methods = innerClass.getMethods();
+      assertTrue(innerClass.getMethods().size() == 1);
+      hashcode = methods.get(0);
+      assertHashCodeForInnerClass(hashcode);
+      assertFalse(outerClass.hasSyntaxErrors());
+      innerClass.removeMethod(hashcode);
+      assertTrue(innerClass.getMethods().size() == 0);
+   }
+   
+   private void assertHashCodeForInnerClass(MethodSource<JavaClassSource> hashcode)
+   {
+      assertEquals("hashCode", hashcode.getName());
+      assertEquals(0, hashcode.getParameters().size());
+      assertEquals("int", hashcode.getReturnType());
+      assertThat(hashcode.getBody(), containsString("result=prime * result + getOuterType().hashCode();"));
+      assertThat(hashcode.getBody(), containsString("result=prime * result + ((flag == null) ? 0 : flag.hashCode());"));
 
+   }
+
+   private void assertEqualsForInnerClass(MethodSource<JavaClassSource> equals)
+   {
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());
       assertThat(equals.getBody(),
@@ -334,12 +550,6 @@ public class RefactoryTest
       assertThat(equals.getBody(),
                containsString("if (flag != null) {\n  if (!flag.equals(other.flag)) {\n    return false;\n  }\n}"));
 
-      assertEquals("hashCode", hashcode.getName());
-      assertEquals(0, hashcode.getParameters().size());
-      assertEquals("int", hashcode.getReturnType());
-      assertThat(hashcode.getBody(), containsString("result=prime * result + getOuterType().hashCode();"));
-      assertThat(hashcode.getBody(), containsString("result=prime * result + ((flag == null) ? 0 : flag.hashCode());"));
-      assertFalse(outerClass.hasSyntaxErrors());
    }
 
    @Test
@@ -350,21 +560,41 @@ public class RefactoryTest
                         "public class Foo { private double firstDouble; private double secondDouble;}");
       FieldSource<JavaClassSource> firstLongField = aClass.getField("firstDouble");
       FieldSource<JavaClassSource> secondLongField = aClass.getField("secondDouble");
+      
       Refactory.createHashCodeAndEquals(aClass, firstLongField, secondLongField);
-
       List<MethodSource<JavaClassSource>> methods = aClass.getMethods();
+      assertTrue(aClass.getMethods().size() == 2);
       MethodSource<JavaClassSource> equals = methods.get(0);
       MethodSource<JavaClassSource> hashcode = methods.get(1);
-
-      assertEquals("equals", equals.getName());
-      assertEquals(1, equals.getParameters().size());
-      assertThat(
-               equals.getBody(),
-               containsString("if (Double.doubleToLongBits(firstDouble) != Double.doubleToLongBits(other.firstDouble)) {\n  return false;\n}"));
-      assertThat(
-               equals.getBody(),
-               containsString("if (Double.doubleToLongBits(secondDouble) != Double.doubleToLongBits(other.secondDouble)) {\n  return false;\n}"));
-
+      assertHashCodeForMultipleLongFields(hashcode);
+      assertEqualsForMultipleLongFields(equals);
+      assertFalse(aClass.hasSyntaxErrors());
+      aClass.removeMethod(equals);
+      aClass.removeMethod(hashcode);
+      assertTrue(aClass.getMethods().size() == 0);
+      
+      Refactory.createEquals(aClass, firstLongField, secondLongField);
+      methods = aClass.getMethods();
+      assertTrue(aClass.getMethods().size() == 1);
+      equals = methods.get(0);
+      assertEqualsForMultipleLongFields(equals);
+      assertFalse(aClass.hasSyntaxErrors());
+      aClass.removeMethod(equals);
+      assertTrue(aClass.getMethods().size() == 0);
+      
+      Refactory.createHashCode(aClass, firstLongField, secondLongField);
+      methods = aClass.getMethods();
+      assertTrue(aClass.getMethods().size() == 1);
+      hashcode = methods.get(0);
+      assertHashCodeForMultipleLongFields(hashcode);
+      assertFalse(aClass.hasSyntaxErrors());
+      aClass.removeMethod(hashcode);
+      assertTrue(aClass.getMethods().size() == 0);
+     
+   }
+   
+   private void assertHashCodeForMultipleLongFields(MethodSource<JavaClassSource> hashcode)
+   {
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
       assertEquals("int", hashcode.getReturnType().getName());
@@ -375,5 +605,17 @@ public class RefactoryTest
       assertThat(hashcode.getBody(), containsString("prime * result + (int)(temp ^ (temp >>> 32));"));
       assertEquals(2,
                Strings.countNumberOfOccurences(hashcode.getBody(), "prime * result + (int)(temp ^ (temp >>> 32));"));
+   }
+
+   private void assertEqualsForMultipleLongFields(MethodSource<JavaClassSource> equals)
+   {
+      assertEquals("equals", equals.getName());
+      assertEquals(1, equals.getParameters().size());
+      assertThat(
+               equals.getBody(),
+               containsString("if (Double.doubleToLongBits(firstDouble) != Double.doubleToLongBits(other.firstDouble)) {\n  return false;\n}"));
+      assertThat(
+               equals.getBody(),
+               containsString("if (Double.doubleToLongBits(secondDouble) != Double.doubleToLongBits(other.secondDouble)) {\n  return false;\n}"));
    }
 }
