@@ -7,11 +7,16 @@
 
 package org.jboss.forge.roaster.model.source;
 
-import java.util.List;
-
 import org.jboss.forge.roaster.model.JavaClass;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.Method;
+import org.jboss.forge.roaster.model.expressions.Expression;
+import org.jboss.forge.roaster.model.statements.BlockStatement;
+import org.jboss.forge.roaster.model.statements.ReturnStatement;
+import org.jboss.forge.roaster.model.statements.Statement;
+import org.jboss.forge.roaster.model.statements.StatementSource;
+
+import java.util.List;
 
 /**
  * Represents a Java Method in source form.
@@ -21,7 +26,9 @@ import org.jboss.forge.roaster.model.Method;
  */
 public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodSource<O>>,
          AbstractableSource<MethodSource<O>>,
-         MemberSource<O, MethodSource<O>>, GenericCapableSource<O, MethodSource<O>>
+         MemberSource<O, MethodSource<O>>,
+         GenericCapableSource<O, MethodSource<O>>,
+         BlockHolder<O>
 {
    /**
     * Sets the <b>synchronized</b> keyword in this element.
@@ -134,5 +141,24 @@ public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodS
     * Remove a parameter with the specified {@link JavaType} type and name to this method
     */
    MethodSource<O> removeParameter(JavaType<?> type, String name);
+
+   /**
+    * @param body
+    * @return
+    */
+   MethodSource<O> setBody( StatementSource<?,?,?>  body );
+
+   /**
+    * @param body
+    * @return
+    */
+   MethodSource<O> setBody( BlockSource<?,?,?> body );
+
+   /**
+    * Returns the body of this method as a Roaster Block
+    * @return
+    */
+   BlockSource<O,MethodSource<O>,?> getBodyAsBlock();
+
 
 }
