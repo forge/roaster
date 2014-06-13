@@ -63,6 +63,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
             ((MemberValuePair) oldNode.getParent()).setValue(newNode);
          }
       }
+
    }
 
    private static final String DEFAULT_VALUE = "value";
@@ -892,4 +893,18 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          return null;
       }
    }
+
+   public boolean hasValue( String name )
+   {
+      List<ValuePair> values = getValues();
+      for (ValuePair pair : values)
+      {
+         if ( pair.getName().equals( name ) )
+         {
+            return true;
+         }
+      }
+      return false;
+   }
+
 }

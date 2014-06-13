@@ -25,24 +25,32 @@ import org.eclipse.jdt.core.dom.VariableDeclaration;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.Annotation;
 import org.jboss.forge.roaster.model.JavaType;
+import org.jboss.forge.roaster.model.Method;
 import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.TypeVariable;
 import org.jboss.forge.roaster.model.Visibility;
 import org.jboss.forge.roaster.model.ast.AnnotationAccessor;
 import org.jboss.forge.roaster.model.ast.ModifierAccessor;
+import org.jboss.forge.roaster.model.expressions.Expression;
+import org.jboss.forge.roaster.model.impl.statements.ExpressionStatementImpl;
+import org.jboss.forge.roaster.model.impl.statements.JdtStatementWrapper;
+import org.jboss.forge.roaster.model.impl.statements.StatementImpl;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
+import org.jboss.forge.roaster.model.source.BlockHolder;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
 import org.jboss.forge.roaster.model.source.TypeVariableSource;
+import org.jboss.forge.roaster.model.statements.BlockStatement;
+import org.jboss.forge.roaster.model.statements.Statements;
 import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.model.util.Types;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
+public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>, BlockHolder<O,MethodSource<O>>
 {
    private final AnnotationAccessor<O, MethodSource<O>> annotations = new AnnotationAccessor<O, MethodSource<O>>();
    private final ModifierAccessor modifiers = new ModifierAccessor();
@@ -668,7 +676,9 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public ParameterSource<O> addParameter(String type, String name)
    {
-      getOrigin().addImport(type);
+      if ( ! Types.isPrimitive( type ) ) {
+        getOrigin().addImport(type);
+      }
       String stub = "public class Stub { public void method( " + Types.toSimpleName(type) + " " + name + " ) {} }";
       JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
       List<MethodSource<JavaClassSource>> methods = temp.getMethods();
@@ -690,4 +700,27 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       method.parameters().remove(parameter.getInternal());
       return this;
    }
+
+    @Override
+    public MethodSource<O> setBody( org.jboss.forge.roaster.model.statements.Statement statement ) {
+        BlockImpl<O,MethodSource<O>> block = new BlockImpl<O,MethodSource<O>>();
+
+        Statement jdtStatement = ((BlockImpl) block).wireAndGetStatement( statement.wrap(), block, cu.getAST() );
+        method.setBody( (Block) jdtStatement );
+
+        return this;
+    }
+
+    @Override
+    public MethodSource<O> setBody( Expression expr ) {
+        ExpressionStatementImpl<O,BlockStatement<O,?>> expressionStatement = new ExpressionStatementImpl<O, BlockStatement<O,?>>( expr );
+        BlockImpl<O,MethodSource<O>> block = new BlockImpl<O,MethodSource<O>>();
+
+        Statement jdtStatement = ((BlockImpl) block).wireAndGetStatement( expressionStatement.wrap(), block, cu.getAST() );
+        method.setBody( (Block) jdtStatement );
+
+        return this;
+    }
+
+
 }
