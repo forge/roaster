@@ -40,7 +40,8 @@ public class MethodReturnTypeTest
    @Test
    public void testGetQualifiedReturnTypePrimitiveArray() throws Exception
    {
-      MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public long[] getLongArray()");
+      MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
+               "public long[] getLongArray()");
       Assert.assertEquals("long", method.getReturnType().getQualifiedName());
       Assert.assertTrue(method.getReturnType().isArray());
       Assert.assertEquals(1, method.getReturnType().getArrayDimensions());
@@ -49,7 +50,8 @@ public class MethodReturnTypeTest
    @Test
    public void testGetQualifiedReturnTypeObjectArray() throws Exception
    {
-      MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public Long[] getLongArray()");
+      MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
+               "public Long[] getLongArray()");
       Assert.assertEquals("java.lang.Long", method.getReturnType().getQualifiedName());
       Assert.assertTrue(method.getReturnType().isArray());
       Assert.assertEquals(1, method.getReturnType().getArrayDimensions());
@@ -58,7 +60,8 @@ public class MethodReturnTypeTest
    @Test
    public void testGetQualifiedReturnTypeNDimensionObjectArray() throws Exception
    {
-      MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public Long[][] getLongArray()");
+      MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
+               "public Long[][] getLongArray()");
       Assert.assertEquals("java.lang.Long", method.getReturnType().getQualifiedName());
       Assert.assertTrue(method.getReturnType().isArray());
       Assert.assertEquals(2, method.getReturnType().getArrayDimensions());
@@ -67,7 +70,8 @@ public class MethodReturnTypeTest
    @Test
    public void testGetQualifiedReturnTypeObjectArrayOfImportedType() throws Exception
    {
-      MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public List[] getListArray()");
+      MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
+               "public List[] getListArray()");
       method.getOrigin().addImport(List.class);
       Assert.assertEquals("java.util.List", method.getReturnType().getQualifiedName());
       Assert.assertTrue(method.getReturnType().isArray());
@@ -77,7 +81,8 @@ public class MethodReturnTypeTest
    @Test
    public void testGetQualifiedReturnTypeImportedObjectArrayParameterizedImportedType() throws Exception
    {
-      MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public List<Long>[] getListArray()");
+      MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
+               "public List<Long>[] getListArray()");
       method.getOrigin().addImport(List.class);
       Assert.assertEquals("java.util.List", method.getReturnType().getQualifiedName());
       Assert.assertTrue(method.getReturnType().isArray());
@@ -285,6 +290,15 @@ public class MethodReturnTypeTest
 
       Assert.assertEquals("List", arguments.get(1).getName());
       Assert.assertEquals("java.util.List", arguments.get(1).getQualifiedName());
+   }
+
+   @Test
+   public void testReturnTypeIsVoidForConstructors()
+   {
+      MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class)
+               .addMethod("public Constructor(){}").setConstructor(true);
+      Assert.assertTrue(method.isConstructor());
+      Assert.assertTrue(method.isReturnTypeVoid());
    }
 
 }

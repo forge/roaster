@@ -230,7 +230,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public boolean isReturnTypeVoid()
    {
-      return getReturnType().isType(Void.TYPE);
+      return getReturnType() == null || getReturnType().isType(Void.TYPE);
    }
 
    @Override
