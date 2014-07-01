@@ -17,6 +17,9 @@ import static org.jboss.forge.test.grammar.java.common.MockEnum.FOO;
 @SuppressWarnings(value = "unchecked")
 @MockAnnotation(FOO)
 @MockNestingAnnotation(@MockNestedAnnotation)
+@MockContainerAnnotation({
+   @MockContainedAnnotation(0)
+})
 public class MockAnnotatedClass
 {
    private String field;

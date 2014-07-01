@@ -53,7 +53,7 @@ public abstract class AnnotationTest<O extends JavaSource<O>, T>
    public void testParseAnnotation() throws Exception
    {
       List<AnnotationSource<O>> annotations = target.getAnnotations();
-      assertEquals(5, annotations.size());
+      assertEquals(6, annotations.size());
       assertEquals("deprecation", annotations.get(1).getStringValue());
       assertEquals("deprecation", annotations.get(1).getStringValue("value"));
       assertEquals("value", annotations.get(1).getValues().get(0).getName());
@@ -63,8 +63,11 @@ public abstract class AnnotationTest<O extends JavaSource<O>, T>
       assertEquals("unchecked", annotations.get(2).getStringValue());
       assertEquals("value", annotations.get(2).getValues().get(0).getName());
       assertEquals("unchecked", annotations.get(2).getValues().get(0).getStringValue());
+      assertEquals("MockAnnotation", annotations.get(3).getName());
       assertEquals("MockNestingAnnotation", annotations.get(4).getName());
       assertEquals("MockNestedAnnotation", annotations.get(4).getAnnotationValue().getName());
+      assertEquals("MockContainerAnnotation", annotations.get(5).getName());
+      assertEquals("MockContainedAnnotation", annotations.get(5).getAnnotationArrayValue()[0].getName());
    }
 
    @Test

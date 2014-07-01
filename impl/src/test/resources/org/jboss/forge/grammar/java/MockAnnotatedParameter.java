@@ -20,6 +20,9 @@ public class MockAnnotatedParameter
             @SuppressWarnings(value = "unchecked")
             @MockAnnotation(FOO)
             @MockNestingAnnotation(@MockNestedAnnotation)
+            @MockContainerAnnotation({
+               @MockContainedAnnotation(0)
+            })
             String param1, int param2)
    {
    }

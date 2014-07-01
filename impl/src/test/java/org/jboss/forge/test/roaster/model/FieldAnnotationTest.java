@@ -37,7 +37,7 @@ public class FieldAnnotationTest extends AnnotationTest<JavaClassSource, FieldSo
    public void testParseEnumValueStaticImport() throws Exception
    {
       List<AnnotationSource<JavaClassSource>> annotations = getTarget().getAnnotations();
-      AnnotationSource<JavaClassSource> annotation = annotations.get(annotations.size() - 2);
+      AnnotationSource<JavaClassSource> annotation = annotations.get(3);
       MockEnumType enumValue = annotation.getEnumValue(MockEnumType.class);
       assertEquals(MockEnumType.FOO, enumValue);
    }

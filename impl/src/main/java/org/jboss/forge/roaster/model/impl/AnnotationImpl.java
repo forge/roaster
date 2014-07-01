@@ -626,6 +626,34 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    }
 
    @Override
+   public AnnotationSource<O>[] getAnnotationArrayValue()
+   {
+      return getAnnotationArrayValue(DEFAULT_VALUE);
+   }
+   
+   @Override
+   public AnnotationSource<O>[] getAnnotationArrayValue(String name)
+   {
+      final Expression expr = getElementValueExpression(name);
+      if (expr instanceof ArrayInitializer)
+      {
+         final List<AnnotationSource<O>> results = new ArrayList<AnnotationSource<O>>();
+         @SuppressWarnings("unchecked")
+         final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
+         for (Expression arrayElement : arrayElements)
+         {
+            final AnnotationSource<O> instance = new Nested(this, arrayElement);
+            results.add(instance);
+         }
+         @SuppressWarnings("unchecked")
+         final AnnotationSource<O>[] result = new AnnotationSource[results.size()];
+         return results.toArray(result);
+      }
+      return null;
+   }
+
+   
+   @Override
    public <E extends Enum<E>> E[] getEnumArrayValue(Class<E> type)
    {
       return getEnumArrayValue(type, DEFAULT_VALUE);

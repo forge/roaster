@@ -54,6 +54,10 @@ public interface Annotation<O extends JavaType<O>> extends Internal, Origin<O>
 
    Annotation<O> getAnnotationValue(String name);
 
+   Annotation<O>[] getAnnotationArrayValue();
+
+   Annotation<O>[] getAnnotationArrayValue(String name);
+
    Class<?> getClassValue();
 
    Class<?> getClassValue(String name);
