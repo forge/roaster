@@ -13,5 +13,8 @@ public enum MockAnnotatedEnumConstant
    @SuppressWarnings(value = "unchecked")
    @MockAnnotation(FOO)
    @MockNestingAnnotation(@MockNestedAnnotation)
+   @MockContainerAnnotation({
+      @MockContainedAnnotation(0)
+   })
    SINGLE_CONSTANT;
 }

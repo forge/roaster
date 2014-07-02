@@ -13,6 +13,9 @@ public class MockAnnotatedMethod
    @SuppressWarnings(value = "unchecked")
    @MockAnnotation(FOO)
    @MockNestingAnnotation(@MockNestedAnnotation)
+   @MockContainerAnnotation({
+      @MockContainedAnnotation(0)
+   })
    public MockAnnotatedMethod()
    {
    }

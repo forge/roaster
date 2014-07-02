@@ -13,5 +13,8 @@ public class MockAnnotatedField
    @SuppressWarnings(value = "unchecked")
    @MockAnnotation(FOO)
    @MockNestingAnnotation(@MockNestedAnnotation)
+   @MockContainerAnnotation({
+      @MockContainedAnnotation(0)
+   })
    private String field;
 }
