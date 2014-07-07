@@ -20,6 +20,7 @@ import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.IExtendedModifier;
 import org.eclipse.jdt.core.dom.MemberValuePair;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
+import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeLiteral;
@@ -463,6 +464,19 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       else if (parentNode instanceof SingleVariableDeclaration)
       {
          modifiers = ((SingleVariableDeclaration) parentNode).modifiers();
+      }
+      else if (parentNode instanceof PackageDeclaration)
+      {
+          List annotations = ((PackageDeclaration) parentNode).annotations();
+          int pos = annotations.indexOf(annotation);
+          if (pos >= 0)
+          {
+             annotations.set(pos, newNode);
+             return;
+          } else
+          {
+             throw new IllegalStateException("Annotation " + annotation + " expected but not found in " + parentNode);
+          }
       }
       else
       {
