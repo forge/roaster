@@ -39,7 +39,7 @@ public class JDTHelper
       }
       else if (type instanceof ArrayType)
       {
-         return ((ArrayType) type).getStructuralProperty(ArrayType.COMPONENT_TYPE_PROPERTY).toString();
+         return ((ArrayType) type).getStructuralProperty(ArrayType.ELEMENT_TYPE_PROPERTY).toString();
       }
       else if (type instanceof QualifiedType)
       {

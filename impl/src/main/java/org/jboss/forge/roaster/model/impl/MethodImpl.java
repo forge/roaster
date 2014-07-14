@@ -523,8 +523,8 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
 
       SimpleName simpleName = method.getAST().newSimpleName(name);
 
-      List list = (List) method.getStructuralProperty(MethodDeclaration.THROWN_EXCEPTIONS_PROPERTY);
-      list.add(simpleName);
+      List list = (List) method.getStructuralProperty(MethodDeclaration.THROWN_EXCEPTION_TYPES_PROPERTY);
+      list.add(method.getAST().newSimpleType(simpleName));
 
       return this;
    }
@@ -533,7 +533,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    public List<String> getThrownExceptions()
    {
       ArrayList<String> result = new ArrayList<String>();
-      List<?> list = (List<?>) method.getStructuralProperty(MethodDeclaration.THROWN_EXCEPTIONS_PROPERTY);
+      List<?> list = (List<?>) method.getStructuralProperty(MethodDeclaration.THROWN_EXCEPTION_TYPES_PROPERTY);
 
       for (Object object : list)
       {
@@ -552,7 +552,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public MethodSource<O> removeThrows(final String type)
    {
-      List<?> list = (List<?>) method.getStructuralProperty(MethodDeclaration.THROWN_EXCEPTIONS_PROPERTY);
+      List<?> list = (List<?>) method.getStructuralProperty(MethodDeclaration.THROWN_EXCEPTION_TYPES_PROPERTY);
 
       for (Object object : list)
       {

@@ -90,7 +90,7 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
 
       if (type.isArrayType())
       {
-         type = ((ArrayType) type).getComponentType();
+         type = ((ArrayType) type).getElementType();
       }
 
       if (type instanceof ParameterizedType)
@@ -117,7 +117,7 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    {
       if (type.isArrayType())
       {
-         return ((ArrayType) type).getComponentType().isParameterizedType();
+         return ((ArrayType) type).getElementType().isParameterizedType();
       }
       return type.isParameterizedType();
    }
@@ -127,7 +127,7 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    {
       if (type.isArrayType())
       {
-         return ((ArrayType) type).getComponentType().isPrimitiveType();
+         return ((ArrayType) type).getElementType().isPrimitiveType();
       }
       return type.isPrimitiveType();
    }
@@ -137,7 +137,7 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    {
       if (type.isArrayType())
       {
-         return ((ArrayType) type).getComponentType().isQualifiedType();
+         return ((ArrayType) type).getElementType().isQualifiedType();
       }
       return type.isQualifiedType();
    }
@@ -147,7 +147,7 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    {
       if (type.isArrayType())
       {
-         return ((ArrayType) type).getComponentType().isWildcardType();
+         return ((ArrayType) type).getElementType().isWildcardType();
       }
       return type.isWildcardType();
    }

@@ -69,11 +69,11 @@ public class JavaParserImpl implements JavaParser
    private JavaType<?> parse(final String data)
    {
       Document document = new Document(data);
-      ASTParser parser = ASTParser.newParser(AST.JLS4);
+      ASTParser parser = ASTParser.newParser(AST.JLS8);
 
       parser.setSource(document.get().toCharArray());
       Map options = JavaCore.getOptions();
-      options.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_7);
+      options.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_8);
       options.put(CompilerOptions.OPTION_Encoding, "UTF-8");
       parser.setCompilerOptions(options);
 
