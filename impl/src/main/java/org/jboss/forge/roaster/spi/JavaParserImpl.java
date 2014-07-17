@@ -39,7 +39,6 @@ import org.jboss.forge.roaster.model.source.JavaEnumSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.JavaPackageInfoSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
-import org.jboss.forge.roaster.spi.JavaParser;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -52,7 +51,8 @@ public class JavaParserImpl implements JavaParser
    {
       try
       {
-         char[] source = Util.getInputStreamAsCharArray(data, data.available(), "ISO8859_1");
+         String encoding = System.getProperty("file.encoding", "ISO8859_1");
+         char[] source = Util.getInputStreamAsCharArray(data, data.available(), encoding);
          return parse(new String(source));
       }
       catch (IOException e)
@@ -146,16 +146,16 @@ public class JavaParserImpl implements JavaParser
       {
          if (type.isAssignableFrom(JavaClassSource.class))
             return (T) parse("public class JavaClass { }");
-   
+
          if (type.isAssignableFrom(JavaEnumSource.class))
             return (T) parse("public enum JavaEnum { }");
-   
+
          if (type.isAssignableFrom(JavaAnnotationSource.class))
             return (T) parse("public @interface JavaAnnotation { }");
-   
+
          if (type.isAssignableFrom(JavaInterfaceSource.class))
             return (T) parse("public interface JavaInterface { }");
-   
+
          if (type.isAssignableFrom(JavaPackageInfoSource.class))
             return (T) parse("package org.example;");
       }
