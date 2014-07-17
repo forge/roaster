@@ -3,7 +3,6 @@ package org.jboss.forge.test.roaster.model;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class NonAsciiCharactersTest {
