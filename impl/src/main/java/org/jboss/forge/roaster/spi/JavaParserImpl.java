@@ -52,7 +52,7 @@ public class JavaParserImpl implements JavaParser
    {
       try
       {
-         char[] source = Util.getInputStreamAsCharArray(data, data.available(), "ISO8859_1");
+         char[] source = Util.getInputStreamAsCharArray(data, data.available(), "UTF-8");
          return parse(new String(source));
       }
       catch (IOException e)
