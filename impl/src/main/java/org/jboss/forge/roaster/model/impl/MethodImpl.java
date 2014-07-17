@@ -175,15 +175,14 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @SuppressWarnings("unchecked")
    public String getBody()
    {
-      String result = "";
-
+      StringBuilder result = new StringBuilder();
       List<Statement> statements = (List<Statement>) method.getBody().getStructuralProperty(Block.STATEMENTS_PROPERTY);
       for (Statement statement : statements)
       {
-         result += statement + " ";
+         result.append(statement).append(" ");
       }
 
-      return result;
+      return result.toString().trim();
    }
 
    @Override
