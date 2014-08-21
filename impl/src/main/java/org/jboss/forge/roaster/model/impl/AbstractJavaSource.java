@@ -372,7 +372,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       if (resolvers == null)
       {
          resolvers = new ArrayList<WildcardImportResolver>();
-         for (WildcardImportResolver r : resolvers)
+         for (WildcardImportResolver r : loader)
          {
             resolvers.add(r);
          }
