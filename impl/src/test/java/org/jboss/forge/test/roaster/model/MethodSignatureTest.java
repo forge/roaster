@@ -34,7 +34,8 @@ public class MethodSignatureTest
    @Test
    public void testMethodSignatureParams() throws Exception
    {
-      MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public void hello(String foo, int bar)");
+      MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
+               "public void hello(String foo, int bar)");
       String signature = method.toSignature();
       assertEquals("public hello(String, int) : void", signature);
    }
@@ -42,7 +43,8 @@ public class MethodSignatureTest
    @Test
    public void testMethodParams() throws Exception
    {
-      MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public void hello(String foo, int bar)");
+      MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
+               "public void hello(String foo, int bar)");
       List<ParameterSource<JavaClassSource>> parameters = method.getParameters();
 
       Assert.assertEquals("String", parameters.get(0).getType().toString());
@@ -52,54 +54,73 @@ public class MethodSignatureTest
    @Test(expected = UnsupportedOperationException.class)
    public void testUnmodifiableMethodParams() throws Exception
    {
-      Roaster.create(JavaClassSource.class).addMethod("public void hello(String foo, int bar)").getParameters().add(null);
+      Roaster.create(JavaClassSource.class).addMethod("public void hello(String foo, int bar)").getParameters()
+               .add(null);
    }
 
    @Test
-   public void testMethodVisibility() throws Exception {
-       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+   public void testMethodVisibility() throws Exception
+   {
+      JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
 
-       MethodSource<JavaClassSource> method = javaClass.addMethod("public void hello()");
-       assertVisibility(Visibility.PUBLIC, method);
-       assertVisibility("public", method);
+      MethodSource<JavaClassSource> method = javaClass.addMethod("public void hello()");
+      assertVisibility(Visibility.PUBLIC, method);
+      assertVisibility("public", method);
 
-       method = javaClass.addMethod("protected void hello()");
-       assertVisibility(Visibility.PROTECTED, method);
-       assertVisibility("protected", method);
+      method = javaClass.addMethod("protected void hello()");
+      assertVisibility(Visibility.PROTECTED, method);
+      assertVisibility("protected", method);
 
-       method = javaClass.addMethod("private void hello()");
-       assertVisibility(Visibility.PRIVATE, method);
-       assertVisibility("private", method);
+      method = javaClass.addMethod("private void hello()");
+      assertVisibility(Visibility.PRIVATE, method);
+      assertVisibility("private", method);
 
-       method = javaClass.addMethod("void hello()");
-       assertVisibility(Visibility.PACKAGE_PRIVATE, method);
-       assertVisibility("", method);
+      method = javaClass.addMethod("void hello()");
+      assertVisibility(Visibility.PACKAGE_PRIVATE, method);
+      assertVisibility("", method);
    }
 
    @Test
-   public void testMethodVisibilityWithSetter() throws Exception {
-       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
-       MethodSource<JavaClassSource> method = javaClass.addMethod().setName("hello");
-       assertVisibility("", method);
+   public void testMethodVisibilityWithSetter() throws Exception
+   {
+      JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> method = javaClass.addMethod().setName("hello");
+      assertVisibility("", method);
 
-       method.setVisibility(Visibility.PUBLIC);
-       assertVisibility("public", method);
+      method.setVisibility(Visibility.PUBLIC);
+      assertVisibility("public", method);
 
-       method.setVisibility(Visibility.PROTECTED);
-       assertVisibility("protected", method);
+      method.setVisibility(Visibility.PROTECTED);
+      assertVisibility("protected", method);
 
-       method.setVisibility(Visibility.PRIVATE);
-       assertVisibility("private", method);
+      method.setVisibility(Visibility.PRIVATE);
+      assertVisibility("private", method);
 
-       method.setVisibility(Visibility.PACKAGE_PRIVATE);
-       assertVisibility("", method);
+      method.setVisibility(Visibility.PACKAGE_PRIVATE);
+      assertVisibility("", method);
    }
 
-   private void assertVisibility(Visibility visibility, MethodSource<JavaClassSource> method) {
-       Assert.assertEquals(visibility, method.getVisibility());
+   @Test
+   public void testMethodWithPrimitiveParameters() throws Exception
+   {
+      JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> method = javaClass.addMethod().setPublic().setName("doSomething").setReturnType(Integer.TYPE).setBody("return 0;");
+      method.addParameter(Integer.TYPE, "initValue");
+      method.addParameter(int.class,"intValueClass");
+      Assert.assertEquals(1, javaClass.getMethods().size());
+      List<ParameterSource<JavaClassSource>> parameters = javaClass.getMethods().get(0).getParameters();
+      Assert.assertEquals(2, parameters.size());
+      Assert.assertTrue(parameters.get(0).getType().isPrimitive());
+      Assert.assertTrue(parameters.get(1).getType().isPrimitive());
    }
 
-   private void assertVisibility(String visibility, MethodSource<JavaClassSource> method) {
-       Assert.assertEquals(visibility, method.getVisibility().toString());
+   private void assertVisibility(Visibility visibility, MethodSource<JavaClassSource> method)
+   {
+      Assert.assertEquals(visibility, method.getVisibility());
+   }
+
+   private void assertVisibility(String visibility, MethodSource<JavaClassSource> method)
+   {
+      Assert.assertEquals(visibility, method.getVisibility().toString());
    }
 }
