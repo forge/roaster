@@ -668,11 +668,11 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public ParameterSource<O> addParameter(String type, String name)
    {
-      if (!Types.isBasicType(type))
+      if (getOrigin().requiresImport(type))
       {
          getOrigin().addImport(type);
       }
-      String stub = "public class Stub { public void method( " + Types.toSimpleName(type) + " " + name + " ) {} }";
+      String stub = "public class Stub { public void method( " + Types.toSimpleName(Types.stripGenerics(type)) + " " + name + " ) {} }";
       JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
       List<MethodSource<JavaClassSource>> methods = temp.getMethods();
       List<VariableDeclaration> astParameters = ((MethodDeclaration) methods.get(0).getInternal()).parameters();
