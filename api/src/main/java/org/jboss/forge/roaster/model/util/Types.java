@@ -213,7 +213,7 @@ public class Types
    public static boolean isJavaLang(final String type)
    {
       final String javaLang = "java.lang.";
-      
+
       String check;
       if (type.startsWith(javaLang))
       {
@@ -252,16 +252,20 @@ public class Types
          arrayDimensions = 0;
          componentType = type;
       }
+      final StringBuilder result = new StringBuilder();
       if (isGeneric(componentType))
       {
-         final StringBuilder result = new StringBuilder(componentType.replaceFirst("^([^<]*)<.*?>$", "$1"));
-         for (int i = 0; i < arrayDimensions; i++)
-         {
-            result.append("[]");
-         }
-         return result.toString();
+         result.append(componentType.replaceFirst("^([^<]*)<.*?>$", "$1"));
       }
-      return type;
+      else
+      {
+         result.append(componentType);
+      }
+      for (int i = 0; i < arrayDimensions; i++)
+      {
+         result.append("[]");
+      }
+      return result.toString();
    }
 
    public static String getGenerics(final String type)
@@ -351,7 +355,7 @@ public class Types
     * It simply counts the "[" from the string.
     *
     * @param name an array type, e.g.: byte[] or [Ljava.lang.Boolean;
-    * @return the array dimension. -1 if the type is not a valid array
+    * @return the array dimension. 0 if the type is not a valid array
     */
    public static int getArrayDimension(String name)
    {

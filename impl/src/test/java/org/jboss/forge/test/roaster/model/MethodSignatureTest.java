@@ -107,11 +107,13 @@ public class MethodSignatureTest
       MethodSource<JavaClassSource> method = javaClass.addMethod().setPublic().setName("doSomething").setReturnType(Integer.TYPE).setBody("return 0;");
       method.addParameter(Integer.TYPE, "initValue");
       method.addParameter(int.class,"intValueClass");
+      method.addParameter(int[].class,"intValueClassArray");
       Assert.assertEquals(1, javaClass.getMethods().size());
       List<ParameterSource<JavaClassSource>> parameters = javaClass.getMethods().get(0).getParameters();
-      Assert.assertEquals(2, parameters.size());
+      Assert.assertEquals(3, parameters.size());
       Assert.assertTrue(parameters.get(0).getType().isPrimitive());
       Assert.assertTrue(parameters.get(1).getType().isPrimitive());
+      Assert.assertTrue(parameters.get(2).getType().isArray());
    }
 
    private void assertVisibility(Visibility visibility, MethodSource<JavaClassSource> method)

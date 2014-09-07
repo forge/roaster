@@ -128,6 +128,7 @@ public class TypesTest
       assertEquals("java.lang.Class[]", Types.stripGenerics("java.lang.Class<LONG_TYPE_VARIABLE_NAME>[]"));
       assertEquals("java.lang.Class[]", Types.stripGenerics("java.lang.Class<? extends Number>[]"));
       assertEquals("java.lang.Class[]", Types.stripGenerics("java.lang.Class<E extends Enum<E>>[]"));
+      assertEquals("int[]", Types.stripGenerics(int[].class.getName()));
    }
 
    @Test
