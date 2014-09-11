@@ -104,4 +104,21 @@ public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodS
     * Remove a parameter from this method
     */
    MethodSource<O> removeParameter(ParameterSource<O> parameter);
+
+   /**
+    * Remove a parameter with the specified {@link Class} type and name from this method
+    */
+   MethodSource<O> removeParameter(Class<?> type, String name);
+
+   /**
+    * Remove a parameter with the specified type and name from this method
+    */
+   MethodSource<O> removeParameter(String type, String name);
+
+   /**
+    * Remove a parameter with the specified {@link JavaType} type and name to this method
+    */
+   MethodSource<O> removeParameter(JavaType<?> type, String name);
+
+
 }

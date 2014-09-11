@@ -161,4 +161,26 @@ public class JavaClassMethodTest
       assertEquals(1, method.getParameters().size());
    }
 
+   @Test
+   public void testRemoveParameterByClassType() throws Exception
+   {
+      method.removeParameter(String.class, "pattern");
+      assertEquals(1, method.getParameters().size());
+   }
+
+   @Test
+   public void testRemoveParameterByStringType() throws Exception
+   {
+      method.removeParameter("String", "pattern");
+      assertEquals(1, method.getParameters().size());
+   }
+
+   @Test
+   public void testRemoveParameterByJavaType() throws Exception
+   {
+      JavaClassSource type = Roaster.create(JavaClassSource.class).setName("String").setPackage("java.lang");
+      method.removeParameter(type, "pattern");
+      assertEquals(1, method.getParameters().size());
+   }
+
 }

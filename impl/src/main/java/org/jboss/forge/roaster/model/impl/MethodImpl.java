@@ -672,7 +672,8 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       {
          getOrigin().addImport(type);
       }
-      String stub = "public class Stub { public void method( " + Types.toSimpleName(Types.stripGenerics(type)) + " " + name + " ) {} }";
+      String stub = "public class Stub { public void method( " + Types.toSimpleName(Types.stripGenerics(type)) + " "
+               + name + " ) {} }";
       JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
       List<MethodSource<JavaClassSource>> methods = temp.getMethods();
       List<VariableDeclaration> astParameters = ((MethodDeclaration) methods.get(0).getInternal()).parameters();
@@ -693,4 +694,62 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       method.parameters().remove(parameter.getInternal());
       return this;
    }
+
+   @Override
+   public MethodSource<O> removeParameter(Class<?> type, String name)
+   {
+      ParameterSource<O> parameter = null;
+      for (ParameterSource<O> param : getParameters())
+      {
+         if (param.getType().isType(type) && param.getName().equals(name))
+         {
+            parameter = param;
+            break;
+         }
+      }
+      if (parameter != null)
+      {
+         removeParameter(parameter);
+      }
+      return this;
+   }
+
+   @Override
+   public MethodSource<O> removeParameter(JavaType<?> type, String name)
+   {
+      ParameterSource<O> parameter = null;
+      for (ParameterSource<O> param : getParameters())
+      {
+         if (param.getType().isType(type.getCanonicalName()) && param.getName().equals(name))
+         {
+            parameter = param;
+            break;
+         }
+      }
+      if (parameter != null)
+      {
+         removeParameter(parameter);
+      }
+      return this;
+   }
+
+   @Override
+   public MethodSource<O> removeParameter(String type, String name)
+   {
+      ParameterSource<O> parameter = null;
+      for (ParameterSource<O> param : getParameters())
+      {
+         if (param.getType().isType(type) && param.getName().equals(name))
+         {
+            parameter = param;
+            break;
+         }
+      }
+      if (parameter != null)
+      {
+         removeParameter(parameter);
+      }
+      return this;
+   }
+
 }
