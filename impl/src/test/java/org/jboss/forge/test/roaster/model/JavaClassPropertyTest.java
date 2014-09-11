@@ -22,18 +22,41 @@ import org.junit.Test;
  */
 public class JavaClassPropertyTest
 {
-   public JavaClassSource getSource()
-   {
-      InputStream stream = JavaClassTest.class
-               .getResourceAsStream("/org/jboss/forge/grammar/java/MockUnformattedClass.java");
-      return Roaster.parse(JavaClassSource.class, stream);
-   }
-
    @Test
    public void testProperties()
    {
-      List<PropertySource<JavaClassSource>> properties = getSource().getProperties();
+      InputStream stream = JavaClassTest.class
+               .getResourceAsStream("/org/jboss/forge/grammar/java/MockUnformattedClass.java");
+      JavaClassSource source = Roaster.parse(JavaClassSource.class, stream);
+      List<PropertySource<JavaClassSource>> properties = source.getProperties();
       Assert.assertEquals(2, properties.size());
    }
 
+   @Test
+   public void testPrimitiveBooleanProperties()
+   {
+      InputStream stream = JavaClassTest.class
+               .getResourceAsStream("/org/jboss/forge/grammar/java/BooleanPrimitiveClass.java");
+      JavaClassSource source = Roaster.parse(JavaClassSource.class, stream);
+      List<PropertySource<JavaClassSource>> properties = source.getProperties();
+      Assert.assertEquals(2, properties.size());
+      Assert.assertNotNull(source.getProperty("myString").getAccessor());
+      Assert.assertNotNull(source.getProperty("myString").getMutator());
+      Assert.assertNotNull(source.getProperty("myBoolean").getAccessor());
+      Assert.assertNotNull(source.getProperty("myBoolean").getMutator());
+   }
+
+   @Test
+   public void testBooleanProperties()
+   {
+      InputStream stream = JavaClassTest.class
+               .getResourceAsStream("/org/jboss/forge/grammar/java/BooleanClass.java");
+      JavaClassSource source = Roaster.parse(JavaClassSource.class, stream);
+      List<PropertySource<JavaClassSource>> properties = source.getProperties();
+      Assert.assertEquals(2, properties.size());
+      Assert.assertNotNull(source.getProperty("myString").getAccessor());
+      Assert.assertNotNull(source.getProperty("myString").getMutator());
+      Assert.assertNotNull(source.getProperty("myBoolean").getAccessor());
+      Assert.assertNotNull(source.getProperty("myBoolean").getMutator());
+   }
 }
