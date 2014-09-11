@@ -720,7 +720,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       ParameterSource<O> parameter = null;
       for (ParameterSource<O> param : getParameters())
       {
-         if (param.getType().isType(type.getCanonicalName()) && param.getName().equals(name))
+         if (param.getType().isType(type.getQualifiedName()) && param.getName().equals(name))
          {
             parameter = param;
             break;
