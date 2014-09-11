@@ -25,6 +25,7 @@ import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
+import org.jboss.forge.roaster.model.source.ParameterSource;
 import org.jboss.forge.roaster.model.source.PropertyHolderSource;
 import org.jboss.forge.roaster.model.source.PropertySource;
 import org.jboss.forge.roaster.model.util.Assert;
@@ -339,7 +340,9 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
       }
       if (mutator != null)
       {
-         mutator.setParameters(String.format("%s %s", type, getName()));
+         for (ParameterSource<O> param : mutator.getParameters())
+            mutator.removeParameter(param);
+         mutator.addParameter(type, getName());
       }
       if (field != null)
       {
@@ -450,7 +453,7 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
    @Override
    public int hashCode()
    {
-      // compatible with Java 6: 
+      // compatible with Java 6:
       return Arrays.hashCode(new Object[] { getOrigin(), getName() });
    }
 

@@ -9,6 +9,7 @@ package org.jboss.forge.roaster.model.source;
 
 import java.util.List;
 
+import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.Property;
 import org.jboss.forge.roaster.model.PropertyHolder;
 
@@ -24,6 +25,16 @@ public interface PropertyHolderSource<O extends JavaSource<O>> extends
     * Add a new {@link Property} declaration to this {@link O} instance.
     */
    PropertySource<O> addProperty(String type, String name);
+
+   /**
+    * Add a new {@link Property} declaration to this {@link O} instance.
+    */
+   PropertySource<O> addProperty(Class<?> type, String name);
+
+   /**
+    * Add a new {@link Property} declaration to this {@link O} instance.
+    */
+   PropertySource<O> addProperty(JavaType<?> type, String name);
 
    /**
     * Remove the given {@link Property} from this {@link O} instance, if it exists; otherwise, do nothing.

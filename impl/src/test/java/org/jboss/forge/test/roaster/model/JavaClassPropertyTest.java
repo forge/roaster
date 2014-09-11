@@ -8,6 +8,8 @@
 package org.jboss.forge.test.roaster.model;
 
 import java.io.InputStream;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import org.jboss.forge.roaster.Roaster;
@@ -58,5 +60,17 @@ public class JavaClassPropertyTest
       Assert.assertNotNull(source.getProperty("myString").getMutator());
       Assert.assertNotNull(source.getProperty("myBoolean").getAccessor());
       Assert.assertNotNull(source.getProperty("myBoolean").getMutator());
+   }
+
+   @Test
+   public void testChangePropertyType()
+   {
+      JavaClassSource source = Roaster.create(JavaClassSource.class).setName("MyClass");
+      PropertySource<JavaClassSource> property = source.addProperty(Date.class, "myDate");
+      property.setType(Timestamp.class);
+      Assert.assertEquals("Timestamp", source.getField("myDate").getType().getName());
+      Assert.assertEquals("Timestamp", source.getMethod("getMyDate").getReturnType().getName());
+      Assert.assertNotNull(source.getMethod("setMyDate", Timestamp.class));
+
    }
 }

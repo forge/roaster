@@ -248,7 +248,14 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public MethodSource<O> setReturnType(final String typeName)
    {
-      String stub = "public class Stub { public " + typeName + " method() {} }";
+      String simpleName = Types.toSimpleName(typeName);
+
+      O origin = getOrigin();
+      if (!Strings.areEqual(typeName, simpleName) && origin.requiresImport(typeName))
+      {
+         origin.addImport(typeName);
+      }
+      String stub = "public class Stub { public " + simpleName + " method() {} }";
       JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
       List<MethodSource<JavaClassSource>> methods = temp.getMethods();
       org.eclipse.jdt.core.dom.Type returnType = ((MethodDeclaration) methods.get(0).getInternal()).getReturnType2();
