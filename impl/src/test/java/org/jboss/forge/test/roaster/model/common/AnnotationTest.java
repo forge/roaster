@@ -570,4 +570,23 @@ public abstract class AnnotationTest<O extends JavaSource<O>, T>
       Assert.assertArrayEquals(values, ann.getStringArrayValue("aName"));
    }
 
+    @Test
+    public void testCheckValueAreDefined() throws Exception
+    {
+        int size = target.getAnnotations().size();
+
+        target.addAnnotation(Test.class).setLiteralValue("expected", "RuntimeException.class")
+                .setLiteralValue("foo", "bar");
+
+        List<AnnotationSource<O>> annotations = target.getAnnotations();
+        assertEquals( size + 1, annotations.size() );
+
+        AnnotationSource<O> annotation = annotations.get(annotations.size() - 1);
+        assertEquals(Test.class.getSimpleName(), annotation.getName());
+        assertTrue( annotation.isTypeElementDefined( "foo" ) );
+        assertTrue( annotation.isTypeElementDefined( "expected" ) );
+        assertFalse( annotation.isTypeElementDefined( "missing" ) );
+        assertFalse( annotation.isTypeElementDefined( "fooo" ) );
+    }
+
 }
