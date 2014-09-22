@@ -45,7 +45,7 @@ FILES...
 ----
 
 Java Parser API
-------
+---------------
 
 Example:
 ```java
@@ -53,7 +53,7 @@ Roaster.parse(JavaClassSource.class, "public class HelloWorld {}");
 ```
 
 Java Source Code Generation API
-------
+-------------------------------
 
 Roaster provides a fluent API to generate java classes. Here an example:
 
@@ -125,7 +125,7 @@ public class Person implements Serializable
 ```
 
 Java Source Code Modification API
----------------------
+---------------------------------
 
 ```java
 JavaClassSource javaClass = Roaster.parse(JavaClassSource.class, "public class SomeClass {}");
