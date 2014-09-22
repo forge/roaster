@@ -1,6 +1,7 @@
 package org.jboss.forge.roaster;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,13 +91,20 @@ public class Bootstrap
       }
    }
 
-   private void format(List<File> files, String configFile, boolean recursive) throws IOException
+   private void format(List<File> files, String configFile, final boolean recursive) throws IOException
    {
       for (File file : files)
       {
          if (file.isDirectory())
          {
-            format(Arrays.asList(file.listFiles()), configFile, recursive);
+            format(Arrays.asList(file.listFiles(new FileFilter()
+            {
+               @Override
+               public boolean accept(File file)
+               {
+                  return recursive || file.isFile();
+               }
+            })), configFile, recursive);
          }
          else if (file.getName().endsWith(".java"))
          {
@@ -112,7 +120,7 @@ public class Bootstrap
    {
       StringBuilder sb = new StringBuilder();
       sb.append("Usage: roaster [OPTION]... FILES ... \n");
-      sb.append("The simplest command-line Java code formatter.\n");
+      sb.append("The simplest command-line Java code formatter. A JBoss Forge sub-project: http://forge.jboss.org\n");
       sb.append("\n");
       sb.append("-c, --config [CONFIG_FILE]\n");
       sb.append("\t specify the path to the Eclipse code format profile (usually found at '$PROJECT/.settings/org.eclipse.jdt.core.prefs') \n");
