@@ -3,10 +3,48 @@ Roaster
 
 Roaster (formerly known as java-parser) is a library that allows easy parsing of java source files, introducing a fluent interface to manipulate Java source files, like adding fields, methods, annotations and so on.
 
+Installation
+============
+* Download (or build from sources) the most recent roaster-distribution-VERSION.zip.
+.. Download link:https://repository.jboss.org/nexus/service/local/artifact/maven/redirect?r=releases&g=org.jboss.forge.roaster&a=roaster-distribution&v=LATEST&e=zip&c=offline[JBoss Forge - Roaster (Lastest)]
+... This ZIP contains the Roaster distribution and command line tools
+
+* Extract the ZIP to a directory and navigate to roaster-distribution-VERSION/bin directory
+
+
 Usage
 =====
+Execute roaster by running the following script (add these to your $PATH for convenience):
 
-Parser
+[source]
+----
+bin/roaster     (UNIX/linux/osx)
+bin/roaster.bat (windows)
+----
+
+Options described here:
+
+[source,cmd]
+----
+$ roaster -h
+
+Usage: roaster [OPTION]... FILES ... 
+The fastest way to build applications, share your software, and enjoy doing it. 
+
+-c, --config [CONFIG_FILE]
+	 specify the path to the Eclipse code format profile (usually found at '$PROJECT/.settings/org.eclipse.jdt.core.prefs') 
+
+-r, --recursive
+	 format files in found sub-directories recursively 
+
+FILES... 
+	 specify one or more space-separated files or directories to format 
+
+-h, --help
+	 display this help and exit 
+----
+
+Java Parser API
 ------
 
 Example:
@@ -14,7 +52,7 @@ Example:
 Roaster.parse(JavaClassSource.class, "public class HelloWorld {}");
 ```
 
-Writer
+Java Source Code Generation API
 ------
 
 Roaster provides a fluent API to generate java classes. Here an example:
@@ -86,7 +124,7 @@ public class Person implements Serializable
 }
 ```
 
-Modifying Java Source
+Java Source Code Modification API
 ---------------------
 
 ```java
@@ -101,8 +139,8 @@ javaClass.addMethod()
 System.out.println(javaClass);
 ```
 
-Download
-========
+Maven Artifacts
+===============
 Of course it is possible to mix both approaches (parser and writer) to modify Java code programmatically:
 
 Download [the latest .jar][1] or depend via Maven:
