@@ -60,6 +60,7 @@
    <modules>
       <module>api</module>
       <module>impl</module>
+      <module>dist</module>
    </modules>
    <dependencyManagement>
       <dependencies>

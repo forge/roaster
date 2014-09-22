@@ -7,6 +7,6 @@
       <relativePath>../pom.xml</relativePath>
    </parent>
    <artifactId>roaster-api</artifactId>
-   <name>Forge Roaster API</name>
+   <name>Forge Roaster - API</name>
 </project>
 

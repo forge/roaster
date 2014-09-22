@@ -7,7 +7,7 @@
       <relativePath>../pom.xml</relativePath>
    </parent>
    <artifactId>roaster-jdt</artifactId>
-   <name>Forge Roaster JDT Implementation</name>
+   <name>Forge Roaster - JDT Implementation</name>
    <dependencies>
       <dependency>
          <groupId>org.jboss.forge.roaster</groupId>

@@ -1,0 +1,162 @@
+#!/bin/sh
+
+# ----------------------------------------------------------------------------
+# Copyright 2012 Red Hat, Inc. and/or its affiliates.
+#
+# Licensed under the Eclipse Public License version 1.0, available at
+# http://www.eclipse.org/legal/epl-v10.html
+# ----------------------------------------------------------------------------
+
+
+
+# ----------------------------------------------------------------------
+# Roaster Startup script
+#
+# Required Environment vars:
+# ------------------
+#   JAVA_HOME - location of a JRE home directory
+#
+# Optional Environment Variables
+# ------------------
+#   ROASTER_HOME - location of Roaster's installed home dir
+#   ROASTER_OPTS - parameters passed to the Java VM when running Roaster
+# -----------------------------------------------------------------------
+ROASTER_DEBUG_ARGS=""
+QUOTED_ARGS=""
+
+while [ "$1" != "" ] ; do
+
+  if [ "$1" = "--debug" ] ; then
+    ROASTER_DEBUG_ARGS="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000"
+  fi
+
+  QUOTED_ARGS="$QUOTED_ARGS \"$1\""
+  shift
+
+done
+
+if [ -f /etc/roasterrc ] ; then
+  . /etc/roasterrc
+fi
+
+if [ -f "$HOME/.roasterrc" ] ; then
+  . "$HOME/.roasterrc"
+fi
+
+# OS specific support.  $var _must_ be set to either true or false.
+cygwin=false;
+darwin=false;
+mingw=false
+case "`uname`" in
+  CYGWIN*) cygwin=true ;;
+  MINGW*) mingw=true;;
+  Darwin*) darwin=true
+           if [ -z "$JAVA_VERSION" ] ; then
+             JAVA_VERSION="1.7+"
+           fi
+           if [ -z "$JAVA_HOME" ] ; then
+             JAVA_HOME="`/usr/libexec/java_home --version $JAVA_VERSION`"
+           fi
+           ;;
+esac
+
+if [ -z "$JAVA_HOME" ] ; then
+  if [ -r /etc/gentoo-release ] ; then
+    JAVA_HOME=`java-config --jre-home`
+  fi
+fi
+
+if [ -z "$ROASTER_HOME" ] ; then
+  ## resolve links - $0 may be a link to Roaster's home
+  PRG="$0"
+
+  # need this for relative symlinks
+  while [ -h "$PRG" ] ; do
+    ls=`ls -ld "$PRG"`
+    link=`expr "$ls" : '.*-> \(.*\)$'`
+    if expr "$link" : '/.*' > /dev/null; then
+      PRG="$link"
+    else
+      PRG="`dirname "$PRG"`/$link"
+    fi
+  done
+
+  saveddir=`pwd`
+
+  ROASTER_HOME=`dirname "$PRG"`/..
+
+  # make it fully qualified
+  ROASTER_HOME=`cd "$ROASTER_HOME" && pwd`
+
+  cd "$saveddir"
+  echo Using Roaster at $ROASTER_HOME
+fi
+
+# For Cygwin, ensure paths are in UNIX format before anything is touched
+if $cygwin ; then
+  [ -n "$ROASTER_HOME" ] &&
+    ROASTER_HOME=`cygpath --unix "$ROASTER_HOME"`
+  [ -n "$JAVA_HOME" ] &&
+    JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
+  [ -n "$CLASSPATH" ] &&
+    CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
+fi
+
+# For Migwn, ensure paths are in UNIX format before anything is touched
+if $mingw ; then
+  [ -n "$ROASTER_HOME" ] &&
+    ROASTER_HOME="`(cd "$ROASTER_HOME"; pwd)`"
+  [ -n "$JAVA_HOME" ] &&
+    JAVA_HOME="`(cd "$JAVA_HOME"; pwd)`"
+  # TODO classpath?
+fi
+
+if [ -z "$JAVACMD" ] ; then
+  if [ -n "$JAVA_HOME"  ] ; then
+    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
+      # IBM's JDK on AIX uses strange locations for the executables
+      JAVACMD="$JAVA_HOME/jre/sh/java"
+    else
+      JAVACMD="$JAVA_HOME/bin/java"
+    fi
+  else
+    JAVACMD="`which java`"
+  fi
+fi
+
+if [ ! -x "$JAVACMD" ] ; then
+  echo "Error: JAVA_HOME is not defined correctly."
+  echo "  We cannot execute $JAVACMD"
+  exit 1
+fi
+
+JAVAVER=`"$JAVACMD" -version 2>&1`
+case $JAVAVER in
+*1.[7-9]*) ;;
+*1.[1-6]*)
+	echo " Error: a Java 1.7 or higher JRE is required to run Roaster; found [$JAVACMD -version == $JAVAVER]."
+	exit 1
+ ;;
+esac
+
+
+if [ -z "$JAVA_HOME" ] ; then
+  echo "Warning: JAVA_HOME environment variable is not set."
+fi
+
+ROASTER_MAIN_CLASS=org.jboss.forge.roaster.Bootstrap
+
+# For Cygwin, switch paths to Windows format before running java
+if $cygwin; then
+  [ -n "$ROASTER_HOME" ] &&
+    ROASTER_HOME=`cygpath --path --windows "$ROASTER_HOME"`
+  [ -n "$JAVA_HOME" ] &&
+    JAVA_HOME=`cygpath --path --windows "$JAVA_HOME"`
+  [ -n "$HOME" ] &&
+    HOME=`cygpath --path --windows "$HOME"`
+fi
+
+roaster_exec_cmd="\"$JAVACMD\" $ROASTER_DEBUG_ARGS $ROASTER_OPTS \"-Droaster.home=${ROASTER_HOME}\" \
+   -cp \"${ROASTER_HOME}/lib/*\" $ROASTER_MAIN_CLASS"
+
+eval $roaster_exec_cmd "$QUOTED_ARGS"
