@@ -14,6 +14,9 @@ Installation
 
 Usage
 =====
+
+CLI
+---
 Execute roaster by running the following script (add these to your $PATH for convenience):
 
 [source]
