@@ -112,7 +112,7 @@ public class Bootstrap
    {
       StringBuilder sb = new StringBuilder();
       sb.append("Usage: roaster [OPTION]... FILES ... \n");
-      sb.append("The fastest way to build applications, share your software, and enjoy doing it. \n");
+      sb.append("The simplest command-line Java code formatter.\n");
       sb.append("\n");
       sb.append("-c, --config [CONFIG_FILE]\n");
       sb.append("\t specify the path to the Eclipse code format profile (usually found at '$PROJECT/.settings/org.eclipse.jdt.core.prefs') \n");
