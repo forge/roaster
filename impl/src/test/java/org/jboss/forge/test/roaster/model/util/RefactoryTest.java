@@ -280,16 +280,16 @@ public class RefactoryTest
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
       assertEquals("int", hashcode.getReturnType().getName());
-      assertThat(hashcode.getBody(), containsString("result=prime * result + Arrays.hashCode(flags);"));
-      assertThat(hashcode.getBody(), containsString("result=prime * result + Arrays.hashCode(objects);"));
+      assertThat(hashcode.getBody(), containsString("result=prime * result + java.util.Arrays.hashCode(flags);"));
+      assertThat(hashcode.getBody(), containsString("result=prime * result + java.util.Arrays.hashCode(objects);"));
    }
 
    private void assertEqualsForArrays(MethodSource<JavaClassSource> equals)
    {
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());
-      assertThat(equals.getBody(), containsString("if (!Arrays.equals(flags,other.flags)) {\n  return false;\n}"));
-      assertThat(equals.getBody(), containsString("if (!Arrays.equals(objects,other.objects)) {\n  return false;\n}"));
+      assertThat(equals.getBody(), containsString("if (!java.util.Arrays.equals(flags,other.flags)) {\n  return false;\n}"));
+      assertThat(equals.getBody(), containsString("if (!java.util.Arrays.equals(objects,other.objects)) {\n  return false;\n}"));
    }
 
    @Test

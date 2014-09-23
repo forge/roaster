@@ -140,7 +140,7 @@ public class Refactory
          String fieldName = field.getName();
          if (field.getType().isArray())
          {
-            fieldEqualityChecks.append("if (!Arrays.equals(").append(fieldName).append(", other.").append(fieldName)
+            fieldEqualityChecks.append("if (!java.util.Arrays.equals(").append(fieldName).append(", other.").append(fieldName)
                      .append(")) {");
             fieldEqualityChecks.append(" return false; }");
          }
@@ -249,7 +249,7 @@ public class Refactory
          String fieldName = field.getName();
          if (field.getType().isArray())
          {
-            hashCodeComputation.append("result = prime * result + Arrays.hashCode(").append(fieldName).append(");");
+            hashCodeComputation.append("result = prime * result + java.util.Arrays.hashCode(").append(fieldName).append(");");
          }
          else if (field.getType().isPrimitive())
          {
