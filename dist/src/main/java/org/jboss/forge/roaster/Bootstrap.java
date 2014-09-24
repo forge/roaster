@@ -112,17 +112,26 @@ public class Bootstrap
          {
             if (!quiet)
                System.out.printf("Formatting %s ", file.getAbsolutePath());
-            if (configFile != null)
+            try
             {
-               if (!quiet)
-                  System.out.printf("using %s ... ", new File(configFile).getAbsolutePath());
-               Formatter.format(new File(configFile), file);
+               if (configFile != null)
+               {
+                  if (!quiet)
+                     System.out.printf("using %s ... ", new File(configFile).getAbsolutePath());
+                  Formatter.format(new File(configFile), file);
+               }
+               else
+               {
+                  if (!quiet)
+                     System.out.printf("... ");
+                  Formatter.format(file);
+               }
             }
-            else
+            catch (IOException e)
             {
                if (!quiet)
-                  System.out.printf("... ");
-               Formatter.format(file);
+                  System.out.println("Error: " + e.getMessage());
+               continue;
             }
             if (!quiet)
                System.out.println("OK!");
