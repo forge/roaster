@@ -111,11 +111,11 @@ public class Bootstrap
          else if (file.getName().endsWith(".java"))
          {
             if (!quiet)
-               System.out.printf("Formatting %s ", file);
+               System.out.printf("Formatting %s ", file.getAbsolutePath());
             if (configFile != null)
             {
                if (!quiet)
-                  System.out.printf("using %s ... ", configFile);
+                  System.out.printf("using %s ... ", new File(configFile).getAbsolutePath());
                Formatter.format(new File(configFile), file);
             }
             else
