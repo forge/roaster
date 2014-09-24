@@ -49,49 +49,51 @@ public class Bootstrap
 
    private void run(List<String> args) throws IOException
    {
-      if (args.size() > 0)
+      if (args.isEmpty() || args.contains("--help") || args.contains("-h"))
       {
-         if (args.contains("--help") || args.contains("-h"))
-         {
-            System.out.println(help());
-            return;
-         }
-
-         boolean recursive = false;
-         String configFile = null;
-         List<File> files = new ArrayList<File>();
-         for (int i = 0; i < args.size(); i++)
-         {
-            String arg = args.get(i);
-            if ("--config".equals(arg) || "-c".equals(arg))
-            {
-               configFile = args.get(++i);
-               if (!new File(configFile).isFile())
-               {
-                  System.out.println("roaster: configuration file [" + configFile + "] does not exist.");
-                  return;
-               }
-            }
-            else if ("--recursive".equals(arg) || "-r".equals(arg))
-            {
-               recursive = true;
-            }
-            else if (new File(arg).exists())
-            {
-               files.add(new File(arg));
-            }
-            else
-            {
-               System.out.println("roaster: no such file: '" + arg + "'");
-               System.out.println("Try 'roaster --help' for more information.");
-            }
-         }
-
-         format(files, configFile, recursive);
+         System.out.println(help());
+         return;
       }
+      boolean quiet = false;
+      boolean recursive = false;
+      String configFile = null;
+      List<File> files = new ArrayList<File>();
+      for (int i = 0; i < args.size(); i++)
+      {
+         String arg = args.get(i);
+         if ("--config".equals(arg) || "-c".equals(arg))
+         {
+            configFile = args.get(++i);
+            if (!new File(configFile).isFile())
+            {
+               System.err.println("roaster: configuration file [" + configFile + "] does not exist.");
+               return;
+            }
+         }
+         else if ("--recursive".equals(arg) || "-r".equals(arg))
+         {
+            recursive = true;
+         }
+         else if ("--quiet".equals(arg) || "-q".equals(arg))
+         {
+            quiet = true;
+         }
+         else if (new File(arg).exists())
+         {
+            files.add(new File(arg));
+         }
+         else
+         {
+            System.err.println("roaster: no such file: '" + arg + "'");
+            System.err.println("Try 'roaster --help' for more information.");
+         }
+      }
+
+      format(files, configFile, recursive, quiet);
    }
 
-   private void format(List<File> files, String configFile, final boolean recursive) throws IOException
+   private void format(List<File> files, String configFile, final boolean recursive, final boolean quiet)
+            throws IOException
    {
       for (File file : files)
       {
@@ -104,14 +106,26 @@ public class Bootstrap
                {
                   return recursive || file.isFile();
                }
-            })), configFile, recursive);
+            })), configFile, recursive, quiet);
          }
          else if (file.getName().endsWith(".java"))
          {
+            if (!quiet)
+               System.out.printf("Formatting %s ", file);
             if (configFile != null)
+            {
+               if (!quiet)
+                  System.out.printf("using %s ... ", configFile);
                Formatter.format(new File(configFile), file);
+            }
             else
+            {
+               if (!quiet)
+                  System.out.printf("... ");
                Formatter.format(file);
+            }
+            if (!quiet)
+               System.out.println("OK!");
          }
       }
    }
@@ -130,6 +144,9 @@ public class Bootstrap
       sb.append("\n");
       sb.append("FILES... \n");
       sb.append("\t specify one or more space-separated files or directories to format \n");
+      sb.append("\n");
+      sb.append("-q, --quiet\n");
+      sb.append("\t do not display any output \n");
       sb.append("\n");
       sb.append("-h, --help\n");
       sb.append("\t display this help and exit \n");
