@@ -63,7 +63,6 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    protected final BodyDeclaration body;
    protected final JavaSource<?> enclosingType;
 
-   public static ServiceLoader<WildcardImportResolver> loader = ServiceLoader.load(WildcardImportResolver.class);
    private static List<WildcardImportResolver> resolvers;
 
    protected AbstractJavaSource(JavaSource<?> enclosingType, final Document document, final CompilationUnit unit,
@@ -372,7 +371,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       if (resolvers == null)
       {
          resolvers = new ArrayList<WildcardImportResolver>();
-         for (WildcardImportResolver r : loader)
+         for (WildcardImportResolver r : ServiceLoader.load(WildcardImportResolver.class, getClass().getClassLoader()))
          {
             resolvers.add(r);
          }

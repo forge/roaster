@@ -61,7 +61,6 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    protected final ASTNode pkg;
    protected final JavaSource<?> enclosingType;
 
-   public static ServiceLoader<WildcardImportResolver> loader = ServiceLoader.load(WildcardImportResolver.class);
    private static List<WildcardImportResolver> resolvers;
 
    @Override
@@ -364,7 +363,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
       if (resolvers == null)
       {
          resolvers = new ArrayList<WildcardImportResolver>();
-         for (WildcardImportResolver r : resolvers)
+         for (WildcardImportResolver r : ServiceLoader.load(WildcardImportResolver.class, getClass().getClassLoader()))
          {
             resolvers.add(r);
          }

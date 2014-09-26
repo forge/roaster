@@ -9,7 +9,9 @@ package org.jboss.forge.test.roaster.model.common;
 import static org.junit.Assert.assertTrue;
 
 import org.jboss.forge.roaster.Roaster;
+import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class WildCardImportsTest
@@ -39,4 +41,15 @@ public class WildCardImportsTest
       assertTrue(javaClass.getImport("org.junit.Assert").isWildcard());
    }
 
+   @Test
+   public void testWildcardImportResolverMissing()
+   {
+      JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+      javaClass.addField().setName("field").setType("Date");
+      javaClass.addImport("java.util.*");
+      FieldSource<JavaClassSource> field = javaClass.getField("field");
+      Assert.assertNotNull(field);
+      Assert.assertNotNull(field.getType());
+      Assert.assertEquals("java.util.Date", field.getType().getQualifiedName());
+   }
 }
