@@ -6,7 +6,7 @@ Roaster (formerly known as java-parser) is a library that allows easy parsing of
 Installation
 ============
 * Download (or build from sources) the most recent roaster-distribution-VERSION.zip.
-.. Download link:https://repository.jboss.org/nexus/service/local/artifact/maven/redirect?r=releases&g=org.jboss.forge.roaster&a=roaster-distribution&v=LATEST&e=zip[JBoss Forge - Roaster (Lastest)]
+.. Download link:https://repository.jboss.org/nexus/service/local/artifact/maven/redirect?r=releases&g=org.jboss.forge.roaster&a=roaster-distribution&v=LATEST&e=zip[JBoss Forge - Roaster (Latest)]
 ... This ZIP contains the Roaster distribution and command line tools
 
 * Extract the ZIP to a directory and navigate to roaster-distribution-VERSION/bin directory
