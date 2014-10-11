@@ -77,10 +77,15 @@ javaClass.addProperty("Integer", "id").setMutable(false);
 javaClass.addProperty("String", "fistName");
 javaClass.addProperty("String", "lastName");
 
-javaClass.addMethod().setConstructor(true).setPublic().setBody("this.id = id;").addParameter(Integer.class, "id");
+javaClass.addMethod()
+  .setConstructor(true)
+  .setPublic()
+  .setBody("this.id = id;")
+  .addParameter(Integer.class, "id");
 ```
 
 Will produce:
+
 ```java
 package com.company.example;
 
@@ -130,8 +135,11 @@ public class Person implements Serializable
 Java Source Code Modification API
 ---------------------------------
 
+Of course it is possible to mix both approaches (parser and writer) to modify Java code programmatically:
+
 ```java
-JavaClassSource javaClass = Roaster.parse(JavaClassSource.class, "public class SomeClass {}");
+JavaClassSource javaClass = 
+  Roaster.parse(JavaClassSource.class, "public class SomeClass {}");
 javaClass.addMethod()
   .setPublic()
   .setStatic(true)
@@ -144,9 +152,8 @@ System.out.println(javaClass);
 
 Maven Artifacts
 ===============
-Of course it is possible to mix both approaches (parser and writer) to modify Java code programmatically:
 
-Download [the latest .jar][1] or depend via Maven:
+Download http://search.maven.org/#search%7Cga%7C1%7Cg:%22org.jboss.forge.roaster%22[the latest .jar] or depend via Maven:
 
 ```xml
 <dependency>
@@ -164,16 +171,16 @@ Download [the latest .jar][1] or depend via Maven:
 Issue tracker
 =============
 
-[ROASTER on JBossDeveloper][2]. You might need to log in, in order to view the issues.
+https://issues.jboss.org/browse/ROASTER[ROASTER on JBossDeveloper]. You might need to log in, in order to view the issues.
 
 
 Get in touch
 ============
 
-Roaster uses the same forum and mailing lists as the [JBoss Forge][3] project. See the [JBoss Forge Community][4] page.
+Roaster uses the same forum and mailing lists as the http://forge.jboss.org/[JBoss Forge] project. See the http://forge.jboss.org/community[JBoss Forge Community] page.
 
-* [User forums][5] 
-* [Developer forums][6] 
+* https://developer.jboss.org/en/forge[User forums]
+* https://developer.jboss.org/en/forge/dev[Developer forums]
 
 
 Related / Similar projects
@@ -181,19 +188,9 @@ Related / Similar projects
 
 For the writer part:
 
-* [square/javawriter][7] 
+* https://github.com/square/javawriter[square/javawriter]
 
 
 License
 =======
-[Eclipse Public License - v 1.0][8]
-
-
-  [1]: http://search.maven.org/#search%7Cga%7C1%7Cg:%22org.jboss.forge.roaster%22
-  [2]: https://issues.jboss.org/browse/ROASTER
-  [3]: http://forge.jboss.org/
-  [4]: http://forge.jboss.org/community
-  [5]: https://developer.jboss.org/en/forge
-  [6]: https://developer.jboss.org/en/forge/dev
-  [7]: https://github.com/square/javawriter
-  [8]: http://www.eclipse.org/legal/epl-v10.html
+http://www.eclipse.org/legal/epl-v10.html[Eclipse Public License - v 1.0]
