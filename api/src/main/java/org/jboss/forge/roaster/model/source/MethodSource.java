@@ -35,7 +35,7 @@ public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodS
 
    /**
     * Toggle this method as a constructor. If true, and the name of the {@link Method} is not the same as the name of
-    * its parent {@link JavaClass} , update the name of the to match.
+    * its parent {@link JavaClass} , update the name of the method to match.
     */
    MethodSource<O> setConstructor(final boolean constructor);
 
