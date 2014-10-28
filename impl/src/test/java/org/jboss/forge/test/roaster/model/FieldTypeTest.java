@@ -229,7 +229,6 @@ public class FieldTypeTest
       Assert.assertEquals(3, type.getArrayDimensions());
    }
 
-
    @Test
    public void testFieldMultidimensionalArray2()
    {
@@ -243,7 +242,7 @@ public class FieldTypeTest
       Assert.assertEquals(3, type.getArrayDimensions());
       Assert.assertEquals("Vector[][][]", field.getType().getName());
    }
-   
+
    @Test
    public void testFieldTypeByteArrayAlternativeDeclarationTest()
    {
@@ -254,7 +253,7 @@ public class FieldTypeTest
       Assert.assertTrue(field.getType().isArray());
       Assert.assertEquals(1, field.getType().getArrayDimensions());
    }
-   
+
    @Test
    public void testFieldTypeObjectArrayAlternativeDeclarationTest()
    {
@@ -265,7 +264,7 @@ public class FieldTypeTest
       Assert.assertTrue(field.getType().isArray());
       Assert.assertEquals(1, field.getType().getArrayDimensions());
    }
-   
+
    @Test
    public void testFieldTypeObjectArrayMixedDimensionTest()
    {
@@ -275,5 +274,15 @@ public class FieldTypeTest
       Assert.assertEquals("java.lang.Long", field.getType().getQualifiedName());
       Assert.assertTrue(field.getType().isArray());
       Assert.assertEquals(2, field.getType().getArrayDimensions());
+   }
+
+   @Test
+   public void testGenericFieldType() throws Exception
+   {
+      JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+      FieldSource<JavaClassSource> field = javaClass.addField();
+      field.setPrivate().setName("email").setType("java.util.List<String>");
+      Assert.assertTrue(javaClass.hasImport(List.class));
+      Assert.assertEquals("List<String>", field.getType().toString());
    }
 }

@@ -15,9 +15,6 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
-import org.eclipse.jdt.core.dom.Name;
-import org.eclipse.jdt.core.dom.PrimitiveType;
-import org.eclipse.jdt.core.dom.PrimitiveType.Code;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.Annotation;
@@ -29,6 +26,7 @@ import org.jboss.forge.roaster.model.ast.AnnotationAccessor;
 import org.jboss.forge.roaster.model.ast.ModifierAccessor;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.FieldSource;
+import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.model.util.Types;
@@ -339,43 +337,15 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
          origin.addImport(typeName);
       }
 
-      Code primitive = PrimitiveType.toCode(typeName);
+      String stub = "public class Stub { " + simpleName + " field; }";
+      JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
+      List<FieldSource<JavaClassSource>> fields = temp.getFields();
+      org.eclipse.jdt.core.dom.Type fieldType = ((FieldDeclaration) ((VariableDeclarationFragment) fields.get(0)
+               .getInternal()).getParent()).getType();
 
-      org.eclipse.jdt.core.dom.Type type = null;
-      if (primitive != null)
-      {
-         type = ast.newPrimitiveType(primitive);
-      }
-      else
-      {
-         if (!origin.requiresImport(typeName))
-         {
-            if (Types.isArray(typeName))
-            {
-               String arrayType = Types.stripArray(typeName);
-               int arrayDimension = Types.getArrayDimension(typeName);
-               if (Types.isPrimitive(arrayType))
-               {
-                  type = ast.newArrayType(ast.newPrimitiveType(PrimitiveType.toCode(arrayType)), arrayDimension);
-               }
-               else
-               {
-                  type = ast.newArrayType(ast.newSimpleType(ast.newSimpleName(arrayType)), arrayDimension);
-               }
-            }
-            else
-            {
-               type = ast.newSimpleType(ast.newSimpleName(simpleName));
-            }
-         }
-         else
-         {
-            String[] className = Types.tokenizeClassName(typeName);
-            Name name = ast.newName(className);
-            type = ast.newSimpleType(name);
-         }
-      }
-      field.setType(type);
+      fieldType = (org.eclipse.jdt.core.dom.Type) ASTNode.copySubtree(field.getAST(), fieldType);
+      field.setType(fieldType);
+
       return this;
    }
 
@@ -434,7 +404,7 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
          if (other.field != null)
             return false;
       }
-      else if (!field.equals(other.field ))
+      else if (!field.equals(other.field))
          return false;
       if (fragment == null)
       {

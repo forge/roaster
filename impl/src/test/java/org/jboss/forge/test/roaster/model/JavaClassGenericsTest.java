@@ -184,5 +184,4 @@ public class JavaClassGenericsTest
       Assert.assertEquals("O", typeVariables.get(1).getName());
       Assert.assertTrue(typeVariables.get(1).getBounds().isEmpty());
    }
-
 }
