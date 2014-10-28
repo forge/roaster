@@ -281,8 +281,10 @@ public class FieldTypeTest
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       FieldSource<JavaClassSource> field = javaClass.addField();
-      field.setPrivate().setName("email").setType("java.util.List<String>");
+      field.setPrivate().setName("email").setType("java.util.List<String>")
+               .setLiteralInitializer("new java.util.ArrayList<String>()");
       Assert.assertTrue(javaClass.hasImport(List.class));
       Assert.assertEquals("List<String>", field.getType().toString());
+      Assert.assertEquals("new java.util.ArrayList<String>()", field.getLiteralInitializer());
    }
 }

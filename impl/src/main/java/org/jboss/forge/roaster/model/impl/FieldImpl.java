@@ -366,7 +366,7 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    @Override
    public FieldSource<O> setLiteralInitializer(final String value)
    {
-      String stub = "public class Stub { private String stub = " + value + " }";
+      String stub = "public class Stub { private Object stub = " + value + " }";
       JavaClass<?> temp = Roaster.parse(JavaClass.class, stub);
       VariableDeclarationFragment tempFrag = (VariableDeclarationFragment) temp.getFields().get(0).getInternal();
       fragment.setInitializer((Expression) ASTNode.copySubtree(ast, tempFrag.getInitializer()));
