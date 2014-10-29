@@ -80,7 +80,7 @@ public class ParameterImpl<O extends JavaSource<O>> implements ParameterSource<O
    }
 
    @Override
-   public List<AnnotationSource<O> > getAnnotations()
+   public List<AnnotationSource<O>> getAnnotations()
    {
       return annotations.getAnnotations(this, param);
    }
@@ -126,5 +126,4 @@ public class ParameterImpl<O extends JavaSource<O>> implements ParameterSource<O
    {
       return parent.getOrigin();
    }
-
 }

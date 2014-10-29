@@ -14,6 +14,7 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.jboss.forge.roaster.Roaster;
@@ -27,6 +28,7 @@ import org.jboss.forge.roaster.model.ast.ModifierAccessor;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.model.util.Types;
@@ -428,4 +430,28 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
       return modifiers.hasModifier(field, ModifierKeyword.VOLATILE_KEYWORD);
    }
 
+   @Override
+   public boolean hasJavaDoc()
+   {
+      return field.getJavadoc() != null;
+   }
+
+   @Override
+   public FieldSource<O> removeJavaDoc()
+   {
+      field.setJavadoc(null);
+      return this;
+   }
+
+   @Override
+   public JavaDocSource<FieldSource<O>> getJavaDoc()
+   {
+      Javadoc javadoc = field.getJavadoc();
+      if (javadoc == null)
+      {
+         javadoc = field.getAST().newJavadoc();
+         field.setJavadoc(javadoc);
+      }
+      return new JavaDocImpl<FieldSource<O>>(this, javadoc);
+   }
 }

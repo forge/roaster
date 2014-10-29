@@ -15,6 +15,7 @@ import org.jboss.forge.roaster.model.Parameter;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface ParameterSource<O extends JavaSource<O>> extends Parameter<O>, AnnotationTargetSource<O, ParameterSource<O>>
+public interface ParameterSource<O extends JavaSource<O>> extends Parameter<O>,
+         AnnotationTargetSource<O, ParameterSource<O>>
 {
 }

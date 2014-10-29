@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 import org.eclipse.jdt.core.compiler.IProblem;
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
+import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jface.text.Document;
@@ -28,6 +28,7 @@ import org.jboss.forge.roaster.model.ast.AnnotationAccessor;
 import org.jboss.forge.roaster.model.ast.ModifierAccessor;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.Import;
+import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.source.JavaPackageInfoSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.util.Formatter;
@@ -37,6 +38,15 @@ import org.jboss.forge.roaster.spi.WildcardImportResolver;
 
 public class JavaPackageInfoImpl implements JavaPackageInfoSource
 {
+   protected final Document document;
+   protected final CompilationUnit unit;
+   protected final PackageDeclaration pkg;
+   protected final JavaSource<?> enclosingType;
+
+   private final AnnotationAccessor<JavaPackageInfoSource, JavaPackageInfoSource> annotations = new AnnotationAccessor<JavaPackageInfoSource, JavaPackageInfoSource>();
+   private final ModifierAccessor modifiers = new ModifierAccessor();
+
+   private static List<WildcardImportResolver> resolvers;
 
    public JavaPackageInfoImpl(JavaSource<?> enclosingType, Document document,
             CompilationUnit unit, PackageDeclaration pkg)
@@ -52,16 +62,6 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    {
       return "package-info";
    }
-
-   private final AnnotationAccessor<JavaPackageInfoSource, JavaPackageInfoSource> annotations = new AnnotationAccessor<JavaPackageInfoSource, JavaPackageInfoSource>();
-   private final ModifierAccessor modifiers = new ModifierAccessor();
-
-   protected final Document document;
-   protected final CompilationUnit unit;
-   protected final ASTNode pkg;
-   protected final JavaSource<?> enclosingType;
-
-   private static List<WildcardImportResolver> resolvers;
 
    @Override
    public JavaSource<?> getEnclosingType()
@@ -721,4 +721,28 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
       return Collections.emptyList();
    }
 
+   @Override
+   public JavaDocSource<JavaPackageInfoSource> getJavaDoc()
+   {
+      Javadoc javadoc = pkg.getJavadoc();
+      if (javadoc == null)
+      {
+         javadoc = pkg.getAST().newJavadoc();
+         pkg.setJavadoc(javadoc);
+      }
+      return new JavaDocImpl<JavaPackageInfoSource>(this, javadoc);
+   }
+
+   @Override
+   public JavaPackageInfoSource removeJavaDoc()
+   {
+      pkg.setJavadoc(null);
+      return this;
+   }
+
+   @Override
+   public boolean hasJavaDoc()
+   {
+      return pkg.getJavadoc() != null;
+   }
 }

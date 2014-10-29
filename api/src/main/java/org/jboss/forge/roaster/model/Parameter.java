@@ -6,7 +6,6 @@
  */
 package org.jboss.forge.roaster.model;
 
-
 /**
  * Represents a parameter of a {@link Method}.
  * 

@@ -19,6 +19,7 @@ import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jface.text.Document;
@@ -38,6 +39,7 @@ import org.jboss.forge.roaster.model.source.EnumConstantSource.Body;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.source.JavaEnumSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MemberSource;
@@ -883,4 +885,34 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
       return getNestedTypes();
    }
 
+   @Override
+   public JavaDocSource<Body> getJavaDoc()
+   {
+      BodyDeclaration body = getFirstBodyDeclaration();
+      Javadoc javadoc = body.getJavadoc();
+      if (javadoc == null)
+      {
+         javadoc = body.getAST().newJavadoc();
+         body.setJavadoc(javadoc);
+      }
+      return new JavaDocImpl<Body>(this, javadoc);
+   }
+
+   @Override
+   public Body removeJavaDoc()
+   {
+      getFirstBodyDeclaration().setJavadoc(null);
+      return this;
+   }
+
+   @Override
+   public boolean hasJavaDoc()
+   {
+      return getFirstBodyDeclaration().getJavadoc() != null;
+   }
+
+   private BodyDeclaration getFirstBodyDeclaration()
+   {
+      return (BodyDeclaration) getBody().bodyDeclarations().get(0);
+   }
 }
