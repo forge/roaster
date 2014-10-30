@@ -69,7 +69,7 @@ javaClass.addField()
   .setName("serialVersionUID")
   .setType("long")
   .setLiteralInitializer("1L")
-  .setPrivate
+  .setPrivate()
   .setStatic(true)
   .setFinal(true);
 
