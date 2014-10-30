@@ -15,6 +15,7 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.SimpleName;
@@ -32,6 +33,7 @@ import org.jboss.forge.roaster.model.ast.AnnotationAccessor;
 import org.jboss.forge.roaster.model.ast.ModifierAccessor;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
@@ -759,4 +761,28 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       return this;
    }
 
+   @Override
+   public boolean hasJavaDoc()
+   {
+      return method.getJavadoc() != null;
+   }
+
+   @Override
+   public MethodSource<O> removeJavaDoc()
+   {
+      method.setJavadoc(null);
+      return this;
+   }
+
+   @Override
+   public JavaDocSource<MethodSource<O>> getJavaDoc()
+   {
+      Javadoc javadoc = method.getJavadoc();
+      if (javadoc == null)
+      {
+         javadoc = method.getAST().newJavadoc();
+         method.setJavadoc(javadoc);
+      }
+      return new JavaDocImpl<MethodSource<O>>(this, javadoc);
+   }
 }

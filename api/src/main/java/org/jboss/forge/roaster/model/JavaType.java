@@ -22,7 +22,8 @@ public interface JavaType<T extends JavaType<T>> extends
          Named,
          VisibilityScoped,
          AnnotationTarget<T>,
-         Origin<T>
+         Origin<T>,
+         JavaDocCapable<T>
 {
    /**
     * Return the canonical name of this {@link T} instance. This is equivalent to calling

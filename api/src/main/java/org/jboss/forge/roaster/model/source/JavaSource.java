@@ -21,7 +21,8 @@ public interface JavaSource<T extends JavaSource<T>> extends JavaType<T>,
          Importer<T>,
          NamedSource<T>,
          VisibilityScopedSource<T>,
-         AnnotationTargetSource<T, T>
+         AnnotationTargetSource<T, T>,
+         JavaDocCapableSource<T>
 {
    @Override
    public JavaSource<?> getEnclosingType();

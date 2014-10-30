@@ -21,6 +21,7 @@ import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
+import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
@@ -38,6 +39,7 @@ import org.jboss.forge.roaster.model.ast.ModifierAccessor;
 import org.jboss.forge.roaster.model.ast.TypeDeclarationFinderVisitor;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.Import;
+import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.TypeHolderSource;
 import org.jboss.forge.roaster.model.util.Formatter;
@@ -866,6 +868,31 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    public List<JavaSource<?>> getNestedClasses()
    {
       return getNestedTypes();
+   }
+
+   @Override
+   public JavaDocSource<O> getJavaDoc()
+   {
+      Javadoc javadoc = body.getJavadoc();
+      if (javadoc == null)
+      {
+         javadoc = body.getAST().newJavadoc();
+         body.setJavadoc(javadoc);
+      }
+      return new JavaDocImpl<O>((O) this, javadoc);
+   }
+
+   @Override
+   public O removeJavaDoc()
+   {
+      body.setJavadoc(null);
+      return (O) this;
+   }
+
+   @Override
+   public boolean hasJavaDoc()
+   {
+      return body.getJavadoc() != null;
    }
 
    private List<AbstractTypeDeclaration> getNestedDeclarations(BodyDeclaration body)
