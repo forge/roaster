@@ -17,12 +17,17 @@ import org.jboss.forge.roaster.model.JavaType;
  */
 public interface AnnotationSource<O extends JavaType<O>> extends Annotation<O>
 {
-
    @Override
    AnnotationSource<O> getAnnotationValue();
 
    @Override
    AnnotationSource<O> getAnnotationValue(String name);
+
+   @Override
+   AnnotationSource<O>[] getAnnotationArrayValue();
+
+   @Override
+   AnnotationSource<O>[] getAnnotationArrayValue(String name);
 
    AnnotationSource<O> removeValue(String name);
 
