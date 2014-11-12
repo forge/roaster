@@ -84,7 +84,7 @@ public class JavaDocImpl<O> implements JavaDocSource<O>
          {
             text.append(fragment);
          }
-         text.append(System.lineSeparator());
+         text.append(System.getProperty("line.separator"));
       }
       return text.toString().trim();
    }

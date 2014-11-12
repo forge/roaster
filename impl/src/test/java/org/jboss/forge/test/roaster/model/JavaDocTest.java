@@ -24,6 +24,8 @@ import org.junit.Test;
  */
 public class JavaDocTest
 {
+   private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
    @Test
    public void testJavaDocParsing() throws Exception
    {
@@ -69,10 +71,10 @@ public class JavaDocTest
    @Test
    public void testJavaDocCreation() throws Exception
    {
-      String expected = "/**" + System.lineSeparator()
-               + " * Do Something" + System.lineSeparator()
-               + " * @author George Gastaldi" + System.lineSeparator() + " */" + System.lineSeparator()
-               + "public class MyClass" + System.lineSeparator() + "{" + System.lineSeparator() + "}";
+      String expected = "/**" + LINE_SEPARATOR
+               + " * Do Something" + LINE_SEPARATOR
+               + " * @author George Gastaldi" + LINE_SEPARATOR + " */" + LINE_SEPARATOR
+               + "public class MyClass" + LINE_SEPARATOR + "{" + LINE_SEPARATOR + "}";
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class).setPublic().setName("MyClass");
       Assert.assertFalse(javaClass.hasJavaDoc());
       JavaDocSource<JavaClassSource> javaDoc = javaClass.getJavaDoc();
@@ -83,28 +85,28 @@ public class JavaDocTest
    @Test
    public void testJavaDocSetFullText() throws Exception
    {
-      String expected = "/**" + System.lineSeparator()
-               + " * Do Something" + System.lineSeparator()
-               + " * @author George Gastaldi" + System.lineSeparator() + " */" + System.lineSeparator()
-               + "public class MyClass" + System.lineSeparator() + "{" + System.lineSeparator() + "}";
+      String expected = "/**" + LINE_SEPARATOR
+               + " * Do Something" + LINE_SEPARATOR
+               + " * @author George Gastaldi" + LINE_SEPARATOR + " */" + LINE_SEPARATOR
+               + "public class MyClass" + LINE_SEPARATOR + "{" + LINE_SEPARATOR + "}";
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class).setPublic().setName("MyClass");
       Assert.assertFalse(javaClass.hasJavaDoc());
       JavaDocSource<JavaClassSource> javaDoc = javaClass.getJavaDoc();
-      javaDoc.setFullText("Do Something" + System.lineSeparator() + "* @author George Gastaldi");
+      javaDoc.setFullText("Do Something" + LINE_SEPARATOR + "* @author George Gastaldi");
       Assert.assertEquals(expected, javaClass.toString());
    }
 
    @Test
    public void testJavaDocGetFullText() throws Exception
    {
-      String text = "/**" + System.lineSeparator()
-               + " * Do Something" + System.lineSeparator()
-               + " * @author George Gastaldi" + System.lineSeparator() + " */" + System.lineSeparator()
-               + "public class MyClass" + System.lineSeparator() + "{" + System.lineSeparator() + "}";
+      String text = "/**" + LINE_SEPARATOR
+               + " * Do Something" + LINE_SEPARATOR
+               + " * @author George Gastaldi" + LINE_SEPARATOR + " */" + LINE_SEPARATOR
+               + "public class MyClass" + LINE_SEPARATOR + "{" + LINE_SEPARATOR + "}";
       JavaClassSource javaClass = Roaster.parse(JavaClassSource.class, text);
       Assert.assertTrue(javaClass.hasJavaDoc());
       JavaDocSource<JavaClassSource> javaDoc = javaClass.getJavaDoc();
-      String expected = "Do Something" + System.lineSeparator() + "@author George Gastaldi";
+      String expected = "Do Something" + LINE_SEPARATOR + "@author George Gastaldi";
       Assert.assertEquals(expected, javaDoc.getFullText());
    }
 
@@ -113,9 +115,9 @@ public class JavaDocTest
    {
       String text =
                "public class MyClass {"
-                        + "/**" + System.lineSeparator()
-                        + " * Do Something" + System.lineSeparator()
-                        + " * @author George Gastaldi" + System.lineSeparator() + " */" + System.lineSeparator() + ""
+                        + "/**" + LINE_SEPARATOR
+                        + " * Do Something" + LINE_SEPARATOR
+                        + " * @author George Gastaldi" + LINE_SEPARATOR + " */" + LINE_SEPARATOR + ""
                         + "private String foo;}";
       JavaClassSource javaClass = Roaster.parse(JavaClassSource.class, text);
       Assert.assertFalse(javaClass.hasJavaDoc());
@@ -123,7 +125,7 @@ public class JavaDocTest
       FieldSource<JavaClassSource> field = javaClass.getFields().get(0);
       Assert.assertTrue(field.hasJavaDoc());
       JavaDocSource<FieldSource<JavaClassSource>> javaDoc = field.getJavaDoc();
-      String expected = "Do Something" + System.lineSeparator() + "@author George Gastaldi";
+      String expected = "Do Something" + LINE_SEPARATOR + "@author George Gastaldi";
       Assert.assertEquals(expected, javaDoc.getFullText());
    }
 
@@ -132,9 +134,9 @@ public class JavaDocTest
    {
       String text =
                "public class MyClass {"
-                        + "/**" + System.lineSeparator()
-                        + " * Do Something" + System.lineSeparator()
-                        + " * @author George Gastaldi" + System.lineSeparator() + " */" + System.lineSeparator() + ""
+                        + "/**" + LINE_SEPARATOR
+                        + " * Do Something" + LINE_SEPARATOR
+                        + " * @author George Gastaldi" + LINE_SEPARATOR + " */" + LINE_SEPARATOR + ""
                         + "private void foo(){};}";
       JavaClassSource javaClass = Roaster.parse(JavaClassSource.class, text);
       Assert.assertFalse(javaClass.hasJavaDoc());
@@ -142,7 +144,7 @@ public class JavaDocTest
       MethodSource<JavaClassSource> method = javaClass.getMethods().get(0);
       Assert.assertTrue(method.hasJavaDoc());
       JavaDocSource<MethodSource<JavaClassSource>> javaDoc = method.getJavaDoc();
-      String expected = "Do Something" + System.lineSeparator() + "@author George Gastaldi";
+      String expected = "Do Something" + LINE_SEPARATOR + "@author George Gastaldi";
       Assert.assertEquals(expected, javaDoc.getFullText());
    }
 
