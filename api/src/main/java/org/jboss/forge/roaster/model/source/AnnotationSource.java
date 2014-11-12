@@ -51,8 +51,17 @@ public interface AnnotationSource<O extends JavaType<O>> extends Annotation<O>
 
    AnnotationSource<O> setStringValue(String name, String value);
 
+   /**
+    * Set an annotation value.
+    * @return the nested {@link AnnotationSource}
+    */
    AnnotationSource<O> setAnnotationValue();
 
+   /**
+    * Set a named annotation value.
+    * @param name
+    * @return the nested {@link AnnotationSource}
+    */
    AnnotationSource<O> setAnnotationValue(String name);
 
    AnnotationSource<O> setClassValue(String name, Class<?> value);
