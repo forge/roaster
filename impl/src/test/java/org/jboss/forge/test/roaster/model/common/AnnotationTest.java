@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2012-2014 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Eclipse Public License version 1.0, available at
  * http://www.eclipse.org/legal/epl-v10.html
@@ -10,6 +10,8 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.annotation.ElementType;
@@ -570,23 +572,203 @@ public abstract class AnnotationTest<O extends JavaSource<O>, T>
       Assert.assertArrayEquals(values, ann.getStringArrayValue("aName"));
    }
 
-    @Test
-    public void testCheckValueAreDefined() throws Exception
-    {
-        int size = target.getAnnotations().size();
+   @Test
+   public void testCheckValueAreDefined() throws Exception
+   {
+      int size = target.getAnnotations().size();
 
-        target.addAnnotation(Test.class).setLiteralValue("expected", "RuntimeException.class")
-                .setLiteralValue("foo", "bar");
+      target.addAnnotation(Test.class).setLiteralValue("expected", "RuntimeException.class")
+               .setLiteralValue("foo", "bar");
 
-        List<AnnotationSource<O>> annotations = target.getAnnotations();
-        assertEquals( size + 1, annotations.size() );
+      List<AnnotationSource<O>> annotations = target.getAnnotations();
+      assertEquals(size + 1, annotations.size());
 
-        AnnotationSource<O> annotation = annotations.get(annotations.size() - 1);
-        assertEquals(Test.class.getSimpleName(), annotation.getName());
-        assertTrue( annotation.isTypeElementDefined( "foo" ) );
-        assertTrue( annotation.isTypeElementDefined( "expected" ) );
-        assertFalse( annotation.isTypeElementDefined( "missing" ) );
-        assertFalse( annotation.isTypeElementDefined( "fooo" ) );
-    }
+      AnnotationSource<O> annotation = annotations.get(annotations.size() - 1);
+      assertEquals(Test.class.getSimpleName(), annotation.getName());
+      assertTrue(annotation.isTypeElementDefined("foo"));
+      assertTrue(annotation.isTypeElementDefined("expected"));
+      assertFalse(annotation.isTypeElementDefined("missing"));
+      assertFalse(annotation.isTypeElementDefined("fooo"));
+   }
 
+   @Test
+   public void testAddDefaultAnnotationValuesToMarker() {
+      final AnnotationSource<O> annotation = target.getAnnotation("MockContainerAnnotation");
+      annotation.removeAllValues();
+      assertTrue(annotation.isMarker());
+      annotation.addAnnotationValue().setName("MockContainedAnnotation").setLiteralValue("0");
+      assertTrue(annotation.isSingleValue());
+      assertNotNull(annotation.getAnnotationValue());
+      assertEquals("MockContainedAnnotation", annotation.getAnnotationValue().getName());
+      assertEquals("0", annotation.getAnnotationValue().getLiteralValue());
+      annotation.addAnnotationValue().setName("MockContainedAnnotation").setLiteralValue("1");
+      final AnnotationSource<O>[] values = annotation.getAnnotationArrayValue();
+      assertNotNull(values);
+      assertEquals(2, values.length);
+      for (int i = 0; i < values.length; i++) {
+         assertEquals("MockContainedAnnotation", values[i].getName());
+         assertEquals(Integer.toString(i), values[i].getLiteralValue());
+      }
+   }
+
+   @Test
+   public void testAddNamedDefaultAnnotationValuesToMarker() {
+      final AnnotationSource<O> annotation = target.getAnnotation("MockContainerAnnotation");
+      annotation.removeAllValues();
+      assertTrue(annotation.isMarker());
+      annotation.addAnnotationValue("value").setName("MockContainedAnnotation").setLiteralValue("0");
+      assertTrue(annotation.isSingleValue());
+      assertNotNull(annotation.getAnnotationValue());
+      assertEquals("MockContainedAnnotation", annotation.getAnnotationValue().getName());
+      assertEquals("0", annotation.getAnnotationValue().getLiteralValue());
+      annotation.addAnnotationValue("value").setName("MockContainedAnnotation").setLiteralValue("1");
+      final AnnotationSource<O>[] values = annotation.getAnnotationArrayValue();
+      assertNotNull(values);
+      assertEquals(2, values.length);
+      for (int i = 0; i < values.length; i++) {
+         assertEquals("MockContainedAnnotation", values[i].getName());
+         assertEquals(Integer.toString(i), values[i].getLiteralValue());
+      }
+   }
+
+   @Test
+   public void testAddNextDefaultAnnotationValue() {
+      final AnnotationSource<O> annotation = target.getAnnotation("MockContainerAnnotation");
+      assertTrue(annotation.isSingleValue());
+      annotation.addAnnotationValue().setName("MockContainedAnnotation").setLiteralValue("1");
+      assertTrue(annotation.isSingleValue());
+      final AnnotationSource<O>[] values = annotation.getAnnotationArrayValue();
+      assertNotNull(values);
+      assertEquals(2, values.length);
+      for (int i = 0; i < values.length; i++) {
+         assertEquals("MockContainedAnnotation", values[i].getName());
+         assertEquals(Integer.toString(i), values[i].getLiteralValue());
+      }
+   }
+
+   @Test
+   public void testAddNextNamedDefaultAnnotationValue() {
+      final AnnotationSource<O> annotation = target.getAnnotation("MockContainerAnnotation");
+      assertTrue(annotation.isSingleValue());
+      annotation.addAnnotationValue("value").setName("MockContainedAnnotation").setLiteralValue("1");
+      assertTrue(annotation.isSingleValue());
+      final AnnotationSource<O>[] values = annotation.getAnnotationArrayValue();
+      assertNotNull(values);
+      assertEquals(2, values.length);
+      for (int i = 0; i < values.length; i++) {
+         assertEquals("MockContainedAnnotation", values[i].getName());
+         assertEquals(Integer.toString(i), values[i].getLiteralValue());
+      }
+   }
+   
+   @Test
+   public void testAddDefaultAnnotationValueToEmptyArray() {
+      final AnnotationSource<O> annotation = target.getAnnotation("MockContainerAnnotation");
+      assertTrue(annotation.isSingleValue());
+      annotation.setLiteralValue("{}");
+      
+   }
+
+   @Test
+   public void testAddNamedAnnotationValuesToMarker() {
+      final AnnotationSource<O> annotation = target.getAnnotation("MockContainerAnnotation");
+      annotation.removeAllValues();
+      assertTrue(annotation.isMarker());
+      annotation.addAnnotationValue("child").setName("MockContainedAnnotation").setLiteralValue("0");
+      assertTrue(annotation.isNormal());
+      assertNotNull(annotation.getAnnotationValue("child"));
+      assertEquals("MockContainedAnnotation", annotation.getAnnotationValue("child").getName());
+      assertEquals("0", annotation.getAnnotationValue("child").getLiteralValue());
+      annotation.addAnnotationValue("child").setName("MockContainedAnnotation").setLiteralValue("1");
+      final AnnotationSource<O>[] values = annotation.getAnnotationArrayValue("child");
+      assertNotNull(values);
+      assertEquals(2, values.length);
+      for (int i = 0; i < values.length; i++) {
+         assertEquals("MockContainedAnnotation", values[i].getName());
+         assertEquals(Integer.toString(i), values[i].getLiteralValue());
+      }
+   }
+
+   @Test
+   public void testAddNamedAnnotationValuesToSingleValue() {
+      final AnnotationSource<O> annotation = target.getAnnotation("MockContainerAnnotation");
+      assertTrue(annotation.isSingleValue());
+      annotation.addAnnotationValue("child").setName("MockContainedAnnotation").setLiteralValue("0");
+      assertTrue(annotation.isNormal());
+      assertNotNull(annotation.getAnnotationArrayValue());
+      assertNotNull(annotation.getAnnotationArrayValue("value"));
+      assertNotNull(annotation.getAnnotationValue("child"));
+      assertEquals("MockContainedAnnotation", annotation.getAnnotationValue("child").getName());
+      assertEquals("0", annotation.getAnnotationValue("child").getLiteralValue());
+      annotation.addAnnotationValue("child").setName("MockContainedAnnotation").setLiteralValue("1");
+      final AnnotationSource<O>[] values = annotation.getAnnotationArrayValue("child");
+      assertNotNull(values);
+      assertEquals(2, values.length);
+      for (int i = 0; i < values.length; i++) {
+         assertEquals("MockContainedAnnotation", values[i].getName());
+         assertEquals(Integer.toString(i), values[i].getLiteralValue());
+      }
+   }
+
+   @Test
+   public void testRemoveDefaultAnnotationValue()
+   {
+      final AnnotationSource<O> annotation = target.getAnnotation("MockContainerAnnotation");
+      assertTrue(annotation.isSingleValue());
+      annotation.addAnnotationValue().setName("MockContainedAnnotation").setLiteralValue("1");
+      final AnnotationSource<O>[] values = annotation.getAnnotationArrayValue();
+      assertNotNull(values);
+      assertEquals(2, values.length);
+      assertSame(annotation, annotation.removeAnnotationValue(values[0]));
+      final AnnotationSource<O> lastChild = annotation.getAnnotationValue();
+      assertNotNull(lastChild);
+      assertEquals("MockContainedAnnotation", lastChild.getName());
+      assertEquals("1", lastChild.getLiteralValue());
+      assertSame(annotation, annotation.removeAnnotationValue(lastChild));
+      assertTrue(annotation.isMarker());
+   }
+
+   @Test
+   public void testRemoveDefaultAnnotationValueFromNormalAnnotation()
+   {
+      final AnnotationSource<O> annotation = target.getAnnotation("MockContainerAnnotation");
+      assertTrue(annotation.isSingleValue());
+      annotation.setStringValue("foo", "bar");
+      assertTrue(annotation.isNormal());
+      assertSame(annotation, annotation.removeAnnotationValue(annotation.getAnnotationArrayValue()[0]));
+      assertTrue(annotation.isNormal());
+      assertNull(annotation.getLiteralValue());
+   }
+
+   @Test
+   public void testRemoveNamedAnnotationValue()
+   {
+      final AnnotationSource<O> annotation = target.getAnnotation("MockContainerAnnotation");
+      annotation.addAnnotationValue("foo").setName("MockContainedAnnotation").setStringValue("foo");
+      annotation.addAnnotationValue("foo").setName("MockContainedAnnotation").setStringValue("bar");
+
+      AnnotationSource<O>[] foo = annotation.getAnnotationArrayValue("foo");
+      assertNotNull(foo);
+      assertEquals(2, foo.length);
+      
+      assertEquals("foo", foo[0].getStringValue());
+      assertEquals("bar", foo[1].getStringValue());
+
+      annotation.removeAnnotationValue("foo", foo[0]);
+      foo = annotation.getAnnotationArrayValue("foo");
+      assertNotNull(foo);
+      assertEquals(1, foo.length);
+      assertEquals("bar", foo[0].getStringValue());
+   }
+
+   @Test
+   public void testConvertNestedAnnotationArrayElement()
+   {
+      final AnnotationSource<O> annotation = target.getAnnotation("MockContainerAnnotation");
+      // demonstrate that we interpret a single-element array equally to an annotation value:
+      final AnnotationSource<O> nested = annotation.getAnnotationValue();
+      assertTrue(nested.isSingleValue());
+      nested.removeAllValues();
+      assertTrue(nested.isMarker());
+   }
 }

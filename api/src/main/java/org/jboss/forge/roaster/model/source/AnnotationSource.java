@@ -64,6 +64,40 @@ public interface AnnotationSource<O extends JavaType<O>> extends Annotation<O>
     */
    AnnotationSource<O> setAnnotationValue(String name);
 
+   /**
+    * Add an annotation value.
+    * @return the nested {@link AnnotationSource}
+    * @see #addAnnotationValue(String)
+    */
+   AnnotationSource<O> addAnnotationValue();
+
+   /**
+    * Add a named annotation value. When there is no existing annotation or annotation array value for {@code name}, a
+    * single unwrapped annotation value will be created (as with {@link #setAnnotationValue(String)}); otherwise an
+    * unwrapped annotation value will be promoted to an array and a new element will be added.
+    * 
+    * @param name
+    * @return the nested {@link AnnotationSource}
+    */
+   AnnotationSource<O> addAnnotationValue(String name);
+
+   /**
+    * Remove {@code element} from the array of values associated with the {@code "value"} annotation element.
+    * 
+    * @param element
+    * @return this, fluently
+    */
+   AnnotationSource<O> removeAnnotationValue(Annotation<O> element);
+
+   /**
+    * Remove {@code element} from the array of values associated with the specified annotation element.
+    * 
+    * @param name
+    * @param element
+    * @return this, fluently
+    */
+   AnnotationSource<O> removeAnnotationValue(String name, Annotation<O> element);
+
    AnnotationSource<O> setClassValue(String name, Class<?> value);
 
    AnnotationSource<O> setClassValue(Class<?> value);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2012-2014 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Eclipse Public License version 1.0, available at
  * http://www.eclipse.org/legal/epl-v10.html
@@ -9,8 +9,11 @@ package org.jboss.forge.roaster.model.impl;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -24,6 +27,7 @@ import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeLiteral;
 import org.jboss.forge.roaster.Roaster;
+import org.jboss.forge.roaster.model.Annotation;
 import org.jboss.forge.roaster.model.JavaClass;
 import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.ValuePair;
@@ -57,9 +61,15 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          {
             ((SingleMemberAnnotation) oldNode.getParent()).setValue(newNode);
          }
-         else
+         else if (oldNode.getParent() instanceof MemberValuePair)
          {
             ((MemberValuePair) oldNode.getParent()).setValue(newNode);
+         }
+         else if (oldNode.getParent() instanceof ArrayInitializer)
+         {
+            @SuppressWarnings("unchecked")
+            final List<org.eclipse.jdt.core.dom.Annotation> expressions = ((ArrayInitializer) oldNode.getParent()).expressions();
+            expressions.set(expressions.indexOf(oldNode), newNode);
          }
       }
 
@@ -85,6 +95,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    {
       this.parent = parent;
       ast = ((ASTNode) parent.getInternal()).getAST();
+      Assert.notNull(internal, "internal representation must not be null");
       annotation = (org.eclipse.jdt.core.dom.Annotation) internal;
    }
 
@@ -125,13 +136,11 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public String getLiteralValue() throws IllegalStateException
    {
-      String result = null;
       if (isSingleValue())
       {
-         SingleMemberAnnotation sm = (SingleMemberAnnotation) annotation;
-         result = sm.getValue().toString();
+         return ((SingleMemberAnnotation) annotation).getValue().toString();
       }
-      else if (isNormal())
+      if (isNormal())
       {
          List<ValuePair> values = getValues();
          for (ValuePair pair : values)
@@ -139,18 +148,20 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
             String name = pair.getName();
             if (DEFAULT_VALUE.equals(name))
             {
-               result = pair.getLiteralValue();
-               break;
+               return pair.getLiteralValue();
             }
          }
       }
-      return result;
+      return null;
    }
 
    @Override
    public String getLiteralValue(final String name)
    {
-      String result = null;
+      if (DEFAULT_VALUE.equals(name) && isSingleValue())
+      {
+         return getLiteralValue();
+      }
       if (isNormal())
       {
          for (Object v : ((NormalAnnotation) annotation).values())
@@ -160,17 +171,12 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
                MemberValuePair pair = (MemberValuePair) v;
                if (pair.getName().getFullyQualifiedName().equals(name))
                {
-                  result = pair.getValue().toString();
-                  break;
+                  return pair.getValue().toString();
                }
             }
          }
       }
-      else if (DEFAULT_VALUE.equals(name) && isSingleValue())
-      {
-         return getLiteralValue();
-      }
-      return result;
+      return null;
    }
 
    @Override
@@ -479,15 +485,19 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
 
    private void convertTo(final AnnotationType type)
    {
-      String value = this.getLiteralValue();
-      AnnotationImpl<O, T> na = new AnnotationImpl<O, T>(parent, type);
-      na.setName(getName());
-      replace(annotation, na.annotation);
-      annotation = na.annotation;
-
-      if (AnnotationType.MARKER != type && (value != null))
+      if (isMarker() && type != AnnotationType.MARKER || isSingleValue() && type != AnnotationType.SINGLE || isNormal()
+               && type != AnnotationType.NORMAL)
       {
-         setLiteralValue(value);
+         String value = this.getLiteralValue();
+         AnnotationImpl<O, T> na = new AnnotationImpl<O, T>(parent, type);
+         na.setName(getName());
+         replace(annotation, na.annotation);
+         annotation = na.annotation;
+
+         if (AnnotationType.MARKER != type && (value != null))
+         {
+            setLiteralValue(value);
+         }
       }
    }
 
@@ -585,6 +595,200 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    }
 
    @Override
+   public AnnotationSource<O> addAnnotationValue()
+   {
+      if (isNormal()) {
+         return addAnnotationValue(DEFAULT_VALUE);
+      }
+      if (isMarker())
+      {
+         convertTo(AnnotationType.SINGLE);
+      }
+      Expression expr = ((SingleMemberAnnotation) annotation).getValue();
+      if (expr instanceof org.eclipse.jdt.core.dom.Annotation)
+      {
+         // wrap a single annotation value:
+         ArrayInitializer arrayInit = ast.newArrayInitializer();
+         {
+            @SuppressWarnings({ "unused", "unchecked" })
+            boolean junk = arrayInit.expressions().add(ASTNode.copySubtree(ast, expr));
+         }
+         ((SingleMemberAnnotation) annotation).setValue(arrayInit);
+         expr = arrayInit;
+      }
+      if (expr instanceof ArrayInitializer)
+      {
+         // append to an annotation array:
+         final org.eclipse.jdt.core.dom.Annotation arrayElement = createAnnotation(parent, AnnotationType.MARKER);
+         if (((ArrayInitializer) expr).expressions().isEmpty())
+         {
+            ((SingleMemberAnnotation) annotation).setValue(arrayElement);
+         }
+         else
+         {
+            @SuppressWarnings({ "unchecked", "unused" })
+            boolean junk = ((ArrayInitializer) expr).expressions().add(arrayElement);
+         }
+         return new Nested(this, arrayElement);
+      }
+      // overwrite with a single annotation value:
+      return setAnnotationValue();
+   }
+
+   @Override
+   public AnnotationSource<O> addAnnotationValue(String name)
+   {
+      if (!isNormal())
+      {
+         if (DEFAULT_VALUE.equals(name))
+         {
+            return addAnnotationValue();
+         }
+         convertTo(AnnotationType.NORMAL);
+      }
+      MemberValuePair memberValuePair = null;
+      
+      for (Object value : ((NormalAnnotation) annotation).values())
+      {
+         if (value instanceof MemberValuePair && Strings.areEqual(name, ((MemberValuePair) value).getName().getIdentifier()))
+         {
+            memberValuePair = (MemberValuePair) value;
+            break;
+         }
+      }
+      if (memberValuePair != null)
+      {
+         Expression expr = memberValuePair.getValue();
+         if (expr instanceof org.eclipse.jdt.core.dom.Annotation)
+         {
+            // wrap a single annotation value:
+            ArrayInitializer arrayInit = ast.newArrayInitializer();
+            {
+               @SuppressWarnings({ "unchecked", "unused" })
+               boolean junk = arrayInit.expressions().add(ASTNode.copySubtree(ast, expr));
+            }
+            memberValuePair.setValue(arrayInit);
+            expr = arrayInit;
+         }
+         if (expr instanceof ArrayInitializer)
+         {
+            // append to an annotation array:
+            final org.eclipse.jdt.core.dom.Annotation arrayElement = createAnnotation(parent, AnnotationType.MARKER);
+            if (((ArrayInitializer) expr).expressions().isEmpty())
+            {
+               memberValuePair.setValue(arrayElement);
+            }
+            else
+            {
+               @SuppressWarnings({ "unchecked", "unused" })
+               boolean junk = ((ArrayInitializer) expr).expressions().add(arrayElement);
+            }
+            return new Nested(this, arrayElement);
+         }
+      }
+      // overwrite with a single annotation value:
+      return setAnnotationValue(name);
+   }
+
+   @Override
+   public AnnotationSource<O> removeAnnotationValue(Annotation<O> element)
+   {
+      Assert.notNull(element, "Cannot remove null element");
+
+      if (isSingleValue())
+      {
+         if (element.getInternal().equals(((SingleMemberAnnotation) annotation).getValue()))
+         {
+            convertTo(AnnotationType.MARKER);
+         }
+         else if (((SingleMemberAnnotation) annotation).getValue() instanceof ArrayInitializer)
+         {
+            final ArrayInitializer arrayInit = (ArrayInitializer) ((SingleMemberAnnotation) annotation).getValue();
+            if (arrayInit.expressions().remove(element.getInternal()))
+            {
+               if (arrayInit.expressions().isEmpty())
+               {
+                  convertTo(AnnotationType.MARKER);
+               }
+               else if (arrayInit.expressions().size() == 1)
+               {
+                  ((SingleMemberAnnotation) annotation).setValue((Expression) ASTNode.copySubtree(ast,
+                           (ASTNode) arrayInit.expressions().get(0)));
+               }
+            }
+         }
+         return this;
+      }
+      return removeAnnotationValue(DEFAULT_VALUE, element);
+   }
+
+   @Override
+   public AnnotationSource<O> removeAnnotationValue(String name, Annotation<O> element)
+   {
+      Assert.notNull(element, "Cannot remove null element");
+
+      if (isSingleValue() && Strings.areEqual(name, DEFAULT_VALUE))
+      {
+         return removeAnnotationValue(element);
+      }
+      if (isNormal())
+      {
+         final Set<String> identifiers = new HashSet<String>();
+         for (@SuppressWarnings("unchecked")
+         Iterator<Object> values = ((NormalAnnotation) annotation).values().iterator(); values.hasNext();)
+         {
+            final Object value = values.next();
+            if (value instanceof MemberValuePair)
+            {
+               final String identifier = ((MemberValuePair) value).getName().getIdentifier();
+               identifiers.add(identifier);
+               if (Strings.areEqual(name, identifier))
+               {
+                  Expression expr = ((MemberValuePair) value).getValue();
+                  if (element.getInternal().equals(expr))
+                  {
+                     // remove entire annotation element for inlined single-element array:
+                     values.remove();
+                     identifiers.remove(identifier);
+                     continue;
+                  }
+                  if (expr instanceof ArrayInitializer)
+                  {
+                     final ArrayInitializer arrayInit = (ArrayInitializer) expr;
+
+                     // remove element:
+                     arrayInit.expressions().remove(element.getInternal());
+
+                     if (arrayInit.expressions().isEmpty())
+                     {
+                        // remove empty array:
+                        values.remove();
+                        identifiers.remove(identifier);
+                     }
+                     else if (arrayInit.expressions().size() == 1)
+                     {
+                        // promote single-element array:
+                        ((MemberValuePair) value).setValue((Expression) ASTNode.copySubtree(ast, (ASTNode) arrayInit
+                                 .expressions().get(0)));
+                     }
+                  }
+               }
+            }
+         }
+         // finally, reduce to simplest equivalent annotation type:
+         if (identifiers.isEmpty())
+         {
+            convertTo(AnnotationType.MARKER);
+         }
+         else if (identifiers.equals(Collections.singleton(DEFAULT_VALUE)))
+         {
+            convertTo(AnnotationType.SINGLE);
+         }
+      }
+      return this;
+   }
+
+   @Override
    public AnnotationSource<O> getAnnotationValue()
    {
       if (isSingleValue())
@@ -594,6 +798,14 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          if (value instanceof org.eclipse.jdt.core.dom.Annotation)
          {
             return new Nested(this, value);
+         }
+         if (value instanceof ArrayInitializer && ((ArrayInitializer) value).expressions().size() == 1)
+         {
+            value = (Expression) ((ArrayInitializer) value).expressions().get(0);
+            if (value instanceof org.eclipse.jdt.core.dom.Annotation)
+            {
+               return new Nested(this, value);
+            }
          }
       }
       if (isNormal())
@@ -615,7 +827,19 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          {
             if (Strings.areEqual(name, memberValuePair.getName().getIdentifier()))
             {
-               return new Nested(this, memberValuePair.getValue());
+               Expression value = memberValuePair.getValue();
+               if (value instanceof org.eclipse.jdt.core.dom.Annotation)
+               {
+                  return new Nested(this, value);
+               }
+               if (value instanceof ArrayInitializer && ((ArrayInitializer) value).expressions().size() == 1)
+               {
+                  value = (Expression) ((ArrayInitializer) value).expressions().get(0);
+                  if (value instanceof org.eclipse.jdt.core.dom.Annotation)
+                  {
+                     return new Nested(this, value);
+                  }
+               }
             }
          }
       }
@@ -631,7 +855,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    {
       return getAnnotationArrayValue(DEFAULT_VALUE);
    }
-   
+
    @Override
    public AnnotationSource<O>[] getAnnotationArrayValue(String name)
    {
@@ -649,6 +873,13 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          @SuppressWarnings("unchecked")
          final AnnotationSource<O>[] result = new AnnotationSource[results.size()];
          return results.toArray(result);
+      }
+      final AnnotationSource<O> annotationValue = getAnnotationValue(name);
+      if (annotationValue != null)
+      {
+         @SuppressWarnings("unchecked")
+         final AnnotationSource<O>[] result = new AnnotationSource[] { annotationValue };
+         return result;
       }
       return null;
    }
@@ -880,16 +1111,16 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       }
    }
 
-    public boolean isTypeElementDefined( String name )
-    {
-        List<ValuePair> values = getValues();
-        for (ValuePair pair : values)
-        {
-            if ( pair.getName().equals( name ) )
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+   public boolean isTypeElementDefined(String name)
+   {
+      List<ValuePair> values = getValues();
+      for (ValuePair pair : values)
+      {
+         if (pair.getName().equals(name))
+         {
+            return true;
+         }
+      }
+      return false;
+   }
 }
