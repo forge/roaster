@@ -7,13 +7,12 @@
 
 package org.jboss.forge.test.roaster.model.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.Vector;
 
 import org.jboss.forge.roaster.model.util.Types;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -129,6 +128,11 @@ public class TypesTest
       assertEquals("java.lang.Class[]", Types.stripGenerics("java.lang.Class<? extends Number>[]"));
       assertEquals("java.lang.Class[]", Types.stripGenerics("java.lang.Class<E extends Enum<E>>[]"));
       assertEquals("int[]", Types.stripGenerics(int[].class.getName()));
+      //@Ignore("ROASTER-45")
+//      assertEquals("java.util.List", Types.stripGenerics("java.util.List<String>"));
+//      assertEquals("java.util.List", Types.stripGenerics("java.util.List<java.lang.String>"));
+//      assertEquals("java.util.List", Types.stripGenerics("java.util.List<List<String>>"));
+//      assertEquals("java.util.List", Types.stripGenerics("java.util.List<List<java.lang.String>>"));
    }
 
    @Test
@@ -141,6 +145,15 @@ public class TypesTest
    public void testAssertClassIsNotJavaLang()
    {
       assertFalse(Types.isJavaLang("AssertClass"));
+   }
+
+   @Ignore("ROASTER-45")
+   @Test
+   public void testAssertToSimpleName() throws Exception
+   {
+      assertEquals("List<String>", Types.toSimpleName("java.util.List<java.lang.String>"));
+      assertEquals("List<String>", Types.toSimpleName("java.util.List<String>"));
+      assertEquals("List<List<String>>", Types.toSimpleName("java.util.List<java.util.List<String>>"));
    }
 
 }

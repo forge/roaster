@@ -7,6 +7,8 @@
 
 package org.jboss.forge.test.roaster.model;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -16,6 +18,7 @@ import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.PropertySource;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -71,6 +74,19 @@ public class JavaClassPropertyTest
       Assert.assertEquals("Timestamp", source.getField("myDate").getType().getName());
       Assert.assertEquals("Timestamp", source.getMethod("getMyDate").getReturnType().getName());
       Assert.assertNotNull(source.getMethod("setMyDate", Timestamp.class));
-
    }
+
+   @Test
+   @Ignore("ROASTER-45")
+   public void testFQNTypes() throws Exception
+   {
+      JavaClassSource source = Roaster.create(JavaClassSource.class).setName("MyClass");
+      source.addProperty("java.util.List<java.lang.String>", "list1");
+      source.addProperty("java.util.List<String>", "list2");
+      source.addProperty("java.util.List<java.util.List<String>>", "list3");
+      assertTrue(source.hasProperty("list1"));
+      assertTrue(source.hasProperty("list2"));
+      assertTrue(source.hasProperty("list3"));
+   }
+
 }
