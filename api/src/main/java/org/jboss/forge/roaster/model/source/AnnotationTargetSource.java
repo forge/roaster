@@ -20,32 +20,35 @@ import org.jboss.forge.roaster.model.AnnotationTarget;
 public interface AnnotationTargetSource<O extends JavaSource<O>, T> extends AnnotationTarget<O>
 {
    @Override
-   public List<AnnotationSource<O>> getAnnotations();
+   List<AnnotationSource<O>> getAnnotations();
 
    @Override
-   public AnnotationSource<O> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type);
+   AnnotationSource<O> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type);
 
    @Override
-   public AnnotationSource<O> getAnnotation(final String type);
+   AnnotationSource<O> getAnnotation(final String type);
 
    /**
     * Add a new annotation instance to this {@link T}. (Note that an import statement must be added manually if
     * required.)
     */
-   public AnnotationSource<O> addAnnotation();
+   AnnotationSource<O> addAnnotation();
 
    /**
-    * Add a new annotation instance to this {@link T}, using the given {@link Class} as the annotation type. Attempt
-    * to add an import statement to this object's {@link O} if required.
+    * Add a new annotation instance to this {@link T}, using the given {@link Class} as the annotation type. Attempt to
+    * add an import statement to this object's {@link O} if required.
     */
-   public AnnotationSource<O> addAnnotation(Class<? extends java.lang.annotation.Annotation> type);
+   AnnotationSource<O> addAnnotation(Class<? extends java.lang.annotation.Annotation> type);
 
    /**
-    * Add a new annotation instance to this {@link T}, using the given {@link String} className as the annotation
-    * type. Attempt to add an import statement to this object's {@link O} if required. (Note that the given className
-    * must be fully-qualified in order to properly import required classes)
+    * Add a new annotation instance to this {@link T}, using the given {@link String} className as the annotation type.
+    * Attempt to add an import statement to this object's {@link O} if required. (Note that the given className must be
+    * fully-qualified in order to properly import required classes)
     */
-   public AnnotationSource<O> addAnnotation(final String className);
+   AnnotationSource<O> addAnnotation(final String className);
 
-   public T removeAnnotation(Annotation<O> annotation);
+   /**
+    * Remove an annotation instance from this {@link T}.
+    */
+   T removeAnnotation(Annotation<O> annotation);
 }

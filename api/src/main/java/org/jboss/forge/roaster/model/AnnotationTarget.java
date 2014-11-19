@@ -19,13 +19,41 @@ import org.jboss.forge.roaster.Origin;
  */
 public interface AnnotationTarget<O extends JavaType<O>> extends Internal, Origin<O>
 {
-   public List<? extends Annotation<O>> getAnnotations();
 
-   public boolean hasAnnotation(final Class<? extends java.lang.annotation.Annotation> type);
+   /**
+    * Returns a {@link List} of {@link Annotation} elements bound to this {@link AnnotationTarget} instance
+    */
+   List<? extends Annotation<O>> getAnnotations();
 
-   public boolean hasAnnotation(final String type);
+   /**
+    * Check if annotation bound of the given type in this {@link AnnotationTarget} exists
+    * 
+    * @param type The {@link java.lang.annotation.Annotation} type
+    * 
+    */
+   boolean hasAnnotation(final Class<? extends java.lang.annotation.Annotation> type);
 
-   public Annotation<O> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type);
+   /**
+    * Check if annotation bound of the given type in this {@link AnnotationTarget} exists
+    * 
+    * @param type The FQN of the annotation
+    * 
+    */
+   boolean hasAnnotation(final String type);
 
-   public Annotation<O> getAnnotation(final String type);
+   /**
+    * Returns the annotation bound of the given type in this {@link AnnotationTarget} or null if it doesn't exist
+    * 
+    * @param type The {@link java.lang.annotation.Annotation} type
+    * 
+    */
+   Annotation<O> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type);
+
+   /**
+    * Returns the annotation bound of the given type in this {@link AnnotationTarget} or null if it doesn't exist
+    * 
+    * @param type The FQN of the annotation
+    * 
+    */
+   Annotation<O> getAnnotation(final String type);
 }
