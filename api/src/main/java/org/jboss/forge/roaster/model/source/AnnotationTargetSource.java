@@ -29,8 +29,8 @@ public interface AnnotationTargetSource<O extends JavaSource<O>, T> extends Anno
    AnnotationSource<O> getAnnotation(final String type);
 
    /**
-    * Add a new annotation instance to this {@link T}. (Note that an import statement must be added manually if
-    * required.)
+    * Add a new annotation instance to this {@link T} (note that an import statement must be added manually if
+    * required).
     */
    AnnotationSource<O> addAnnotation();
 
@@ -42,8 +42,8 @@ public interface AnnotationTargetSource<O extends JavaSource<O>, T> extends Anno
 
    /**
     * Add a new annotation instance to this {@link T}, using the given {@link String} className as the annotation type.
-    * Attempt to add an import statement to this object's {@link O} if required. (Note that the given className must be
-    * fully-qualified in order to properly import required classes)
+    * Attempt to add an import statement to this object's {@link O} if required (note that the given className must be
+    * fully-qualified in order to properly import required classes).
     */
    AnnotationSource<O> addAnnotation(final String className);
 
