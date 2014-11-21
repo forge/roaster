@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jboss.forge.roaster.model.source.Importer;
+import org.jboss.forge.roaster.model.source.JavaSource;
+
 /**
  * Types utilities
  *
@@ -166,15 +169,23 @@ public class Types
       return false;
    }
 
-   public static String toSimpleName(final String fieldType)
+   public static String toSimpleName(final String type)
    {
-      String result = fieldType;
+      String result = type;
       if (result != null)
       {
+         if (isGeneric(type))
+         {
+            result = stripGenerics(result);
+         }
          String[] tokens = tokenizeClassName(result);
          if (tokens != null)
          {
             result = tokens[tokens.length - 1];
+         }
+         if (isGeneric(type))
+         {
+            result += getGenerics(type);
          }
       }
       return result;
@@ -272,14 +283,18 @@ public class Types
    {
       if (isGeneric(type))
       {
-         return type.replaceFirst("^[^<]*(<.*?>)$", "$1");
+         return new StringBuilder("<>").insert(1, getGenericsTypeParameter(type)).toString();
       }
       return "";
    }
 
    public static String getGenericsTypeParameter(final String type)
    {
-      return getGenerics(type).replaceAll("<", "").replaceAll(">", "");
+      if (isGeneric(type))
+      {
+         return type.replaceFirst("^[^<]*<(.*?)>$", "$1");
+      }
+      return "";
    }
 
    // [Bjava.lang.Boolean;
@@ -372,4 +387,5 @@ public class Types
       }
       return count;
    }
+
 }

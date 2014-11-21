@@ -77,7 +77,6 @@ public class JavaClassPropertyTest
    }
 
    @Test
-   @Ignore("ROASTER-45")
    public void testFQNTypes() throws Exception
    {
       JavaClassSource source = Roaster.create(JavaClassSource.class).setName("MyClass");
