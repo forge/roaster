@@ -128,11 +128,10 @@ public class TypesTest
       assertEquals("java.lang.Class[]", Types.stripGenerics("java.lang.Class<? extends Number>[]"));
       assertEquals("java.lang.Class[]", Types.stripGenerics("java.lang.Class<E extends Enum<E>>[]"));
       assertEquals("int[]", Types.stripGenerics(int[].class.getName()));
-      //@Ignore("ROASTER-45")
-//      assertEquals("java.util.List", Types.stripGenerics("java.util.List<String>"));
-//      assertEquals("java.util.List", Types.stripGenerics("java.util.List<java.lang.String>"));
-//      assertEquals("java.util.List", Types.stripGenerics("java.util.List<List<String>>"));
-//      assertEquals("java.util.List", Types.stripGenerics("java.util.List<List<java.lang.String>>"));
+      assertEquals("java.util.List", Types.stripGenerics("java.util.List<String>"));
+      assertEquals("java.util.List", Types.stripGenerics("java.util.List<java.lang.String>"));
+      assertEquals("java.util.List", Types.stripGenerics("java.util.List<List<String>>"));
+      assertEquals("java.util.List", Types.stripGenerics("java.util.List<List<java.lang.String>>"));
    }
 
    @Test
