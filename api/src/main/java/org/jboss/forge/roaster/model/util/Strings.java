@@ -417,17 +417,23 @@ public class Strings
       }
    }
 
+   @Deprecated
    public static int countNumberOfOccurences(String text, String toMatch)
    {
+      return countNumberOfOccurrences(text, toMatch);
+   }
+
+   public static int countNumberOfOccurrences(String text, String toMatch)
+   {
       int count = 0;
-      if(toMatch == null || toMatch.length() < 1)
+      if (toMatch == null || toMatch.length() < 1)
       {
          return count;
       }
 
       String wholeText = text;
       int idx = 0;
-      while((idx = wholeText.indexOf(toMatch, idx)) != -1)
+      while ((idx = wholeText.indexOf(toMatch, idx)) != -1)
       {
          count++;
          idx = idx + toMatch.length();
