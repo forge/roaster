@@ -12,7 +12,6 @@ import static org.junit.Assert.*;
 import java.util.Vector;
 
 import org.jboss.forge.roaster.model.util.Types;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -146,13 +145,14 @@ public class TypesTest
       assertFalse(Types.isJavaLang("AssertClass"));
    }
 
-   @Ignore("ROASTER-45")
    @Test
    public void testAssertToSimpleName() throws Exception
    {
       assertEquals("List<String>", Types.toSimpleName("java.util.List<java.lang.String>"));
       assertEquals("List<String>", Types.toSimpleName("java.util.List<String>"));
       assertEquals("List<List<String>>", Types.toSimpleName("java.util.List<java.util.List<String>>"));
+      assertEquals("List<? extends List<String>>",
+               Types.toSimpleName("java.util.List<? extends java.util.List<String>>"));
    }
 
 }

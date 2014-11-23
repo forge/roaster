@@ -7,6 +7,7 @@
 
 package org.jboss.forge.roaster.model.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -32,6 +33,7 @@ public class Types
    private static final Pattern SIMPLE_ARRAY_PATTERN = Pattern
             .compile("((?:[0-9a-zA-Z\\$]+)(?:\\<[^\\.^\\[]+)?(?:\\.(?:[0-9a-zA-Z\\$]+)(?:\\<[^\\.^\\[]+)?)*)(\\[\\])+");
    private static final Pattern GENERIC_PATTERN = Pattern.compile(".*<.*>$");
+   private static final Pattern WILDCARD_AWARE_TYPE_PATTERN = Pattern.compile("^\\s*(\\?\\s+(?:extends|super)\\s+)?([A-Za-z$_]\\S*)\\s*$");
 
    private static final List<String> LANG_TYPES = Arrays.asList(
             // Interfaces
@@ -168,22 +170,40 @@ public class Types
 
    public static String toSimpleName(final String type)
    {
-      String result = type;
-      if (result != null)
+      if (type == null)
       {
-         if (isGeneric(type))
+         return null;
+      }
+      String result = type;
+
+      if (isGeneric(type))
+      {
+         result = stripGenerics(result);
+      }
+      String[] tokens = tokenizeClassName(result);
+      if (tokens != null)
+      {
+         result = tokens[tokens.length - 1];
+      }
+      if (isGeneric(type))
+      {
+         final List<String> simpleParameters = new ArrayList<String>();
+         for (String typeParameter : getGenericsTypeParameter(type).split(", "))
          {
-            result = stripGenerics(result);
+            final Matcher matcher = WILDCARD_AWARE_TYPE_PATTERN.matcher(typeParameter);
+            if (!matcher.matches())
+            {
+               throw new IllegalArgumentException("Cannot parse type parameter " + typeParameter);
+            }
+            String simpleType = toSimpleName(matcher.group(2));
+            if (matcher.start(1) >= 0)
+            {
+               simpleType = new StringBuilder(matcher.group(1)).append(' ').append(simpleType).toString()
+                        .replaceAll("\\s{2,}?", " ");
+            }
+            simpleParameters.add(simpleType);
          }
-         String[] tokens = tokenizeClassName(result);
-         if (tokens != null)
-         {
-            result = tokens[tokens.length - 1];
-         }
-         if (isGeneric(type))
-         {
-            result += getGenerics(type);
-         }
+         result += new StringBuilder("<>").insert(1, Strings.join(simpleParameters, ", ")).toString();
       }
       return result;
    }
