@@ -53,7 +53,7 @@ public class Strings
 
    public static String join(final Collection<?> collection, final String delimiter)
    {
-      StringBuffer buffer = new StringBuffer();
+      StringBuilder buffer = new StringBuilder();
       Iterator<?> iter = collection.iterator();
       while (iter.hasNext())
       {
