@@ -1,7 +1,8 @@
 Roaster
 =======
 
-Roaster (formerly known as java-parser) is a library that allows easy parsing of java source files, introducing a fluent interface to manipulate Java source files, like adding fields, methods, annotations and so on.
+Roaster (formerly known as java-parser) is a library that allows easy parsing and formatting of java source files. 
+Roaster introduces a fluent interface to manipulate Java source files, like adding fields, methods, annotations and so on.
 
 Installation
 ============
@@ -21,8 +22,8 @@ Execute roaster by running the following script (add these to your $PATH for con
 
 [source]
 ----
-bin/roaster     (UNIX/linux/osx)
-bin/roaster.bat (windows)
+bin/roaster     (Unix/Linux/OSX)
+bin/roaster.bat (Windows)
 ----
 
 Options described here:
@@ -148,6 +149,17 @@ javaClass.addMethod()
   .setBody("System.out.println(\"Hello World\");")
   .addParameter("java.lang.String[]", "args");
 System.out.println(javaClass);
+```
+
+Formatting the Java Source Code
+-------------------------------
+
+Roaster formats the Java Source Code by calling the format() method:
+
+```java
+String javaCode = "public class MyClass{ private String field;}";
+String formattedCode = Roaster.format(javaCode);
+System.out.println(formattedCode);
 ```
 
 Maven Artifacts
