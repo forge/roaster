@@ -17,5 +17,8 @@ import org.jboss.forge.roaster.model.JavaType;
  */
 public interface WildcardImportResolver
 {
-   public String resolve(JavaType<?> source, String type);
+   /**
+    * Resolves the wildcard type from the specified source
+    */
+   String resolve(JavaType<?> source, String type);
 }

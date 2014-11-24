@@ -24,7 +24,7 @@ public interface JavaParser
     * @return instance of {@code T}, {@code null} if the {@link JavaSource} type is not supported by this
     *         {@link JavaParser}.
     */
-   public <T extends JavaSource<?>> T create(final Class<T> type);
+   <T extends JavaSource<?>> T create(final Class<T> type);
 
    /**
     * Read the given {@link InputStream} and parse the data into a new {@link JavaType} instance.
@@ -32,6 +32,6 @@ public interface JavaParser
     * @param data to parse
     * @return {@link JavaType}, {@code null} if the data format is not recognized by this {@link JavaParser}.
     */
-   public JavaType<?> parse(final InputStream data);
+   JavaType<?> parse(final InputStream data);
 
 }
