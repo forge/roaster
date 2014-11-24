@@ -15,10 +15,12 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.ServiceLoader;
 
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.source.JavaSource;
+import org.jboss.forge.roaster.spi.FormatterProvider;
 import org.jboss.forge.roaster.spi.JavaParser;
 
 /**
@@ -29,6 +31,7 @@ import org.jboss.forge.roaster.spi.JavaParser;
 public final class Roaster
 {
    private static List<JavaParser> parsers;
+   private static List<FormatterProvider> formatters;
 
    private static List<JavaParser> getParsers()
    {
@@ -49,6 +52,27 @@ public final class Roaster
          }
       }
       return parsers;
+   }
+
+   private static List<FormatterProvider> getFormatters()
+   {
+      synchronized (Roaster.class)
+      {
+         if (formatters == null || formatters.isEmpty())
+         {
+            formatters = new ArrayList<FormatterProvider>();
+            for (FormatterProvider p : ServiceLoader.load(FormatterProvider.class, Roaster.class.getClassLoader()))
+            {
+               formatters.add(p);
+            }
+         }
+         if (formatters.size() == 0)
+         {
+            throw new IllegalStateException("No instances of [" + FormatterProvider.class.getName()
+                     + "] were found on the classpath.");
+         }
+      }
+      return formatters;
    }
 
    /**
@@ -167,6 +191,35 @@ public final class Roaster
          }
       }
       throw new ParserException("Cannot find JavaParserProvider capable of parsing the requested data");
+   }
+
+   /**
+    * Format the given {@link String} as a Java source file, using the built in code format style.
+    * 
+    * @param source a java source code
+    * @return the formatted source code
+    */
+   public static String format(String source)
+   {
+      String result = source;
+      for (FormatterProvider formatter : getFormatters())
+      {
+         result = formatter.format(result);
+      }
+      return result;
+   }
+
+   /**
+    * Format the given {@link String} as a Java source type, using the given code format {@link Properties}
+    */
+   public static String format(Properties properties, String source)
+   {
+      String result = source;
+      for (FormatterProvider formatter : getFormatters())
+      {
+         result = formatter.format(properties, result);
+      }
+      return result;
    }
 
    private static <T extends JavaType<?>> T internalParse(final Class<T> type, final InputStream data)

@@ -41,4 +41,13 @@ public class FormatterTest
       String original = javaClass.toString();
       assertNotSame(original, result);
    }
+   
+   @Test
+   public void testFormatterSource() throws Exception
+   {
+      String result = Roaster.format(javaClass.toString());
+      String original = javaClass.toString();
+      assertNotSame(original, result);
+   }
+   
 }
