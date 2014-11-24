@@ -53,12 +53,14 @@ public interface AnnotationSource<O extends JavaType<O>> extends Annotation<O>
 
    /**
     * Set an annotation value.
+    * 
     * @return the nested {@link AnnotationSource}
     */
    AnnotationSource<O> setAnnotationValue();
 
    /**
     * Set a named annotation value.
+    * 
     * @param name
     * @return the nested {@link AnnotationSource}
     */
@@ -66,6 +68,7 @@ public interface AnnotationSource<O extends JavaType<O>> extends Annotation<O>
 
    /**
     * Add an annotation value.
+    * 
     * @return the nested {@link AnnotationSource}
     * @see #addAnnotationValue(String)
     */
@@ -80,6 +83,23 @@ public interface AnnotationSource<O extends JavaType<O>> extends Annotation<O>
     * @return the nested {@link AnnotationSource}
     */
    AnnotationSource<O> addAnnotationValue(String name);
+
+   /**
+    * Add an annotation value.
+    * 
+    * @return the nested {@link AnnotationSource}
+    * @see #addAnnotationValue(String)
+    */
+   AnnotationSource<O> addAnnotationValue(Class<? extends java.lang.annotation.Annotation> type);
+
+   /**
+    * Add an annotation value.
+    * 
+    * @param name
+    * @return the nested {@link AnnotationSource}
+    * @see #addAnnotationValue(String)
+    */
+   AnnotationSource<O> addAnnotationValue(String name, Class<? extends java.lang.annotation.Annotation> type);
 
    /**
     * Remove {@code element} from the array of values associated with the {@code "value"} annotation element.

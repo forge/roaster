@@ -68,7 +68,8 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          else if (oldNode.getParent() instanceof ArrayInitializer)
          {
             @SuppressWarnings("unchecked")
-            final List<org.eclipse.jdt.core.dom.Annotation> expressions = ((ArrayInitializer) oldNode.getParent()).expressions();
+            final List<org.eclipse.jdt.core.dom.Annotation> expressions = ((ArrayInitializer) oldNode.getParent())
+                     .expressions();
             expressions.set(expressions.indexOf(oldNode), newNode);
          }
       }
@@ -597,7 +598,8 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public AnnotationSource<O> addAnnotationValue()
    {
-      if (isNormal()) {
+      if (isNormal())
+      {
          return addAnnotationValue(DEFAULT_VALUE);
       }
       if (isMarker())
@@ -647,10 +649,11 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          convertTo(AnnotationType.NORMAL);
       }
       MemberValuePair memberValuePair = null;
-      
+
       for (Object value : ((NormalAnnotation) annotation).values())
       {
-         if (value instanceof MemberValuePair && Strings.areEqual(name, ((MemberValuePair) value).getName().getIdentifier()))
+         if (value instanceof MemberValuePair
+                  && Strings.areEqual(name, ((MemberValuePair) value).getName().getIdentifier()))
          {
             memberValuePair = (MemberValuePair) value;
             break;
@@ -688,6 +691,26 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       }
       // overwrite with a single annotation value:
       return setAnnotationValue(name);
+   }
+
+   @Override
+   public AnnotationSource<O> addAnnotationValue(Class<? extends java.lang.annotation.Annotation> type)
+   {
+      if (!getOrigin().hasImport(type))
+      {
+         getOrigin().addImport(type);
+      }
+      return addAnnotationValue().setName(type.getSimpleName());
+   }
+
+   @Override
+   public AnnotationSource<O> addAnnotationValue(String name, Class<? extends java.lang.annotation.Annotation> type)
+   {
+      if (!getOrigin().hasImport(type))
+      {
+         getOrigin().addImport(type);
+      }
+      return addAnnotationValue(name).setName(type.getSimpleName());
    }
 
    @Override
@@ -884,7 +907,6 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       return null;
    }
 
-   
    @Override
    public <E extends Enum<E>> E[] getEnumArrayValue(Class<E> type)
    {
