@@ -143,9 +143,9 @@ public abstract class Formatter
          {
             Properties config = parseConfig(stream);
             Properties modified = new Properties();
+            String shadePackage = JavaCore.class.getPackage().getName().replaceAll("org\\.eclipse.*$", "");
             for (Entry<Object, Object> property : config.entrySet())
             {
-               String shadePackage = JavaCore.class.getPackage().getName().replaceAll("org\\.eclipse.*$", "");
                modified.put(shadePackage + property.getKey(), property.getValue());
             }
 
