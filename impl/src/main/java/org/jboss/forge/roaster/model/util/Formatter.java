@@ -106,7 +106,8 @@ public abstract class Formatter
     */
    public static String format(Properties prefs, String source)
    {
-      final CodeFormatter codeFormatter = ToolFactory.createCodeFormatter(prefs);
+      Properties shadedProperties = applyShadedPackageName(prefs);
+      final CodeFormatter codeFormatter = ToolFactory.createCodeFormatter(shadedProperties);
       return _format(source, codeFormatter);
    }
 
@@ -141,15 +142,7 @@ public abstract class Formatter
          InputStream stream = new BufferedInputStream(new FileInputStream(prefs));
          try
          {
-            Properties config = parseConfig(stream);
-            Properties modified = new Properties();
-            String shadePackage = JavaCore.class.getPackage().getName().replaceAll("org\\.eclipse.*$", "");
-            for (Entry<Object, Object> property : config.entrySet())
-            {
-               modified.put(shadePackage + property.getKey(), property.getValue());
-            }
-
-            return modified;
+            return parseConfig(stream);
          }
          catch (IOException e)
          {
@@ -163,6 +156,18 @@ public abstract class Formatter
       }
 
       return null;
+   }
+
+   private static Properties applyShadedPackageName(Properties config)
+   {
+      Properties modified = new Properties();
+      String shadePackage = JavaCore.class.getPackage().getName().replaceAll("org\\.eclipse.*$", "");
+      for (Entry<Object, Object> property : config.entrySet())
+      {
+         modified.put(shadePackage + property.getKey(), property.getValue());
+      }
+
+      return modified;
    }
 
    private static Properties readConfigInternal(String filename)
