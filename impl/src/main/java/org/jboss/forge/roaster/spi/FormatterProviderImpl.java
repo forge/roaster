@@ -27,6 +27,7 @@ public class FormatterProviderImpl implements FormatterProvider
    @Override
    public String format(Properties properties, String source)
    {
-      return Formatter.format(properties, source);
+      Properties shadedProperties = Formatter.applyShadedPackageName(properties);
+      return Formatter.format(shadedProperties, source);
    }
 }
