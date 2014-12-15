@@ -12,8 +12,9 @@ import org.jboss.forge.roaster.model.EnumConstant;
 /**
  * Represents one of the constant members of a {@link JavaEnumSource}.
  */
-public interface EnumConstantSource extends EnumConstant<JavaEnumSource>, AnnotationTargetSource<JavaEnumSource, EnumConstantSource>,
-         NamedSource<EnumConstantSource>
+public interface EnumConstantSource extends EnumConstant<JavaEnumSource>,
+         AnnotationTargetSource<JavaEnumSource, EnumConstantSource>,
+         NamedSource<EnumConstantSource>, JavaDocCapableSource<EnumConstantSource>
 {
    /**
     * Represents the anonymous subclass "body" of an {@link EnumConstantSource}.
@@ -35,4 +36,5 @@ public interface EnumConstantSource extends EnumConstant<JavaEnumSource>, Annota
     * Remove the {@link Body} of this enum constant.
     */
    EnumConstantSource removeBody();
+
 }

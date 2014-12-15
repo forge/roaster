@@ -10,9 +10,11 @@ package org.jboss.forge.test.roaster.model;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.JavaDoc;
 import org.jboss.forge.roaster.model.JavaDocTag;
+import org.jboss.forge.roaster.model.source.EnumConstantSource;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaDocSource;
+import org.jboss.forge.roaster.model.source.JavaEnumSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.junit.Assert;
 import org.junit.Test;
@@ -144,6 +146,24 @@ public class JavaDocTest
       MethodSource<JavaClassSource> method = javaClass.getMethods().get(0);
       Assert.assertTrue(method.hasJavaDoc());
       JavaDocSource<MethodSource<JavaClassSource>> javaDoc = method.getJavaDoc();
+      String expected = "Do Something" + LINE_SEPARATOR + "@author George Gastaldi";
+      Assert.assertEquals(expected, javaDoc.getFullText());
+   }
+
+   @Test
+   public void testJavaDocEnumConstant() throws Exception
+   {
+      String text =
+               "public enum MyEnum {"
+                        + "/**" + LINE_SEPARATOR
+                        + " * Do Something" + LINE_SEPARATOR
+                        + " * @author George Gastaldi" + LINE_SEPARATOR + " */" + LINE_SEPARATOR + ""
+                        + "MY_CONSTANT;}";
+      JavaEnumSource javaEnum = Roaster.parse(JavaEnumSource.class, text);
+      Assert.assertFalse(javaEnum.hasJavaDoc());
+      EnumConstantSource enumConstant = javaEnum.getEnumConstant("MY_CONSTANT");
+      Assert.assertTrue(enumConstant.hasJavaDoc());
+      JavaDocSource<EnumConstantSource> javaDoc = enumConstant.getJavaDoc();
       String expected = "Do Something" + LINE_SEPARATOR + "@author George Gastaldi";
       Assert.assertEquals(expected, javaDoc.getFullText());
    }

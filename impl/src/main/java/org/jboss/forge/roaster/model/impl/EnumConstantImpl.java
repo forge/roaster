@@ -15,11 +15,13 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.Javadoc;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.Annotation;
 import org.jboss.forge.roaster.model.ast.AnnotationAccessor;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.EnumConstantSource;
+import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.source.JavaEnumSource;
 import org.jboss.forge.roaster.model.util.Strings;
 
@@ -34,13 +36,15 @@ public class EnumConstantImpl implements EnumConstantSource
    {
       this.parent = parent;
       this.ast = ((ASTNode) parent.getInternal()).getAST();
+
    }
-   
-   public EnumConstantImpl(final JavaEnumSource parent) {
+
+   public EnumConstantImpl(final JavaEnumSource parent)
+   {
       init(parent);
       this.enumConstant = ast.newEnumConstantDeclaration();
    }
-   
+
    public EnumConstantImpl(final JavaEnumSource parent, final String declaration)
    {
       init(parent);
@@ -52,7 +56,7 @@ public class EnumConstantImpl implements EnumConstantSource
       EnumConstantDeclaration subtree = (EnumConstantDeclaration) ASTNode.copySubtree(ast, newField);
       this.enumConstant = subtree;
    }
-   
+
    public EnumConstantImpl(final JavaEnumSource parent, final Object internal)
    {
       init(parent);
@@ -88,7 +92,8 @@ public class EnumConstantImpl implements EnumConstantSource
    public List<String> getConstructorArguments()
    {
       final List<String> result = new ArrayList<String>();
-      for (Object o : enumConstant.arguments()) {
+      for (Object o : enumConstant.arguments())
+      {
          result.add(o.toString());
       }
       return Collections.unmodifiableList(result);
@@ -188,6 +193,31 @@ public class EnumConstantImpl implements EnumConstantSource
    public AnnotationSource<JavaEnumSource> getAnnotation(final String type)
    {
       return annotations.getAnnotation(this, enumConstant, type);
+   }
+
+   @Override
+   public JavaDocSource<EnumConstantSource> getJavaDoc()
+   {
+      Javadoc javadoc = enumConstant.getJavadoc();
+      if (javadoc == null)
+      {
+         javadoc = enumConstant.getAST().newJavadoc();
+         enumConstant.setJavadoc(javadoc);
+      }
+      return new JavaDocImpl<EnumConstantSource>(this, javadoc);
+   }
+
+   @Override
+   public boolean hasJavaDoc()
+   {
+      return enumConstant.getJavadoc() != null;
+   }
+
+   @Override
+   public EnumConstantSource removeJavaDoc()
+   {
+      enumConstant.setJavadoc(null);
+      return this;
    }
 
    @Override
