@@ -205,6 +205,38 @@ public class NestedClassTest
       Assert.assertEquals(1, javaClass.getNestedTypes().size());
    }
 
+   @Test
+   public void testRenamedOuterClass() throws Exception
+   {
+      JavaClassSource source = Roaster
+               .parse(JavaClassSource.class,
+                        "public class Outer {public class Inner { String innerField; public Inner() {} public Inner(String innerField){this.innerField=innerField;}} public Outer() {}}");
+
+      JavaClassSource nestedType = (JavaClassSource) source.getNestedType("Inner");
+      Assert.assertNotNull(nestedType);
+      Assert.assertEquals("Inner", nestedType.getName());
+      Assert.assertEquals(1, source.getMethods().size());
+      Assert.assertEquals(2, nestedType.getMethods().size());
+
+      Assert.assertTrue(source.getMethods().get(0).isConstructor());
+      Assert.assertEquals("Outer", source.getMethods().get(0).getName());
+
+      Assert.assertTrue(nestedType.getMethods().get(0).isConstructor());
+      Assert.assertTrue(nestedType.getMethods().get(1).isConstructor());
+      Assert.assertEquals("Inner", nestedType.getMethods().get(0).getName());
+      Assert.assertEquals("Inner", nestedType.getMethods().get(1).getName());
+
+      source.setName("RenamedOuter");
+      nestedType = (JavaClassSource) source.getNestedType("Inner");
+      Assert.assertTrue(source.getMethods().get(0).isConstructor());
+      Assert.assertEquals("RenamedOuter", source.getMethods().get(0).getName());
+
+      Assert.assertTrue(nestedType.getMethods().get(0).isConstructor());
+      Assert.assertTrue(nestedType.getMethods().get(1).isConstructor());
+      Assert.assertEquals("Inner", nestedType.getMethods().get(0).getName());
+      Assert.assertEquals("Inner", nestedType.getMethods().get(1).getName());
+   }
+
    public class NestedClass
    {
    }

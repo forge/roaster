@@ -27,15 +27,21 @@ public class MethodFinderVisitor extends ASTVisitor
 {
    private final List<MethodDeclaration> methods = new ArrayList<MethodDeclaration>();
    private ASTNode parent;
+   private boolean outerTypeVisited;
 
    @Override
    public boolean visit(final TypeDeclaration node)
    {
+      if (outerTypeVisited)
+      {
+         return false;
+      }
+      this.outerTypeVisited = true;
       parent = node;
       addMethods(node);
       return super.visit(node);
    }
-   
+
    @Override
    public boolean visit(EnumDeclaration node)
    {
@@ -43,7 +49,7 @@ public class MethodFinderVisitor extends ASTVisitor
       addMethods(node);
       return super.visit(node);
    }
-   
+
    @Override
    public boolean visit(AnnotationTypeDeclaration node)
    {
@@ -83,7 +89,8 @@ public class MethodFinderVisitor extends ASTVisitor
    {
       for (BodyDeclaration bodyDeclaration : bodyDeclarations)
       {
-         if (bodyDeclaration instanceof MethodDeclaration) {
+         if (bodyDeclaration instanceof MethodDeclaration)
+         {
             methods.add((MethodDeclaration) bodyDeclaration);
          }
       }
