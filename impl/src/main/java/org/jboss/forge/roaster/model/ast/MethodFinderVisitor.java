@@ -21,25 +21,23 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 /**
+ * Traverses the AST tree looking for Method declarations
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+ * @author <a href="ggastald@redhat.com">George Gastaldi</a>
+ * 
  */
 public class MethodFinderVisitor extends ASTVisitor
 {
    private final List<MethodDeclaration> methods = new ArrayList<MethodDeclaration>();
    private ASTNode parent;
-   private boolean outerTypeVisited;
 
    @Override
    public boolean visit(final TypeDeclaration node)
    {
-      if (outerTypeVisited)
-      {
-         return false;
-      }
-      this.outerTypeVisited = true;
       parent = node;
       addMethods(node);
-      return super.visit(node);
+      return false;
    }
 
    @Override
@@ -47,7 +45,7 @@ public class MethodFinderVisitor extends ASTVisitor
    {
       parent = node;
       addMethods(node);
-      return super.visit(node);
+      return false;
    }
 
    @Override
@@ -55,7 +53,7 @@ public class MethodFinderVisitor extends ASTVisitor
    {
       parent = node;
       addMethods(node);
-      return super.visit(node);
+      return false;
    }
 
    @Override
@@ -65,9 +63,9 @@ public class MethodFinderVisitor extends ASTVisitor
       @SuppressWarnings("unchecked")
       final List<BodyDeclaration> bodyDeclarations = node.bodyDeclarations();
       addMethods(bodyDeclarations);
-      return super.visit(node);
+      return false;
    }
-
+   
    public List<MethodDeclaration> getMethods()
    {
       return Collections.unmodifiableList(methods);
