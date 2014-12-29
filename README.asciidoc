@@ -151,6 +151,24 @@ javaClass.addMethod()
 System.out.println(javaClass);
 ```
 
+JavaDoc creation and parsing
+-----------------------------------
+ 
+Here is an example on how to add JavaDoc to a class:
+
+```java
+JavaClassSource javaClass = 
+  Roaster.parse(JavaClassSource.class, "public class SomeClass {}");
+JavaDocSource javaDoc = javaClass.getJavaDoc();
+
+javaDoc.setFullText("Full class documentation");
+// or 
+javaDoc.setText("Class documentation text");
+javaDoc.addTagValue("@author","George Gastaldi");
+
+System.out.println(javaClass);
+```
+
 Formatting the Java Source Code
 -------------------------------
 
