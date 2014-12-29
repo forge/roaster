@@ -152,7 +152,7 @@ System.out.println(javaClass);
 ```
 
 JavaDoc creation and parsing
------------------------------------
+----------------------------
  
 Here is an example on how to add JavaDoc to a class:
 
