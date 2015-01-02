@@ -125,4 +125,18 @@ public class MethodSignatureTest
    {
       Assert.assertEquals(visibility, method.getVisibility().toString());
    }
+
+   public static class Inner {}
+
+   @Test
+   public void testMethodWithInnerClassParameter() throws Exception
+   {
+      JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> method = javaClass.addMethod().setPublic().setName("doSomething").setReturnTypeVoid();
+      method.addParameter(Inner.class, "inner");
+      Assert.assertEquals(1, javaClass.getMethods().size());
+      assertEquals( Inner.class.getCanonicalName(), method.getParameters().get( 0 ).getType().getQualifiedName() );
+      assertEquals( Inner.class.getCanonicalName(), javaClass.getImports().get( 0 ).getQualifiedName() );
+   }
+
 }
