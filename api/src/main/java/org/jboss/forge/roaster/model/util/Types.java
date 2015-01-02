@@ -268,6 +268,11 @@ public class Types
 
    public static String stripGenerics(final String type)
    {
+       return fixArray( type, true );
+   }
+
+   public static String fixArray(final String type, boolean stripGenerics)
+   {
       final String componentType;
       final int arrayDimensions;
       if (isArray(type))
@@ -281,7 +286,7 @@ public class Types
          componentType = type;
       }
       final StringBuilder result = new StringBuilder();
-      if (isGeneric(componentType))
+      if (isGeneric(componentType) && stripGenerics)
       {
          result.append(componentType.replaceFirst("^([^<]*)<.*?>$", "$1"));
       }
