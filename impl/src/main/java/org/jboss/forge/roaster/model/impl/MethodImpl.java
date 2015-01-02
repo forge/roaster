@@ -681,7 +681,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       {
          getOrigin().addImport(type);
       }
-      String stub = "public class Stub { public void method( " + Types.toSimpleName(Types.stripGenerics(type)) + " "
+      String stub = "public class Stub { public void method( " + Types.toSimpleName(Types.fixArray(type,false)) + " "
                + name + " ) {} }";
       JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
       List<MethodSource<JavaClassSource>> methods = temp.getMethods();
