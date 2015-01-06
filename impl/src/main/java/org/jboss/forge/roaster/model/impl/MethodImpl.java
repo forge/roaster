@@ -664,7 +664,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public ParameterSource<O> addParameter(Class<?> type, String name)
    {
-      return addParameter(type.getName(), name);
+      return addParameter(type.getCanonicalName(), name);
    }
 
    @Override
