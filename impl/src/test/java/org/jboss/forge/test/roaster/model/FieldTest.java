@@ -12,10 +12,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
+import java.util.HashMap;
 
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -84,7 +86,8 @@ public class FieldTest
    @Test
    public void testIsTypeStringChecksImports() throws Exception
    {
-      FieldSource<JavaClassSource> field = javaClass.addField().setType(FieldTest.class.getName()).setPublic().setName("test");
+      FieldSource<JavaClassSource> field = javaClass.addField().setType(FieldTest.class.getName()).setPublic()
+               .setName("test");
       assertTrue(field.getType().isType(FieldTest.class.getSimpleName()));
       assertTrue(javaClass.hasImport(FieldTest.class));
    }
@@ -182,7 +185,7 @@ public class FieldTest
       assertFalse(objectField.getType().isPrimitive());
       assertTrue(primitiveField.getType().isPrimitive());
    }
-   
+
    @Test
    public void testIsTransient() throws Exception
    {
@@ -192,7 +195,7 @@ public class FieldTest
       assertTrue(transientField.isTransient());
       assertFalse(nonTransientField.isTransient());
    }
-   
+
    @Test
    public void testIsVolatile() throws Exception
    {
@@ -202,7 +205,7 @@ public class FieldTest
       assertTrue(volatileField.isVolatile());
       assertFalse(nonVolatileField.isVolatile());
    }
-   
+
    @Test
    public void testAddFieldInitializerLiteral() throws Exception
    {
@@ -270,6 +273,22 @@ public class FieldTest
       FieldSource<JavaClassSource> notFld = Roaster.parse(JavaClassSource.class, "public class Foo {}")
                .addField("private int foobar;");
       assertFalse(javaClass.hasField(notFld));
+   }
+
+   @Test
+   public void testGenericField() throws Exception
+   {
+      javaClass.addImport(HashMap.class);
+      javaClass.addField()
+               .setFinal(true)
+               .setName("AS_MAP")
+               .setPrivate()
+               .setStatic(true)
+               .setType("HashMap<Class<?>,Object>")
+               .setLiteralInitializer("new HashMap<>();");
+      FieldSource<JavaClassSource> mapField = javaClass.getField("AS_MAP");
+      Assert.assertNotNull(mapField);
+      Assert.assertEquals("HashMap<Class<?>,Object>", mapField.getType().toString());
 
    }
 }

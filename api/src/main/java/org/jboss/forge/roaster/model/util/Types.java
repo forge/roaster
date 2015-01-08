@@ -33,7 +33,8 @@ public class Types
    private static final Pattern SIMPLE_ARRAY_PATTERN = Pattern
             .compile("((?:[0-9a-zA-Z\\$]+)(?:\\<[^\\.^\\[]+)?(?:\\.(?:[0-9a-zA-Z\\$]+)(?:\\<[^\\.^\\[]+)?)*)(\\[\\])+");
    private static final Pattern GENERIC_PATTERN = Pattern.compile(".*<.*>$");
-   private static final Pattern WILDCARD_AWARE_TYPE_PATTERN = Pattern.compile("^\\s*(\\?\\s+(?:extends|super)\\s+)?([A-Za-z$_]\\S*)\\s*$");
+   private static final Pattern WILDCARD_AWARE_TYPE_PATTERN = Pattern
+            .compile("^\\s*(\\?\\s+(?:extends|super)\\s+)?([A-Za-z$_]\\S*)\\s*$");
 
    private static final List<String> LANG_TYPES = Arrays.asList(
             // Interfaces
@@ -190,16 +191,24 @@ public class Types
          final List<String> simpleParameters = new ArrayList<String>();
          for (String typeParameter : getGenericsTypeParameter(type).split(", "))
          {
-            final Matcher matcher = WILDCARD_AWARE_TYPE_PATTERN.matcher(typeParameter);
-            if (!matcher.matches())
+            String simpleType;
+            if ("?".equals(typeParameter))
             {
-               throw new IllegalArgumentException("Cannot parse type parameter " + typeParameter);
+               simpleType = typeParameter;
             }
-            String simpleType = toSimpleName(matcher.group(2));
-            if (matcher.start(1) >= 0)
+            else
             {
-               simpleType = new StringBuilder(matcher.group(1)).append(' ').append(simpleType).toString()
-                        .replaceAll("\\s{2,}?", " ");
+               final Matcher matcher = WILDCARD_AWARE_TYPE_PATTERN.matcher(typeParameter);
+               if (!matcher.matches())
+               {
+                  throw new IllegalArgumentException("Cannot parse type parameter " + typeParameter);
+               }
+               simpleType = toSimpleName(matcher.group(2));
+               if (matcher.start(1) >= 0)
+               {
+                  simpleType = new StringBuilder(matcher.group(1)).append(' ').append(simpleType).toString()
+                           .replaceAll("\\s{2,}?", " ");
+               }
             }
             simpleParameters.add(simpleType);
          }
@@ -268,7 +277,7 @@ public class Types
 
    public static String stripGenerics(final String type)
    {
-       return fixArray( type, true );
+      return fixArray(type, true);
    }
 
    public static String fixArray(final String type, boolean stripGenerics)
