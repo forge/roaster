@@ -75,7 +75,7 @@ javaClass.addField()
   .setFinal(true);
 
 javaClass.addProperty("Integer", "id").setMutable(false);
-javaClass.addProperty("String", "fistName");
+javaClass.addProperty("String", "firstName");
 javaClass.addProperty("String", "lastName");
 
 javaClass.addMethod()
@@ -98,7 +98,7 @@ public class Person implements Serializable
 
    private static final long serialVersionUID = 1L;
    private final Integer id;
-   private String fistName;
+   private String firstName;
    private String lastName;
 
    public Integer getId()
@@ -106,14 +106,14 @@ public class Person implements Serializable
       return id;
    }
 
-   public String getFistName()
+   public String getFirstName()
    {
-      return fistName;
+      return firstName;
    }
 
-   public void setFistName(String fistName)
+   public void setFirstName(String firstName)
    {
-      this.fistName = fistName;
+      this.firstName = firstName;
    }
 
    public String getLastName()
