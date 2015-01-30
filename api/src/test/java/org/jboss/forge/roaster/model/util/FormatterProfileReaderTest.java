@@ -16,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
+ * Test class for {@link FormatterProfileReader}
  * 
  * @author <a href="ggastald@redhat.com">George Gastaldi</a>
  */
