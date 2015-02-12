@@ -12,7 +12,7 @@ package org.jboss.forge.roaster.model;
  * 
  * @author <a href="ggastald@redhat.com">George Gastaldi</a>
  */
-public interface Mutable
+public interface FinalCapable
 {
    /**
     * @return if this element has the <b>final</b> keyword

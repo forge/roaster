@@ -22,6 +22,6 @@ public interface JavaClass<O extends JavaClass<O>> extends
          Extendable<O>,
          Abstractable<O>, 
          TypeHolder<O>,
-         Mutable
+         FinalCapable
 {
 }

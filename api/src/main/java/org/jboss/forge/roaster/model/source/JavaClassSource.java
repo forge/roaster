@@ -26,6 +26,6 @@ public interface JavaClassSource extends JavaClass<JavaClassSource>,
          AbstractableSource<JavaClassSource>,
          PropertyHolderSource<JavaClassSource>, 
          TypeHolderSource<JavaClassSource>,
-         MutableSource<JavaClassSource>
+         FinalCapableSource<JavaClassSource>
 {
 }

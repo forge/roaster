@@ -16,7 +16,7 @@ import org.jboss.forge.roaster.Origin;
  * 
  */
 public interface Member<O extends JavaType<O>> extends VisibilityScoped, AnnotationTarget<O>,
-         Origin<O>, Named, Mutable
+         Origin<O>, Named, FinalCapable
 {
    public boolean isStatic();
 }

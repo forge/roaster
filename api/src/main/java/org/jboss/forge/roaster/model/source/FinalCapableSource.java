@@ -7,14 +7,14 @@
 
 package org.jboss.forge.roaster.model.source;
 
-import org.jboss.forge.roaster.model.Mutable;
+import org.jboss.forge.roaster.model.FinalCapable;
 
 /**
  * Represents a Java element that supports the <b>final</b> keyword.
  * 
  * @author <a href="ggastald@redhat.com">George Gastaldi</a>
  */
-public interface MutableSource<T> extends Mutable
+public interface FinalCapableSource<T> extends FinalCapable
 {
    /**
     * Sets the <b>final</b> keyword in this element.
