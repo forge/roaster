@@ -104,10 +104,11 @@ public class MethodSignatureTest
    public void testMethodWithPrimitiveParameters() throws Exception
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
-      MethodSource<JavaClassSource> method = javaClass.addMethod().setPublic().setName("doSomething").setReturnType(Integer.TYPE).setBody("return 0;");
+      MethodSource<JavaClassSource> method = javaClass.addMethod().setPublic().setName("doSomething")
+               .setReturnType(Integer.TYPE).setBody("return 0;");
       method.addParameter(Integer.TYPE, "initValue");
-      method.addParameter(int.class,"intValueClass");
-      method.addParameter(int[].class,"intValueClassArray");
+      method.addParameter(int.class, "intValueClass");
+      method.addParameter(int[].class, "intValueClassArray");
       Assert.assertEquals(1, javaClass.getMethods().size());
       List<ParameterSource<JavaClassSource>> parameters = javaClass.getMethods().get(0).getParameters();
       Assert.assertEquals(3, parameters.size());
@@ -126,48 +127,53 @@ public class MethodSignatureTest
       Assert.assertEquals(visibility, method.getVisibility().toString());
    }
 
-   public static class Inner {}
+   public static class Inner
+   {
+   }
 
    @Test
    public void testMethodWithInnerClassParameter() throws Exception
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
-      MethodSource<JavaClassSource> method = javaClass.addMethod().setPublic().setName("doSomething").setReturnTypeVoid();
+      MethodSource<JavaClassSource> method = javaClass.addMethod().setPublic().setName("doSomething")
+               .setReturnTypeVoid();
       method.addParameter(Inner.class, "inner");
       Assert.assertEquals(1, javaClass.getMethods().size());
-      assertEquals( Inner.class.getCanonicalName(), method.getParameters().get( 0 ).getType().getQualifiedName() );
-      assertEquals( Inner.class.getCanonicalName(), javaClass.getImports().get( 0 ).getQualifiedName() );
+      assertEquals(Inner.class.getCanonicalName(), method.getParameters().get(0).getType().getQualifiedName());
+      assertEquals(Inner.class.getCanonicalName(), javaClass.getImports().get(0).getQualifiedName());
    }
+
    @Test
    public void testMethodWithGenericParameters() throws Exception
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
-      MethodSource<JavaClassSource> method = javaClass.addMethod().setPublic().setName( "hello" ).setReturnType( "java.util.List<String>" );
-      method.addParameter( "java.util.Map<java.util.Set<String>,Object>", "map" );
+      MethodSource<JavaClassSource> method = javaClass.addMethod().setPublic().setName("hello")
+               .setReturnType("java.util.List<String>");
+      method.addParameter("java.util.Map<java.util.Set<String>,Object>", "map");
 
       String signature = method.toSignature();
-      assertEquals( "public hello(Map) : List", signature );
+      assertEquals("public hello(Map) : List", signature);
 
-      ParameterSource ps = method.getParameters().get( 0 );
-      assertEquals( 2, ps.getType().getTypeArguments().size() );
+      ParameterSource<?> ps = method.getParameters().get(0);
+      assertEquals(2, ps.getType().getTypeArguments().size());
 
-      assertEquals( 1, method.getReturnType().getTypeArguments().size() );
+      assertEquals(1, method.getReturnType().getTypeArguments().size());
    }
 
    @Test
    public void testMethodSignatureParamsWithGenerics() throws Exception
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
-              "public java.util.List<String> hello(java.util.Map<java.util.Set<String>,Object> map)");
+               "public java.util.List<String> hello(java.util.Map<java.util.Set<String>,Object> map)");
       String signature = method.toSignature();
-      assertEquals( "public hello(java.util.Map) : java.util.List", signature );
+      assertEquals("public hello(java.util.Map) : java.util.List", signature);
 
-      ParameterSource ps = method.getParameters().get( 0 );
-      assertEquals( 2, ps.getType().getTypeArguments().size() );
+      ParameterSource<?> ps = method.getParameters().get(0);
+      assertEquals(2, ps.getType().getTypeArguments().size());
 
-      assertEquals( "public java.util.List<String> hello(java.util.Map<java.util.Set<String>,Object> map){\n}",
-                    method.toString().trim());
-      assertEquals( 1, method.getReturnType().getTypeArguments().size() );
+      assertEquals("public java.util.List<String> hello(java.util.Map<java.util.Set<String>,Object> map){\n}",
+               method.toString().trim());
+      assertEquals(1, method.getReturnType().getTypeArguments().size());
    }
 
 }
