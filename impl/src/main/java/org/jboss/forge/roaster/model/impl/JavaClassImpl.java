@@ -72,6 +72,22 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
    }
 
    @Override
+   public boolean isFinal()
+   {
+      return modifiers.hasModifier(getBodyDeclaration(), ModifierKeyword.FINAL_KEYWORD);
+   }
+
+   @Override
+   public JavaClassSource setFinal(boolean finl)
+   {
+      if (finl)
+         modifiers.addModifier(getBodyDeclaration(), ModifierKeyword.FINAL_KEYWORD);
+      else
+         modifiers.removeModifier(getBodyDeclaration(), ModifierKeyword.FINAL_KEYWORD);
+      return this;
+   }
+
+   @Override
    public int hashCode()
    {
       final int prime = 31;
@@ -160,5 +176,4 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
 
       return this;
    }
-
 }

@@ -274,7 +274,8 @@ public abstract class JavaClassTestBase
    public void testAddConstructor() throws Exception
    {
       int size = source.getMethods().size();
-      MethodSource<JavaClassSource> method = source.addMethod().setName("testMethod").setConstructor(true).setProtected()
+      MethodSource<JavaClassSource> method = source.addMethod().setName("testMethod").setConstructor(true)
+               .setProtected()
                .setReturnType(String.class)
                .setBody("System.out.println(\"I am a constructor!\");");
       assertEquals(size + 1, source.getMethods().size());
@@ -320,5 +321,14 @@ public abstract class JavaClassTestBase
 
       source.setSuperType(getClass());
       assertEquals(getClass().getName(), source.getSuperType());
+   }
+
+   @Test
+   public void testFinal() throws Exception
+   {
+      source.setFinal(false);
+      assertFalse(source.isFinal());
+      source.setFinal(true);
+      assertTrue(source.isFinal());
    }
 }

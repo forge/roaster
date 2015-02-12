@@ -9,7 +9,6 @@ package org.jboss.forge.roaster.model.source;
 
 import org.jboss.forge.roaster.model.Member;
 
-
 /**
  * Represents a {@link JavaSource} member. (I.e.: a {@link FieldSource} or {@link MethodSource})
  * 
@@ -17,10 +16,7 @@ import org.jboss.forge.roaster.model.Member;
  * 
  */
 public interface MemberSource<O extends JavaSource<O>, T> extends Member<O>, AnnotationTargetSource<O, T>,
-         VisibilityScopedSource<T>, NamedSource<T>, JavaDocCapableSource<T>
+         VisibilityScopedSource<T>, NamedSource<T>, JavaDocCapableSource<T>, MutableSource<T>
 {
-
-   public T setFinal(boolean finl);
-
    public T setStatic(boolean statc);
 }
