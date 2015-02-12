@@ -15,19 +15,15 @@ import org.jboss.forge.roaster.Internal;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface Import extends Internal
+public interface Import extends Internal, StaticCapableSource<Import>
 {
-   public String getPackage();
+   String getPackage();
 
-   public String getSimpleName();
+   String getSimpleName();
 
-   public String getQualifiedName();
+   String getQualifiedName();
 
-   public boolean isStatic();
+   boolean isWildcard();
 
-   public boolean isWildcard();
-
-   public Import setName(final String name);
-
-   public Import setStatic(final boolean value);
+   Import setName(final String name);
 }
