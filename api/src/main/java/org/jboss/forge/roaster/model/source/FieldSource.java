@@ -10,7 +10,6 @@ package org.jboss.forge.roaster.model.source;
 import org.jboss.forge.roaster.model.Field;
 import org.jboss.forge.roaster.model.JavaType;
 
-
 /**
  * Represents a field of a {@link JavaClassSource}, {@link JavaInterfaceSource}, or {@link JavaEnumSource}.
  * 
@@ -21,25 +20,30 @@ public interface FieldSource<O extends JavaSource<O>> extends Field<O>, MemberSo
 {
 
    /**
-    * Set the type of this {@link Field} to the given {@link Class} type. Attempt to add an import statement to
-    * this field's base {@link O} if required.
+    * Set the type of this {@link Field} to the given {@link Class} type. Attempt to add an import statement to this
+    * field's base {@link O} if required.
     */
    FieldSource<O> setType(Class<?> clazz);
 
    /**
-    * Set the type of this {@link Field} to the given type. Attempt to add an import statement to this field's
-    * base {@link O} if required. (Note that the given className must be fully-qualified in order to properly import
-    * required classes)
+    * Set the type of this {@link Field} to the given type. Attempt to add an import statement to this field's base
+    * {@link O} if required. (Note that the given className must be fully-qualified in order to properly import required
+    * classes)
     */
    FieldSource<O> setType(String type);
 
    /**
-    * Set the type of this {@link Field} to the given {@link JavaSource<?>} type. Attempt to add an import
-    * statement to this field's base {@link O} if required.
+    * Set the type of this {@link Field} to the given {@link JavaSource<?>} type. Attempt to add an import statement to
+    * this field's base {@link O} if required.
     */
    FieldSource<O> setType(JavaType<?> entity);
 
    FieldSource<O> setLiteralInitializer(String value);
 
    FieldSource<O> setStringInitializer(String value);
+
+   FieldSource<O> setTransient(boolean value);
+
+   FieldSource<O> setVolatile(boolean value);
+
 }

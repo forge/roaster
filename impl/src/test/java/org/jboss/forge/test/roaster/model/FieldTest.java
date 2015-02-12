@@ -187,23 +187,35 @@ public class FieldTest
    }
 
    @Test
-   public void testIsTransient() throws Exception
+   public void testTransient() throws Exception
    {
       FieldSource<JavaClassSource> transientField = javaClass.addField("public transient boolean flag = false;");
       FieldSource<JavaClassSource> nonTransientField = javaClass.addField("public boolean flag = false;");
 
       assertTrue(transientField.isTransient());
       assertFalse(nonTransientField.isTransient());
+
+      transientField.setTransient(false);
+      nonTransientField.setTransient(true);
+
+      assertFalse(transientField.isTransient());
+      assertTrue(nonTransientField.isTransient());
    }
 
    @Test
-   public void testIsVolatile() throws Exception
+   public void testVolatile() throws Exception
    {
       FieldSource<JavaClassSource> volatileField = javaClass.addField("public volatile boolean flag = false;");
       FieldSource<JavaClassSource> nonVolatileField = javaClass.addField("public boolean flag = false;");
 
       assertTrue(volatileField.isVolatile());
       assertFalse(nonVolatileField.isVolatile());
+
+      volatileField.setVolatile(false);
+      nonVolatileField.setVolatile(true);
+
+      assertFalse(volatileField.isVolatile());
+      assertTrue(nonVolatileField.isVolatile());
    }
 
    @Test
@@ -289,6 +301,6 @@ public class FieldTest
       FieldSource<JavaClassSource> mapField = javaClass.getField("AS_MAP");
       Assert.assertNotNull(mapField);
       Assert.assertEquals("HashMap<Class<?>,Object>", mapField.getType().toString());
-
    }
+
 }

@@ -425,9 +425,29 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    }
 
    @Override
+   public FieldSource<O> setTransient(boolean value)
+   {
+      if (value)
+         modifiers.addModifier(field, ModifierKeyword.TRANSIENT_KEYWORD);
+      else
+         modifiers.removeModifier(field, ModifierKeyword.TRANSIENT_KEYWORD);
+      return this;
+   }
+
+   @Override
    public boolean isVolatile()
    {
       return modifiers.hasModifier(field, ModifierKeyword.VOLATILE_KEYWORD);
+   }
+
+   @Override
+   public FieldSource<O> setVolatile(boolean value)
+   {
+      if (value)
+         modifiers.addModifier(field, ModifierKeyword.VOLATILE_KEYWORD);
+      else
+         modifiers.removeModifier(field, ModifierKeyword.VOLATILE_KEYWORD);
+      return this;
    }
 
    @Override
