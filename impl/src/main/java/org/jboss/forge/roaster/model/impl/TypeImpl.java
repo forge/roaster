@@ -199,7 +199,7 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    public int getArrayDimensions()
    {
       int result = 0;
-      
+
       if (type.isArrayType())
       {
          result += ((ArrayType) type).getDimensions();

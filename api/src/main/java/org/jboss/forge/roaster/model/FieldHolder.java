@@ -33,9 +33,8 @@ public interface FieldHolder<O extends JavaType<O>> extends MemberHolder<O>
    public Field<O> getField(String name);
 
    /**
-    * Get a list of all {@link Field}s declared by this {@link O}, or return an empty list if no {@link Field}s
-    * are declared.
+    * Get a list of all {@link Field}s declared by this {@link O}, or return an empty list if no {@link Field}s are
+    * declared.
     */
    public List<? extends Field<O>> getFields();
 }
-

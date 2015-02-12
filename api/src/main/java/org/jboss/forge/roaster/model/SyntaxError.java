@@ -19,27 +19,30 @@ public interface SyntaxError
     */
    public String getDescription();
 
-    /**
-     * Gets the 1 based line number for the syntax error whenever it's possible to calculate it, or < 0 when the line is unknown.
-     */
+   /**
+    * Gets the 1 based line number for the syntax error whenever it's possible to calculate it, or < 0 when the line is
+    * unknown.
+    */
    public int getLine();
 
-    /**
-     * Get the 0 based column number for the error start whenever it's possible to calculate it, or < 0 when the column is unknown.
-     */
+   /**
+    * Get the 0 based column number for the error start whenever it's possible to calculate it, or < 0 when the column
+    * is unknown.
+    */
    public int getColumn();
 
-    /**
-     * True if the syntax error is an error, false in any other case. (see isWarning())
-     * @return
-     */
+   /**
+    * True if the syntax error is an error, false in any other case. (see isWarning())
+    * 
+    * @return
+    */
    public boolean isError();
 
-    /**
-     * True if the syntax error is a warning, false in any other case. (see isError())
-     * @return
-     */
+   /**
+    * True if the syntax error is a warning, false in any other case. (see isError())
+    * 
+    * @return
+    */
    public boolean isWarning();
-
 
 }

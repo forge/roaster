@@ -96,7 +96,8 @@ public class JavaAnnotationTest
       assertTrue(nestedAnnotation.hasAnnotationElement(metasyntacticVariable));
       assertEquals("metasyntacticVariable", metasyntacticVariable.getName());
       Type<JavaAnnotationSource> metasyntacticVariableType = metasyntacticVariable.getType();
-      assertEquals("org.jboss.forge.test.roaster.model.common.MockEnumType", metasyntacticVariableType.getQualifiedName());
+      assertEquals("org.jboss.forge.test.roaster.model.common.MockEnumType",
+               metasyntacticVariableType.getQualifiedName());
       assertFalse(metasyntacticVariableType.isArray());
       assertEquals(1, metasyntacticVariable.getAnnotations().size());
       assertEquals("Deprecated",

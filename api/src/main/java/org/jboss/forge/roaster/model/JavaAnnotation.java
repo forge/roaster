@@ -21,8 +21,7 @@ public interface JavaAnnotation<O extends JavaAnnotation<O>> extends JavaType<O>
 {
 
    /**
-    * Return whether or not this {@link JavaAnnotation} declares an {@link AnnotationElement} with the given
-    * name.
+    * Return whether or not this {@link JavaAnnotation} declares an {@link AnnotationElement} with the given name.
     */
    public boolean hasAnnotationElement(String name);
 
@@ -37,8 +36,8 @@ public interface JavaAnnotation<O extends JavaAnnotation<O>> extends JavaType<O>
    public AnnotationElement<O> getAnnotationElement(String name);
 
    /**
-    * Get a list of all {@link AnnotationElement}s declared by this {@link JavaAnnotation}, or return an empty
-    * list if no {@link AnnotationElement}s are declared.
+    * Get a list of all {@link AnnotationElement}s declared by this {@link JavaAnnotation}, or return an empty list if
+    * no {@link AnnotationElement}s are declared.
     */
    public List<? extends AnnotationElement<O>> getAnnotationElements();
 }

@@ -44,7 +44,7 @@ public class RefactoryTest
    {
       FieldSource<JavaClassSource> field = javaClass.getField("foo");
       Refactory.createGetterAndSetter(javaClass, field);
-      
+
       List<MethodSource<JavaClassSource>> methods = javaClass.getMethods();
       MethodSource<JavaClassSource> getter = methods.get(0);
       MethodSource<JavaClassSource> setter = methods.get(1);
@@ -128,7 +128,7 @@ public class RefactoryTest
       FieldSource<JavaClassSource> booleanField = aClass.getField("flag");
       Refactory.createHashCodeAndEquals(aClass, booleanField);
    }
-   
+
    @Test(expected = IllegalArgumentException.class)
    public void testCreateHashCodeForStatics() throws Exception
    {
@@ -138,7 +138,7 @@ public class RefactoryTest
       FieldSource<JavaClassSource> booleanField = aClass.getField("flag");
       Refactory.createHashCode(aClass, booleanField);
    }
-   
+
    @Test(expected = IllegalArgumentException.class)
    public void testCreateEqualsForStatics() throws Exception
    {
@@ -288,8 +288,10 @@ public class RefactoryTest
    {
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());
-      assertThat(equals.getBody(), containsString("if (!java.util.Arrays.equals(flags,other.flags)) {\n  return false;\n}"));
-      assertThat(equals.getBody(), containsString("if (!java.util.Arrays.equals(objects,other.objects)) {\n  return false;\n}"));
+      assertThat(equals.getBody(),
+               containsString("if (!java.util.Arrays.equals(flags,other.flags)) {\n  return false;\n}"));
+      assertThat(equals.getBody(),
+               containsString("if (!java.util.Arrays.equals(objects,other.objects)) {\n  return false;\n}"));
    }
 
    @Test
@@ -321,7 +323,7 @@ public class RefactoryTest
       assertFalse(aClass.hasSyntaxErrors());
       aClass.removeMethod(hashcode);
       assertTrue(aClass.getMethods().size() == 0);
-      
+
       Refactory.createEquals(aClass, identityBasedField, nonIdentityBasedField);
       assertTrue(aClass.getMethods().size() == 1);
       methods = aClass.getMethods();
@@ -394,7 +396,7 @@ public class RefactoryTest
       subClass.removeMethod(equals);
       subClass.removeMethod(hashcode);
       assertTrue(subClass.getMethods().size() == 0);
-      
+
       Refactory.createEquals(subClass, intField, stringField);
       methods = subClass.getMethods();
       assertTrue(subClass.getMethods().size() == 1);
@@ -403,7 +405,7 @@ public class RefactoryTest
       assertFalse(subClass.hasSyntaxErrors());
       subClass.removeMethod(equals);
       assertTrue(subClass.getMethods().size() == 0);
-      
+
       Refactory.createHashCode(subClass, intField, stringField);
       methods = subClass.getMethods();
       assertTrue(subClass.getMethods().size() == 1);
@@ -413,7 +415,7 @@ public class RefactoryTest
       subClass.removeMethod(hashcode);
       assertTrue(subClass.getMethods().size() == 0);
    }
-   
+
    private void assertHashCodeForSubclass(MethodSource<JavaClassSource> hashcode)
    {
       assertEquals("hashCode", hashcode.getName());
@@ -437,7 +439,7 @@ public class RefactoryTest
                .parse(JavaClassSource.class,
                         "public class Foo { private Foo.Bar bar; class Bar{ private Boolean flag; } }");
       FieldSource<JavaClassSource> outerField = outerClass.getField("bar");
-      
+
       Refactory.createHashCodeAndEquals(outerClass, outerField);
       assertTrue(outerClass.getMethods().size() == 2);
       List<MethodSource<JavaClassSource>> methods = outerClass.getMethods();
@@ -449,7 +451,7 @@ public class RefactoryTest
       outerClass.removeMethod(equals);
       outerClass.removeMethod(hashcode);
       assertTrue(outerClass.getMethods().size() == 0);
-      
+
       Refactory.createEquals(outerClass, outerField);
       assertTrue(outerClass.getMethods().size() == 1);
       methods = outerClass.getMethods();
@@ -458,7 +460,7 @@ public class RefactoryTest
       assertFalse(outerClass.hasSyntaxErrors());
       outerClass.removeMethod(equals);
       assertTrue(outerClass.getMethods().size() == 0);
-      
+
       Refactory.createHashCode(outerClass, outerField);
       assertTrue(outerClass.getMethods().size() == 1);
       methods = outerClass.getMethods();
@@ -467,9 +469,9 @@ public class RefactoryTest
       assertFalse(outerClass.hasSyntaxErrors());
       outerClass.removeMethod(hashcode);
       assertTrue(outerClass.getMethods().size() == 0);
-  
+
    }
-   
+
    private void assertHashCodeForOuterClass(MethodSource<JavaClassSource> hashcode)
    {
       assertEquals("hashCode", hashcode.getName());
@@ -510,7 +512,7 @@ public class RefactoryTest
       assertFalse(outerClass.hasSyntaxErrors());
       innerClass.removeMethod(equals);
       innerClass.removeMethod(hashcode);
-      
+
       Refactory.createEquals(innerClass, innerField);
       methods = innerClass.getMethods();
       assertTrue(innerClass.getMethods().size() == 1);
@@ -519,7 +521,7 @@ public class RefactoryTest
       assertFalse(outerClass.hasSyntaxErrors());
       innerClass.removeMethod(equals);
       assertTrue(innerClass.getMethods().size() == 0);
-      
+
       Refactory.createHashCode(innerClass, innerField);
       methods = innerClass.getMethods();
       assertTrue(innerClass.getMethods().size() == 1);
@@ -529,7 +531,7 @@ public class RefactoryTest
       innerClass.removeMethod(hashcode);
       assertTrue(innerClass.getMethods().size() == 0);
    }
-   
+
    private void assertHashCodeForInnerClass(MethodSource<JavaClassSource> hashcode)
    {
       assertEquals("hashCode", hashcode.getName());
@@ -559,7 +561,7 @@ public class RefactoryTest
                         "public class Foo { private double firstDouble; private double secondDouble;}");
       FieldSource<JavaClassSource> firstLongField = aClass.getField("firstDouble");
       FieldSource<JavaClassSource> secondLongField = aClass.getField("secondDouble");
-      
+
       Refactory.createHashCodeAndEquals(aClass, firstLongField, secondLongField);
       List<MethodSource<JavaClassSource>> methods = aClass.getMethods();
       assertTrue(aClass.getMethods().size() == 2);
@@ -571,7 +573,7 @@ public class RefactoryTest
       aClass.removeMethod(equals);
       aClass.removeMethod(hashcode);
       assertTrue(aClass.getMethods().size() == 0);
-      
+
       Refactory.createEquals(aClass, firstLongField, secondLongField);
       methods = aClass.getMethods();
       assertTrue(aClass.getMethods().size() == 1);
@@ -580,7 +582,7 @@ public class RefactoryTest
       assertFalse(aClass.hasSyntaxErrors());
       aClass.removeMethod(equals);
       assertTrue(aClass.getMethods().size() == 0);
-      
+
       Refactory.createHashCode(aClass, firstLongField, secondLongField);
       methods = aClass.getMethods();
       assertTrue(aClass.getMethods().size() == 1);
@@ -589,9 +591,9 @@ public class RefactoryTest
       assertFalse(aClass.hasSyntaxErrors());
       aClass.removeMethod(hashcode);
       assertTrue(aClass.getMethods().size() == 0);
-     
+
    }
-   
+
    private void assertHashCodeForMultipleLongFields(MethodSource<JavaClassSource> hashcode)
    {
       assertEquals("hashCode", hashcode.getName());

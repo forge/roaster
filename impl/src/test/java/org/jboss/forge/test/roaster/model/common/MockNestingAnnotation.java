@@ -12,7 +12,8 @@ package org.jboss.forge.test.roaster.model.common;
  */
 public @interface MockNestingAnnotation
 {
-   public @interface MockNestedAnnotation {
+   public @interface MockNestedAnnotation
+   {
    }
 
    MockNestedAnnotation value();

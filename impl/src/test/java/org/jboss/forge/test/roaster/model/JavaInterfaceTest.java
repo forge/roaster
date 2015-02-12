@@ -50,8 +50,10 @@ public class JavaInterfaceTest
    @Test
    public void testImportJavaSource() throws Exception
    {
-      JavaInterfaceSource foo = Roaster.parse(JavaInterfaceSource.class, "package org.jboss.forge; public interface Foo{}");
-      JavaInterfaceSource bar = Roaster.parse(JavaInterfaceSource.class, "package org.jboss.forge; public interface Bar{}");
+      JavaInterfaceSource foo = Roaster.parse(JavaInterfaceSource.class,
+               "package org.jboss.forge; public interface Foo{}");
+      JavaInterfaceSource bar = Roaster.parse(JavaInterfaceSource.class,
+               "package org.jboss.forge; public interface Bar{}");
 
       assertFalse(foo.hasImport(bar));
       assertFalse(bar.hasImport(foo));

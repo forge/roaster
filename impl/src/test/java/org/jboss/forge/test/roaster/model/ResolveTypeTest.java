@@ -126,7 +126,8 @@ public class ResolveTypeTest
    @Test
    public void testResolveTypeChar() throws Exception
    {
-      MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public CharSequence get()");
+      MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
+               "public CharSequence get()");
       Assert.assertEquals("java.lang.CharSequence", method.getReturnType().getQualifiedName());
    }
 

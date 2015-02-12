@@ -39,8 +39,8 @@ public interface ExtendableSource<O extends JavaType<O>> extends Extendable<O>
     * In the case of " <code>public class Foo extends Bar {}</code>" - <code>Foo</code> is the base type, and
     * <code>Bar</code> is the super class.)
     * <p>
-    * Attempt to add an import statement to this object's {@link O} if required. (Note that the given className must
-    * be fully-qualified in order to properly import required classes)
+    * Attempt to add an import statement to this object's {@link O} if required. (Note that the given className must be
+    * fully-qualified in order to properly import required classes)
     */
    public O setSuperType(String type);
 }

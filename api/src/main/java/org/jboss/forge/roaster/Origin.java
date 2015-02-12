@@ -6,10 +6,8 @@
  */
 package org.jboss.forge.roaster;
 
-
 /**
- * Represents an object that has a root ancestor that should be made accessible
- * to its clients.
+ * Represents an object that has a root ancestor that should be made accessible to its clients.
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 

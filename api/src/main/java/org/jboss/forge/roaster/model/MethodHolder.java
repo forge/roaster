@@ -58,8 +58,8 @@ public interface MethodHolder<O extends JavaType<O>> extends MemberHolder<O>
    public Method<O, ?> getMethod(final String name, Class<?>... paramTypes);
 
    /**
-    * Get a {@link List} of all {@link Method}s declared by this {@link O} instance, if any; otherwise, return an
-    * empty {@link List}
+    * Get a {@link List} of all {@link Method}s declared by this {@link O} instance, if any; otherwise, return an empty
+    * {@link List}
     */
    public List<? extends Method<O, ?>> getMethods();
 }

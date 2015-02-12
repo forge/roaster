@@ -44,8 +44,8 @@ public interface AnnotationElementSource extends AnnotationElement<JavaAnnotatio
    }
 
    /**
-    * Set the type of this {@link AnnotationElement} to the given {@link Class} type. Attempt to add an import
-    * statement to this annotation element's base {@link O} if required.
+    * Set the type of this {@link AnnotationElement} to the given {@link Class} type. Attempt to add an import statement
+    * to this annotation element's base {@link O} if required.
     */
    AnnotationElementSource setType(Class<?> clazz);
 
@@ -57,8 +57,8 @@ public interface AnnotationElementSource extends AnnotationElement<JavaAnnotatio
    AnnotationElementSource setType(String type);
 
    /**
-    * Set the type of this {@link AnnotationElement} to the given {@link JavaSource<?>} type. Attempt to add an
-    * import statement to this field's base {@link O} if required.
+    * Set the type of this {@link AnnotationElement} to the given {@link JavaSource<?>} type. Attempt to add an import
+    * statement to this field's base {@link O} if required.
     */
    AnnotationElementSource setType(JavaType<?> entity);
 

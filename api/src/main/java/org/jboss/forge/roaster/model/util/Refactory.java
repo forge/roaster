@@ -55,8 +55,8 @@ public class Refactory
    /**
     * Create a <i>hashCode</i> and <i>equals</i> implementation for the given class and fields
     *
-    * @deprecated Use {@link Refactory#createHashCodeAndEquals(JavaClass, Field<O>...)} instead, since this method relies
-    *             on the existence of the id field
+    * @deprecated Use {@link Refactory#createHashCodeAndEquals(JavaClass, Field<O>...)} instead, since this method
+    *             relies on the existence of the id field
     */
    @Deprecated
    public static void createHashCodeAndEquals(final JavaClassSource clazz)
@@ -93,18 +93,18 @@ public class Refactory
     */
    public static void createHashCodeAndEquals(final JavaClassSource clazz, final FieldSource<?>... fields)
    {
-      createEquals(clazz,fields);
-      createHashCode(clazz,fields);
+      createEquals(clazz, fields);
+      createHashCode(clazz, fields);
    }
-   
+
    /**
-    * Create an <i>equals</i> implementation for the given class and fields. Callers must verify that
-    * the types of the fields override the default identity based equals implementation. No warnings are
-    * issued in an event where the field type uses the implementation of java.lang.Object.
+    * Create an <i>equals</i> implementation for the given class and fields. Callers must verify that the types of the
+    * fields override the default identity based equals implementation. No warnings are issued in an event where the
+    * field type uses the implementation of java.lang.Object.
     *
-    * This method ignores static fields for generating the equals method, since they are ideally not meant
-    * to be used in these cases. Although transient fields could also be ignored, they are not since there is no
-    * mechanism to convey warnings (not errors) in this case.
+    * This method ignores static fields for generating the equals method, since they are ideally not meant to be used in
+    * these cases. Although transient fields could also be ignored, they are not since there is no mechanism to convey
+    * warnings (not errors) in this case.
     *
     * @param clazz class to be changed
     * @param fields fields to be used in the equals/hashCode methods
@@ -130,17 +130,20 @@ public class Refactory
       {
          if (field == null)
          {
-            throw new IllegalArgumentException("A supplied field was null. The equals and hashCode computation will be aborted.");
+            throw new IllegalArgumentException(
+                     "A supplied field was null. The equals and hashCode computation will be aborted.");
          }
          if (field.isStatic())
          {
-            throw new IllegalArgumentException("A static field was detected. The equals and hashCode computation will be aborted.");
+            throw new IllegalArgumentException(
+                     "A static field was detected. The equals and hashCode computation will be aborted.");
          }
 
          String fieldName = field.getName();
          if (field.getType().isArray())
          {
-            fieldEqualityChecks.append("if (!java.util.Arrays.equals(").append(fieldName).append(", other.").append(fieldName)
+            fieldEqualityChecks.append("if (!java.util.Arrays.equals(").append(fieldName).append(", other.")
+                     .append(fieldName)
                      .append(")) {");
             fieldEqualityChecks.append(" return false; }");
          }
@@ -180,7 +183,7 @@ public class Refactory
          }
       }
 
-      if (fieldEqualityChecks.length() < 1 )
+      if (fieldEqualityChecks.length() < 1)
       {
          throw new IllegalArgumentException(
                   "A failure was detected when generating the equals and hashCode methods. Verify the type and modifiers of the provided fields.");
@@ -203,15 +206,15 @@ public class Refactory
                         "}")
                .addAnnotation(Override.class);
    }
-   
+
    /**
-    * Create a <i>hashCode</i> implementation for the given class and fields. Callers must verify that
-    * the types of the fields override the default identity based hashcode implementation. No warnings are
-    * issued in an event where the field type uses the implementation of java.lang.Object.
+    * Create a <i>hashCode</i> implementation for the given class and fields. Callers must verify that the types of the
+    * fields override the default identity based hashcode implementation. No warnings are issued in an event where the
+    * field type uses the implementation of java.lang.Object.
     *
-    * This method ignores static fields for generating the equals method, since they are ideally not meant
-    * to be used in these cases. Although transient fields could also be ignored, they are not since there is no
-    * mechanism to convey warnings (not errors) in this case.
+    * This method ignores static fields for generating the equals method, since they are ideally not meant to be used in
+    * these cases. Although transient fields could also be ignored, they are not since there is no mechanism to convey
+    * warnings (not errors) in this case.
     *
     * @param clazz class to be changed
     * @param fields fields to be used in the equals/hashCode methods
@@ -239,17 +242,20 @@ public class Refactory
       {
          if (field == null)
          {
-            throw new IllegalArgumentException("A supplied field was null. The equals and hashCode computation will be aborted.");
+            throw new IllegalArgumentException(
+                     "A supplied field was null. The equals and hashCode computation will be aborted.");
          }
          if (field.isStatic())
          {
-            throw new IllegalArgumentException("A static field was detected. The equals and hashCode computation will be aborted.");
+            throw new IllegalArgumentException(
+                     "A static field was detected. The equals and hashCode computation will be aborted.");
          }
 
          String fieldName = field.getName();
          if (field.getType().isArray())
          {
-            hashCodeComputation.append("result = prime * result + java.util.Arrays.hashCode(").append(fieldName).append(");");
+            hashCodeComputation.append("result = prime * result + java.util.Arrays.hashCode(").append(fieldName)
+                     .append(");");
          }
          else if (field.getType().isPrimitive())
          {
@@ -310,7 +316,7 @@ public class Refactory
                         "return result; }")
                .addAnnotation(Override.class);
    }
-   
+
    /**
     * Create a <i>toString</i> implementation using all the fields in this class
     *
@@ -328,7 +334,8 @@ public class Refactory
     * @param clazz
     * @param fields
     */
-   public static void createToStringFromFields(final JavaClassSource clazz, final FieldSource<JavaClassSource>... fields)
+   public static void createToStringFromFields(final JavaClassSource clazz,
+            final FieldSource<JavaClassSource>... fields)
    {
       createToStringFromFields(clazz, Arrays.asList(fields));
    }
@@ -339,7 +346,8 @@ public class Refactory
     * @param clazz
     * @param fields
     */
-   public static void createToStringFromFields(final JavaClassSource clazz, final List<FieldSource<JavaClassSource>> fields)
+   public static void createToStringFromFields(final JavaClassSource clazz,
+            final List<FieldSource<JavaClassSource>> fields)
    {
       MethodSource<JavaClassSource> method = clazz.addMethod().setName("toString").setReturnType(String.class)
                .setPublic();

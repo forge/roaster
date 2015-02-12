@@ -27,8 +27,7 @@ public interface FieldHolderSource<O extends JavaSource<O>> extends FieldHolder<
    public FieldSource<O> addField();
 
    /**
-    * Add a new {@link Field} declaration to this {@link O} instance, using the given {@link String} as the
-    * declaration.
+    * Add a new {@link Field} declaration to this {@link O} instance, using the given {@link String} as the declaration.
     * <p/>
     * <strong>For example:</strong><br>
     * <code>Field f = javaClass.addField("private String newField;");</code>
@@ -39,15 +38,16 @@ public interface FieldHolderSource<O extends JavaSource<O>> extends FieldHolder<
     * Remove the given {@link Field} from this {@link O} instance, if it exists; otherwise, do nothing.
     */
    public O removeField(final Field<O> field);
+
    /**
     * Get the {@link Field} with the given name and return it, otherwise, return null.
     */
    @Override
    public FieldSource<O> getField(String name);
-   
+
    /**
-    * Get a list of all {@link Field}s declared by this {@link O}, or return an empty list if no {@link Field}s
-    * are declared.
+    * Get a list of all {@link Field}s declared by this {@link O}, or return an empty list if no {@link Field}s are
+    * declared.
     */
    @Override
    public List<FieldSource<O>> getFields();

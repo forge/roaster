@@ -119,7 +119,8 @@ public class JavaEnumMethodTest
    @Test
    public void testGetMembers() throws Exception
    {
-      JavaClassSource javaClass = Roaster.create(JavaClassSource.class).addMethod("public void doSomething();").getOrigin()
+      JavaClassSource javaClass = Roaster.create(JavaClassSource.class).addMethod("public void doSomething();")
+               .getOrigin()
                .addField("private int id;").getOrigin();
       List<MemberSource<JavaClassSource, ?>> members = javaClass.getMembers();
       assertEquals(2, members.size());

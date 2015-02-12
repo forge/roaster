@@ -192,7 +192,8 @@ public class AnnotationAccessor<O extends JavaSource<O>, T>
       return getAnnotation(target, variableDeclaration.modifiers(), type.getName());
    }
 
-   public AnnotationSource<O> getAnnotation(final AnnotationTargetSource<O, T> target, final ASTNode body, final String type)
+   public AnnotationSource<O> getAnnotation(final AnnotationTargetSource<O, T> target, final ASTNode body,
+            final String type)
    {
       return getAnnotation(target, getModifiers(body), type);
    }
@@ -203,7 +204,8 @@ public class AnnotationAccessor<O extends JavaSource<O>, T>
       return getAnnotation(target, variableDeclaration.modifiers(), type);
    }
 
-   private AnnotationSource<O> getAnnotation(final AnnotationTargetSource<O, T> target, final List<?> modifiers, final String type)
+   private AnnotationSource<O> getAnnotation(final AnnotationTargetSource<O, T> target, final List<?> modifiers,
+            final String type)
    {
       List<AnnotationSource<O>> annotations = getAnnotations(target, modifiers);
       for (AnnotationSource<O> annotation : annotations)

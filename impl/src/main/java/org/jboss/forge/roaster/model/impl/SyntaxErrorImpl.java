@@ -21,7 +21,6 @@ public class SyntaxErrorImpl implements SyntaxError, Internal
    private final JavaType<?> parent;
    private final IProblem problem;
 
-
    public SyntaxErrorImpl(final JavaType<?> parent, final Object internal)
    {
       this.parent = parent;
@@ -55,30 +54,32 @@ public class SyntaxErrorImpl implements SyntaxError, Internal
       return getDescription();
    }
 
-    @Override
-    public int getLine()
-    {
-        return problem.getSourceLineNumber();
-    }
+   @Override
+   public int getLine()
+   {
+      return problem.getSourceLineNumber();
+   }
 
-    @Override
-    public int getColumn()
-    {
-        int position = problem.getSourceStart();
-        if ( position >= 0 && parent != null && ( parent.getInternal() instanceof CompilationUnit ) ) {
-            return ((CompilationUnit)parent.getInternal()).getColumnNumber( position );
-        }
-        return -1;
-    }
+   @Override
+   public int getColumn()
+   {
+      int position = problem.getSourceStart();
+      if (position >= 0 && parent != null && (parent.getInternal() instanceof CompilationUnit))
+      {
+         return ((CompilationUnit) parent.getInternal()).getColumnNumber(position);
+      }
+      return -1;
+   }
 
-    @Override public boolean isError()
-    {
-        return problem.isError();
-    }
+   @Override
+   public boolean isError()
+   {
+      return problem.isError();
+   }
 
-    @Override
-    public boolean isWarning()
-    {
-        return problem.isWarning();
-    }
+   @Override
+   public boolean isWarning()
+   {
+      return problem.isWarning();
+   }
 }

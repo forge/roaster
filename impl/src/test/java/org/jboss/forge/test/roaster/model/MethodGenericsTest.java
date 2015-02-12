@@ -26,10 +26,10 @@ public class MethodGenericsTest
    public void addAndRemoveGenericType() throws ClassNotFoundException
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
-      
+
       MethodSource<JavaClassSource> method = javaClass.addMethod();
       method.addTypeVariable().setName("T");
-      
+
       Assert.assertTrue(method.toString().contains("<T>"));
       Assert.assertTrue(method.getTypeVariables().get(0).getBounds().isEmpty());
       method.removeTypeVariable("T");
@@ -107,5 +107,5 @@ public class MethodGenericsTest
       method.getTypeVariable("T").removeBounds();
       Assert.assertTrue(method.toString().contains("<T>"));
    }
-   
+
 }

@@ -16,10 +16,12 @@ import org.jboss.forge.roaster.model.source.JavaSource;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public class JavaInterfaceImpl extends AbstractGenericCapableJavaSource<JavaInterfaceSource> implements JavaInterfaceSource
+public class JavaInterfaceImpl extends AbstractGenericCapableJavaSource<JavaInterfaceSource> implements
+         JavaInterfaceSource
 {
 
-   public JavaInterfaceImpl(JavaSource<?> enclosingType, final Document document, final CompilationUnit unit, BodyDeclaration body)
+   public JavaInterfaceImpl(JavaSource<?> enclosingType, final Document document, final CompilationUnit unit,
+            BodyDeclaration body)
    {
       super(enclosingType, document, unit, body);
    }

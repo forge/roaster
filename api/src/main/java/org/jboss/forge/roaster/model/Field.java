@@ -7,7 +7,6 @@
 
 package org.jboss.forge.roaster.model;
 
-
 /**
  * Represents a field of a {@link JavaClass}, {@link JavaInterface}, or {@link JavaEnum}.
  * 

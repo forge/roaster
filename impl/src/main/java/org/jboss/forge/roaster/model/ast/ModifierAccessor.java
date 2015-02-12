@@ -66,9 +66,10 @@ public class ModifierAccessor
 
    public void addModifier(ASTNode body, ModifierKeyword keyword)
    {
-	  if (!hasModifier(body, keyword)) {
-		  getInternalModifiers(body).add(body.getAST().newModifier(keyword));
-	  }
+      if (!hasModifier(body, keyword))
+      {
+         getInternalModifiers(body).add(body.getAST().newModifier(keyword));
+      }
    }
 
    public void removeModifier(ASTNode body, ModifierKeyword keyword)

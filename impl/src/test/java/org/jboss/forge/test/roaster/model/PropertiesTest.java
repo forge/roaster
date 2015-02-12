@@ -610,7 +610,7 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       assertFalse(property.hasAnnotation(Deprecated.class));
 
       AnnotationSource<O> ann = property.getField().addAnnotation(Deprecated.class);
-      assertEquals(1,property.getAnnotations().size());
+      assertEquals(1, property.getAnnotations().size());
       property.getField().removeAnnotation(ann);
    }
 
@@ -622,7 +622,7 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       assertFalse(property.hasAnnotation(Deprecated.class));
 
       AnnotationSource<O> ann = property.getAccessor().addAnnotation(Deprecated.class);
-      assertEquals(1,property.getAnnotations().size());
+      assertEquals(1, property.getAnnotations().size());
       property.getAccessor().removeAnnotation(ann);
    }
 
@@ -634,7 +634,7 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       assertFalse(property.hasAnnotation(Deprecated.class));
 
       AnnotationSource<O> ann = property.getMutator().addAnnotation(Deprecated.class);
-      assertEquals(1,property.getAnnotations().size());
+      assertEquals(1, property.getAnnotations().size());
       property.getMutator().removeAnnotation(ann);
    }
 

@@ -14,12 +14,13 @@ import org.jboss.forge.roaster.model.AnnotationElement;
 import org.jboss.forge.roaster.model.JavaAnnotation;
 
 /**
- * Represents a Java {@code @interface} annotation source file as an in-memory modifiable element. See
- * {@link Roaster} for various options in generating {@link JavaAnnotationSource} instances.
+ * Represents a Java {@code @interface} annotation source file as an in-memory modifiable element. See {@link Roaster}
+ * for various options in generating {@link JavaAnnotationSource} instances.
  *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public interface JavaAnnotationSource extends JavaAnnotation<JavaAnnotationSource>, JavaSource<JavaAnnotationSource>, TypeHolderSource<JavaAnnotationSource>
+public interface JavaAnnotationSource extends JavaAnnotation<JavaAnnotationSource>, JavaSource<JavaAnnotationSource>,
+         TypeHolderSource<JavaAnnotationSource>
 {
    /**
     * Get the {@link AnnotationElementSource} with the given name and return it, otherwise, return null.
@@ -35,14 +36,14 @@ public interface JavaAnnotationSource extends JavaAnnotation<JavaAnnotationSourc
    public List<AnnotationElementSource> getAnnotationElements();
 
    /**
-    * Add a new Java {@link AnnotationElementSource} to this {@link JavaAnnotationSource} instance. This will be a stub until
-    * further modified.
+    * Add a new Java {@link AnnotationElementSource} to this {@link JavaAnnotationSource} instance. This will be a stub
+    * until further modified.
     */
    public AnnotationElementSource addAnnotationElement();
 
    /**
-    * Add a new {@link AnnotationElementSource} declaration to this {@link JavaAnnotationSource} instance, using the given
-    * {@link String} as the declaration.
+    * Add a new {@link AnnotationElementSource} declaration to this {@link JavaAnnotationSource} instance, using the
+    * given {@link String} as the declaration.
     * <p/>
     * <strong>For example:</strong><br>
     * <code>AnnotationElement e = javaClass.addAnnotationElement("String newAnnotationElement();");</code>

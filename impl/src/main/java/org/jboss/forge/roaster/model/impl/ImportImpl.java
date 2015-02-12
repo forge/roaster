@@ -105,11 +105,11 @@ public class ImportImpl implements Import
    public boolean equals(final Object obj)
    {
       if (this == obj)
-          return true;
-      
+         return true;
+
       if (!(obj instanceof Import))
-          return false;
-      
+         return false;
+
       Import other = (Import) obj;
       if (!getQualifiedName().equals(other.getQualifiedName()))
       {

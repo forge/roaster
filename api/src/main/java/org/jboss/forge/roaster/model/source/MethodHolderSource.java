@@ -47,8 +47,8 @@ public interface MethodHolderSource<O extends JavaSource<O>> extends MethodHolde
    public List<MethodSource<O>> getMethods();
 
    /**
-    * Add an uninitialized {@link MethodSource} declaration to this {@link O} instance. This {@link MethodSource} will be a stub
-    * until further modified.
+    * Add an uninitialized {@link MethodSource} declaration to this {@link O} instance. This {@link MethodSource} will
+    * be a stub until further modified.
     */
    public MethodSource<O> addMethod();
 

@@ -12,6 +12,7 @@ import org.jboss.forge.roaster.model.Property;
 
 /**
  * Source variant of {@link Property} interface.
+ * 
  * @author mbenson
  *
  * @param <O>
@@ -38,14 +39,13 @@ public interface PropertySource<O extends JavaSource<O>> extends Property<O>,
     */
    PropertySource<O> setType(JavaType<?> entity);
 
-
    /**
     * Create the accessor method.
     * 
     * @throws IllegalStateException if property name unset or method already exists
     */
    MethodSource<O> createAccessor();
-   
+
    /**
     * Override.
     */

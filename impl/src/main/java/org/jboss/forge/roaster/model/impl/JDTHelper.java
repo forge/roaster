@@ -65,9 +65,12 @@ public class JDTHelper
    public static List<Type> getInterfaces(final BodyDeclaration dec)
    {
       StructuralPropertyDescriptor desc;
-      if (dec instanceof EnumDeclaration) {
+      if (dec instanceof EnumDeclaration)
+      {
          desc = EnumDeclaration.SUPER_INTERFACE_TYPES_PROPERTY;
-      } else {
+      }
+      else
+      {
          desc = TypeDeclaration.SUPER_INTERFACE_TYPES_PROPERTY;
       }
       return (List<Type>) dec.getStructuralProperty(desc);

@@ -9,10 +9,10 @@ package org.jboss.forge.roaster.model.source;
 
 import org.jboss.forge.roaster.model.JavaPackageInfo;
 
-
 /**
  * Represents a Java Package Info descriptor source file.
  */
-public interface JavaPackageInfoSource extends JavaPackageInfo<JavaPackageInfoSource>, JavaSource<JavaPackageInfoSource>
+public interface JavaPackageInfoSource extends JavaPackageInfo<JavaPackageInfoSource>,
+         JavaSource<JavaPackageInfoSource>
 {
 }

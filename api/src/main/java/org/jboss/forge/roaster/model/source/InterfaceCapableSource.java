@@ -10,7 +10,6 @@ package org.jboss.forge.roaster.model.source;
 import org.jboss.forge.roaster.model.InterfaceCapable;
 import org.jboss.forge.roaster.model.JavaInterface;
 
-
 /**
  * Represents a {@link JavaSource} that may implement one or more interfaces.
  * 

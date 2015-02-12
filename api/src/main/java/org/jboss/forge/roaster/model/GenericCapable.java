@@ -20,9 +20,10 @@ public interface GenericCapable<O extends JavaType<O>>
     * Returns all the generic types associated with this object
     */
    List<? extends TypeVariable<O>> getTypeVariables();
-   
+
    /**
     * Returns the named {@link TypeVariable}.
+    * 
     * @param name
     * @return TypeVariable or {@code null}
     */

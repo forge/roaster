@@ -345,7 +345,8 @@ public class AnnotationElementImpl implements AnnotationElementSource
    }
 
    @Override
-   public AnnotationSource<JavaAnnotationSource> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
+   public AnnotationSource<JavaAnnotationSource> addAnnotation(
+            final Class<? extends java.lang.annotation.Annotation> clazz)
    {
       if (parent.requiresImport(clazz))
       {
@@ -379,7 +380,8 @@ public class AnnotationElementImpl implements AnnotationElementSource
    }
 
    @Override
-   public AnnotationSource<JavaAnnotationSource> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
+   public AnnotationSource<JavaAnnotationSource> getAnnotation(
+            final Class<? extends java.lang.annotation.Annotation> type)
    {
       return annotations.getAnnotation(this, member, type);
    }

@@ -41,7 +41,7 @@ public class FormatterTest
       String original = javaClass.toString();
       assertNotSame(original, result);
    }
-   
+
    @Test
    public void testFormatterSource() throws Exception
    {
@@ -49,5 +49,5 @@ public class FormatterTest
       String original = javaClass.toString();
       assertNotSame(original, result);
    }
-   
+
 }

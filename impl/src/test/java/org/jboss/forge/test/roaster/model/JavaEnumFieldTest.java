@@ -65,7 +65,8 @@ public class JavaEnumFieldTest
    @Test
    public void testIsTypeChecksImports() throws Exception
    {
-      FieldSource<JavaEnumSource> field = javaEnum.addField().setType(JavaEnumFieldTest.class).setPublic().setName("test");
+      FieldSource<JavaEnumSource> field = javaEnum.addField().setType(JavaEnumFieldTest.class).setPublic()
+               .setName("test");
       assertTrue(field.getType().isType(JavaEnumFieldTest.class));
       assertTrue(field.getType().isType(JavaEnumFieldTest.class.getName()));
       assertTrue(javaEnum.hasImport(JavaEnumFieldTest.class));
@@ -84,7 +85,8 @@ public class JavaEnumFieldTest
    @Test
    public void testIsTypeStringChecksImports() throws Exception
    {
-      FieldSource<JavaEnumSource> field = javaEnum.addField().setType(JavaEnumFieldTest.class.getName()).setPublic().setName("test");
+      FieldSource<JavaEnumSource> field = javaEnum.addField().setType(JavaEnumFieldTest.class.getName()).setPublic()
+               .setName("test");
       assertTrue(field.getType().isType(JavaEnumFieldTest.class.getSimpleName()));
       assertTrue(javaEnum.hasImport(JavaEnumFieldTest.class));
    }
@@ -93,7 +95,8 @@ public class JavaEnumFieldTest
    public void testIsTypeChecksImportsTypes() throws Exception
    {
       FieldSource<JavaEnumSource> field = javaEnum.addField("private org.jboss.JavaEnumFieldTest test;");
-      FieldSource<JavaEnumSource> field2 = javaEnum.addField().setType(JavaEnumFieldTest.class).setName("test2").setPrivate();
+      FieldSource<JavaEnumSource> field2 = javaEnum.addField().setType(JavaEnumFieldTest.class).setName("test2")
+               .setPrivate();
 
       assertTrue(field.getType().isType(JavaEnumFieldTest.class.getSimpleName()));
       assertFalse(field.getType().isType(JavaEnumFieldTest.class));
@@ -107,7 +110,8 @@ public class JavaEnumFieldTest
    @Test
    public void testSetTypeSimpleNameDoesNotAddImport() throws Exception
    {
-      FieldSource<JavaEnumSource> field = javaEnum.addField().setType(JavaEnumFieldTest.class.getSimpleName()).setPublic()
+      FieldSource<JavaEnumSource> field = javaEnum.addField().setType(JavaEnumFieldTest.class.getSimpleName())
+               .setPublic()
                .setName("test");
       assertFalse(field.getType().isType(JavaEnumFieldTest.class));
       assertFalse(javaEnum.hasImport(JavaEnumFieldTest.class));

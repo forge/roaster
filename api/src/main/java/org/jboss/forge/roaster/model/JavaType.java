@@ -72,15 +72,15 @@ public interface JavaType<T extends JavaType<T>> extends
    public boolean isAnnotation();
 
    /**
-    * Return the enclosing {@link JavaType} type in which this class is defined. If this class is a top-level
-    * type, and is not a nested type, this object will return itself.
+    * Return the enclosing {@link JavaType} type in which this class is defined. If this class is a top-level type, and
+    * is not a nested type, this object will return itself.
     */
    public JavaType<?> getEnclosingType();
-   
+
    /**
     * Return a list containing {@link JavaType} instances for each nested {@link Class} declaration found within
-    * <code>this</code>. Any modification of returned {@link JavaType} instances will result in modification of
-    * the contents contained by <code>this</code> the parent instance.
+    * <code>this</code>. Any modification of returned {@link JavaType} instances will result in modification of the
+    * contents contained by <code>this</code> the parent instance.
     */
    @Deprecated
    public List<? extends JavaType<?>> getNestedClasses();

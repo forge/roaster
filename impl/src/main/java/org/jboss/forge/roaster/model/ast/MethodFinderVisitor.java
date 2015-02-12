@@ -65,7 +65,7 @@ public class MethodFinderVisitor extends ASTVisitor
       addMethods(bodyDeclarations);
       return false;
    }
-   
+
    public List<MethodDeclaration> getMethods()
    {
       return Collections.unmodifiableList(methods);

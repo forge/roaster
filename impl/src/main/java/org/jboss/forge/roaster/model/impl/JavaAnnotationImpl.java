@@ -57,7 +57,7 @@ public class JavaAnnotationImpl extends AbstractJavaSource<JavaAnnotationSource>
       @SuppressWarnings("unchecked")
       final ListIterator<BodyDeclaration> members = getBodyDeclaration().bodyDeclarations().listIterator();
 
-      //skip any members before annotation elements, i.e. nested types
+      // skip any members before annotation elements, i.e. nested types
       while (members.hasNext())
       {
          if (members.next() instanceof AnnotationTypeMemberDeclaration)
@@ -65,14 +65,14 @@ public class JavaAnnotationImpl extends AbstractJavaSource<JavaAnnotationSource>
             break;
          }
       }
-      //find the last annotation element
+      // find the last annotation element
       while (members.hasNext())
       {
          if (members.next() instanceof AnnotationTypeMemberDeclaration)
          {
             continue;
          }
-         //back up a step
+         // back up a step
          members.previous();
          break;
       }
