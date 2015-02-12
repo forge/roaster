@@ -79,14 +79,14 @@ If you're wondering what issues would be suitable when you're just getting start
 License Information and Contributor Agreement
 ---------------------------------------------
 
-  JBoss Forge is licensed under the [Eclipse Public License 1.0](http://www.eclipse.org/legal/epl-v10.html).
+  Roaster is licensed under the [Eclipse Public License 1.0](http://www.eclipse.org/legal/epl-v10.html).
 
-  There is no need to sign a contributor agreement to contribute to JBoss Forge. You just need to explicitly license any contribution under the EPL 1.0. If you add any new files to JBoss Forge, make sure to add the correct header.
+  There is no need to sign a contributor agreement to contribute to Roaster. You just need to explicitly license any contribution under the EPL 1.0. If you add any new files to Roaster, make sure to add the correct header.
 
 ### Java,  Javascript and CSS files
 
       /**
-       * Copyright 2014 Red Hat, Inc. and/or its affiliates.
+       * Copyright 2015 Red Hat, Inc. and/or its affiliates.
        *
        * Licensed under the Eclipse Public License version 1.0, available at
        * http://www.eclipse.org/legal/epl-v10.html
@@ -95,7 +95,7 @@ License Information and Contributor Agreement
 ### HTML, XML, XSD and XHTML files
 
       <!--
-       ~ Copyright 2014 Red Hat, Inc. and/or its affiliates.
+       ~ Copyright 2015 Red Hat, Inc. and/or its affiliates.
        ~
        ~ Licensed under the Eclipse Public License version 1.0, available at
        ~ http://www.eclipse.org/legal/epl-v10.html
@@ -103,7 +103,7 @@ License Information and Contributor Agreement
 
 ### Properties files and Bash Scripts
 
-       # Copyright 2014 Red Hat, Inc. and/or its affiliates.
+       # Copyright 2015 Red Hat, Inc. and/or its affiliates.
        #
        # Licensed under the Eclipse Public License version 1.0, available at
        # http://www.eclipse.org/legal/epl-v10.html
@@ -111,7 +111,7 @@ License Information and Contributor Agreement
 ### SQL files
 
       --
-      -- Copyright 2014 Red Hat, Inc. and/or its affiliates.
+      -- Copyright 2015 Red Hat, Inc. and/or its affiliates.
       --
       -- Licensed under the Eclipse Public License version 1.0, available at
       -- http://www.eclipse.org/legal/epl-v10.html
@@ -120,7 +120,7 @@ License Information and Contributor Agreement
 ### JSP files
 
       <%--
-      Copyright 2014 Red Hat, Inc. and/or its affiliates.
+      Copyright 2015 Red Hat, Inc. and/or its affiliates.
 
       Licensed under the Eclipse Public License version 1.0, available at
       http://www.eclipse.org/legal/epl-v10.html
