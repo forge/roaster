@@ -19,8 +19,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.AnnotationTargetSource;
+import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.junit.Assert;
 import org.junit.Before;
@@ -805,6 +807,14 @@ public abstract class AnnotationTest<O extends JavaSource<O>, T>
       assertTrue(target.getOrigin().hasImport(MockAnnotation.class));
       assertEquals(1, annotation.getAnnotationArrayValue("nested").length);
       assertEquals("MockAnnotation", annotation.getAnnotationArrayValue("nested")[0].getName());
+   }
+
+   @Test
+   public void testAddJavaLangAnnotationShouldNotBeImported()
+   {
+      JavaClassSource source = Roaster.create(JavaClassSource.class);
+      source.addAnnotation(Override.class);
+      Assert.assertNull(source.getImport(Override.class));
    }
 
 }
