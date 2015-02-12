@@ -23,6 +23,11 @@ public interface Method<O extends JavaType<O>, T extends Method<O, T>> extends A
          Origin<O>
 {
    /**
+    * @return true if this method is native
+    */
+   boolean isNative();
+
+   /**
     * Get the inner body of this {@link Method}
     */
    String getBody();

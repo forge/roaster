@@ -17,12 +17,26 @@ import org.jboss.forge.roaster.model.Method;
  * Represents a Java Method in source form.
  *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
- *
+ * @author <a href="ggastald@redhat.com">George Gastaldi</a>
  */
 public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodSource<O>>,
          AbstractableSource<MethodSource<O>>,
          MemberSource<O, MethodSource<O>>, GenericCapableSource<O, MethodSource<O>>
 {
+   /**
+    * Sets this method to be <b>native</b>
+    * 
+    * <b>IMPORTANT</b>: Setting it to true will remove the method body.
+    */
+   MethodSource<O> setNative(boolean value);
+
+   /**
+    * Sets this method be <b>abstract</b>
+    * 
+    * <b>IMPORTANT</b>: Setting it to true will remove the method body.
+    */
+   MethodSource<O> setAbstract(boolean abstrct);
+
    /**
     * Set this {@link Method} to return the given type.
     */
@@ -119,6 +133,5 @@ public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodS
     * Remove a parameter with the specified {@link JavaType} type and name to this method
     */
    MethodSource<O> removeParameter(JavaType<?> type, String name);
-
 
 }

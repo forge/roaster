@@ -89,22 +89,23 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public String toSignature()
    {
-      String signature = (Visibility.PACKAGE_PRIVATE.equals(this.getVisibility().scope()) ? "" : this.getVisibility()
-               .scope()) + " ";
-      signature += this.getName() + "(";
-
+      StringBuilder signature = new StringBuilder();
+      signature.append((Visibility.PACKAGE_PRIVATE.equals(this.getVisibility().scope()) ? "" : this.getVisibility()
+               .scope()));
+      signature.append(" ");
+      signature.append(this.getName()).append("(");
       List<ParameterSource<O>> parameters = this.getParameters();
       for (ParameterSource<O> p : parameters)
       {
-         signature += p.getType().getName();
+         signature.append(p.getType().getName());
          if (parameters.indexOf(p) < (parameters.size() - 1))
          {
-            signature += ", ";
+            signature.append(", ");
          }
       }
 
-      signature += ") : " + (this.getReturnType() == null ? "void" : this.getReturnType().getName());
-      return signature;
+      signature.append(") : " + (this.getReturnType() == null ? "void" : this.getReturnType().getName()));
+      return signature.toString();
    }
 
    /*
@@ -177,27 +178,41 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @SuppressWarnings("unchecked")
    public String getBody()
    {
-      StringBuilder result = new StringBuilder();
-      List<Statement> statements = (List<Statement>) method.getBody().getStructuralProperty(Block.STATEMENTS_PROPERTY);
-      for (Statement statement : statements)
+      Block body = method.getBody();
+      if (body != null)
       {
-         result.append(statement).append(" ");
+         StringBuilder result = new StringBuilder();
+         List<Statement> statements = (List<Statement>) body.getStructuralProperty(Block.STATEMENTS_PROPERTY);
+         for (Statement statement : statements)
+         {
+            result.append(statement).append(" ");
+         }
+         return result.toString().trim();
       }
-
-      return result.toString().trim();
+      else
+      {
+         // No body found, probably because it's a native or an abstract method
+         return null;
+      }
    }
 
    @Override
    public MethodSource<O> setBody(final String body)
    {
-      String stub = "public class Stub { public void method() {" + body + "} }";
-      JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
-      List<MethodSource<JavaClassSource>> methods = temp.getMethods();
-      Block block = ((MethodDeclaration) methods.get(0).getInternal()).getBody();
+      if (body == null)
+      {
+         method.setBody(null);
+      }
+      else
+      {
+         String stub = "public class Stub { public void method() {" + body + "} }";
+         JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
+         List<MethodSource<JavaClassSource>> methods = temp.getMethods();
+         Block block = ((MethodDeclaration) methods.get(0).getInternal()).getBody();
 
-      block = (Block) ASTNode.copySubtree(method.getAST(), block);
-      method.setBody(block);
-
+         block = (Block) ASTNode.copySubtree(method.getAST(), block);
+         method.setBody(block);
+      }
       return this;
    }
 
@@ -237,7 +252,6 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public MethodSource<O> setReturnType(final Class<?> type)
    {
-      // TODO add import?
       return setReturnType(type.getSimpleName());
    }
 
@@ -274,10 +288,6 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       return setReturnType(type.getName());
    }
 
-   /*
-    * Abstract Modifiers
-    */
-
    @Override
    public boolean isAbstract()
    {
@@ -290,10 +300,16 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       if (abstrct)
       {
          modifiers.addModifier(method, ModifierKeyword.ABSTRACT_KEYWORD);
+         // Abstract methods do not specify a body
+         setBody(null);
       }
       else
       {
          modifiers.removeModifier(method, ModifierKeyword.ABSTRACT_KEYWORD);
+         if (getBody() == null)
+         {
+            setBody("");
+         }
       }
       return this;
    }
@@ -328,6 +344,32 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       else
          modifiers.removeModifier(method, ModifierKeyword.STATIC_KEYWORD);
       return this;
+   }
+
+   @Override
+   public MethodSource<O> setNative(boolean value)
+   {
+      if (value)
+      {
+         modifiers.addModifier(method, ModifierKeyword.NATIVE_KEYWORD);
+         // Native methods do not specify a body
+         setBody(null);
+      }
+      else
+      {
+         modifiers.removeModifier(method, ModifierKeyword.NATIVE_KEYWORD);
+         if (getBody() == null)
+         {
+            setBody("");
+         }
+      }
+      return this;
+   }
+
+   @Override
+   public boolean isNative()
+   {
+      return modifiers.hasModifier(method, ModifierKeyword.NATIVE_KEYWORD);
    }
 
    @Override
@@ -681,7 +723,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       {
          getOrigin().addImport(type);
       }
-      String stub = "public class Stub { public void method( " + Types.toSimpleName(Types.fixArray(type,false)) + " "
+      String stub = "public class Stub { public void method( " + Types.toSimpleName(Types.fixArray(type, false)) + " "
                + name + " ) {} }";
       JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
       List<MethodSource<JavaClassSource>> methods = temp.getMethods();
