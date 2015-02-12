@@ -7,7 +7,7 @@ Roaster introduces a fluent interface to manipulate Java source files, like addi
 Installation
 ============
 * Download (or build from sources) the most recent roaster-distribution-VERSION.zip.
-.. Download link:https://repository.jboss.org/nexus/service/local/artifact/maven/redirect?r=releases&g=org.jboss.forge.roaster&a=roaster-distribution&v=LATEST&e=zip[JBoss Forge - Roaster (Latest)]
+.. Download link:https://repository.jboss.org/nexus/service/local/artifact/maven/redirect?r=releases&g=org.jboss.forge.roaster&a=roaster-distribution&v=LATEST&e=zip[Roaster (Latest)]
 ... This ZIP contains the Roaster distribution and command line tools
 
 * Extract the ZIP to a directory and navigate to roaster-distribution-VERSION/bin directory
