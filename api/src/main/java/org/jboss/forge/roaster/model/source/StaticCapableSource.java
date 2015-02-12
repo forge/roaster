@@ -17,7 +17,7 @@ import org.jboss.forge.roaster.model.StaticCapable;
 public interface StaticCapableSource<T> extends StaticCapable
 {
    /**
-    * Sets the <b>final</b> keyword in this element.
+    * Sets the <b>static</b> keyword in this element.
     * 
     * @param value if this element should be set to static
     * @return the generic element this interface is bound to
