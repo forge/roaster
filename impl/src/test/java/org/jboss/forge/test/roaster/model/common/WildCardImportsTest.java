@@ -45,8 +45,8 @@ public class WildCardImportsTest
    public void testWildcardImportResolverMissing()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
-      javaClass.addField().setName("field").setType("Date");
       javaClass.addImport("java.util.*");
+      javaClass.addField().setName("field").setType("Date");
       FieldSource<JavaClassSource> field = javaClass.getField("field");
       Assert.assertNotNull(field);
       Assert.assertNotNull(field.getType());

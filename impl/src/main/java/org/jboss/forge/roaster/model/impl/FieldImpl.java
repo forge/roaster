@@ -27,11 +27,9 @@ import org.jboss.forge.roaster.model.ast.AnnotationAccessor;
 import org.jboss.forge.roaster.model.ast.ModifierAccessor;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.FieldSource;
-import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.util.Strings;
-import org.jboss.forge.roaster.model.util.Types;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -329,23 +327,12 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    }
 
    @Override
-   public FieldSource<O> setType(final String typeName)
+   public FieldSource<O> setType(String typeName)
    {
-      String simpleName = Types.toSimpleName(typeName);
-
       O origin = getOrigin();
-      if (!Strings.areEqual(typeName, simpleName) && origin.requiresImport(typeName))
-      {
-         origin.addImport(typeName);
-      }
+      String resolvedType = origin.ensureImports(new TypeImpl<O>(origin,null,typeName));
 
-      String stub = "public class Stub { " + simpleName + " field; }";
-      JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
-      List<FieldSource<JavaClassSource>> fields = temp.getFields();
-      org.eclipse.jdt.core.dom.Type fieldType = ((FieldDeclaration) ((VariableDeclarationFragment) fields.get(0)
-               .getInternal()).getParent()).getType();
-
-      fieldType = (org.eclipse.jdt.core.dom.Type) ASTNode.copySubtree(field.getAST(), fieldType);
+      org.eclipse.jdt.core.dom.Type fieldType = TypeImpl.fromString(resolvedType,this.ast);
       field.setType(fieldType);
 
       return this;

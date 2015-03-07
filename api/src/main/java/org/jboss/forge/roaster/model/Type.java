@@ -20,7 +20,11 @@ public interface Type<O extends JavaType<O>> extends Origin<O>
 
    String getName();
 
+   String getSimpleName();
+
    String getQualifiedName();
+
+   String getQualifiedNameWithGenerics();
 
    Type<O> getParentType();
 
@@ -33,6 +37,8 @@ public interface Type<O extends JavaType<O>> extends Origin<O>
    boolean isPrimitive();
 
    boolean isQualified();
+
+   boolean isNameQualified();
 
    boolean isWildcard();
 

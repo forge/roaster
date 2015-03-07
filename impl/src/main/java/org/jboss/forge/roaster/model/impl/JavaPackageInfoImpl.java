@@ -23,6 +23,7 @@ import org.jboss.forge.roaster.ParserException;
 import org.jboss.forge.roaster.model.Annotation;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.SyntaxError;
+import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.Visibility;
 import org.jboss.forge.roaster.model.ast.AnnotationAccessor;
 import org.jboss.forge.roaster.model.ast.ModifierAccessor;
@@ -719,6 +720,11 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    public List<JavaSource<?>> getNestedClasses()
    {
       return Collections.emptyList();
+   }
+
+   @Override
+   public String ensureImports(Type<?> type) {
+      throw new UnsupportedOperationException("Imports cannot be added at the package-info level");
    }
 
    @Override

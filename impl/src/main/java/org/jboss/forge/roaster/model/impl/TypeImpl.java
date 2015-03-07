@@ -21,8 +21,10 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.Type;
+import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.Importer;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.model.util.Types;
@@ -190,6 +192,28 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    }
 
    @Override
+   public String getSimpleName()
+   {
+      return Types.toSimpleName( getQualifiedName() );
+   }
+
+   @Override
+   public boolean isNameQualified() {
+      return ! getSimpleName().equals( getQualifiedName() );
+   }
+
+   @Override
+   public String getQualifiedNameWithGenerics()
+   {
+      String result = type.toString();
+      if (origin instanceof Importer<?>)
+      {
+         return Types.rebuildGenericNameWithArrays( ( (Importer<?>) origin ).resolveType( result ), this );
+      }
+      return result;
+   }
+
+   @Override
    public Type<O> getParentType()
    {
       return parent;
@@ -271,5 +295,15 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
          }
       }
       return 0;
+   }
+
+
+   public static org.eclipse.jdt.core.dom.Type fromString(String resolvedType,AST ast) {
+      String stub = "public class Stub { " + resolvedType + " field; }";
+      JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
+      List<FieldSource<JavaClassSource>> fields = temp.getFields();
+      org.eclipse.jdt.core.dom.Type fieldType = ((FieldDeclaration) ((VariableDeclarationFragment) fields.get(0)
+              .getInternal()).getParent()).getType();
+      return (org.eclipse.jdt.core.dom.Type) ASTNode.copySubtree(ast, fieldType);
    }
 }

@@ -81,6 +81,8 @@ public class TypesTest
       assertTrue(Types.isArray(Boolean[].class.getName()));
       assertTrue(Types.isArray(Types[].class.getName()));
 
+      assertTrue(Types.isArray("Map<String,List<Long>>[]"));
+
       assertEquals("byte", Types.stripArray(byte[].class.getSimpleName()));
       assertEquals("Boolean", Types.stripArray(Boolean[].class.getSimpleName()));
       assertEquals("Vector", Types.stripArray(Vector[].class.getSimpleName()));
@@ -88,6 +90,8 @@ public class TypesTest
       assertEquals("byte", Types.stripArray(byte[].class.getName()));
       assertEquals("java.lang.Boolean", Types.stripArray(Boolean[].class.getName()));
       assertEquals("java.util.Vector", Types.stripArray(Vector[].class.getName()));
+
+      assertEquals("java.util.Map<org.foo.String[],T>", Types.stripArray( "java.util.Map<org.foo.String[],T>[]"));
 
       assertEquals("int", Types.stripArray(int[][][][][].class.getName()));
 
@@ -99,6 +103,7 @@ public class TypesTest
                Types.stripArray("java.lang.Class<LONG_TYPE_VARIABLE_NAME>[]"));
       assertEquals("java.lang.Class<? extends Number>", Types.stripArray("java.lang.Class<? extends Number>[]"));
       assertEquals("java.lang.Class<E extends Enum<E>>", Types.stripArray("java.lang.Class<E extends Enum<E>>[]"));
+      assertEquals("java.util.Map<org.Foo.MyEnum<T>,java.lang.Object>", Types.stripArray("java.util.Map<org.Foo.MyEnum<T>,java.lang.Object>[][]"));
    }
 
    @Test
@@ -131,6 +136,9 @@ public class TypesTest
       assertEquals("java.util.List", Types.stripGenerics("java.util.List<java.lang.String>"));
       assertEquals("java.util.List", Types.stripGenerics("java.util.List<List<String>>"));
       assertEquals("java.util.List", Types.stripGenerics("java.util.List<List<java.lang.String>>"));
+      assertEquals("java.util.Map[][]", Types.stripGenerics("java.util.Map<org.Foo.MyEnum<T>,java.lang.Object>[][]"));
+      assertEquals("java.util.Map[]", Types.stripGenerics("java.util.Map<org.foo.String[],T>[]"));
+      assertEquals("Map[]", Types.stripGenerics("Map<String,List<Long>>[]"));
    }
 
    @Test
