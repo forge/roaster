@@ -6,10 +6,12 @@
  */
 package org.jboss.forge.roaster.model.impl;
 
+import org.eclipse.jdt.core.dom.ArrayType;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.SimpleType;
+import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jface.text.Document;
 import org.jboss.forge.roaster.model.JavaType;
@@ -152,9 +154,8 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
 
          for (String typeP : typesGeneric.split(","))
          {
-            pt.typeArguments().add(
-                     body.getAST().newSimpleType(body.getAST().newSimpleName(Types.toSimpleName(typeP.trim()))));
-
+            Type t = TypeImpl.fromString(Types.toSimpleName(typeP.trim()),body.getAST());
+            pt.typeArguments().add(t);
             if (!hasImport(typeP) && Types.isQualified(typeP))
             {
                addImport(typeP);
@@ -165,7 +166,7 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
       }
       else
       {
-         SimpleType simpleType = body.getAST().newSimpleType(body.getAST().newSimpleName(Types.toSimpleName(type)));
+         SimpleType simpleType = body.getAST().newSimpleType( body.getAST().newSimpleName( Types.toSimpleName( type ) ) );
          getBodyDeclaration().setStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY, simpleType);
 
          if (!hasImport(type) && Types.isQualified(type))

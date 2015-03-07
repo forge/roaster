@@ -30,6 +30,7 @@ import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.Method;
 import org.jboss.forge.roaster.model.Parameter;
 import org.jboss.forge.roaster.model.SyntaxError;
+import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.Visibility;
 import org.jboss.forge.roaster.model.ast.MethodFinderVisitor;
 import org.jboss.forge.roaster.model.ast.TypeDeclarationFinderVisitor;
@@ -99,6 +100,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    }
 
    @Override
+
    public boolean isInterface()
    {
       return false;
@@ -883,6 +885,11 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    public List<JavaSource<?>> getNestedClasses()
    {
       return getNestedTypes();
+   }
+
+   @Override
+   public Import addImport(Type<?> type) {
+      return getEnclosingType().addImport(type);
    }
 
    @Override

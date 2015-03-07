@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.JavaInterface;
+import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
@@ -106,6 +107,17 @@ public class MethodGenericsTest
       Assert.assertTrue(method.toString().contains("<T extends com.something.Foo & com.something.Bar<T>>"));
       method.getTypeVariable("T").removeBounds();
       Assert.assertTrue(method.toString().contains("<T>"));
+   }
+
+   @Test
+   public void fullyQualifiedArrayArguments() throws ClassNotFoundException
+   {
+      JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> method = javaClass.addMethod();
+      method.addTypeVariable().setName("T").setBounds( CharSequence.class );
+      method.addParameter("java.util.Map<org.foo.String[],T>[]","complexMap");
+      Type type = method.getParameters().get(0).getType();
+      Assert.assertEquals( "Map<org.foo.String[],T>[]",type.toString());
    }
 
 }

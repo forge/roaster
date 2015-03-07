@@ -23,6 +23,7 @@ import org.jboss.forge.roaster.ParserException;
 import org.jboss.forge.roaster.model.Annotation;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.SyntaxError;
+import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.Visibility;
 import org.jboss.forge.roaster.model.ast.AnnotationAccessor;
 import org.jboss.forge.roaster.model.ast.ModifierAccessor;
@@ -722,6 +723,11 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    }
 
    @Override
+   public Import addImport(Type<?> type) {
+      return addImport(type.getQualifiedName());
+   }
+
+   @Override
    public JavaDocSource<JavaPackageInfoSource> getJavaDoc()
    {
       Javadoc javadoc = pkg.getJavadoc();
@@ -744,5 +750,13 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    public boolean hasJavaDoc()
    {
       return pkg.getJavadoc() != null;
+   }
+
+   public CompilationUnit getUnit() {
+      return unit;
+   }
+
+   public PackageDeclaration getPkg() {
+      return pkg;
    }
 }

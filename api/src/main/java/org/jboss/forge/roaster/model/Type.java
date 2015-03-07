@@ -18,9 +18,33 @@ public interface Type<O extends JavaType<O>> extends Origin<O>
 {
    List<Type<O>> getTypeArguments();
 
+   /**
+    * Returns the type's name after erasing any type parameters.
+    * Preserves array dimensions
+    * @return the type's name without type parameters
+    */
    String getName();
 
+   /**
+    * Returns the type's name, simplifying qualified names based on imports
+    * Preserves generic parameters, simplifying them recursively
+    * Preserves array dimensions
+    * @return the type's simple name
+    */
+   String getSimpleName();
+
+   /**
+    * Returns the type's qualified name, expanding simple names according to imports
+    * @return the type's qualified name
+    */
    String getQualifiedName();
+
+   /**
+    * Returns the type's qualified name, preserving type parameters (which are also qualified)
+    * Preserves array dimensions.
+    * @return the type's qualified name, including type parameters
+    */
+   String getQualifiedNameWithGenerics();
 
    Type<O> getParentType();
 

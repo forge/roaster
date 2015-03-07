@@ -21,6 +21,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.Type;
+import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.Importer;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
@@ -32,20 +33,16 @@ import org.jboss.forge.roaster.model.util.Types;
  */
 public class TypeImpl<O extends JavaType<O>> implements Type<O>
 {
-   private O origin = null;
+   private O origin;
+   private CompilationUnit cu;
+
    private final Type<O> parent;
-
-   @SuppressWarnings("unused")
-   private AST ast = null;
-
-   private CompilationUnit cu = null;
    private final org.eclipse.jdt.core.dom.Type type;
 
    private void init(final O origin)
    {
       this.origin = origin;
       cu = (CompilationUnit) origin.getInternal();
-      ast = cu.getAST();
    }
 
    public TypeImpl(final O origin, final Object internal)
@@ -135,11 +132,7 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    @Override
    public boolean isQualified()
    {
-      if (type.isArrayType())
-      {
-         return ((ArrayType) type).getElementType().isQualifiedType();
-      }
-      return type.isQualifiedType();
+      return type.toString().contains(".");
    }
 
    @Override
@@ -185,6 +178,23 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
       if (origin instanceof Importer<?>)
       {
          return ((Importer<?>) origin).resolveType(result);
+      }
+      return result;
+   }
+
+   @Override
+   public String getSimpleName()
+   {
+      return Types.toSimpleName(getQualifiedName());
+   }
+
+   @Override
+   public String getQualifiedNameWithGenerics()
+   {
+      String result = type.toString();
+      if (origin instanceof Importer<?>)
+      {
+         return Types.rebuildGenericNameWithArrays(((Importer<?>) origin).resolveType(result), this);
       }
       return result;
    }
@@ -271,5 +281,15 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
          }
       }
       return 0;
+   }
+
+   public static org.eclipse.jdt.core.dom.Type fromString(String resolvedType, AST ast)
+   {
+      String stub = "public class Stub { " + resolvedType + " field; }";
+      JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
+      List<FieldSource<JavaClassSource>> fields = temp.getFields();
+      org.eclipse.jdt.core.dom.Type fieldType = ((FieldDeclaration) ((VariableDeclarationFragment) fields.get(0)
+               .getInternal()).getParent()).getType();
+      return (org.eclipse.jdt.core.dom.Type) ASTNode.copySubtree(ast, fieldType);
    }
 }
