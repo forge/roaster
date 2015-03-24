@@ -107,24 +107,19 @@ public abstract class Formatter
     */
    public static String format(Properties prefs, String source)
    {
-      final CodeFormatter codeFormatter = ToolFactory.createCodeFormatter(prefs);
-      return _format(source, codeFormatter);
-   }
-
-   private static String _format(String contents, CodeFormatter codeFormatter)
-   {
-      IDocument doc = new Document(contents);
+      CodeFormatter codeFormatter = ToolFactory.createCodeFormatter(prefs);
+      IDocument doc = new Document(source);
       try
       {
          TextEdit edit = codeFormatter.format(CodeFormatter.K_COMPILATION_UNIT,
-                  contents, 0, contents.length(), 0, null);
+                  source, 0, source.length(), 0, null);
          if (edit != null)
          {
             edit.apply(doc);
          }
          else
          {
-            return contents;
+            return source;
          }
       }
       catch (BadLocationException e)
