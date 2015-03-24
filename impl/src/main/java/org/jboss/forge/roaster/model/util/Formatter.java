@@ -55,7 +55,7 @@ public abstract class Formatter
    {
       Properties options = readConfig(prefs);
       if (options == null)
-         options = readConfigInternal("org.eclipse.jdt.core.prefs");
+         options = readConfigInternal();
 
       InputStream in = null;
       OutputStream out = null;
@@ -97,7 +97,7 @@ public abstract class Formatter
     */
    public static String format(String source)
    {
-      Properties options = readConfigInternal("org.eclipse.jdt.core.prefs");
+      Properties options = readConfigInternal();
       return format(options, source);
    }
 
@@ -170,18 +170,17 @@ public abstract class Formatter
       return modified;
    }
 
-   private static Properties readConfigInternal(String filename)
+   private static Properties readConfigInternal()
    {
       InputStream stream = new BufferedInputStream(org.jboss.forge.roaster.model.util.Formatter.class
-               .getResourceAsStream(filename));
+               .getResourceAsStream("org.eclipse.jdt.core.prefs"));
       try
       {
          return parseConfig(stream);
       }
       catch (IOException e)
       {
-         throw new RuntimeException("Error reading internal configuration: ["
-                  + filename + "]", e);
+         throw new RuntimeException("Error reading internal configuration: [org.eclipse.jdt.core.prefs]", e);
       }
       finally
       {
