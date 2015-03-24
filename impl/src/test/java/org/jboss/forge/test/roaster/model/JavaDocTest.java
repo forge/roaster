@@ -76,7 +76,7 @@ public class JavaDocTest
       String expected = "/**" + LINE_SEPARATOR
                + " * Do Something" + LINE_SEPARATOR
                + " * @author George Gastaldi" + LINE_SEPARATOR + " */" + LINE_SEPARATOR
-               + "public class MyClass" + LINE_SEPARATOR + "{" + LINE_SEPARATOR + "}";
+               + "public class MyClass {" + LINE_SEPARATOR + "}";
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class).setPublic().setName("MyClass");
       Assert.assertFalse(javaClass.hasJavaDoc());
       JavaDocSource<JavaClassSource> javaDoc = javaClass.getJavaDoc();
@@ -90,7 +90,7 @@ public class JavaDocTest
       String expected = "/**" + LINE_SEPARATOR
                + " * Do Something" + LINE_SEPARATOR
                + " * @author George Gastaldi" + LINE_SEPARATOR + " */" + LINE_SEPARATOR
-               + "public class MyClass" + LINE_SEPARATOR + "{" + LINE_SEPARATOR + "}";
+               + "public class MyClass {" + LINE_SEPARATOR + "}";
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class).setPublic().setName("MyClass");
       Assert.assertFalse(javaClass.hasJavaDoc());
       JavaDocSource<JavaClassSource> javaDoc = javaClass.getJavaDoc();

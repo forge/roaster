@@ -60,8 +60,8 @@ public abstract class JavaClassTestBase
 
       String output = source.toString();
 
-      assertTrue(Pattern.compile(".*Telephone\\s*(\\r?\\n)\\s*\\{.*", Pattern.DOTALL).matcher(output).matches());
-      assertTrue(Pattern.compile(".*\\)\\s*(\\r?\\n)\\s*\\{.*", Pattern.DOTALL).matcher(output).matches());
+      assertTrue(Pattern.compile(".*Telephone\\s*\\{.*", Pattern.DOTALL).matcher(output).matches());
+      assertTrue(Pattern.compile(".*\\)\\s*\\{.*", Pattern.DOTALL).matcher(output).matches());
    }
 
    @Test
