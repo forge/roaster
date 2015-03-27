@@ -1,7 +1,7 @@
 Roaster 
 =======
 
-image:https://travis-ci.org/forge/roaster.svg["Build Status", link="https://travis-ci.org/forge/roaster"]
+image:https://travis-ci.org/forge/roaster.svg?branch=master["Build Status", link="https://travis-ci.org/forge/roaster"]
 
 Roaster (formerly known as java-parser) is a library that allows easy parsing and formatting of java source files. 
 Roaster introduces a fluent interface to manipulate Java source files, like adding fields, methods, annotations and so on.
