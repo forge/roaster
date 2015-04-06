@@ -121,7 +121,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public AnnotationSource<O> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
    {
-      if (!parent.hasImport(clazz))
+      if (parent.requiresImport(clazz))
       {
          parent.addImport(clazz);
       }

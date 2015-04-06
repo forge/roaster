@@ -19,10 +19,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.AnnotationTargetSource;
-import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.jboss.forge.roaster.model.source.Importer;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.junit.Assert;
 import org.junit.Before;
@@ -812,9 +811,9 @@ public abstract class AnnotationTest<O extends JavaSource<O>, T>
    @Test
    public void testAddJavaLangAnnotationShouldNotBeImported()
    {
-      JavaClassSource source = Roaster.create(JavaClassSource.class);
-      source.addAnnotation(Override.class);
-      Assert.assertNull(source.getImport(Override.class));
+      target.addAnnotation(Override.class);
+      Importer<?> importer = target.getOrigin();
+      Assert.assertNull(importer.getImport(Override.class));
    }
 
 }

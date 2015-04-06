@@ -146,7 +146,7 @@ public class EnumConstantImpl implements EnumConstantSource
    @Override
    public AnnotationSource<JavaEnumSource> addAnnotation(final Class<? extends java.lang.annotation.Annotation> clazz)
    {
-      if (!parent.hasImport(clazz))
+      if (parent.requiresImport(clazz))
       {
          parent.addImport(clazz);
       }
