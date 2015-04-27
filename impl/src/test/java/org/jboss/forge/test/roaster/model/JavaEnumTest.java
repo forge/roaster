@@ -7,6 +7,7 @@
 package org.jboss.forge.test.roaster.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
@@ -84,4 +85,14 @@ public class JavaEnumTest
       assertTrue(method.getParameters().isEmpty());
       assertSame(Visibility.PUBLIC, method.getVisibility());
    }
+
+   @Test
+   public void testStatic()
+   {
+      javaEnum.setStatic(true);
+      assertTrue(javaEnum.isStatic());
+      javaEnum.setStatic(false);
+      assertFalse(javaEnum.isStatic());
+   }
+
 }

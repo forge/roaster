@@ -41,6 +41,7 @@ import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
+import org.jboss.forge.roaster.model.source.StaticCapableSource;
 import org.jboss.forge.roaster.model.source.TypeHolderSource;
 import org.jboss.forge.roaster.model.util.Formatter;
 import org.jboss.forge.roaster.model.util.Strings;
@@ -55,7 +56,7 @@ import org.jboss.forge.roaster.spi.WildcardImportResolver;
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
-         JavaSource<O>, TypeHolderSource<O>
+         JavaSource<O>, TypeHolderSource<O>, StaticCapableSource<O>
 {
    private final AnnotationAccessor<O, O> annotations = new AnnotationAccessor<O, O>();
    private final ModifierAccessor modifiers = new ModifierAccessor();
@@ -893,6 +894,26 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    public boolean hasJavaDoc()
    {
       return body.getJavadoc() != null;
+   }
+
+   @Override
+   public boolean isStatic()
+   {
+      return modifiers.hasModifier(getBodyDeclaration(), ModifierKeyword.STATIC_KEYWORD);
+   }
+
+   @Override
+   public O setStatic(boolean _static)
+   {
+      if (_static)
+      {
+         modifiers.addModifier(getBodyDeclaration(), ModifierKeyword.STATIC_KEYWORD);
+      }
+      else
+      {
+         modifiers.removeModifier(getBodyDeclaration(), ModifierKeyword.STATIC_KEYWORD);
+      }
+      return (O) this;
    }
 
    private List<AbstractTypeDeclaration> getNestedDeclarations(BodyDeclaration body)

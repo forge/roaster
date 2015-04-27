@@ -331,4 +331,13 @@ public abstract class JavaClassTestBase
       source.setFinal(true);
       assertTrue(source.isFinal());
    }
+
+   @Test
+   public void testStatic()
+   {
+      source.setStatic(true);
+      assertTrue(source.isStatic());
+      source.setStatic(false);
+      assertFalse(source.isStatic());
+   }
 }

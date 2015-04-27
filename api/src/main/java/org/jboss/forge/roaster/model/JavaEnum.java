@@ -17,7 +17,7 @@ import org.jboss.forge.roaster.Roaster;
  *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public interface JavaEnum<O extends JavaEnum<O>> extends JavaType<O>, PropertyHolder<O>, TypeHolder<O>
+public interface JavaEnum<O extends JavaEnum<O>> extends JavaType<O>, PropertyHolder<O>, TypeHolder<O>, StaticCapable
 {
    /**
     * Return the {@link EnumConstant} with the given name, or return null if no such constant exists.

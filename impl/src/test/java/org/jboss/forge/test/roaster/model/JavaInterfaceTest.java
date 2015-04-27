@@ -81,4 +81,15 @@ public class JavaInterfaceTest
       assertNotSame(i, i2);
       assertEquals(i.getQualifiedName(), i2.getQualifiedName());
    }
+
+   @Test
+   public void testStatic()
+   {
+      JavaInterfaceSource iface = Roaster.parse(JavaInterfaceSource.class, "public interface Foo{}");
+      iface.setStatic(true);
+      assertTrue(iface.isStatic());
+      iface.setStatic(false);
+      assertFalse(iface.isStatic());
+   }
+
 }
