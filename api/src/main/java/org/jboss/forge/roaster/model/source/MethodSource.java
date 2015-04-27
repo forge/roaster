@@ -39,14 +39,6 @@ public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodS
    MethodSource<O> setNative(boolean value);
 
    /**
-    * Sets this method be <b>abstract</b>
-    * 
-    * <b>IMPORTANT</b>: Setting it to true will remove the method body.
-    */
-   @Override
-   MethodSource<O> setAbstract(boolean abstrct);
-
-   /**
     * Set this {@link Method} to return the given type.
     */
    MethodSource<O> setReturnType(final Class<?> type);
