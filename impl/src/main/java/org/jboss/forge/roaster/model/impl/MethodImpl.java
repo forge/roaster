@@ -347,6 +347,26 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    }
 
    @Override
+   public MethodSource<O> setSynchronized(boolean value)
+   {
+      if (value)
+      {
+         modifiers.addModifier(method, ModifierKeyword.SYNCHRONIZED_KEYWORD);
+      }
+      else
+      {
+         modifiers.removeModifier(method, ModifierKeyword.SYNCHRONIZED_KEYWORD);
+      }
+      return this;
+   }
+
+   @Override
+   public boolean isSynchronized()
+   {
+      return modifiers.hasModifier(method, ModifierKeyword.SYNCHRONIZED_KEYWORD);
+   }
+
+   @Override
    public MethodSource<O> setNative(boolean value)
    {
       if (value)

@@ -70,4 +70,16 @@ public class MethodModifierTest
       Assert.assertNotNull(method.getBody());
    }
 
+   @Test
+   public void testSynchronizedMethod() throws Exception
+   {
+      MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
+               "public void test(){}");
+      Assert.assertFalse(method.isSynchronized());
+      method.setSynchronized(true);
+      Assert.assertTrue(method.isSynchronized());
+      method.setSynchronized(false);
+      Assert.assertFalse(method.isSynchronized());
+   }
+
 }

@@ -24,6 +24,14 @@ public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodS
          MemberSource<O, MethodSource<O>>, GenericCapableSource<O, MethodSource<O>>
 {
    /**
+    * Sets the <b>synchronized</b> keyword in this element.
+    * 
+    * @param value if this element should be set to synchronized
+    * @return the generic element this interface is bound to
+    */
+   MethodSource<O> setSynchronized(boolean value);
+
+   /**
     * Sets this method to be <b>native</b>
     * 
     * <b>IMPORTANT</b>: Setting it to true will remove the method body.
@@ -35,6 +43,7 @@ public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodS
     * 
     * <b>IMPORTANT</b>: Setting it to true will remove the method body.
     */
+   @Override
    MethodSource<O> setAbstract(boolean abstrct);
 
    /**

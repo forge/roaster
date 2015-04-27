@@ -23,6 +23,11 @@ public interface Method<O extends JavaType<O>, T extends Method<O, T>> extends A
          Origin<O>
 {
    /**
+    * @return if this method is synchronized
+    */
+   boolean isSynchronized();
+
+   /**
     * @return true if this method is native
     */
    boolean isNative();
