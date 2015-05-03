@@ -100,6 +100,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    }
 
    @Override
+
    public boolean isInterface()
    {
       return false;
@@ -887,8 +888,8 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    }
 
    @Override
-   public String ensureImports(Type<?> type) {
-      return getEnclosingType().ensureImports(type);
+   public Import addImport(Type<?> type) {
+      return getEnclosingType().addImport(type);
    }
 
    @Override

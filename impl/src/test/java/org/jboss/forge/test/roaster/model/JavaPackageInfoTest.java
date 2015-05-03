@@ -13,7 +13,10 @@ import java.util.List;
 
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.Annotation;
+import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.ValuePair;
+import org.jboss.forge.roaster.model.impl.JavaPackageInfoImpl;
+import org.jboss.forge.roaster.model.impl.TypeImpl;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaPackageInfoSource;
@@ -64,4 +67,19 @@ public class JavaPackageInfoTest
       AnnotationSource<JavaPackageInfoSource> annotationXmlAccessorOrder = javaPkg.getAnnotation("XmlAccessorOrder");
       Assert.assertEquals(annotationXmlOrder.getName(), annotationXmlAccessorOrder.getName());
    }
+
+   @Test
+   public void testPackageInfoWithImportedAnnotations()
+   {
+      JavaPackageInfoSource packageInfo = Roaster.create(JavaPackageInfoSource.class);
+      packageInfo.setPackage("org.jboss.forge.roaster");
+      Type type = new TypeImpl(packageInfo, null, MyPLAnnotation.class.getName());
+      packageInfo.addImport(type);
+      packageInfo.addAnnotation("my.custom.Annotation");
+      packageInfo.getEnclosingType();
+
+      assertEquals(2,packageInfo.getImports().size());
+   }
+
+   public static @interface MyPLAnnotation {}
 }

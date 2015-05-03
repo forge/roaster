@@ -511,7 +511,7 @@ public class Types
       return count;
    }
 
-   public static <O extends JavaSource<O>> int getBasicArrayDimension(String name)
+   public static int getBasicArrayDimension(String name)
    {
       int count = 0;
       if (name != null)

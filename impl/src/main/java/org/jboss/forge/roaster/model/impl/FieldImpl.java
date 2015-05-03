@@ -27,9 +27,11 @@ import org.jboss.forge.roaster.model.ast.AnnotationAccessor;
 import org.jboss.forge.roaster.model.ast.ModifierAccessor;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.FieldSource;
+import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.util.Strings;
+import org.jboss.forge.roaster.model.util.Types;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -330,8 +332,9 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    public FieldSource<O> setType(String typeName)
    {
       O origin = getOrigin();
-      String resolvedType = origin.ensureImports(new TypeImpl<O>(origin,null,typeName));
-
+      Type innerType = new TypeImpl<O>(origin,null,typeName);
+      Import imprt = getOrigin().addImport(innerType);
+      String resolvedType = imprt != null ? Types.rebuildGenericNameWithArrays(imprt.getSimpleName(),innerType) : Types.toSimpleName(typeName);
       org.eclipse.jdt.core.dom.Type fieldType = TypeImpl.fromString(resolvedType,this.ast);
       field.setType(fieldType);
 

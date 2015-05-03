@@ -723,8 +723,8 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    }
 
    @Override
-   public String ensureImports(Type<?> type) {
-      throw new UnsupportedOperationException("Imports cannot be added at the package-info level");
+   public Import addImport(Type<?> type) {
+      return addImport(type.getQualifiedName());
    }
 
    @Override
@@ -750,5 +750,13 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    public boolean hasJavaDoc()
    {
       return pkg.getJavadoc() != null;
+   }
+
+   public CompilationUnit getUnit() {
+      return unit;
+   }
+
+   public PackageDeclaration getPkg() {
+      return pkg;
    }
 }

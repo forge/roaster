@@ -32,6 +32,7 @@ import org.jboss.forge.roaster.model.Visibility;
 import org.jboss.forge.roaster.model.ast.AnnotationAccessor;
 import org.jboss.forge.roaster.model.ast.ModifierAccessor;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
+import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
@@ -739,7 +740,10 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public ParameterSource<O> addParameter(String type, String name)
    {
-      String resolvedType = getOrigin().ensureImports(new TypeImpl<O>(getOrigin(),null,type));
+      Type innerType = new TypeImpl<O>(getOrigin(),null,type);
+      Import imprt = getOrigin().addImport(innerType);
+      String resolvedType = imprt != null ? Types.rebuildGenericNameWithArrays( imprt.getSimpleName(),innerType) : Types.toSimpleName(type);
+
       String stub = "public class Stub { public void method( " + resolvedType + " " + name + " ) {} }";
       JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
       List<MethodSource<JavaClassSource>> methods = temp.getMethods();

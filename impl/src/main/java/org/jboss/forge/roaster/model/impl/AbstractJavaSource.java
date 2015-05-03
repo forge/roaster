@@ -949,23 +949,23 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       return result;
    }
 
-   public String ensureImports(Type<?> type)
+   public Import addImport(final Type<?> type)
    {
-      String resolvedTypeName;
+      Import imprt;
       if (requiresImport(type.getQualifiedName()))
       {
-         resolvedTypeName = addImport(type.getQualifiedName()).getSimpleName();
+         imprt = addImport(type.getQualifiedName());
       } else {
-         resolvedTypeName = type.getSimpleName();
+         imprt = getImport(type.getSimpleName());
       }
       for (Type<?> arg : type.getTypeArguments())
       {
          if (!arg.isWildcard() && arg.isNameQualified())
          {
-            ensureImports(arg);
+            addImport(arg);
          }
       }
-      return Types.rebuildGenericNameWithArrays(resolvedTypeName,type);
+      return imprt;
    }
 
 }
