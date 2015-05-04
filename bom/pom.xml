@@ -62,15 +62,6 @@
       </dependencies>
    </dependencyManagement>
 
-   <dependencies>
-      <dependency>
-         <groupId>junit</groupId>
-         <artifactId>junit</artifactId>
-         <version>4.11</version>
-         <scope>test</scope>
-      </dependency>
-   </dependencies>
-
    <scm>
       <connection>scm:git:git://github.com/forge/roaster.git</connection>
       <developerConnection>scm:git:git@github.com:forge/roaster.git</developerConnection>
