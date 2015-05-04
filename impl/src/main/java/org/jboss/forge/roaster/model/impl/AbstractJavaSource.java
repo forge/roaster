@@ -25,6 +25,7 @@ import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.TypeParameter;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
@@ -33,6 +34,7 @@ import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.Annotation;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.SyntaxError;
+import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.Visibility;
 import org.jboss.forge.roaster.model.ast.AnnotationAccessor;
 import org.jboss.forge.roaster.model.ast.ModifierAccessor;
@@ -448,7 +450,18 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    @Override
    public O setName(final String name)
    {
-      getBodyDeclaration().setName(unit.getAST().newSimpleName(name));
+      AbstractTypeDeclaration typeDeclaration = getBodyDeclaration();
+      TypeImpl<O> type = new TypeImpl(this,null,name);
+
+      typeDeclaration.setName( unit.getAST().newSimpleName(type.getName()) );
+      if (typeDeclaration instanceof TypeDeclaration) {
+         TypeDeclaration td = (TypeDeclaration) typeDeclaration;
+         for ( Type arg : type.getTypeArguments() ) {
+            TypeParameter typeParameter = unit.getAST().newTypeParameter();
+            typeParameter.setName(unit.getAST().newSimpleName(arg.getName()));
+            td.typeParameters().add(typeParameter);
+         }
+      }
       return updateTypeNames(name);
    }
 
@@ -934,6 +947,25 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       }
 
       return result;
+   }
+
+   public Import addImport(final Type<?> type)
+   {
+      Import imprt;
+      if (requiresImport(type.getQualifiedName()))
+      {
+         imprt = addImport(type.getQualifiedName());
+      } else {
+         imprt = getImport(type.getSimpleName());
+      }
+      for (Type<?> arg : type.getTypeArguments())
+      {
+         if (!arg.isWildcard() && arg.isQualified())
+         {
+            addImport(arg);
+         }
+      }
+      return imprt;
    }
 
 }

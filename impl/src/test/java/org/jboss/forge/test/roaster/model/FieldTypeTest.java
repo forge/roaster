@@ -287,4 +287,39 @@ public class FieldTypeTest
       Assert.assertEquals("List<String>", field.getType().toString());
       Assert.assertEquals("new java.util.ArrayList<String>()", field.getLiteralInitializer());
    }
+
+   @Test
+   public void testComplexFieldType() throws Exception
+   {
+      JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("MyClass<T>");
+      String type = "java.util.Map<org.foo.MyEnum<T>,java.lang.Object>";
+      FieldSource<JavaClassSource> field = clazz.addField().setName("field").setType(type);
+      Assert.assertEquals(type, field.getType().getQualifiedNameWithGenerics());
+   }
+
+   @Test
+   public void testComplexFieldTypeArray() throws Exception
+   {
+      JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("MyClass<T>");
+      String type = "java.util.Map<org.Foo.MyEnum<T>,java.lang.Object>[][]";
+      FieldSource<JavaClassSource> field = clazz.addField().setName("field").setType(type);
+      Assert.assertEquals(type, field.getType().getQualifiedNameWithGenerics());
+   }
+
+   @Test
+   public void testImportImpliedGenerics() {
+      JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("MyClass");
+      String type = "org.foo.Code<org.foo.Condition>";
+      FieldSource<JavaClassSource> field = clazz.addField().setName("param").setType(type);
+      Assert.assertEquals(2, clazz.getImports().size());
+   }
+
+   @Test
+   public void testNestedGenerics() {
+      JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("MyClass");
+      String type = "java.util.List<java.util.List<java.util.List<String>>>";
+      FieldSource<JavaClassSource> field = clazz.addField().setName("param").setType(type);
+      Assert.assertEquals(type,field.getType().getQualifiedNameWithGenerics());
+   }
+
 }

@@ -32,6 +32,7 @@ import org.jboss.forge.roaster.model.Visibility;
 import org.jboss.forge.roaster.model.ast.AnnotationAccessor;
 import org.jboss.forge.roaster.model.ast.ModifierAccessor;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
+import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
@@ -301,7 +302,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       {
          modifiers.addModifier(method, ModifierKeyword.ABSTRACT_KEYWORD);
          // Abstract methods do not specify a body
-         setBody(null);
+         setBody((String)null);
       }
       else
       {
@@ -373,7 +374,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       {
          modifiers.addModifier(method, ModifierKeyword.NATIVE_KEYWORD);
          // Native methods do not specify a body
-         setBody(null);
+         setBody((String)null);
       }
       else
       {
@@ -739,12 +740,11 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public ParameterSource<O> addParameter(String type, String name)
    {
-      if (getOrigin().requiresImport(type))
-      {
-         getOrigin().addImport(type);
-      }
-      String stub = "public class Stub { public void method( " + Types.toSimpleName(Types.fixArray(type, false)) + " "
-               + name + " ) {} }";
+      Type innerType = new TypeImpl<O>(getOrigin(),null,type);
+      Import imprt = getOrigin().addImport(innerType);
+      String resolvedType = imprt != null ? Types.rebuildGenericNameWithArrays( imprt.getSimpleName(),innerType) : Types.toSimpleName(type);
+
+      String stub = "public class Stub { public void method( " + resolvedType + " " + name + " ) {} }";
       JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
       List<MethodSource<JavaClassSource>> methods = temp.getMethods();
       List<VariableDeclaration> astParameters = ((MethodDeclaration) methods.get(0).getInternal()).parameters();
