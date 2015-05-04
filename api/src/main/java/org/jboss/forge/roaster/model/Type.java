@@ -58,8 +58,6 @@ public interface Type<O extends JavaType<O>> extends Origin<O>
 
    boolean isQualified();
 
-   boolean isNameQualified();
-
    boolean isWildcard();
 
    boolean isType(Class<?> type);

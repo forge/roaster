@@ -137,11 +137,7 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    @Override
    public boolean isQualified()
    {
-      if (type.isArrayType())
-      {
-         return ((ArrayType) type).getElementType().isQualifiedType();
-      }
-      return type.isQualifiedType();
+      return type.toString().contains(".");
    }
 
    @Override
@@ -195,11 +191,6 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    public String getSimpleName()
    {
       return Types.toSimpleName( getQualifiedName() );
-   }
-
-   @Override
-   public boolean isNameQualified() {
-      return ! getSimpleName().equals( getQualifiedName() );
    }
 
    @Override

@@ -960,7 +960,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       }
       for (Type<?> arg : type.getTypeArguments())
       {
-         if (!arg.isWildcard() && arg.isNameQualified())
+         if (!arg.isWildcard() && arg.isQualified())
          {
             addImport(arg);
          }
