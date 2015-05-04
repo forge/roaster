@@ -6,12 +6,12 @@
       <version>17</version>
    </parent>
    <groupId>org.jboss.forge.roaster</groupId>
-   <artifactId>roaster-parent</artifactId>
+   <artifactId>roaster-bom</artifactId>
    <version>2.13.3-SNAPSHOT</version>
    <packaging>pom</packaging>
-   <name>Forge Roaster - Parent</name>
+   <name>Forge Roaster - BOM</name>
    <description>
-      Forge Roaster is a library for inspecting and manipulating Java types.
+      Forge Roaster "Bill of Materials".
    </description>
    <licenses>
       <license>
@@ -47,22 +47,6 @@
       </developer>
    </developers>
 
-   <prerequisites>
-      <maven>3.0</maven>
-   </prerequisites>
-
-  <properties>
-    <maven.compiler.target>1.6</maven.compiler.target>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-  </properties>
-
-   <modules>
-      <module>api</module>
-      <module>impl</module>
-      <module>bom</module>
-      <module>dist</module>
-   </modules>
    <dependencyManagement>
       <dependencies>
          <dependency>
