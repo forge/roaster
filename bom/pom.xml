@@ -4,6 +4,7 @@
       <groupId>org.jboss</groupId>
       <artifactId>jboss-parent</artifactId>
       <version>17</version>
+      <relativePath/>
    </parent>
    <groupId>org.jboss.forge.roaster</groupId>
    <artifactId>roaster-bom</artifactId>
