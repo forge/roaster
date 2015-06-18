@@ -5,10 +5,7 @@ jdk:
   - oraclejdk7
   
 notifications:
-  irc: chat.freenode.net#forge
-
-before_install:
-  sudo pip install codecov
-
-after_success:
-  codecov
+  irc:
+    channels:
+      - "chat.freenode.net#forge"
+    use_notice: true
