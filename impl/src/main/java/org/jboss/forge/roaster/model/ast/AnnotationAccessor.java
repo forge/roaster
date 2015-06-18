@@ -87,7 +87,8 @@ public class AnnotationAccessor<O extends JavaSource<O>, T>
    private AnnotationSource<O> addAnnotation(final AnnotationTargetSource<O, T> target, final List<?> modifiers,
             final String className)
    {
-      if (target.getOrigin().requiresImport(className) && !target.getOrigin().hasImport(className) && Types.isQualified(className))
+      if (target.getOrigin().requiresImport(className) && !target.getOrigin().hasImport(className)
+               && Types.isQualified(className))
       {
          target.getOrigin().addImport(className);
       }

@@ -332,10 +332,11 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    public FieldSource<O> setType(String typeName)
    {
       O origin = getOrigin();
-      Type innerType = new TypeImpl<O>(origin,null,typeName);
+      Type innerType = new TypeImpl<O>(origin, null, typeName);
       Import imprt = getOrigin().addImport(innerType);
-      String resolvedType = imprt != null ? Types.rebuildGenericNameWithArrays(imprt.getSimpleName(),innerType) : Types.toSimpleName(typeName);
-      org.eclipse.jdt.core.dom.Type fieldType = TypeImpl.fromString(resolvedType,this.ast);
+      String resolvedType = imprt != null ? Types.rebuildGenericNameWithArrays(imprt.getSimpleName(), innerType)
+               : Types.toSimpleName(typeName);
+      org.eclipse.jdt.core.dom.Type fieldType = TypeImpl.fromString(resolvedType, this.ast);
       field.setType(fieldType);
 
       return this;

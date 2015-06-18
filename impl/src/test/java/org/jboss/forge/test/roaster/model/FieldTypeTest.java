@@ -307,7 +307,8 @@ public class FieldTypeTest
    }
 
    @Test
-   public void testImportImpliedGenerics() {
+   public void testImportImpliedGenerics()
+   {
       JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("MyClass");
       String type = "org.foo.Code<org.foo.Condition>";
       FieldSource<JavaClassSource> field = clazz.addField().setName("param").setType(type);
@@ -315,11 +316,12 @@ public class FieldTypeTest
    }
 
    @Test
-   public void testNestedGenerics() {
+   public void testNestedGenerics()
+   {
       JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("MyClass");
       String type = "java.util.List<java.util.List<java.util.List<String>>>";
       FieldSource<JavaClassSource> field = clazz.addField().setName("param").setType(type);
-      Assert.assertEquals(type,field.getType().getQualifiedNameWithGenerics());
+      Assert.assertEquals(type, field.getType().getQualifiedNameWithGenerics());
    }
 
 }

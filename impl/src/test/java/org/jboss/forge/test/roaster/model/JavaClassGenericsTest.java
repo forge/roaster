@@ -53,7 +53,8 @@ public class JavaClassGenericsTest
       javaClass.setSuperType("it.coopservice.test.Bar<com.coopservice.test.MyConcreteSuperClass[][]>");
       Assert.assertTrue(javaClass.toString().contains("extends Bar<MyConcreteSuperClass[][]>"));
       Assert.assertNotNull(javaClass.getImport("it.coopservice.test.Bar"));
-      Assert.assertNotNull(javaClass.getImport("com.coopservice.test.MyConcreteSuperClass"));   }
+      Assert.assertNotNull(javaClass.getImport("com.coopservice.test.MyConcreteSuperClass"));
+   }
 
    @Test
    public void addConcreteGenericSuperTypeWithPackage() throws ClassNotFoundException

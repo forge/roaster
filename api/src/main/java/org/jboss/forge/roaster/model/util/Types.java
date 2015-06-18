@@ -36,11 +36,11 @@ public class Types
    // [Z=boolean
    private static final Pattern CLASS_ARRAY_PATTERN = Pattern.compile("\\[+(B|F|C|D|I|J|S|Z|L)([0-9a-zA-Z\\.\\$]*);?");
 
-    private static final Pattern SIMPLE_ARRAY_PATTERN = Pattern
+   private static final Pattern SIMPLE_ARRAY_PATTERN = Pattern
             .compile("^((.)+)(\\[\\])+$");
-    private static final Pattern IDENTIFIER_PATTERN = Pattern
-            .compile( "(\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*\\.)*\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*" );
-//    private static final Pattern GENERIC_PATTERN = Pattern.compile(".*<.*>(\\[\\])*$");
+   private static final Pattern IDENTIFIER_PATTERN = Pattern
+            .compile("(\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*\\.)*\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*");
+   // private static final Pattern GENERIC_PATTERN = Pattern.compile(".*<.*>(\\[\\])*$");
    private static final Pattern WILDCARD_AWARE_TYPE_PATTERN = Pattern
             .compile("\\?|^\\s*(\\?\\s+(?:extends|super)\\s+)?([A-Za-z$_]\\S*)\\s*$");
 
@@ -282,51 +282,53 @@ public class Types
    {
       if (type == null)
       {
-          return false;
+         return false;
       }
       int genericStart = type.indexOf('<');
       if (genericStart < 0)
       {
-          return false;
+         return false;
       }
       type = stripArray(type);
-      if (!validateName(type.substring(0,genericStart)))
+      if (!validateName(type.substring(0, genericStart)))
       {
-          return false;
+         return false;
       }
-      String typeArgs = type.substring(genericStart+1,type.lastIndexOf('>'));
-      StringTokenizer tok = new StringTokenizer(typeArgs,", ");
+      String typeArgs = type.substring(genericStart + 1, type.lastIndexOf('>'));
+      StringTokenizer tok = new StringTokenizer(typeArgs, ", ");
       while (tok.hasMoreTokens())
       {
-          if (!validateNameWithGenerics(tok.nextToken()))
-          {
-              return false;
-          }
+         if (!validateNameWithGenerics(tok.nextToken()))
+         {
+            return false;
+         }
       }
       return true;
    }
 
-    private static boolean validateNameWithGenerics(String name) {
-        return isGeneric(name) || validateName(name) || WILDCARD_AWARE_TYPE_PATTERN.matcher(name).matches();
-    }
+   private static boolean validateNameWithGenerics(String name)
+   {
+      return isGeneric(name) || validateName(name) || WILDCARD_AWARE_TYPE_PATTERN.matcher(name).matches();
+   }
 
-    private static boolean validateName(String name) {
-        return IDENTIFIER_PATTERN.matcher(name).matches();
-    }
+   private static boolean validateName(String name)
+   {
+      return IDENTIFIER_PATTERN.matcher(name).matches();
+   }
 
-    public static String stripGenerics(String type)
-    {
+   public static String stripGenerics(String type)
+   {
       if (isClassArray(type))
       {
-          type = fixClassArray(type);
+         type = fixClassArray(type);
       }
       if (isGeneric(type))
       {
-          return type.substring(0,type.indexOf('<')) + type.substring(type.lastIndexOf('>')+1);
+         return type.substring(0, type.indexOf('<')) + type.substring(type.lastIndexOf('>') + 1);
       }
       else
       {
-          return type;
+         return type;
       }
    }
 
@@ -373,112 +375,118 @@ public class Types
    {
       if (isGeneric(type))
       {
-         return stripArray(type).replaceFirst( "^[^<]*<(.*?)>$", "$1" );
+         return stripArray(type).replaceFirst("^[^<]*<(.*?)>$", "$1");
       }
       return "";
    }
 
    // [Bjava.lang.Boolean;
    // [Ljava.util.Vector;
-   public static boolean isArray(final String type) {
-       if ( type == null ) {
-           return false;
-       }
-       if ( CLASS_ARRAY_PATTERN.matcher( type ).matches() )
-       {
-           return true;
-       }
-       Matcher matcher = SIMPLE_ARRAY_PATTERN.matcher(type);
-       if (matcher.find())
-       {
-           String candidateType = matcher.group(1);
-           return validateNameWithGenerics(candidateType);
-       } else
-       {
-           return false;
-       }
+   public static boolean isArray(final String type)
+   {
+      if (type == null)
+      {
+         return false;
+      }
+      if (CLASS_ARRAY_PATTERN.matcher(type).matches())
+      {
+         return true;
+      }
+      Matcher matcher = SIMPLE_ARRAY_PATTERN.matcher(type);
+      if (matcher.find())
+      {
+         String candidateType = matcher.group(1);
+         return validateNameWithGenerics(candidateType);
+      }
+      else
+      {
+         return false;
+      }
    }
 
-    public static String stripArray(final String type)
-    {
-        String result = type;
-        if (isClassArray(type))
-        {
-            result = fixClassArray(type);
-        }
+   public static String stripArray(final String type)
+   {
+      String result = type;
+      if (isClassArray(type))
+      {
+         result = fixClassArray(type);
+      }
 
-        if (isArray(result))
-        {
-            Matcher matcher;
-            matcher = SIMPLE_ARRAY_PATTERN.matcher(result);
-            if (matcher.find())
+      if (isArray(result))
+      {
+         Matcher matcher;
+         matcher = SIMPLE_ARRAY_PATTERN.matcher(result);
+         if (matcher.find())
+         {
+            int idx = result.length() - 2;
+            while (idx > 1 && result.charAt(idx - 2) == '[')
             {
-                int idx = result.length()-2;
-                while (idx>1 && result.charAt(idx-2)=='[')
-                {
-                   idx-=2;
-                }
-                result = result.substring(0,idx);
+               idx -= 2;
             }
-            else
-            {
-                return result;
-            }
-        }
-        return result;
-    }
+            result = result.substring(0, idx);
+         }
+         else
+         {
+            return result;
+         }
+      }
+      return result;
+   }
 
-    private static boolean isClassArray( String type ) {
-        Matcher matcher = CLASS_ARRAY_PATTERN.matcher(type);
-        return matcher.find();
-    }
+   private static boolean isClassArray(String type)
+   {
+      Matcher matcher = CLASS_ARRAY_PATTERN.matcher(type);
+      return matcher.find();
+   }
 
-    private static String fixClassArray(String type) {
-        Matcher matcher = CLASS_ARRAY_PATTERN.matcher(type);
-        String result = type;
-        if (matcher.find())
-        {
-            int dim = getBasicArrayDimension(type);
-            switch (matcher.group(1).charAt(0)) {
-                case 'B':
-                    result = "byte";
-                    break;
-                case 'F':
-                    result = "float";
-                    break;
-                case 'C':
-                    result = "char";
-                    break;
-                case 'D':
-                    result = "double";
-                    break;
-                case 'I':
-                    result = "int";
-                    break;
-                case 'J':
-                    result = "long";
-                    break;
-                case 'S':
-                    result = "short";
-                    break;
-                case 'Z':
-                    result = "boolean";
-                    break;
-                case 'L':
-                    result = matcher.group( 2 );
-                    break;
-                default:
-                    throw new IllegalArgumentException( "Invalid array format " + type );
-            }
-            for (int j=0;j<dim;j++)
-            {
-                result += "[]";
-            }
-        }
-        return result;
-    }
+   private static String fixClassArray(String type)
+   {
+      Matcher matcher = CLASS_ARRAY_PATTERN.matcher(type);
+      String result = type;
+      if (matcher.find())
+      {
+         int dim = getBasicArrayDimension(type);
+         switch (matcher.group(1).charAt(0))
+         {
+         case 'B':
+            result = "byte";
+            break;
+         case 'F':
+            result = "float";
+            break;
+         case 'C':
+            result = "char";
+            break;
+         case 'D':
+            result = "double";
+            break;
+         case 'I':
+            result = "int";
+            break;
+         case 'J':
+            result = "long";
+            break;
+         case 'S':
+            result = "short";
+            break;
+         case 'Z':
+            result = "boolean";
+            break;
+         case 'L':
+            result = matcher.group(2);
+            break;
+         default:
+            throw new IllegalArgumentException("Invalid array format " + type);
+         }
+         for (int j = 0; j < dim; j++)
+         {
+            result += "[]";
+         }
+      }
+      return result;
+   }
 
-    public static boolean isPrimitive(final String result)
+   public static boolean isPrimitive(final String result)
    {
       return Arrays.asList("byte", "short", "int", "long", "float", "double", "boolean", "char").contains(result);
    }
@@ -527,13 +535,13 @@ public class Types
       return count;
    }
 
-   public static <O extends JavaType<O>> String rebuildGenericNameWithArrays(String resolvedTypeName,Type<O> type)
+   public static <O extends JavaType<O>> String rebuildGenericNameWithArrays(String resolvedTypeName, Type<O> type)
    {
       StringBuilder resolvedType = new StringBuilder(stripArray(resolvedTypeName));
       resolvedType.append(getGenerics(type.toString()));
-      for (int j=0; j<getArrayDimension(type.getName()); j++)
+      for (int j = 0; j < getArrayDimension(type.getName()); j++)
       {
-          resolvedType.append("[]");
+         resolvedType.append("[]");
       }
       return resolvedType.toString();
    }

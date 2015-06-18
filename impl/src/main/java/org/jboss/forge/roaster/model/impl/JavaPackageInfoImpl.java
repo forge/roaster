@@ -723,7 +723,8 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    }
 
    @Override
-   public Import addImport(Type<?> type) {
+   public Import addImport(Type<?> type)
+   {
       return addImport(type.getQualifiedName());
    }
 
@@ -752,11 +753,13 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
       return pkg.getJavadoc() != null;
    }
 
-   public CompilationUnit getUnit() {
+   public CompilationUnit getUnit()
+   {
       return unit;
    }
 
-   public PackageDeclaration getPkg() {
+   public PackageDeclaration getPkg()
+   {
       return pkg;
    }
 }

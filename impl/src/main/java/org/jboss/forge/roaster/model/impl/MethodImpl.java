@@ -302,7 +302,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       {
          modifiers.addModifier(method, ModifierKeyword.ABSTRACT_KEYWORD);
          // Abstract methods do not specify a body
-         setBody((String)null);
+         setBody((String) null);
       }
       else
       {
@@ -374,7 +374,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       {
          modifiers.addModifier(method, ModifierKeyword.NATIVE_KEYWORD);
          // Native methods do not specify a body
-         setBody((String)null);
+         setBody((String) null);
       }
       else
       {
@@ -740,9 +740,10 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public ParameterSource<O> addParameter(String type, String name)
    {
-      Type innerType = new TypeImpl<O>(getOrigin(),null,type);
+      Type innerType = new TypeImpl<O>(getOrigin(), null, type);
       Import imprt = getOrigin().addImport(innerType);
-      String resolvedType = imprt != null ? Types.rebuildGenericNameWithArrays( imprt.getSimpleName(),innerType) : Types.toSimpleName(type);
+      String resolvedType = imprt != null ? Types.rebuildGenericNameWithArrays(imprt.getSimpleName(), innerType)
+               : Types.toSimpleName(type);
 
       String stub = "public class Stub { public void method( " + resolvedType + " " + name + " ) {} }";
       JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);

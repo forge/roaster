@@ -154,7 +154,7 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
 
          for (String typeP : typesGeneric.split(","))
          {
-            Type t = TypeImpl.fromString(Types.toSimpleName(typeP.trim()),body.getAST());
+            Type t = TypeImpl.fromString(Types.toSimpleName(typeP.trim()), body.getAST());
             pt.typeArguments().add(t);
             if (!hasImport(typeP) && Types.isQualified(typeP))
             {
@@ -166,7 +166,7 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
       }
       else
       {
-         SimpleType simpleType = body.getAST().newSimpleType( body.getAST().newSimpleName( Types.toSimpleName( type ) ) );
+         SimpleType simpleType = body.getAST().newSimpleType(body.getAST().newSimpleName(Types.toSimpleName(type)));
          getBodyDeclaration().setStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY, simpleType);
 
          if (!hasImport(type) && Types.isQualified(type))

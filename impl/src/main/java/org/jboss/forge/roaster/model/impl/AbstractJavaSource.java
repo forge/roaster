@@ -451,12 +451,14 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    public O setName(final String name)
    {
       AbstractTypeDeclaration typeDeclaration = getBodyDeclaration();
-      TypeImpl<O> type = new TypeImpl(this,null,name);
+      TypeImpl<O> type = new TypeImpl(this, null, name);
 
-      typeDeclaration.setName( unit.getAST().newSimpleName(type.getName()) );
-      if (typeDeclaration instanceof TypeDeclaration) {
+      typeDeclaration.setName(unit.getAST().newSimpleName(type.getName()));
+      if (typeDeclaration instanceof TypeDeclaration)
+      {
          TypeDeclaration td = (TypeDeclaration) typeDeclaration;
-         for ( Type arg : type.getTypeArguments() ) {
+         for (Type arg : type.getTypeArguments())
+         {
             TypeParameter typeParameter = unit.getAST().newTypeParameter();
             typeParameter.setName(unit.getAST().newSimpleName(arg.getName()));
             td.typeParameters().add(typeParameter);
@@ -955,7 +957,9 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       if (requiresImport(type.getQualifiedName()))
       {
          imprt = addImport(type.getQualifiedName());
-      } else {
+      }
+      else
+      {
          imprt = getImport(type.getSimpleName());
       }
       for (Type<?> arg : type.getTypeArguments())

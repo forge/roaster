@@ -114,10 +114,10 @@ public class MethodGenericsTest
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       MethodSource<JavaClassSource> method = javaClass.addMethod();
-      method.addTypeVariable().setName("T").setBounds( CharSequence.class );
-      method.addParameter("java.util.Map<org.foo.String[],T>[]","complexMap");
+      method.addTypeVariable().setName("T").setBounds(CharSequence.class);
+      method.addParameter("java.util.Map<org.foo.String[],T>[]", "complexMap");
       Type type = method.getParameters().get(0).getType();
-      Assert.assertEquals( "Map<org.foo.String[],T>[]",type.toString());
+      Assert.assertEquals("Map<org.foo.String[],T>[]", type.toString());
    }
 
 }

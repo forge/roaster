@@ -91,7 +91,7 @@ public class TypesTest
       assertEquals("java.lang.Boolean", Types.stripArray(Boolean[].class.getName()));
       assertEquals("java.util.Vector", Types.stripArray(Vector[].class.getName()));
 
-      assertEquals("java.util.Map<org.foo.String[],T>", Types.stripArray( "java.util.Map<org.foo.String[],T>[]"));
+      assertEquals("java.util.Map<org.foo.String[],T>", Types.stripArray("java.util.Map<org.foo.String[],T>[]"));
 
       assertEquals("int", Types.stripArray(int[][][][][].class.getName()));
 
@@ -103,7 +103,8 @@ public class TypesTest
                Types.stripArray("java.lang.Class<LONG_TYPE_VARIABLE_NAME>[]"));
       assertEquals("java.lang.Class<? extends Number>", Types.stripArray("java.lang.Class<? extends Number>[]"));
       assertEquals("java.lang.Class<E extends Enum<E>>", Types.stripArray("java.lang.Class<E extends Enum<E>>[]"));
-      assertEquals("java.util.Map<org.Foo.MyEnum<T>,java.lang.Object>", Types.stripArray("java.util.Map<org.Foo.MyEnum<T>,java.lang.Object>[][]"));
+      assertEquals("java.util.Map<org.Foo.MyEnum<T>,java.lang.Object>",
+               Types.stripArray("java.util.Map<org.Foo.MyEnum<T>,java.lang.Object>[][]"));
    }
 
    @Test

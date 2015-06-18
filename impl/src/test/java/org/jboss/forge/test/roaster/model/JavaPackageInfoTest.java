@@ -78,8 +78,10 @@ public class JavaPackageInfoTest
       packageInfo.addAnnotation("my.custom.Annotation");
       packageInfo.getEnclosingType();
 
-      assertEquals(2,packageInfo.getImports().size());
+      assertEquals(2, packageInfo.getImports().size());
    }
 
-   public static @interface MyPLAnnotation {}
+   public static @interface MyPLAnnotation
+   {
+   }
 }
