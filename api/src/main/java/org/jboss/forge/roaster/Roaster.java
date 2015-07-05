@@ -20,6 +20,7 @@ import java.util.ServiceLoader;
 
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.source.JavaSource;
+import org.jboss.forge.roaster.model.source.JavaSourceUnit;
 import org.jboss.forge.roaster.spi.FormatterProvider;
 import org.jboss.forge.roaster.spi.JavaParser;
 
@@ -191,6 +192,43 @@ public final class Roaster
          }
       }
       throw new ParserException("Cannot find JavaParserProvider capable of parsing the requested data");
+   }
+
+   /**
+    * Read the given {@link InputStream} and parse its data into a source code file structure which contains a List of
+    * new {@link JavaType} instances of the given type. The caller is responsible for closing the stream.
+    */
+   @Deprecated
+   public static JavaSourceUnit parse2(String encoding_if_its_string, final InputStream data)
+   {
+      for (JavaParser parser : getParsers())
+      {
+         final JavaSourceUnit sources = parser.parse(encoding_if_its_string, data);
+
+         if (sources != null)
+            return sources;
+      }
+      throw new ParserException("Cannot find JavaParserProvider capable of parsing the requested data");
+   }
+
+   /**
+    * Try to cast the 'source' object into the type of 'type'.
+    *
+    * @param source
+    * @param type
+    * @return
+    * @throws ParserException when the cast cannot be done for some reasons.
+    */
+   public static <T extends JavaType<?>> T tryCast(final JavaType<?> source, final Class<T> type)
+   {
+      if (type.isInstance(source))
+      {
+         @SuppressWarnings("unchecked")
+         final T result = (T) source;
+         return result;
+      }
+      throw new ParserException(
+               "the [" + source.getClass().getSimpleName() + "] cannot be casted into [" + type.getSimpleName() + "]");
    }
 
    /**
