@@ -7,9 +7,11 @@
 package org.jboss.forge.roaster.spi;
 
 import java.io.InputStream;
+import java.util.List;
 
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.source.JavaSource;
+import org.jboss.forge.roaster.model.source.JavaSourceUnit;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -33,5 +35,15 @@ public interface JavaParser
     * @return {@link JavaType}, {@code null} if the data format is not recognized by this {@link JavaParser}.
     */
    JavaType<?> parse(final InputStream data);
+   
+   
+   /**
+    * Read the given {@link InputStream} and parse the data into a source code file data type representation.
+    * 
+    * @param encoding encoding used when the data is a string
+    * @param data to parse
+    * @return {@link JavaSourceUnit}, {@code null} if the data format is not recognized by this {@link JavaParser}.
+    */
+   JavaSourceUnit parse(final String encoding, final InputStream data);
 
 }

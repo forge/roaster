@@ -9,6 +9,8 @@ package org.jboss.forge.roaster.spi;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +41,7 @@ import org.jboss.forge.roaster.model.source.JavaEnumSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.JavaPackageInfoSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
+import org.jboss.forge.roaster.model.source.JavaSourceUnit;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -63,6 +66,78 @@ public class JavaParserImpl implements JavaParser
       {
          Streams.closeQuietly(data);
       }
+   }
+
+   @Override
+   public JavaSourceUnit parse(String encoding, InputStream data) {
+	      try
+	      {
+	         char[] source = Util.getInputStreamAsCharArray(data, data.available(), encoding);
+	         final List<? extends JavaType<?>> X =  parseGen2(new String(source));
+	         
+	         if ( X.size() == 0  ) return null;
+	         
+	         return new JavaSourceUnit() {
+				@Override
+				public List<? extends JavaType<?>> getTopLevelDeclaredTypes() {
+					return X;
+				}
+
+				@Override
+				public JavaType<?> getGoverningType() {
+					return X.get(0);
+				}
+				
+				public String toString(){
+					return getGoverningType().toString();
+				}
+			};
+	         
+	         
+	      }
+	      catch (IOException e)
+	      {
+	         return null;
+	      }
+	      finally
+	      {
+	         Streams.closeQuietly(data);
+	      }
+   }
+   
+   private List<? extends JavaType<?>> parseGen2(String data) {
+	   Document document = new Document(data);
+	   ASTParser parser = ASTParser.newParser(AST.JLS8);
+
+	   parser.setSource(document.get().toCharArray());
+	   Map options = JavaCore.getOptions();
+	   options.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_8);
+	   options.put(CompilerOptions.OPTION_Encoding, "UTF-8");
+	   parser.setCompilerOptions(options);
+
+	   parser.setResolveBindings(true);
+	   parser.setKind(ASTParser.K_COMPILATION_UNIT);
+	   CompilationUnit unit = (CompilationUnit) parser.createAST(null);
+	   unit.recordModifications();
+
+	   TypeDeclarationFinderVisitor visitor = new TypeDeclarationFinderVisitor();
+	   unit.accept(visitor);
+
+	   List<AbstractTypeDeclaration> declarations = visitor.getTypeDeclarations();
+	   if (!declarations.isEmpty())
+	   {
+//		   AbstractTypeDeclaration declaration = declarations.get(0);
+		   List<JavaType<?>> decls = new ArrayList<JavaType<?>>();
+		   for ( AbstractTypeDeclaration declaration : declarations ){
+			   decls.add( getJavaSource(null, document, unit, declaration) );
+		   }
+		   return decls;
+	   }
+	   else if (visitor.getPackageDeclaration() != null)
+	   {
+		   return  Arrays.asList( getJavaSource(null, document, unit, visitor.getPackageDeclaration()) );
+	   }
+	   throw new ParserException("Could not find type declaration in Java source - is this actually code?");
    }
 
    @SuppressWarnings({ "rawtypes", "unchecked" })
