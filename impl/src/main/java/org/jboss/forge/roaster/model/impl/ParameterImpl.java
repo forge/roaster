@@ -8,11 +8,13 @@ package org.jboss.forge.roaster.model.impl;
 
 import java.util.List;
 
+import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.jboss.forge.roaster.model.Annotation;
 import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.ast.AnnotationAccessor;
+import org.jboss.forge.roaster.model.ast.ModifierAccessor;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
@@ -26,6 +28,7 @@ public class ParameterImpl<O extends JavaSource<O>> implements ParameterSource<O
    private final AnnotationAccessor<O, ParameterSource<O>> annotations = new AnnotationAccessor<O, ParameterSource<O>>();
    private final O parent;
    private final SingleVariableDeclaration param;
+   private final ModifierAccessor modifiers = new ModifierAccessor();
 
    public ParameterImpl(final O parent, final Object internal)
    {
@@ -113,6 +116,22 @@ public class ParameterImpl<O extends JavaSource<O>> implements ParameterSource<O
    public ParameterSource<O> removeAnnotation(final Annotation<O> annotation)
    {
       return annotations.removeAnnotation(this, param, annotation);
+   }
+
+   @Override
+   public boolean isFinal()
+   {
+      return modifiers.hasModifier(param, ModifierKeyword.FINAL_KEYWORD);
+   }
+
+   @Override
+   public ParameterSource<O> setFinal(boolean finl)
+   {
+      if (finl)
+         modifiers.addModifier(param, ModifierKeyword.FINAL_KEYWORD);
+      else
+         modifiers.removeModifier(param, ModifierKeyword.FINAL_KEYWORD);
+      return this;
    }
 
    @Override

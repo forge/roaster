@@ -14,6 +14,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
+import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 
 public class ModifierAccessor
 {
@@ -94,6 +95,10 @@ public class ModifierAccessor
       if (body instanceof BodyDeclaration)
       {
          return ((BodyDeclaration) body).modifiers();
+      }
+      else if (body instanceof SingleVariableDeclaration)
+      {
+         return ((SingleVariableDeclaration) body).modifiers();
       }
       else
       {

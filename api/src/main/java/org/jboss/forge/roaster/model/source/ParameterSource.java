@@ -16,6 +16,6 @@ import org.jboss.forge.roaster.model.Parameter;
  * 
  */
 public interface ParameterSource<O extends JavaSource<O>> extends Parameter<O>,
-         AnnotationTargetSource<O, ParameterSource<O>>
+         AnnotationTargetSource<O, ParameterSource<O>>, FinalCapableSource<ParameterSource<O>>
 {
 }

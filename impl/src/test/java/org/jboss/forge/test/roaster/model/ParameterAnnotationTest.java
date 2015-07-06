@@ -15,6 +15,7 @@ import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
 import org.jboss.forge.test.roaster.model.common.AnnotationTest;
+import org.junit.Test;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -30,6 +31,7 @@ public class ParameterAnnotationTest extends AnnotationTest<JavaClassSource, Par
       setTarget(method.getParameters().get(0));
    }
 
+   @Test
    public void testNoAnnotations()
    {
       InputStream stream = ParameterAnnotationTest.class

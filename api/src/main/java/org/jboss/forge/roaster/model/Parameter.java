@@ -12,7 +12,7 @@ package org.jboss.forge.roaster.model;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface Parameter<O extends JavaType<O>> extends AnnotationTarget<O>
+public interface Parameter<O extends JavaType<O>> extends AnnotationTarget<O>, FinalCapable
 {
    String getName();
 
