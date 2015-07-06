@@ -475,9 +475,8 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       JavaType<?> enclosingType = this;
       while (enclosingType != enclosingType.getEnclosingType())
       {
-         enclosingType = getEnclosingType();
-         result = enclosingType.getEnclosingType().getName() + "." + result;
          enclosingType = enclosingType.getEnclosingType();
+         result = enclosingType.getName() + "." + result;
       }
 
       if (!Strings.isNullOrEmpty(getPackage()))
@@ -499,9 +498,8 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       JavaType<?> enclosingType = this;
       while (enclosingType != enclosingType.getEnclosingType())
       {
-         enclosingType = getEnclosingType();
-         result = enclosingType.getEnclosingType().getName() + "$" + result;
          enclosingType = enclosingType.getEnclosingType();
+         result = enclosingType.getName() + "$" + result;
       }
 
       if (!Strings.isNullOrEmpty(getPackage()))
@@ -951,6 +949,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       return result;
    }
 
+   @Override
    public Import addImport(final Type<?> type)
    {
       Import imprt;
