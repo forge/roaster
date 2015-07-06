@@ -332,7 +332,7 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    public FieldSource<O> setType(String typeName)
    {
       O origin = getOrigin();
-      Type innerType = new TypeImpl<O>(origin, null, typeName);
+      Type<O> innerType = new TypeImpl<O>(origin, null, typeName);
       Import imprt = getOrigin().addImport(innerType);
       String resolvedType = imprt != null ? Types.rebuildGenericNameWithArrays(imprt.getSimpleName(), innerType)
                : Types.toSimpleName(typeName);
