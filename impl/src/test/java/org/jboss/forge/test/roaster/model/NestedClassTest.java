@@ -47,6 +47,7 @@ public class NestedClassTest
       List<JavaSource<?>> nestedClasses = javaClass.getNestedTypes();
       JavaClassSource inner1 = (JavaClassSource) nestedClasses.get(0);
       JavaClassSource inner2 = (JavaClassSource) nestedClasses.get(1);
+      JavaClassSource inner3 = (JavaClassSource) inner1.getNestedTypes().get(0);
       Assert.assertEquals(javaClass, inner1.getEnclosingType());
       Assert.assertEquals("org.example.OuterClass.InnerClass1", inner1.getCanonicalName());
       Assert.assertEquals("org.example.OuterClass$InnerClass1", inner1.getQualifiedName());
@@ -56,6 +57,9 @@ public class NestedClassTest
       Assert.assertEquals("org.example.OuterClass$InnerClass2", inner2.getQualifiedName());
       Assert.assertEquals("InnerClass2", inner2.getName());
       Assert.assertEquals(2, nestedClasses.size());
+      
+      Assert.assertEquals("org.example.OuterClass$InnerClass1$InnerClass3", inner3.getQualifiedName());
+      Assert.assertEquals("org.example.OuterClass.InnerClass1.InnerClass3", inner3.getCanonicalName());
    }
 
    @Test
