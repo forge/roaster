@@ -628,6 +628,12 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    @Override
    public String toString()
    {
+      return Formatter.format(toUnformattedString());
+   }
+   
+   @Override
+   public String toUnformattedString()
+   {
       Document document = new Document(this.document.get());
 
       try
@@ -644,8 +650,9 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
          throw new ParserException("Could not modify source: " + unit.toString(), e);
       }
 
-      return Formatter.format(document.get());
+      return document.get();
    }
+
 
    @Override
    public Object getInternal()

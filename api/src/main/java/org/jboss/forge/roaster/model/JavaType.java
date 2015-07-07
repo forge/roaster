@@ -87,4 +87,9 @@ public interface JavaType<T extends JavaType<T>> extends
    @Deprecated
    public List<? extends JavaType<?>> getNestedClasses();
 
+   /**
+    * Return the generated code without any formatting.
+    */
+   public String toUnformattedString();
+
 }

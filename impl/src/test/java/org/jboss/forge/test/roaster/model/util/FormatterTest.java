@@ -7,14 +7,14 @@
 
 package org.jboss.forge.test.roaster.model.util;
 
-import static org.junit.Assert.assertNotSame;
-
 import java.io.InputStream;
 
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.util.Formatter;
+import org.jboss.forge.roaster.spi.Streams;
 import org.jboss.forge.test.roaster.model.FieldAnnotationTest;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -25,29 +25,36 @@ public class FormatterTest
 {
    private static JavaClassSource javaClass;
 
+   private static String content;
+
    @BeforeClass
    public static void resetTests()
    {
       InputStream stream = FieldAnnotationTest.class
                .getResourceAsStream("/org/jboss/forge/grammar/java/MockUnformattedClass.java");
-      javaClass = Roaster.parse(JavaClassSource.class, stream);
+      content = Streams.toString(stream);
+      javaClass = Roaster.parse(JavaClassSource.class, content);
    }
 
    @Test
    public void testFormatSource() throws Exception
    {
-      // TODO figure out some sort of way to test that this actually works
       String result = Formatter.format(javaClass);
-      String original = javaClass.toString();
-      assertNotSame(original, result);
+      String original = javaClass.toUnformattedString();
+      Assert.assertNotEquals(original, result);
    }
 
    @Test
    public void testFormatterSource() throws Exception
    {
       String result = Roaster.format(javaClass.toString());
-      String original = javaClass.toString();
-      assertNotSame(original, result);
+      String original = javaClass.toUnformattedString();
+      Assert.assertNotEquals(original, result);
    }
 
+   @Test
+   public void testToUnformattedStringAsOriginalContent()
+   {
+      Assert.assertEquals(content, javaClass.toUnformattedString());
+   }
 }
