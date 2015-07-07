@@ -922,4 +922,17 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    {
       return (BodyDeclaration) getBody().bodyDeclarations().get(0);
    }
+
+   /**
+    * Why? Is this a JavaType?
+    */
+   @Override
+   public String toUnformattedString() 
+   {
+	   //do something unknown...
+	   return toString(); 
+   }
+
+   
+   
 }
