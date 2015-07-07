@@ -86,5 +86,11 @@ public interface JavaType<T extends JavaType<T>> extends
     */
    @Deprecated
    public List<? extends JavaType<?>> getNestedClasses();
+   
+   
+   /**
+    * ROAST-74 : emits the unformatted code.
+    */
+   public String toUnformattedString();
 
 }

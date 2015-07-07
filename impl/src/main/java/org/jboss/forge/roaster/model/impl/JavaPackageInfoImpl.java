@@ -590,19 +590,25 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    @Override
    public String toString()
    {
-      Document document = new Document(this.document.get());
+      return Formatter.format(toUnformattedString());
+   }
+   
 
-      try
-      {
-         TextEdit edit = unit.rewrite(document, null);
-         edit.apply(document);
-      }
-      catch (Exception e)
-      {
-         throw new ParserException("Could not modify source: " + unit.toString(), e);
-      }
+   @Override
+   public String toUnformattedString() {
+	   Document document = new Document(this.document.get());
 
-      return Formatter.format(document.get());
+	   try
+	   {
+		   TextEdit edit = unit.rewrite(document, null);
+		   edit.apply(document);
+	   }
+	   catch (Exception e)
+	   {
+		   throw new ParserException("Could not modify source: " + unit.toString(), e);
+	   }
+
+	   return document.get();
    }
 
    @Override
