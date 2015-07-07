@@ -91,6 +91,11 @@ public class JavaParserImpl implements JavaParser
 				public String toString(){
 					return getGoverningType().toString();
 				}
+
+				@Override
+				public String toUnformattedString() {
+					return getGoverningType().toUnformattedString();
+				}
 			};
 	         
 	         

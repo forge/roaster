@@ -32,5 +32,7 @@ public interface JavaSourceUnit {
 	 * @return
 	 */
 	String toString();
+	
+	String toUnformattedString();
 
 }
