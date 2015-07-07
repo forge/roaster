@@ -646,7 +646,9 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
          throw new ParserException("Could not modify source: " + unit.toString(), e);
       }
 
-      return Formatter.format(document.get());
+      //ROASTER-74 
+      return document.get();
+//      return Formatter.format(document.get());
    }
 
    @Override
