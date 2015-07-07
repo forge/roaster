@@ -74,8 +74,7 @@ public class MethodGenericsTest
       MethodSource<JavaClassSource> method = javaClass.addMethod();
       method.addTypeVariable().setName("T").setBounds(CharSequence.class);
       Assert.assertTrue(method.toString().contains("<T extends CharSequence>"));
-      method.getTypeVariable("T").
-               setBounds(CharSequence.class, Serializable.class);
+      method.getTypeVariable("T").setBounds(CharSequence.class, Serializable.class);
       Assert.assertTrue(method.toString().contains("<T extends CharSequence & Serializable>"));
       method.getTypeVariable("T").removeBounds();
       Assert.assertTrue(method.toString().contains("<T>"));

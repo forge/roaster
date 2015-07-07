@@ -16,7 +16,7 @@ import org.jboss.forge.roaster.model.source.JavaSource;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public class JavaInterfaceImpl extends AbstractGenericCapableJavaSource<JavaInterfaceSource> implements
+public class JavaInterfaceImpl extends AbstractGenericCapableJavaSource<JavaInterfaceSource>implements
          JavaInterfaceSource
 {
 

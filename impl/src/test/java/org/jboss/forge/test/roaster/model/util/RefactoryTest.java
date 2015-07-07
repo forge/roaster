@@ -210,10 +210,12 @@ public class RefactoryTest
       assertThat(equals.getBody(), containsString("if (aLong != other.aLong) {\n  return false;\n}"));
       assertThat(
                equals.getBody(),
-               containsString("if (Float.floatToIntBits(aFloat) != Float.floatToIntBits(other.aFloat)) {\n  return false;\n}"));
+               containsString(
+                        "if (Float.floatToIntBits(aFloat) != Float.floatToIntBits(other.aFloat)) {\n  return false;\n}"));
       assertThat(
                equals.getBody(),
-               containsString("if (Double.doubleToLongBits(aDouble) != Double.doubleToLongBits(other.aDouble)) {\n  return false;\n}"));
+               containsString(
+                        "if (Double.doubleToLongBits(aDouble) != Double.doubleToLongBits(other.aDouble)) {\n  return false;\n}"));
    }
 
    private void assertHashCodeForPrimitives(MethodSource<JavaClassSource> hashcode)
@@ -352,7 +354,8 @@ public class RefactoryTest
       assertEquals(1, equals.getParameters().size());
       assertThat(
                equals.getBody(),
-               containsString("if (object != null) {\n  if (!object.equals(other.object)) {\n    return false;\n  }\n}"));
+               containsString(
+                        "if (object != null) {\n  if (!object.equals(other.object)) {\n    return false;\n  }\n}"));
       assertThat(equals.getBody(),
                containsString("if (date != null) {\n  if (!date.equals(other.date)) {\n    return false;\n  }\n}"));
    }
@@ -614,9 +617,11 @@ public class RefactoryTest
       assertEquals(1, equals.getParameters().size());
       assertThat(
                equals.getBody(),
-               containsString("if (Double.doubleToLongBits(firstDouble) != Double.doubleToLongBits(other.firstDouble)) {\n  return false;\n}"));
+               containsString(
+                        "if (Double.doubleToLongBits(firstDouble) != Double.doubleToLongBits(other.firstDouble)) {\n  return false;\n}"));
       assertThat(
                equals.getBody(),
-               containsString("if (Double.doubleToLongBits(secondDouble) != Double.doubleToLongBits(other.secondDouble)) {\n  return false;\n}"));
+               containsString(
+                        "if (Double.doubleToLongBits(secondDouble) != Double.doubleToLongBits(other.secondDouble)) {\n  return false;\n}"));
    }
 }

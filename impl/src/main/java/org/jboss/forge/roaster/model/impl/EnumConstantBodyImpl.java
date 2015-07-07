@@ -927,12 +927,10 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
     * Why? Is this a JavaType?
     */
    @Override
-   public String toUnformattedString() 
+   public String toUnformattedString()
    {
-	   //do something unknown...
-	   return toString(); 
+      // do something unknown...
+      return toString();
    }
 
-   
-   
 }

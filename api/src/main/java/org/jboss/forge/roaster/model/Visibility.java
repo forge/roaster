@@ -16,10 +16,7 @@ import org.jboss.forge.roaster.model.util.Assert;
  */
 public enum Visibility
 {
-   PUBLIC("public"),
-   PROTECTED("protected"),
-   PRIVATE("private"),
-   PACKAGE_PRIVATE("");
+   PUBLIC("public"), PROTECTED("protected"), PRIVATE("private"), PACKAGE_PRIVATE("");
 
    private Visibility(String scope)
    {

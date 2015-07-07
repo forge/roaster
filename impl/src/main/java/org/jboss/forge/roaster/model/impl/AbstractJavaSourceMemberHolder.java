@@ -397,7 +397,9 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
          Type interfaceType = JDTHelper.getInterfaces(
                   Roaster.parse(JavaInterfaceImpl.class,
                            "public interface Mock extends " + Types.toSimpleName(type)
-                                    + " {}").getBodyDeclaration()).get(0);
+                                    + " {}")
+                           .getBodyDeclaration())
+                  .get(0);
 
          if (this.hasInterface(Types.toSimpleName(type)) || this.hasImport(Types.toSimpleName(type)))
          {

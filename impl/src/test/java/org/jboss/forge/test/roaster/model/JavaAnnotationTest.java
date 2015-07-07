@@ -35,9 +35,8 @@ public class JavaAnnotationTest
    @Before
    public void setup()
    {
-      InputStream stream =
-               JavaAnnotationTest.class
-                        .getResourceAsStream("/org/jboss/forge/grammar/java/MockJavaAnnotationType.java");
+      InputStream stream = JavaAnnotationTest.class
+               .getResourceAsStream("/org/jboss/forge/grammar/java/MockJavaAnnotationType.java");
       javaAnnotation = Roaster.parse(JavaAnnotationSource.class, stream);
    }
 

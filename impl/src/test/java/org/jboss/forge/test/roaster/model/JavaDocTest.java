@@ -115,12 +115,11 @@ public class JavaDocTest
    @Test
    public void testJavaDocField() throws Exception
    {
-      String text =
-               "public class MyClass {"
-                        + "/**" + LINE_SEPARATOR
-                        + " * Do Something" + LINE_SEPARATOR
-                        + " * @author George Gastaldi" + LINE_SEPARATOR + " */" + LINE_SEPARATOR + ""
-                        + "private String foo;}";
+      String text = "public class MyClass {"
+               + "/**" + LINE_SEPARATOR
+               + " * Do Something" + LINE_SEPARATOR
+               + " * @author George Gastaldi" + LINE_SEPARATOR + " */" + LINE_SEPARATOR + ""
+               + "private String foo;}";
       JavaClassSource javaClass = Roaster.parse(JavaClassSource.class, text);
       Assert.assertFalse(javaClass.hasJavaDoc());
       Assert.assertEquals(1, javaClass.getFields().size());
@@ -134,12 +133,11 @@ public class JavaDocTest
    @Test
    public void testJavaDocMethod() throws Exception
    {
-      String text =
-               "public class MyClass {"
-                        + "/**" + LINE_SEPARATOR
-                        + " * Do Something" + LINE_SEPARATOR
-                        + " * @author George Gastaldi" + LINE_SEPARATOR + " */" + LINE_SEPARATOR + ""
-                        + "private void foo(){};}";
+      String text = "public class MyClass {"
+               + "/**" + LINE_SEPARATOR
+               + " * Do Something" + LINE_SEPARATOR
+               + " * @author George Gastaldi" + LINE_SEPARATOR + " */" + LINE_SEPARATOR + ""
+               + "private void foo(){};}";
       JavaClassSource javaClass = Roaster.parse(JavaClassSource.class, text);
       Assert.assertFalse(javaClass.hasJavaDoc());
       Assert.assertEquals(1, javaClass.getMethods().size());
@@ -153,12 +151,11 @@ public class JavaDocTest
    @Test
    public void testJavaDocEnumConstant() throws Exception
    {
-      String text =
-               "public enum MyEnum {"
-                        + "/**" + LINE_SEPARATOR
-                        + " * Do Something" + LINE_SEPARATOR
-                        + " * @author George Gastaldi" + LINE_SEPARATOR + " */" + LINE_SEPARATOR + ""
-                        + "MY_CONSTANT;}";
+      String text = "public enum MyEnum {"
+               + "/**" + LINE_SEPARATOR
+               + " * Do Something" + LINE_SEPARATOR
+               + " * @author George Gastaldi" + LINE_SEPARATOR + " */" + LINE_SEPARATOR + ""
+               + "MY_CONSTANT;}";
       JavaEnumSource javaEnum = Roaster.parse(JavaEnumSource.class, text);
       Assert.assertFalse(javaEnum.hasJavaDoc());
       EnumConstantSource enumConstant = javaEnum.getEnumConstant("MY_CONSTANT");

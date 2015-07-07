@@ -36,7 +36,8 @@ public class JavaSourceCompatibilityTest
    public void testSupportsGenericsSourceFromMethod() throws Exception
    {
       JavaClassSource source = Roaster.parse(JavaClassSource.class, "public class Test{}");
-      source.addMethod("public void test() {java.util.List<String> s = new java.util.ArrayList<String>(); for (String item : s){}}");
+      source.addMethod(
+               "public void test() {java.util.List<String> s = new java.util.ArrayList<String>(); for (String item : s){}}");
       Assert.assertFalse(source.hasSyntaxErrors());
    }
 

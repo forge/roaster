@@ -57,7 +57,7 @@ public class NestedClassTest
       Assert.assertEquals("org.example.OuterClass$InnerClass2", inner2.getQualifiedName());
       Assert.assertEquals("InnerClass2", inner2.getName());
       Assert.assertEquals(2, nestedClasses.size());
-      
+
       Assert.assertEquals("org.example.OuterClass$InnerClass1$InnerClass3", inner3.getQualifiedName());
       Assert.assertEquals("org.example.OuterClass.InnerClass1.InnerClass3", inner3.getCanonicalName());
    }

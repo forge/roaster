@@ -25,7 +25,7 @@ import org.jboss.forge.roaster.model.util.Strings;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public class JavaAnnotationImpl extends AbstractJavaSource<JavaAnnotationSource> implements JavaAnnotationSource
+public class JavaAnnotationImpl extends AbstractJavaSource<JavaAnnotationSource>implements JavaAnnotationSource
 {
 
    public JavaAnnotationImpl(JavaSource<?> enclosingType, final Document document, final CompilationUnit unit,

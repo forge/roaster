@@ -630,7 +630,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    {
       return Formatter.format(toUnformattedString());
    }
-   
+
    @Override
    public String toUnformattedString()
    {
@@ -652,7 +652,6 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
 
       return document.get();
    }
-
 
    @Override
    public Object getInternal()

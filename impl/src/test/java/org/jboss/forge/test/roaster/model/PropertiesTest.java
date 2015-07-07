@@ -428,7 +428,8 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
                || Strings.areEqual(source.getQualifiedName(), property.getField().getType().getQualifiedName()));
       assertTrue(!existingItems.contains(PropertyComponent.ACCESSOR)
                || Strings
-                        .areEqual(source.getQualifiedName(), property.getAccessor().getReturnType().getQualifiedName()));
+                        .areEqual(source.getQualifiedName(),
+                                 property.getAccessor().getReturnType().getQualifiedName()));
       assertTrue(!existingItems.contains(PropertyComponent.MUTATOR)
                || Strings.areEqual(source.getQualifiedName(), property.getMutator().getParameters().get(0).getType()
                         .getQualifiedName()));

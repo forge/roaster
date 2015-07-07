@@ -74,7 +74,8 @@ public class JavaClassGenericsTest
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
-      javaClass.setSuperType("it.coopservice.test.Bar<com.coopservice.test.MyConcreteSuperClass,com.coopservice.test.MyOtherClass>");
+      javaClass.setSuperType(
+               "it.coopservice.test.Bar<com.coopservice.test.MyConcreteSuperClass,com.coopservice.test.MyOtherClass>");
       Assert.assertTrue(javaClass.toString().contains("extends Bar<MyConcreteSuperClass, MyOtherClass>"));
       Assert.assertNotNull(javaClass.getImport("it.coopservice.test.Bar"));
       Assert.assertNotNull(javaClass.getImport("com.coopservice.test.MyConcreteSuperClass"));
@@ -126,8 +127,7 @@ public class JavaClassGenericsTest
       javaClass.setName("SimpleClass");
       javaClass.addTypeVariable().setName("T").setBounds(CharSequence.class);
       Assert.assertTrue(javaClass.toString().contains("<T extends CharSequence>"));
-      javaClass.getTypeVariable("T").
-               setBounds(CharSequence.class, Serializable.class);
+      javaClass.getTypeVariable("T").setBounds(CharSequence.class, Serializable.class);
       Assert.assertTrue(javaClass.toString().contains("<T extends CharSequence & Serializable>"));
       javaClass.getTypeVariable("T").removeBounds();
       Assert.assertTrue(javaClass.toString().contains("<T>"));

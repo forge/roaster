@@ -24,7 +24,7 @@ import org.jboss.forge.roaster.model.source.JavaSource;
  *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnumSource> implements JavaEnumSource
+public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnumSource>implements JavaEnumSource
 {
    public JavaEnumImpl(JavaSource<?> enclosingType, final Document document, final CompilationUnit unit,
             BodyDeclaration body)

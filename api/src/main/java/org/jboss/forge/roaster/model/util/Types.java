@@ -144,8 +144,7 @@ public class Types
             "Deprecated",
             "Override",
             "SafeVarargs",
-            "SuppressWarnings"
-            );
+            "SuppressWarnings");
 
    public static boolean areEquivalent(String left, String right)
    {

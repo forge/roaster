@@ -592,23 +592,23 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    {
       return Formatter.format(toUnformattedString());
    }
-   
 
    @Override
-   public String toUnformattedString() {
-	   Document document = new Document(this.document.get());
+   public String toUnformattedString()
+   {
+      Document document = new Document(this.document.get());
 
-	   try
-	   {
-		   TextEdit edit = unit.rewrite(document, null);
-		   edit.apply(document);
-	   }
-	   catch (Exception e)
-	   {
-		   throw new ParserException("Could not modify source: " + unit.toString(), e);
-	   }
+      try
+      {
+         TextEdit edit = unit.rewrite(document, null);
+         edit.apply(document);
+      }
+      catch (Exception e)
+      {
+         throw new ParserException("Could not modify source: " + unit.toString(), e);
+      }
 
-	   return document.get();
+      return document.get();
    }
 
    @Override

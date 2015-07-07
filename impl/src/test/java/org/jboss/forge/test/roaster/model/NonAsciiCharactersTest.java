@@ -8,12 +8,11 @@ import org.junit.Test;
 public class NonAsciiCharactersTest
 {
 
-   String nonAsciiCharactersClass =
-            "public class NonAsciiCharacters {" +
+   String nonAsciiCharactersClass = "public class NonAsciiCharacters {" +
 
-                     "   public int punctuations_example_áéíóú = 0; " +
+   "   public int punctuations_example_áéíóú = 0; " +
 
-                     "}";
+   "}";
 
    @Test
    public void testNonAsciiCharacters()
