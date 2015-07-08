@@ -9,6 +9,7 @@ package org.jboss.forge.roaster.spi;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,12 +28,14 @@ import org.eclipse.jdt.internal.compiler.util.Util;
 import org.eclipse.jface.text.Document;
 import org.jboss.forge.roaster.ParserException;
 import org.jboss.forge.roaster.model.JavaType;
+import org.jboss.forge.roaster.model.JavaUnit;
 import org.jboss.forge.roaster.model.ast.TypeDeclarationFinderVisitor;
 import org.jboss.forge.roaster.model.impl.JavaAnnotationImpl;
 import org.jboss.forge.roaster.model.impl.JavaClassImpl;
 import org.jboss.forge.roaster.model.impl.JavaEnumImpl;
 import org.jboss.forge.roaster.model.impl.JavaInterfaceImpl;
 import org.jboss.forge.roaster.model.impl.JavaPackageInfoImpl;
+import org.jboss.forge.roaster.model.impl.JavaUnitImpl;
 import org.jboss.forge.roaster.model.source.JavaAnnotationSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaEnumSource;
@@ -49,11 +52,17 @@ public class JavaParserImpl implements JavaParser
    @Override
    public JavaType<?> parse(final InputStream data)
    {
+      return parseUnit(data).getGoverningType();
+   }
+
+   @Override
+   public JavaUnit parseUnit(InputStream data)
+   {
       try
       {
          String encoding = System.getProperty("file.encoding", "ISO8859_1");
          char[] source = Util.getInputStreamAsCharArray(data, data.available(), encoding);
-         return parse(new String(source));
+         return parseUnit(new String(source));
       }
       catch (IOException e)
       {
@@ -66,7 +75,7 @@ public class JavaParserImpl implements JavaParser
    }
 
    @SuppressWarnings({ "rawtypes", "unchecked" })
-   private JavaType<?> parse(final String data)
+   private JavaUnit parseUnit(final String data)
    {
       Document document = new Document(data);
       ASTParser parser = ASTParser.newParser(AST.JLS8);
@@ -86,16 +95,27 @@ public class JavaParserImpl implements JavaParser
       unit.accept(visitor);
 
       List<AbstractTypeDeclaration> declarations = visitor.getTypeDeclarations();
+      List<JavaType<?>> types = new ArrayList<JavaType<?>>();
       if (!declarations.isEmpty())
       {
-         AbstractTypeDeclaration declaration = declarations.get(0);
-         return getJavaSource(null, document, unit, declaration);
+         for (AbstractTypeDeclaration declaration : declarations)
+         {
+            if (declaration.isPackageMemberTypeDeclaration())
+            {
+               types.add(getJavaSource(null, document, unit, declaration));
+            }
+         }
+         return new JavaUnitImpl(types);
       }
       else if (visitor.getPackageDeclaration() != null)
       {
-         return getJavaSource(null, document, unit, visitor.getPackageDeclaration());
+         types.add(getJavaSource(null, document, unit, visitor.getPackageDeclaration()));
+         return new JavaUnitImpl(types);
       }
-      throw new ParserException("Could not find type declaration in Java source - is this actually code?");
+      else
+      {
+         throw new ParserException("Could not find type declaration in Java source - is this actually code?");
+      }
    }
 
    /**
@@ -145,19 +165,19 @@ public class JavaParserImpl implements JavaParser
       if (type != null)
       {
          if (type.isAssignableFrom(JavaClassSource.class))
-            return (T) parse("public class JavaClass { }");
+            return (T) parseUnit("public class JavaClass { }").getGoverningType();
 
          if (type.isAssignableFrom(JavaEnumSource.class))
-            return (T) parse("public enum JavaEnum { }");
+            return (T) parseUnit("public enum JavaEnum { }").getGoverningType();
 
          if (type.isAssignableFrom(JavaAnnotationSource.class))
-            return (T) parse("public @interface JavaAnnotation { }");
+            return (T) parseUnit("public @interface JavaAnnotation { }").getGoverningType();
 
          if (type.isAssignableFrom(JavaInterfaceSource.class))
-            return (T) parse("public interface JavaInterface { }");
+            return (T) parseUnit("public interface JavaInterface { }").getGoverningType();
 
          if (type.isAssignableFrom(JavaPackageInfoSource.class))
-            return (T) parse("package org.example;");
+            return (T) parseUnit("package org.example;").getGoverningType();
       }
       return null;
    }

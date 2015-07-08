@@ -175,6 +175,21 @@ String formattedCode = Roaster.format(javaCode);
 System.out.println(formattedCode);
 ```
 
+Parsing the java unit 
+----------------------
+
+The link:http://docs.oracle.com/javase/specs/jls/se7/html/jls-7.html#jls-7.3[Java Language Specification] allows you to define multiple classes in the same .java file. Roaster supports parsing the entire unit by calling the parseUnit() method:
+
+```java
+String javaCode = "public class MyClass{ private String field;} public class AnotherClass {}";
+
+JavaUnit unit = Roaster.parseUnit(javaCode);
+
+JavaClassSource myClass = unit.getGoverningType();
+JavaClassSource anotherClass = (JavaClassSource) unit.getTopLevelTypes().get(1);
+```
+
+
 Maven Artifacts
 ===============
 

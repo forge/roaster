@@ -9,6 +9,7 @@ package org.jboss.forge.roaster.spi;
 import java.io.InputStream;
 
 import org.jboss.forge.roaster.model.JavaType;
+import org.jboss.forge.roaster.model.JavaUnit;
 import org.jboss.forge.roaster.model.source.JavaSource;
 
 /**
@@ -27,11 +28,21 @@ public interface JavaParser
    <T extends JavaSource<?>> T create(final Class<T> type);
 
    /**
+    * Read the given {@link InputStream} and parse the data into a new {@link JavaUnit} instance.
+    * 
+    * @param data to parse
+    * @return {@link JavaUnit}, {@code null} if the data format is not recognized by this {@link JavaParser}.
+    */
+   JavaUnit parseUnit(final InputStream data);
+
+   /**
     * Read the given {@link InputStream} and parse the data into a new {@link JavaType} instance.
     * 
     * @param data to parse
     * @return {@link JavaType}, {@code null} if the data format is not recognized by this {@link JavaParser}.
+    * @deprecated {@link #parseUnit(InputStream)} should be used instead, as the JLS allows several types to be defined
+    *             in a single file
     */
+   @Deprecated
    JavaType<?> parse(final InputStream data);
-
 }

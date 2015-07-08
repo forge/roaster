@@ -19,6 +19,7 @@ import java.util.Properties;
 import java.util.ServiceLoader;
 
 import org.jboss.forge.roaster.model.JavaType;
+import org.jboss.forge.roaster.model.JavaUnit;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.spi.FormatterProvider;
 import org.jboss.forge.roaster.spi.JavaParser;
@@ -172,25 +173,48 @@ public final class Roaster
     * Read the given {@link InputStream} and parse its data into a new {@link JavaType} instance of the given type. The
     * caller is responsible for closing the stream.
     */
+   @SuppressWarnings("unchecked")
    public static <T extends JavaType<?>> T parse(final Class<T> type, final InputStream data)
    {
       for (JavaParser parser : getParsers())
       {
-         final JavaType<?> source = parser.parse(data);
+         final JavaUnit unit = parser.parseUnit(data);
 
-         if (type.isInstance(source))
+         if (type.isInstance(unit.getGoverningType()))
          {
-            @SuppressWarnings("unchecked")
-            final T result = (T) source;
+            final T result = (T) unit.getGoverningType();
             return result;
          }
-         else if (source != null)
+         else if (unit != null)
          {
             throw new ParserException("Source does not represent a [" + type.getSimpleName() + "], instead was ["
-                     + source.getClass().getSimpleName() + "] - Cannot convert.");
+                     + unit.getGoverningType().getClass().getSimpleName() + "] - Cannot convert.");
          }
       }
-      throw new ParserException("Cannot find JavaParserProvider capable of parsing the requested data");
+      throw new ParserException("Cannot find JavaParser capable of parsing the requested data");
+   }
+
+   /**
+    * Read the given {@link String} and parse its data into a new {@link JavaUnit} instance of the given type.
+    */
+   public static JavaUnit parseUnit(final String data)
+   {
+      return parseUnit(Streams.fromString(data));
+   }
+
+   /**
+    * Read the given {@link InputStream} and parse its data into a new {@link JavaUnit} instance of the given type. The
+    * caller is responsible for closing the stream.
+    */
+   public static JavaUnit parseUnit(final InputStream data)
+   {
+      for (JavaParser parser : getParsers())
+      {
+         final JavaUnit unit = parser.parseUnit(data);
+         if (unit != null)
+            return unit;
+      }
+      throw new ParserException("Cannot find JavaParser capable of parsing the requested data");
    }
 
    /**
