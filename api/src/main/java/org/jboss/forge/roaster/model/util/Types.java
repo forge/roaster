@@ -7,16 +7,15 @@
 
 package org.jboss.forge.roaster.model.util;
 
-import org.jboss.forge.roaster.model.JavaType;
-import org.jboss.forge.roaster.model.Type;
-import org.jboss.forge.roaster.model.source.JavaSource;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.jboss.forge.roaster.model.JavaType;
+import org.jboss.forge.roaster.model.Type;
 
 /**
  * Types utilities

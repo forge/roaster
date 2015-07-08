@@ -10,7 +10,6 @@ package org.jboss.forge.roaster.model.source;
 import java.util.List;
 
 import org.jboss.forge.roaster.model.JavaType;
-import org.jboss.forge.roaster.model.Type;
 
 /**
  * Represents a Java type in source form.

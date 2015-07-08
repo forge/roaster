@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.jboss.forge.roaster.Internal;
 import org.jboss.forge.roaster.Origin;
+import org.jboss.forge.roaster.model.source.EnumConstantSource.Body;
 
 /**
  * Represents one of the constant members of a {@link JavaEnum}.

@@ -6,7 +6,8 @@
  */
 package org.jboss.forge.test.roaster.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.impl.ImportImpl;

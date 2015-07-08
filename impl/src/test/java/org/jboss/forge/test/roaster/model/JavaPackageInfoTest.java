@@ -15,7 +15,6 @@ import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.Annotation;
 import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.ValuePair;
-import org.jboss.forge.roaster.model.impl.JavaPackageInfoImpl;
 import org.jboss.forge.roaster.model.impl.TypeImpl;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.Import;
