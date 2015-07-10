@@ -25,4 +25,12 @@ public interface JavaClass<O extends JavaClass<O>> extends
          FinalCapable,
          StaticCapable
 {
+   /**
+    * Returns <code>true</code> if this {@link JavaClass} represents a local class.
+    * 
+    * @see JSL 14.3. Local Class Declarations
+    * @return <code>true</code> if this {@link JavaClass} represents a local class.
+    */
+   public boolean isLocalClass();
+
 }

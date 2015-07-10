@@ -422,7 +422,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    protected PackageDeclaration getPackageDeclaration()
    {
       if (pkg instanceof PackageDeclaration)
-         return (PackageDeclaration) pkg;
+         return pkg;
       throw new ParserException("Source body was not of the expected type (PackageDeclaration).");
    }
 

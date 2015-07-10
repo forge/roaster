@@ -89,6 +89,12 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
    }
 
    @Override
+   public boolean isLocalClass()
+   {
+      return JDTHelper.isLocalClass(getBodyDeclaration());
+   }
+
+   @Override
    public int hashCode()
    {
       final int prime = 31;

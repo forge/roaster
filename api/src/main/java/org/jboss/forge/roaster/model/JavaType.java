@@ -52,22 +52,22 @@ public interface JavaType<T extends JavaType<T>> extends
    public boolean hasSyntaxErrors();
 
    /**
-    * Return true if this {@link JavaType} represents a {@link JavaClass}
+    * Return <code>true</code> if this {@link JavaType} represents a {@link JavaClass}
     */
    public boolean isClass();
 
    /**
-    * Return true if this {@link JavaType} represents a {@link JavaEnum}
+    * Return <code>true</code> if this {@link JavaType} represents a {@link JavaEnum}
     */
    public boolean isEnum();
 
    /**
-    * Return true if this {@link JavaType} represents a {@link JavaClass} interface.
+    * Return <code>true</code> if this {@link JavaType} represents a {@link JavaClass} interface.
     */
    public boolean isInterface();
 
    /**
-    * Return true if this {@link JavaType} represents a {@link JavaAnnotation}
+    * Return <code>true</code> if this {@link JavaType} represents a {@link JavaAnnotation}
     */
    public boolean isAnnotation();
 
