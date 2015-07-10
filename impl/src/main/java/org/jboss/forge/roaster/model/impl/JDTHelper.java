@@ -61,6 +61,16 @@ public class JDTHelper
       return null;
    }
 
+   public static boolean isLocalClass(final BodyDeclaration dec)
+   {
+      if (dec instanceof TypeDeclaration)
+      {
+         TypeDeclaration td = (TypeDeclaration) dec;
+         return td.isLocalTypeDeclaration();
+      }
+      return false;
+   }
+
    @SuppressWarnings("unchecked")
    public static List<Type> getInterfaces(final BodyDeclaration dec)
    {

@@ -94,6 +94,12 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    }
 
    @Override
+   public boolean isLocalClass()
+   {
+      return false;
+   }
+
+   @Override
    public boolean isEnum()
    {
       return false;
