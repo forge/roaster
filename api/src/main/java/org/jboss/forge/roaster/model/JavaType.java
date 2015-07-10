@@ -55,6 +55,14 @@ public interface JavaType<T extends JavaType<T>> extends
     * Return true if this {@link JavaType} represents a {@link JavaClass}
     */
    public boolean isClass();
+   
+   
+   /**
+    * Return true if this {@link JavaType} represents a local class. 
+    * @see JSL 14.3. Local Class Declarations
+    * @return
+    */
+   public boolean isLocalClass();
 
    /**
     * Return true if this {@link JavaType} represents a {@link JavaEnum}

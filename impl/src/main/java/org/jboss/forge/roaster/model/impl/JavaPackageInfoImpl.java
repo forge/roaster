@@ -723,6 +723,12 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    }
 
    @Override
+   public boolean isLocalClass()
+   {
+      return false;
+   }
+
+   @Override
    public List<JavaSource<?>> getNestedClasses()
    {
       return Collections.emptyList();

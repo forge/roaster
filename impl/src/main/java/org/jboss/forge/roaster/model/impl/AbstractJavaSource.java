@@ -771,6 +771,12 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       return declaration instanceof AnnotationTypeDeclaration;
    }
 
+   @Override
+   public boolean isLocalClass()
+   {
+      return JDTHelper.isLocalClass(getBodyDeclaration());
+   }
+
    /*
     * Interfaced Methods
     */
