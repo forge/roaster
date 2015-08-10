@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -76,6 +77,12 @@ public final class Roaster
       return formatters;
    }
 
+   public static Charset getDefaultEncoding()
+   {
+      String encoding = System.getProperty("file.encoding", "ISO8859_1");
+      return Charset.forName(encoding);
+   }
+
    /**
     * Create a new empty {@link JavaSource} instance.
     */
@@ -96,25 +103,54 @@ public final class Roaster
    /**
     * Open the given {@link File}, parsing its contents into a new {@link JavaType} instance.
     */
+   @Deprecated
    public static JavaType<?> parse(final File file) throws FileNotFoundException
    {
-      return parse(JavaType.class, file);
+      return parse(file, getDefaultEncoding());
+   }
+
+   /**
+    * Open the given {@link File}, parsing its contents into a new {@link JavaType} instance.
+    */
+   public static JavaType<?> parse(final File file, Charset encoding) throws FileNotFoundException
+   {
+      return parse(JavaType.class, file, encoding);
    }
 
    /**
     * Parse the given {@link URL} data into a new {@link JavaType} instance.
     */
+   @Deprecated
    public static JavaType<?> parse(final URL data) throws IOException
    {
-      return parse(JavaType.class, data);
+      return parse(data, getDefaultEncoding());
+   }
+
+   /**
+    * Parse the given {@link URL} data into a new {@link JavaType} instance.
+    */
+   public static JavaType<?> parse(final URL data, Charset encoding) throws IOException
+   {
+      return parse(JavaType.class, data, encoding);
+   }
+
+   /**
+    * Read the given {@link InputStream} and parse the data into a new {@link JavaType} instance.
+    * 
+    * @see #parse(InputStream, Charset)
+    */
+   @Deprecated
+   public static JavaType<?> parse(final InputStream data)
+   {
+      return parse(data, getDefaultEncoding());
    }
 
    /**
     * Read the given {@link InputStream} and parse the data into a new {@link JavaType} instance.
     */
-   public static JavaType<?> parse(final InputStream data)
+   public static JavaType<?> parse(final InputStream data, Charset encoding)
    {
-      return parse(JavaType.class, data);
+      return parse(JavaType.class, data, encoding);
    }
 
    /**
@@ -138,9 +174,21 @@ public final class Roaster
     *
     * @throws FileNotFoundException
     */
+   @Deprecated
    public static <T extends JavaType<?>> T parse(final Class<T> type, final URL url) throws IOException
    {
-      return internalParse(type, url.openStream());
+      return parse(type, url, getDefaultEncoding());
+   }
+
+   /**
+    * Read the given {@link URL} and parse its data into a new {@link JavaType} instance of the given type.
+    *
+    * @throws FileNotFoundException
+    */
+   public static <T extends JavaType<?>> T parse(final Class<T> type, final URL url, Charset encoding)
+            throws IOException
+   {
+      return internalParse(type, url.openStream(), encoding);
    }
 
    /**
@@ -148,9 +196,21 @@ public final class Roaster
     *
     * @throws FileNotFoundException
     */
+   @Deprecated
    public static <T extends JavaType<?>> T parse(final Class<T> type, final File file) throws FileNotFoundException
    {
-      return internalParse(type, new FileInputStream(file));
+      return parse(type, file, getDefaultEncoding());
+   }
+
+   /**
+    * Read the given {@link File} and parse its data into a new {@link JavaType} instance of the given type.
+    *
+    * @throws FileNotFoundException
+    */
+   public static <T extends JavaType<?>> T parse(final Class<T> type, final File file, Charset encoding)
+            throws FileNotFoundException
+   {
+      return internalParse(type, new FileInputStream(file), encoding);
    }
 
    /**
@@ -166,7 +226,18 @@ public final class Roaster
     */
    public static <T extends JavaType<?>> T parse(final Class<T> type, final String data)
    {
-      return parse(type, Streams.fromString(data));
+      return parse(type, Streams.ofUTF8fromString(data), Streams.UTF8_ENCODING);
+   }
+
+   /**
+    * Read the given {@link InputStream} and parse its data into a new {@link JavaType} instance of the given type. The
+    * caller is responsible for closing the stream.
+    */
+   @Deprecated
+   @SuppressWarnings("unchecked")
+   public static <T extends JavaType<?>> T parse(final Class<T> type, final InputStream data)
+   {
+      return parse(type, data, getDefaultEncoding());
    }
 
    /**
@@ -174,11 +245,11 @@ public final class Roaster
     * caller is responsible for closing the stream.
     */
    @SuppressWarnings("unchecked")
-   public static <T extends JavaType<?>> T parse(final Class<T> type, final InputStream data)
+   public static <T extends JavaType<?>> T parse(final Class<T> type, final InputStream data, Charset encodingIfText)
    {
       for (JavaParser parser : getParsers())
       {
-         final JavaUnit unit = parser.parseUnit(data);
+         final JavaUnit unit = parser.parseUnit(data, encodingIfText);
 
          if (type.isInstance(unit.getGoverningType()))
          {
@@ -199,18 +270,28 @@ public final class Roaster
     */
    public static JavaUnit parseUnit(final String data)
    {
-      return parseUnit(Streams.fromString(data));
+      return parseUnit(Streams.ofUTF8fromString(data), Streams.UTF8_ENCODING);
    }
 
    /**
     * Read the given {@link InputStream} and parse its data into a new {@link JavaUnit} instance of the given type. The
     * caller is responsible for closing the stream.
     */
+   @Deprecated
    public static JavaUnit parseUnit(final InputStream data)
+   {
+      return parseUnit(data, getDefaultEncoding());
+   }
+
+   /**
+    * Read the given {@link InputStream} and parse its data into a new {@link JavaUnit} instance of the given type. The
+    * caller is responsible for closing the stream.
+    */
+   public static JavaUnit parseUnit(final InputStream data, Charset encodingIfText)
    {
       for (JavaParser parser : getParsers())
       {
-         final JavaUnit unit = parser.parseUnit(data);
+         final JavaUnit unit = parser.parseUnit(data, encodingIfText);
          if (unit != null)
             return unit;
       }
@@ -246,11 +327,11 @@ public final class Roaster
       return result;
    }
 
-   private static <T extends JavaType<?>> T internalParse(final Class<T> type, final InputStream data)
+   private static <T extends JavaType<?>> T internalParse(final Class<T> type, final InputStream data, Charset encoding)
    {
       try
       {
-         return parse(type, data);
+         return parse(type, data, encoding);
       }
       finally
       {

@@ -9,6 +9,7 @@ package org.jboss.forge.roaster.spi;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.util.Util;
 import org.eclipse.jface.text.Document;
 import org.jboss.forge.roaster.ParserException;
+import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.JavaUnit;
 import org.jboss.forge.roaster.model.ast.TypeDeclarationFinderVisitor;
@@ -55,13 +57,28 @@ public class JavaParserImpl implements JavaParser
       return parseUnit(data).getGoverningType();
    }
 
+   private Charset getDefaultEncoding()
+   {
+      return Roaster.getDefaultEncoding();
+   }
+
    @Override
    public JavaUnit parseUnit(InputStream data)
    {
+      return parseUnit(data, getDefaultEncoding());
+   }
+
+   @Override
+   public JavaUnit parseUnit(InputStream data, Charset encodingIfText)
+   {
+      return parseUnit(data, encodingIfText.name());
+   }
+
+   private JavaUnit parseUnit(InputStream data, String encodingIfText)
+   {
       try
       {
-         String encoding = System.getProperty("file.encoding", "ISO8859_1");
-         char[] source = Util.getInputStreamAsCharArray(data, data.available(), encoding);
+         char[] source = Util.getInputStreamAsCharArray(data, -1, encodingIfText);
          return parseUnit(new String(source));
       }
       catch (IOException e)

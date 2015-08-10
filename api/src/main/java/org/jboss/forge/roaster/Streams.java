@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 /**
  * Stream utilities.
@@ -23,6 +24,8 @@ import java.io.UnsupportedEncodingException;
  */
 abstract class Streams
 {
+   static Charset UTF8_ENCODING = Charset.forName("UTF-8");
+
    private Streams()
    {
    }
@@ -84,6 +87,11 @@ abstract class Streams
    public static InputStream fromString(final String data)
    {
       return new ByteArrayInputStream(data.getBytes());
+   }
+
+   public static InputStream ofUTF8fromString(final String data)
+   {
+      return new ByteArrayInputStream(data.getBytes(UTF8_ENCODING));
    }
 
    /**
