@@ -395,7 +395,7 @@ public abstract class AnnotationTest<O extends JavaSource<O>, T>
       AnnotationSource<O> annotation = annotations.get(annotations.size() - 1);
       assertEquals(Test.class.getSimpleName(), annotation.getName());
       assertEquals(null, annotation.getLiteralValue());
-      assertEquals("RuntimeException.class", annotation.getLiteralValue("expected"));
+      assertEquals(RuntimeException.class.getName(), annotation.getLiteralValue("expected"));
       assertEquals("bar", annotation.getLiteralValue("foo"));
    }
 
@@ -405,15 +405,15 @@ public abstract class AnnotationTest<O extends JavaSource<O>, T>
       target.addAnnotation(Test.class).setLiteralValue("RuntimeException.class");
       AnnotationSource<O> annotation = target.getAnnotations().get(target.getAnnotations().size() - 1);
 
-      assertEquals("RuntimeException.class", annotation.getLiteralValue());
+      assertEquals(RuntimeException.class.getName(), annotation.getLiteralValue());
       assertTrue(annotation.isSingleValue());
 
       annotation.setLiteralValue("foo", "bar");
       assertFalse(annotation.isSingleValue());
       assertTrue(annotation.isNormal());
 
-      assertEquals("RuntimeException.class", annotation.getLiteralValue());
-      assertEquals("RuntimeException.class", annotation.getLiteralValue("value"));
+      assertEquals(RuntimeException.class.getName(), annotation.getLiteralValue());
+      assertEquals(RuntimeException.class.getName(), annotation.getLiteralValue("value"));
       assertEquals("bar", annotation.getLiteralValue("foo"));
    }
 
@@ -814,6 +814,14 @@ public abstract class AnnotationTest<O extends JavaSource<O>, T>
       target.addAnnotation(Override.class);
       Importer<?> importer = target.getOrigin();
       Assert.assertNull(importer.getImport(Override.class));
+   }
+
+   @Test
+   public void testGetLiteralValueReturnsFQNInClassAnnotationValue()
+   {
+      target.addAnnotation(Test.class).setClassValue("expected", IllegalStateException.class);
+      AnnotationSource<O> annotation = target.getAnnotation(Test.class);
+      Assert.assertEquals(IllegalStateException.class.getName(), annotation.getStringValue("expected"));
    }
 
 }
