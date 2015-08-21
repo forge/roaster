@@ -139,7 +139,15 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    {
       if (isSingleValue())
       {
-         return ((SingleMemberAnnotation) annotation).getValue().toString();
+         Expression value = ((SingleMemberAnnotation) annotation).getValue();
+         if (value instanceof TypeLiteral)
+         {
+            return resolveTypeLiteralName((TypeLiteral) value);
+         }
+         else
+         {
+            return value.toString();
+         }
       }
       if (isNormal())
       {
@@ -172,7 +180,15 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
                MemberValuePair pair = (MemberValuePair) v;
                if (pair.getName().getFullyQualifiedName().equals(name))
                {
-                  return pair.getValue().toString();
+                  Expression value = pair.getValue();
+                  if (value instanceof TypeLiteral)
+                  {
+                     return resolveTypeLiteralName((TypeLiteral) value);
+                  }
+                  else
+                  {
+                     return value.toString();
+                  }
                }
             }
          }
@@ -1104,6 +1120,27 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       return null;
    }
 
+   private String resolveTypeLiteralName(TypeLiteral typeLiteral)
+   {
+      final Type<O> type = new TypeImpl<O>(getOrigin(), typeLiteral.getType());
+      if (type.isPrimitive())
+      {
+         final Class<?>[] primitiveTypes = { boolean.class, byte.class, short.class, int.class, long.class,
+                  float.class, double.class };
+         for (Class<?> c : primitiveTypes)
+         {
+            if (c.getSimpleName().equals(type.getName()))
+            {
+               return c.getName();
+            }
+         }
+         return null;
+      }
+
+      final String classname = type.getQualifiedName();
+      return getOrigin().resolveType(classname);
+   }
+
    private Class<?> resolveTypeLiteral(TypeLiteral typeLiteral)
    {
       final Type<O> type = new TypeImpl<O>(getOrigin(), typeLiteral.getType());
@@ -1133,6 +1170,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       }
    }
 
+   @Override
    public boolean isTypeElementDefined(String name)
    {
       List<ValuePair> values = getValues();

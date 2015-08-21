@@ -239,7 +239,7 @@ public class JavaAnnotationTest
       assertEquals("MockNestedJavaAnnotationType", valueDefaultValue.getName());
       assertTrue(valueDefaultValue.isNormal());
       assertEquals("0", valueDefaultValue.getLiteralValue());
-      assertEquals("StringBuffer.class", valueDefaultValue.getLiteralValue("charSequenceType"));
+      assertEquals(StringBuffer.class.getName(), valueDefaultValue.getLiteralValue("charSequenceType"));
       assertEquals(MockEnumType.BAR, valueDefaultValue.getEnumValue(MockEnumType.class, "metasyntacticVariable"));
    }
 
