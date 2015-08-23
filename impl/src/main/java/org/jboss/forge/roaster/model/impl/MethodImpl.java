@@ -6,11 +6,6 @@
  */
 package org.jboss.forge.roaster.model.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
@@ -31,21 +26,36 @@ import org.jboss.forge.roaster.model.TypeVariable;
 import org.jboss.forge.roaster.model.Visibility;
 import org.jboss.forge.roaster.model.ast.AnnotationAccessor;
 import org.jboss.forge.roaster.model.ast.ModifierAccessor;
+import org.jboss.forge.roaster.model.impl.statements.BlockStatementImpl;
+import org.jboss.forge.roaster.model.impl.statements.InnerBlockImpl;
+import org.jboss.forge.roaster.model.impl.statements.JdtStatementWrapper;
+import org.jboss.forge.roaster.model.impl.statements.StatementBuilder;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.Import;
+import org.jboss.forge.roaster.model.source.BlockHolder;
+import org.jboss.forge.roaster.model.source.BlockSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
 import org.jboss.forge.roaster.model.source.TypeVariableSource;
+import org.jboss.forge.roaster.model.statements.BlockStatement;
+import org.jboss.forge.roaster.model.statements.StatementSource;
+import org.jboss.forge.roaster.model.statements.Statements;
 import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.model.util.Types;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
+public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>, BlockHolder<O>
 {
    private final AnnotationAccessor<O, MethodSource<O>> annotations = new AnnotationAccessor<O, MethodSource<O>>();
    private final ModifierAccessor modifiers = new ModifierAccessor();
@@ -54,6 +64,8 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    private AST ast = null;
    private CompilationUnit cu = null;
    private final MethodDeclaration method;
+
+   private BlockStatement<O,MethodSource<O>> body;
 
    private void init(final O parent)
    {
@@ -83,8 +95,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
       List<MethodSource<JavaClassSource>> methods = temp.getMethods();
       MethodDeclaration newMethod = (MethodDeclaration) methods.get(0).getInternal();
-      MethodDeclaration subtree = (MethodDeclaration) ASTNode.copySubtree(cu.getAST(), newMethod);
-      this.method = subtree;
+      this.method = (MethodDeclaration) ASTNode.copySubtree(cu.getAST(), newMethod);
    }
 
    @Override
@@ -132,13 +143,13 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public AnnotationSource<O> addAnnotation(final String className)
    {
-      return annotations.addAnnotation(this, method, className);
+      return annotations.addAnnotation( this, method, className );
    }
 
    @Override
    public List<AnnotationSource<O>> getAnnotations()
    {
-      return annotations.getAnnotations(this, method);
+      return annotations.getAnnotations( this, method );
    }
 
    @Override
@@ -150,13 +161,13 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public boolean hasAnnotation(final String type)
    {
-      return annotations.hasAnnotation(this, method, type);
+      return annotations.hasAnnotation( this, method, type );
    }
 
    @Override
    public MethodSource<O> removeAnnotation(final Annotation<O> annotation)
    {
-      return annotations.removeAnnotation(this, method, annotation);
+      return annotations.removeAnnotation( this, method, annotation );
    }
 
    @Override
@@ -212,7 +223,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
          Block block = ((MethodDeclaration) methods.get(0).getInternal()).getBody();
 
          block = (Block) ASTNode.copySubtree(method.getAST(), block);
-         method.setBody(block);
+         method.setBody( block );
       }
       return this;
    }
@@ -286,7 +297,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public MethodSource<O> setReturnType(final JavaType<?> type)
    {
-      return setReturnType(type.getName());
+      return setReturnType( type.getName() );
    }
 
    @Override
@@ -390,7 +401,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public boolean isNative()
    {
-      return modifiers.hasModifier(method, ModifierKeyword.NATIVE_KEYWORD);
+      return modifiers.hasModifier( method, ModifierKeyword.NATIVE_KEYWORD );
    }
 
    @Override
@@ -504,13 +515,13 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public Visibility getVisibility()
    {
-      return Visibility.getFrom(this);
+      return Visibility.getFrom( this );
    }
 
    @Override
    public MethodSource<O> setVisibility(final Visibility scope)
    {
-      return Visibility.set(this, scope);
+      return Visibility.set( this, scope );
    }
 
    /*
@@ -721,13 +732,13 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public MethodSource<O> removeTypeVariable(TypeVariable<?> typeVariable)
    {
-      return removeTypeVariable(typeVariable.getName());
+      return removeTypeVariable( typeVariable.getName() );
    }
 
    @Override
    public ParameterSource<O> addParameter(Class<?> type, String name)
    {
-      return addParameter(type.getCanonicalName(), name);
+      return addParameter( type.getCanonicalName(), name );
    }
 
    @Override
@@ -834,6 +845,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    public MethodSource<O> removeJavaDoc()
    {
       method.setJavadoc(null);
+
       return this;
    }
 
@@ -848,4 +860,45 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       }
       return new JavaDocImpl<MethodSource<O>>(this, javadoc);
    }
+
+
+   @Override
+   public MethodSource<O> setBody( BlockSource<?,?,?> statement )
+   {
+      this.body = (BlockStatement<O, MethodSource<O>>) statement;
+
+      ( (BlockStatement<O, MethodSource<O>>) statement ).setOrigin( this );
+      JdtStatementWrapper<O,MethodSource<O>,?> wrapper = (JdtStatementWrapper<O, MethodSource<O>, ?>) body;
+      wrapper.setAst( cu.getAST() );
+      Statement jdtStatement = wrapper.materialize( cu.getAST() );
+
+      method.setBody((Block) jdtStatement);
+      return this;
+   }
+
+   @Override
+   public MethodSource<O> setBody( StatementSource<?,?,?> statement )
+   {
+      BlockStatement<O,MethodSource<O>> block = new BlockStatementImpl<O, MethodSource<O>>();
+      setBody( (BlockSource<O, MethodSource<O>, ?>) block );
+      block.addStatement( statement );
+      return this;
+   }
+
+
+   public BlockSource<O,MethodSource<O>,?> getBodyAsBlock()
+   {
+      if (body == null) {
+         body = new BlockStatementImpl();
+         ((org.jboss.forge.roaster.model.ASTNode)body).setInternal(method.getBody());
+         for (Object statement : method.getBody().statements()) {
+            StatementSource stat = StatementBuilder.asRoasterStatement((Statement) statement);
+            if (stat != null) {
+               body.addStatement(stat);
+            }
+         }
+      }
+      return body;
+   }
+
 }
