@@ -8,7 +8,6 @@ package org.jboss.forge.roaster.model.impl;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -110,9 +109,9 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       // Set method name
       setName(reflectMethod.getName());
       // Set method parameters
-      for (Parameter param : reflectMethod.getParameters())
+      for (Class<?> paramType : reflectMethod.getParameterTypes())
       {
-         addParameter(param.getType(), param.getName());
+         addParameter(paramType, "arg" + method.parameters().size());
       }
       // Set method body
       {
