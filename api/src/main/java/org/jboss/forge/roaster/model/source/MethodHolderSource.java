@@ -25,32 +25,32 @@ public interface MethodHolderSource<O extends JavaSource<O>> extends MethodHolde
     * Return the {@link MethodSource} with the given name and zero parameters; otherwise return null.
     */
    @Override
-   public MethodSource<O> getMethod(final String name);
+   MethodSource<O> getMethod(final String name);
 
    /**
     * Return the {@link MethodSource} with the given name and signature types; otherwise return null.
     */
    @Override
-   public MethodSource<O> getMethod(final String name, String... paramTypes);
+   MethodSource<O> getMethod(final String name, String... paramTypes);
 
    /**
     * Return the {@link MethodSource} with the given name and signature types; otherwise return null.
     */
    @Override
-   public MethodSource<O> getMethod(final String name, Class<?>... paramTypes);
+   MethodSource<O> getMethod(final String name, Class<?>... paramTypes);
 
    /**
     * Get a {@link List} of all {@link MethodSource}s declared by this {@link O} instance, if any; otherwise, return an
     * empty {@link List}
     */
    @Override
-   public List<MethodSource<O>> getMethods();
+   List<MethodSource<O>> getMethods();
 
    /**
     * Add an uninitialized {@link MethodSource} declaration to this {@link O} instance. This {@link MethodSource} will
     * be a stub until further modified.
     */
-   public MethodSource<O> addMethod();
+   MethodSource<O> addMethod();
 
    /**
     * Add a new {@link MethodSource} declaration to this {@link O} instance, using the given {@link String} as the
@@ -59,12 +59,18 @@ public interface MethodHolderSource<O extends JavaSource<O>> extends MethodHolde
     * <strong>For example:</strong><br>
     * <code>Method m = javaClass.addMethod("public String method() {return \"hello!\";}")</code>
     */
-   public MethodSource<O> addMethod(final String method);
+   MethodSource<O> addMethod(final String method);
+
+   /**
+    * Add a new {@link MethodSource} declaration to this {@link O} instance, using the given
+    * {@link java.lang.reflect.Method} as the method declaration
+    */
+   MethodSource<O> addMethod(final java.lang.reflect.Method method);
 
    /**
     * Remove the given {@link MethodSource} declaration from this {@link O} instance, if it exists; otherwise, do
     * nothing.
     */
-   public O removeMethod(final Method<O, ?> method);
+   O removeMethod(final Method<O, ?> method);
 
 }

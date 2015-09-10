@@ -6,17 +6,21 @@
  */
 package org.jboss.forge.test.roaster.model.common;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.Serializable;
+import java.util.Enumeration;
 
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.InterfaceCapableSource;
+import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -100,5 +104,16 @@ public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapa
       this.source.removeInterface(Serializable.class);
       assertFalse(this.source.hasInterface(Serializable.class));
       assertEquals(2, this.source.getInterfaces().size());
+   }
+
+   @Test
+   public void testAddInterfaceWithReflectedMethod() throws Exception
+   {
+      JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+      Class<?> type = Enumeration.class;
+      javaClass.addInterface(type, true);
+      Assert.assertThat(javaClass.getMethods().size(), is(2));
+      Assert.assertNotNull(javaClass.getMethod("hasMoreElements"));
+      Assert.assertNotNull(javaClass.getMethod("nextElement"));
    }
 }

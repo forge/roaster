@@ -18,6 +18,7 @@ import org.jboss.forge.roaster.model.ast.ModifierAccessor;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
+import org.jboss.forge.roaster.model.util.Refactory;
 import org.jboss.forge.roaster.model.util.Types;
 
 /**
@@ -133,6 +134,20 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
          throw new IllegalArgumentException("Super-type must be a Class type, but was [" + type.getName() + "]");
       }
       return setSuperType(type.getName());
+   }
+
+   @Override
+   public JavaClassSource setSuperType(final Class<?> type, boolean importAbstractMethods)
+   {
+      setSuperType(type);
+      if (importAbstractMethods)
+      {
+         for (MethodSource<?> methodSource : Refactory.importAbstractMethods(this, type))
+         {
+            methodSource.addAnnotation(Override.class);
+         }
+      }
+      return this;
    }
 
    @SuppressWarnings("unchecked")

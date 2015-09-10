@@ -22,6 +22,11 @@ public interface InterfaceCapableSource<T extends JavaSource<T>> extends Interfa
 
    T addInterface(Class<?> type);
 
+   /**
+    * Adds the interface and imports the methods
+    */
+   T addInterface(Class<?> type, boolean importAbstractMethods);
+
    T addInterface(JavaInterface<?> type);
 
    T removeInterface(String type);

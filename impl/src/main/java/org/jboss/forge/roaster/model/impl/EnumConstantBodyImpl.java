@@ -706,6 +706,14 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    }
 
    @Override
+   public MethodSource<Body> addMethod(java.lang.reflect.Method method)
+   {
+      final MethodSource<Body> m = new MethodImpl<Body>(this, method);
+      getBody().bodyDeclarations().add(m.getInternal());
+      return m;
+   }
+
+   @Override
    public List<MethodSource<Body>> getMethods()
    {
       final List<MethodSource<Body>> result = new ArrayList<MethodSource<Body>>();

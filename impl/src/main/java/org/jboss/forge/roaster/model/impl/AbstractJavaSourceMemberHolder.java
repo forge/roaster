@@ -40,6 +40,7 @@ import org.jboss.forge.roaster.model.source.ParameterSource;
 import org.jboss.forge.roaster.model.source.PropertyHolderSource;
 import org.jboss.forge.roaster.model.source.PropertySource;
 import org.jboss.forge.roaster.model.util.Assert;
+import org.jboss.forge.roaster.model.util.Refactory;
 import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.model.util.Types;
 
@@ -351,6 +352,15 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
 
    @Override
    @SuppressWarnings("unchecked")
+   public MethodSource<O> addMethod(java.lang.reflect.Method method)
+   {
+      MethodSource<O> m = new MethodImpl<O>((O) this, method);
+      getBodyDeclaration().bodyDeclarations().add(m.getInternal());
+      return m;
+   }
+
+   @Override
+   @SuppressWarnings("unchecked")
    public List<MethodSource<O>> getMethods()
    {
       List<MethodSource<O>> result = new ArrayList<MethodSource<O>>();
@@ -419,6 +429,21 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    public O addInterface(final Class<?> type)
    {
       return addInterface(type.getName());
+   }
+
+   @Override
+   public O addInterface(Class<?> type, boolean importMethods)
+   {
+      O obj = addInterface(type);
+      if (importMethods)
+      {
+         MethodSource<?>[] methods = Refactory.importAbstractMethods(this, type);
+         for (MethodSource<?> methodSource : methods)
+         {
+            methodSource.addAnnotation(Override.class);
+         }
+      }
+      return obj;
    }
 
    @Override

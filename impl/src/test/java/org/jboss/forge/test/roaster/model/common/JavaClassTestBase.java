@@ -13,6 +13,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.lang.annotation.Annotation;
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -321,6 +322,19 @@ public abstract class JavaClassTestBase
 
       source.setSuperType(getClass());
       assertEquals(getClass().getName(), source.getSuperType());
+   }
+
+   @Test
+   public void testSuperTypeImport() throws Exception
+   {
+      JavaClassSource source = Roaster.parse(JavaClassSource.class, "public class Base extends Super {}");
+      assertEquals("Super", source.getSuperType());
+
+      source.setSuperType(NumberFormat.class, true);
+      assertEquals(NumberFormat.class.getName(), source.getSuperType());
+      assertFalse(source.hasSyntaxErrors());
+      assertEquals(3, source.getMethods().size());
+
    }
 
    @Test

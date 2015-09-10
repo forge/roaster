@@ -33,6 +33,13 @@ public interface ExtendableSource<O extends JavaType<O>> extends Extendable<O>
    public O setSuperType(Class<?> type);
 
    /**
+    * Set this type's super class and import their methods.
+    * 
+    * @see #setSuperType(String)
+    */
+   public O setSuperType(Class<?> type, boolean importAbstractMethods);
+
+   /**
     * Set this type's super class.
     * <p>
     * <strong>For example:</strong><br/>

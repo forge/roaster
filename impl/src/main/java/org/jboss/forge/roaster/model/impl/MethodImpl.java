@@ -6,6 +6,9 @@
  */
 package org.jboss.forge.roaster.model.impl;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -73,6 +76,58 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    {
       init(parent);
       method = (MethodDeclaration) internal;
+   }
+
+   public MethodImpl(final O parent, final Method reflectMethod)
+   {
+      this(parent);
+      // Set method visibility
+      int mod = reflectMethod.getModifiers();
+      if (Modifier.isPublic(mod))
+      {
+         setPublic();
+      }
+      else if (Modifier.isProtected(mod))
+      {
+         setProtected();
+      }
+      else if (Modifier.isPrivate(mod))
+      {
+         setPrivate();
+      }
+      // setAbstract(Modifier.isAbstract(mod));
+      setSynchronized(Modifier.isSynchronized(mod));
+      setNative(Modifier.isNative(mod));
+      // Set method return type
+      if (reflectMethod.getReturnType() == Void.TYPE)
+      {
+         setReturnTypeVoid();
+      }
+      else
+      {
+         setReturnType(reflectMethod.getReturnType());
+      }
+      // Set method name
+      setName(reflectMethod.getName());
+      // Set method parameters
+      for (Parameter param : reflectMethod.getParameters())
+      {
+         addParameter(param.getType(), param.getName());
+      }
+      // Set method body
+      {
+         if (!getOrigin().isInterface())
+         {
+            if (!isReturnTypeVoid())
+               setBody("return " + Types.getDefaultValue(reflectMethod.getReturnType()) + ";");
+            else
+               setBody("");
+         }
+         else
+         {
+            setBody(null);
+         }
+      }
    }
 
    public MethodImpl(final O parent, final String method)
@@ -740,7 +795,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public ParameterSource<O> addParameter(String type, String name)
    {
-      Type innerType = new TypeImpl<O>(getOrigin(), null, type);
+      Type<?> innerType = new TypeImpl<O>(getOrigin(), null, type);
       Import imprt = getOrigin().addImport(innerType);
       String resolvedType = imprt != null ? Types.rebuildGenericNameWithArrays(imprt.getSimpleName(), innerType)
                : Types.toSimpleName(type);
