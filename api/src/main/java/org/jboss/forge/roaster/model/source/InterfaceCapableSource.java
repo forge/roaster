@@ -9,6 +9,7 @@ package org.jboss.forge.roaster.model.source;
 
 import org.jboss.forge.roaster.model.InterfaceCapable;
 import org.jboss.forge.roaster.model.JavaInterface;
+import org.jboss.forge.roaster.model.util.Refactory;
 
 /**
  * Represents a {@link JavaSource} that may implement one or more interfaces.
@@ -18,20 +19,62 @@ import org.jboss.forge.roaster.model.JavaInterface;
  */
 public interface InterfaceCapableSource<T extends JavaSource<T>> extends InterfaceCapable
 {
+   /**
+    * Implements the specified interface name
+    * 
+    * @param type the interface FQN
+    * @return this object
+    */
    T addInterface(String type);
 
+   /**
+    * Implements the specified {@link Class} interface
+    * 
+    * @param type the interface {@link Class} reference
+    * @return this object
+    */
    T addInterface(Class<?> type);
 
    /**
-    * Adds the interface and imports the methods
+    * Implements the specified {@link Class} interface and import their abstract methods, if any.
+    * 
+    * @param type the interface {@link Class} reference
+    * @param importAbstractMethods whether the abstract methods should be imported.
+    * @return this object
+    * 
+    * @see Refactory#importAbstractMethods(MethodHolderSource, Class)
     */
    T addInterface(Class<?> type, boolean importAbstractMethods);
 
+   /**
+    * Implements the specified {@link JavaInterface}
+    * 
+    * @param type the interface
+    * @return this object
+    */
    T addInterface(JavaInterface<?> type);
 
+   /**
+    * Removes the specified interface FQN
+    * 
+    * @param type the interface FQN
+    * @return this object
+    */
    T removeInterface(String type);
 
+   /**
+    * Removes the specified interface
+    * 
+    * @param type the interface {@link Class}
+    * @return this object
+    */
    T removeInterface(Class<?> type);
 
+   /**
+    * Removes the specified interface
+    * 
+    * @param type the interface {@link JavaInterface}
+    * @return this object
+    */
    T removeInterface(JavaInterface<?> type);
 }

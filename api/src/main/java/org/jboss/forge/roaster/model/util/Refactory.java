@@ -392,7 +392,7 @@ public class Refactory
    }
 
    /**
-    * This will add the methods present in a class to the specified {@link MethodHolderSource}
+    * This will add the abstract methods present in a {@link Class} to the specified {@link MethodHolderSource}
     * 
     * @param methodHolder the {@link MethodHolderSource} where the methods will be exported
     * @param source the {@link Class} where the methods will be imported
