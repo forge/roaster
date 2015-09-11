@@ -432,16 +432,13 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    }
 
    @Override
-   public O addInterface(Class<?> type, boolean importMethods)
+   public O implementsInterface(Class<?> type)
    {
       O obj = addInterface(type);
-      if (importMethods)
+      MethodSource<?>[] methods = Methods.addInheritedAbstractMethods(type, this);
+      for (MethodSource<?> methodSource : methods)
       {
-         MethodSource<?>[] methods = Methods.addInheritedAbstractMethods(type, this);
-         for (MethodSource<?> methodSource : methods)
-         {
-            methodSource.addAnnotation(Override.class);
-         }
+         methodSource.addAnnotation(Override.class);
       }
       return obj;
    }

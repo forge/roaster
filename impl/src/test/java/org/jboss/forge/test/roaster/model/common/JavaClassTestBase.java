@@ -330,7 +330,7 @@ public abstract class JavaClassTestBase
       JavaClassSource source = Roaster.parse(JavaClassSource.class, "public class Base extends Super {}");
       assertEquals("Super", source.getSuperType());
 
-      source.setSuperType(NumberFormat.class, true);
+      source.implementSuperType(NumberFormat.class);
       assertEquals(NumberFormat.class.getName(), source.getSuperType());
       assertFalse(source.hasSyntaxErrors());
       assertEquals(3, source.getMethods().size());

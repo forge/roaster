@@ -39,12 +39,11 @@ public interface InterfaceCapableSource<T extends JavaSource<T>> extends Interfa
     * Implements the specified {@link Class} interface and import their abstract methods, if any.
     * 
     * @param type the interface {@link Class} reference
-    * @param importAbstractMethods whether the abstract methods should be imported.
     * @return this object
     * 
     * @see Methods#addInheritedAbstractMethods(Class, MethodHolderSource)
     */
-   T addInterface(Class<?> type, boolean addInheritedAbstractMethods);
+   T implementsInterface(Class<?> type);
 
    /**
     * Implements the specified {@link JavaInterface}
