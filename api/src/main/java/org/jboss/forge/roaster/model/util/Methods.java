@@ -73,6 +73,11 @@ public class Methods
 
    static String toParamName(String type)
    {
+      // Special case for java.lang types
+      if (Types.isJavaLang(type))
+      {
+         return String.valueOf(type.charAt(0)).toLowerCase();
+      }
       StringBuilder name = new StringBuilder(type);
       int i;
       for (i = 0; i < name.length(); i++)

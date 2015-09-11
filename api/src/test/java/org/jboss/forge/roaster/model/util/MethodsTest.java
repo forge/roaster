@@ -7,14 +7,13 @@
 
 package org.jboss.forge.roaster.model.util;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 import java.awt.List;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
 /**
@@ -43,17 +42,24 @@ public class MethodsTest
    }
 
    @Test
-   public void testParametersSameTypes()
+   public void testGenerateParametersNamesWithSameTypes()
    {
       String[] paramNames = Methods.generateParameterNames(new Class[] { List.class, List.class });
-      assertThat(Arrays.asList(paramNames), CoreMatchers.hasItems("list", "list1"));
+      assertArrayEquals(new String[] { "list", "list1" }, paramNames);
    }
 
    @Test
-   public void testParametersDifferentTypes()
+   public void testGenerateParametersNamesWithDifferentTypes()
    {
       String[] paramNames = Methods.generateParameterNames(new Class[] { Map.class, List.class });
-      assertThat(Arrays.asList(paramNames), CoreMatchers.hasItems("map", "list"));
+      assertArrayEquals(new String[] { "map", "list" }, paramNames);
    }
 
+   @Test
+   public void testGenerateParametersNamesWithString()
+   {
+      String[] paramNames = Methods
+               .generateParameterNames(new Class[] { String.class, Date.class, Object.class, List.class });
+      assertArrayEquals(new String[] { "s", "date", "o", "list" }, paramNames);
+   }
 }
