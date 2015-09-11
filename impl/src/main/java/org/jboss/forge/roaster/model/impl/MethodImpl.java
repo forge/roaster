@@ -41,6 +41,7 @@ import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
 import org.jboss.forge.roaster.model.source.TypeVariableSource;
+import org.jboss.forge.roaster.model.util.Methods;
 import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.model.util.Types;
 
@@ -109,9 +110,11 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       // Set method name
       setName(reflectMethod.getName());
       // Set method parameters
-      for (Class<?> paramType : reflectMethod.getParameterTypes())
+      Class<?>[] paramTypes = reflectMethod.getParameterTypes();
+      String[] paramNames = Methods.generateParameterNames(paramTypes);
+      for (int i = 0; i < paramTypes.length; i++)
       {
-         addParameter(paramType, "arg" + method.parameters().size());
+         addParameter(paramTypes[i], paramNames[i]);
       }
       // Set method body
       {

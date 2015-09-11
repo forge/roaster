@@ -50,4 +50,44 @@ public class Methods
       return methods.toArray(new MethodSource<?>[methods.size()]);
    }
 
+   /**
+    * Generate the parameter names of a given {@link Method}
+    */
+   public static String[] generateParameterNames(Class<?>[] parameterTypes)
+   {
+      List<String> parameterNames = new ArrayList<String>();
+      for (Class<?> paramType : parameterTypes)
+      {
+         // Check if we haven't already used it.
+         String name = toParamName(paramType.getSimpleName());
+         String paramName = name;
+         int idx = 1;
+         while (parameterNames.contains(paramName))
+         {
+            paramName = name + idx++;
+         }
+         parameterNames.add(paramName);
+      }
+      return parameterNames.toArray(new String[parameterNames.size()]);
+   }
+
+   static String toParamName(String type)
+   {
+      StringBuilder name = new StringBuilder(type);
+      int i;
+      for (i = 0; i < name.length(); i++)
+      {
+         if (!Character.isUpperCase(name.charAt(i)))
+         {
+            // Go back one index
+            i--;
+            break;
+         }
+      }
+      if (i == 0)
+         name.setCharAt(0, Character.toLowerCase(name.charAt(0)));
+      else if (i > 0)
+         name.replace(0, i, name.substring(0, i).toLowerCase());
+      return name.toString();
+   }
 }
