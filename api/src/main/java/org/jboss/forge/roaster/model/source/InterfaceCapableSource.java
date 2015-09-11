@@ -9,7 +9,7 @@ package org.jboss.forge.roaster.model.source;
 
 import org.jboss.forge.roaster.model.InterfaceCapable;
 import org.jboss.forge.roaster.model.JavaInterface;
-import org.jboss.forge.roaster.model.util.Refactory;
+import org.jboss.forge.roaster.model.util.Methods;
 
 /**
  * Represents a {@link JavaSource} that may implement one or more interfaces.
@@ -42,9 +42,9 @@ public interface InterfaceCapableSource<T extends JavaSource<T>> extends Interfa
     * @param importAbstractMethods whether the abstract methods should be imported.
     * @return this object
     * 
-    * @see Refactory#importAbstractMethods(MethodHolderSource, Class)
+    * @see Methods#addInheritedAbstractMethods(Class, MethodHolderSource)
     */
-   T addInterface(Class<?> type, boolean importAbstractMethods);
+   T addInterface(Class<?> type, boolean addInheritedAbstractMethods);
 
    /**
     * Implements the specified {@link JavaInterface}

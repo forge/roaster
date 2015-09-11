@@ -40,7 +40,7 @@ import org.jboss.forge.roaster.model.source.ParameterSource;
 import org.jboss.forge.roaster.model.source.PropertyHolderSource;
 import org.jboss.forge.roaster.model.source.PropertySource;
 import org.jboss.forge.roaster.model.util.Assert;
-import org.jboss.forge.roaster.model.util.Refactory;
+import org.jboss.forge.roaster.model.util.Methods;
 import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.model.util.Types;
 
@@ -437,7 +437,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
       O obj = addInterface(type);
       if (importMethods)
       {
-         MethodSource<?>[] methods = Refactory.importAbstractMethods(this, type);
+         MethodSource<?>[] methods = Methods.addInheritedAbstractMethods(type, this);
          for (MethodSource<?> methodSource : methods)
          {
             methodSource.addAnnotation(Override.class);

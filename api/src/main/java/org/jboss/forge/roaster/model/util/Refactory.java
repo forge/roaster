@@ -6,15 +6,12 @@
  */
 package org.jboss.forge.roaster.model.util;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
-import org.jboss.forge.roaster.model.source.MethodHolderSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 
 /**
@@ -389,31 +386,5 @@ public class Refactory
                Strings.join(list, delimeter) + "\n" +
                "return result;";
       method.setBody(body);
-   }
-
-   /**
-    * This will add the abstract methods present in a {@link Class} to the specified {@link MethodHolderSource}
-    * 
-    * @param methodHolder the {@link MethodHolderSource} where the methods will be exported
-    * @param source the {@link Class} where the methods will be imported
-    */
-
-   public static MethodSource<?>[] importAbstractMethods(final MethodHolderSource<?> methodHolder,
-            final Class<?> source)
-   {
-      Class<?> currentType = source;
-      List<MethodSource<?>> methods = new ArrayList<MethodSource<?>>();
-      for (Method m : currentType.getMethods())
-      {
-         if (m.getDeclaringClass() == Object.class)
-            continue;
-         if (Modifier.isAbstract(m.getModifiers())
-                  && methodHolder.getMethod(m.getName(), m.getParameterTypes()) == null)
-         {
-            MethodSource<?> newMethod = methodHolder.addMethod(m);
-            methods.add(newMethod);
-         }
-      }
-      return methods.toArray(new MethodSource<?>[methods.size()]);
    }
 }

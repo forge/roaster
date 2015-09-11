@@ -18,7 +18,7 @@ import org.jboss.forge.roaster.model.ast.ModifierAccessor;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
-import org.jboss.forge.roaster.model.util.Refactory;
+import org.jboss.forge.roaster.model.util.Methods;
 import org.jboss.forge.roaster.model.util.Types;
 
 /**
@@ -142,7 +142,7 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
       setSuperType(type);
       if (importAbstractMethods)
       {
-         for (MethodSource<?> methodSource : Refactory.importAbstractMethods(this, type))
+         for (MethodSource<?> methodSource : Methods.addInheritedAbstractMethods(type, this))
          {
             methodSource.addAnnotation(Override.class);
          }
