@@ -111,7 +111,7 @@ public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapa
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       Class<?> type = Enumeration.class;
-      javaClass.implementsInterface(type);
+      javaClass.implementInterface(type);
       Assert.assertThat(javaClass.getMethods().size(), is(2));
       Assert.assertNotNull(javaClass.getMethod("hasMoreElements"));
       Assert.assertNotNull(javaClass.getMethod("nextElement"));

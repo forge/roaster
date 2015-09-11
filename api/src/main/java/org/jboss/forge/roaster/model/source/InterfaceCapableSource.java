@@ -43,7 +43,7 @@ public interface InterfaceCapableSource<T extends JavaSource<T>> extends Interfa
     * 
     * @see Methods#addInheritedAbstractMethods(Class, MethodHolderSource)
     */
-   T implementsInterface(Class<?> type);
+   T implementInterface(Class<?> type);
 
    /**
     * Implements the specified {@link JavaInterface}
