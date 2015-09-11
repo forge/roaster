@@ -137,7 +137,7 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
    }
 
    @Override
-   public JavaClassSource implementSuperType(final Class<?> type)
+   public JavaClassSource extendSuperType(final Class<?> type)
    {
       setSuperType(type);
       for (MethodSource<?> methodSource : Methods.addInheritedAbstractMethods(type, this))

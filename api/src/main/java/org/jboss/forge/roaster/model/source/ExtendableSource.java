@@ -39,7 +39,7 @@ public interface ExtendableSource<O extends JavaType<O>> extends Extendable<O>
     * @see #setSuperType(String)
     * @see Methods#addInheritedAbstractMethods(Class, MethodHolderSource)
     */
-   public O implementSuperType(Class<?> type);
+   public O extendSuperType(Class<?> type);
 
    /**
     * Set this type's super class.
