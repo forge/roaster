@@ -11,6 +11,8 @@ import java.util.List;
 
 import org.jboss.forge.roaster.model.Method;
 import org.jboss.forge.roaster.model.MethodHolder;
+import org.jboss.forge.roaster.model.util.Methods;
+import org.jboss.forge.roaster.model.util.Types;
 
 /**
  * Represents a {@link JavaSource} that may declare methods.
@@ -63,7 +65,16 @@ public interface MethodHolderSource<O extends JavaSource<O>> extends MethodHolde
 
    /**
     * Add a new {@link MethodSource} declaration to this {@link O} instance, using the given
-    * {@link java.lang.reflect.Method} as the method declaration
+    * {@link java.lang.reflect.Method} as the method declaration.
+    * 
+    * Abstract {@link java.lang.reflect.Method} objects are implemented in this method.
+    * 
+    * @param method The {@link java.lang.reflect.Method} to be added
+    * @return the method implementation based on the {@link java.lang.reflect.Method} parameter. The generated method
+    *         body (unless the origin is an interface) returns the default value for the return type as defined in
+    *         {@link Types#getDefaultValue(Class)}.
+    * @see Methods#addInheritedAbstractMethods(Class, MethodHolderSource)
+    * @see Types#getDefaultValue(Class)
     */
    MethodSource<O> addMethod(final java.lang.reflect.Method method);
 
