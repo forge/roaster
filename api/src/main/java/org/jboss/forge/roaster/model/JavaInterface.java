@@ -16,6 +16,9 @@ import org.jboss.forge.roaster.Roaster;
  */
 public interface JavaInterface<O extends JavaInterface<O>> extends
          JavaType<O>,
+         FieldHolder<O>,
+         MethodHolder<O>,
+         InterfaceCapable,
          GenericCapable<O>,
          PropertyHolder<O>,
          TypeHolder<O>,
