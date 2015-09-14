@@ -11,9 +11,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
 import java.util.Vector;
 
-import org.jboss.forge.roaster.model.util.Types;
 import org.junit.Test;
 
 /**
@@ -164,6 +164,27 @@ public class TypesTest
       assertEquals("List<List<String>>", Types.toSimpleName("java.util.List<java.util.List<String>>"));
       assertEquals("List<? extends List<String>>",
                Types.toSimpleName("java.util.List<? extends java.util.List<String>>"));
+   }
+
+   @Test
+   public void testDefaultValuesUsingClass()
+   {
+      assertEquals("null", Types.getDefaultValue(Object.class));
+      assertEquals("null", Types.getDefaultValue(List.class));
+      assertEquals("false", Types.getDefaultValue(boolean.class));
+      assertEquals("0", Types.getDefaultValue(int.class));
+      assertEquals("0", Types.getDefaultValue(char.class));
+   }
+
+   @Test
+   public void testDefaultValuesUsingString()
+   {
+      assertEquals("null", Types.getDefaultValue("Object"));
+      assertEquals("null", Types.getDefaultValue("java.util.List"));
+      assertEquals("false", Types.getDefaultValue("boolean"));
+      assertEquals("false", Types.getDefaultValue(boolean.class.getName()));
+      assertEquals("0", Types.getDefaultValue("int"));
+      assertEquals("0", Types.getDefaultValue("char"));
    }
 
 }

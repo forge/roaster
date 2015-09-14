@@ -95,7 +95,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       {
          setPrivate();
       }
-      // setAbstract(Modifier.isAbstract(mod));
+      setAbstract(Modifier.isAbstract(mod));
       setSynchronized(Modifier.isSynchronized(mod));
       setNative(Modifier.isNative(mod));
       // Set method return type
@@ -117,20 +117,9 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
          addParameter(paramTypes[i], paramNames[i]);
       }
       // Set method body
-      if (getOrigin().isInterface())
+      if (!isAbstract())
       {
-         setBody(null);
-      }
-      else
-      {
-         if (isReturnTypeVoid())
-         {
-            setBody("");
-         }
-         else
-         {
-            setBody("return " + Types.getDefaultValue(reflectMethod.getReturnType()) + ";");
-         }
+         Methods.implementMethod(this);
       }
    }
 

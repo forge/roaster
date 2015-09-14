@@ -435,7 +435,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    public O implementInterface(Class<?> type)
    {
       O obj = addInterface(type);
-      List<MethodSource<?>> methods = Methods.addInheritedAbstractMethods(type, this);
+      List<MethodSource<?>> methods = Methods.addAbstractMethods(type, this);
       for (MethodSource<?> methodSource : methods)
       {
          methodSource.addAnnotation(Override.class);

@@ -24,14 +24,12 @@ public class Methods
 {
 
    /**
-    * This will add the inherited abstract methods present in a {@link Class} to the specified
-    * {@link MethodHolderSource}
+    * This will add the abstract methods present in a {@link Class} to the specified {@link MethodHolderSource}
     * 
-    * @param source the {@link Class} where the methods will be imported
-    * @param target the {@link MethodHolderSource} where the methods will be exported
+    * @param source the {@link Class} where the methods will be imported from
+    * @param target the {@link MethodHolderSource} where the methods will be exported to
     */
-
-   public static List<MethodSource<?>> addInheritedAbstractMethods(final Class<?> source,
+   public static List<MethodSource<?>> addAbstractMethods(final Class<?> source,
             final MethodHolderSource<?> target)
    {
       Class<?> currentType = source;
@@ -44,10 +42,41 @@ public class Methods
                   && target.getMethod(m.getName(), m.getParameterTypes()) == null)
          {
             MethodSource<?> newMethod = target.addMethod(m);
+            implementMethod(newMethod);
             methods.add(newMethod);
          }
       }
       return methods;
+   }
+
+   /**
+    * Adds a default method implementation to the given {@link MethodSource}. This method will call
+    * {@link MethodSource#setAbstract(false)} before setting the body if the origin is not an interface
+    * 
+    * @param source
+    */
+   public static void implementMethod(MethodSource<?> source)
+   {
+      if (source.getOrigin().isInterface())
+      {
+         source.setBody(null);
+      }
+      else
+      {
+         if (source.isNative())
+         {
+            source.setNative(false);
+         }
+         source.setAbstract(false);
+         if (source.isReturnTypeVoid())
+         {
+            source.setBody("");
+         }
+         else
+         {
+            source.setBody("return " + Types.getDefaultValue(source.getReturnType().getName()) + ";");
+         }
+      }
    }
 
    /**

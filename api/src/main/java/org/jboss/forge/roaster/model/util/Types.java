@@ -572,4 +572,31 @@ public class Types
       }
       return result;
    }
+
+   /**
+    * Returns the default value for a given type
+    * 
+    * @param type
+    * @return
+    */
+   public static String getDefaultValue(String type)
+   {
+      final String result;
+      if (Types.isPrimitive(type))
+      {
+         if ("boolean".equals(type) || Boolean.TYPE.getName().equals(type))
+         {
+            result = "false";
+         }
+         else
+         {
+            result = "0";
+         }
+      }
+      else
+      {
+         result = "null";
+      }
+      return result;
+   }
 }
