@@ -29,7 +29,7 @@ public class Methods
     * @param source the {@link Class} where the methods will be imported from
     * @param target the {@link MethodHolderSource} where the methods will be exported to
     */
-   public static List<MethodSource<?>> addAbstractMethods(final Class<?> source,
+   public static List<MethodSource<?>> implementAbstractMethods(final Class<?> source,
             final MethodHolderSource<?> target)
    {
       Class<?> currentType = source;

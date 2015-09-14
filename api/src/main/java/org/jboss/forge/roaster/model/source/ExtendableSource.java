@@ -37,7 +37,7 @@ public interface ExtendableSource<O extends JavaType<O>> extends Extendable<O>
     * Set this type's super class and import their abstract methods, if any.
     * 
     * @see #setSuperType(String)
-    * @see Methods#addAbstractMethods(Class, MethodHolderSource)
+    * @see Methods#implementAbstractMethods(Class, MethodHolderSource)
     */
    public O extendSuperType(Class<?> type);
 
