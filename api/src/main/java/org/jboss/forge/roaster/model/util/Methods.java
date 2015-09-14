@@ -31,7 +31,7 @@ public class Methods
     * @param target the {@link MethodHolderSource} where the methods will be exported
     */
 
-   public static MethodSource<?>[] addInheritedAbstractMethods(final Class<?> source,
+   public static List<MethodSource<?>> addInheritedAbstractMethods(final Class<?> source,
             final MethodHolderSource<?> target)
    {
       Class<?> currentType = source;
@@ -47,7 +47,7 @@ public class Methods
             methods.add(newMethod);
          }
       }
-      return methods.toArray(new MethodSource<?>[methods.size()]);
+      return methods;
    }
 
    /**

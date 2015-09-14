@@ -117,17 +117,19 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
          addParameter(paramTypes[i], paramNames[i]);
       }
       // Set method body
+      if (getOrigin().isInterface())
       {
-         if (!getOrigin().isInterface())
+         setBody(null);
+      }
+      else
+      {
+         if (isReturnTypeVoid())
          {
-            if (!isReturnTypeVoid())
-               setBody("return " + Types.getDefaultValue(reflectMethod.getReturnType()) + ";");
-            else
-               setBody("");
+            setBody("");
          }
          else
          {
-            setBody(null);
+            setBody("return " + Types.getDefaultValue(reflectMethod.getReturnType()) + ";");
          }
       }
    }
