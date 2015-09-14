@@ -13,7 +13,6 @@ import java.util.List;
 
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.Annotation;
-import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.ValuePair;
 import org.jboss.forge.roaster.model.impl.TypeImpl;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
@@ -68,12 +67,12 @@ public class JavaPackageInfoTest
    }
 
    @Test
+   @SuppressWarnings({ "unchecked", "rawtypes" })
    public void testPackageInfoWithImportedAnnotations()
    {
       JavaPackageInfoSource packageInfo = Roaster.create(JavaPackageInfoSource.class);
       packageInfo.setPackage("org.jboss.forge.roaster");
-      Type type = new TypeImpl(packageInfo, null, MyPLAnnotation.class.getName());
-      packageInfo.addImport(type);
+      packageInfo.addImport(new TypeImpl(packageInfo, null, MyPLAnnotation.class.getName()));
       packageInfo.addAnnotation("my.custom.Annotation");
       packageInfo.getEnclosingType();
 
