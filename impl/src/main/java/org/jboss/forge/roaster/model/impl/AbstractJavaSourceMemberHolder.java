@@ -361,6 +361,15 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
 
    @Override
    @SuppressWarnings("unchecked")
+   public MethodSource<O> addMethod(Method<?, ?> method)
+   {
+      MethodSource<O> m = new MethodImpl<O>((O) this, method.toString());
+      getBodyDeclaration().bodyDeclarations().add(m.getInternal());
+      return m;
+   }
+
+   @Override
+   @SuppressWarnings("unchecked")
    public List<MethodSource<O>> getMethods()
    {
       List<MethodSource<O>> result = new ArrayList<MethodSource<O>>();

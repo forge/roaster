@@ -15,6 +15,8 @@ import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaEnumSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
+import org.jboss.forge.roaster.model.source.MethodSource;
+import org.jboss.forge.roaster.model.util.Methods;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -61,6 +63,21 @@ public class MethodImplementationTest
       Assert.assertNotNull(source.getMethod("nextElement"));
       Assert.assertThat(source.getMethod("hasMoreElements").isAbstract(), is(false));
       Assert.assertThat(source.getMethod("nextElement").isAbstract(), is(false));
+   }
+
+   @Test
+   public void testCopyMethod() throws Exception
+   {
+      JavaClassSource source = Roaster.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> method = source.addMethod().setName("foo").setReturnTypeVoid();
+      method.addParameter(String.class, "bar");
+      Methods.implementMethod(method);
+
+      JavaClassSource target = Roaster.create(JavaClassSource.class);
+      target.addMethod(method);
+
+      Assert.assertThat(target.getMethods().size(), is(1));
+      Assert.assertNotNull(source.getMethod("foo", String.class));
    }
 
 }

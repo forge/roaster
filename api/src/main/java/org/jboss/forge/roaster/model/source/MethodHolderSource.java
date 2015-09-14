@@ -76,6 +76,19 @@ public interface MethodHolderSource<O extends JavaSource<O>> extends MethodHolde
    MethodSource<O> addMethod(final java.lang.reflect.Method method);
 
    /**
+    * Add a new {@link MethodSource} declaration to this {@link O} instance, using the given {@link Method} as the
+    * method declaration.
+    * 
+    * Abstract {@link java.lang.reflect.Method} objects are not implemented in this method. See
+    * {@link Methods#implementMethod(MethodSource)} for more information
+    * 
+    * @param method The {@link Method} to be added
+    * @return a {@link MethodSource} declaration based on the {@link java.lang.reflect.Method} parameter.
+    * @see Methods#implementMethod(MethodSource)
+    */
+   MethodSource<O> addMethod(final Method<?, ?> method);
+
+   /**
     * Remove the given {@link MethodSource} declaration from this {@link O} instance, if it exists; otherwise, do
     * nothing.
     */
