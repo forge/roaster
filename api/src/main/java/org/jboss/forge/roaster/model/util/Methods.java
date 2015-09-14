@@ -28,6 +28,7 @@ public class Methods
     * 
     * @param source the {@link Class} where the methods will be imported from
     * @param target the {@link MethodHolderSource} where the methods will be exported to
+    * @return a {@link List} of the implemented methods added to the provided {@link MethodHolderSource}
     */
    public static List<MethodSource<?>> implementAbstractMethods(final Class<?> source,
             final MethodHolderSource<?> target)
@@ -80,7 +81,7 @@ public class Methods
    }
 
    /**
-    * Generate the parameter names of a given {@link Method}
+    * @return the parameter names of a given {@link Method}
     */
    public static String[] generateParameterNames(Class<?>[] parameterTypes)
    {
