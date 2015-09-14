@@ -7,11 +7,12 @@
 
 package org.jboss.forge.roaster.model.util;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jboss.forge.roaster.model.Method;
+import org.jboss.forge.roaster.model.MethodHolder;
 import org.jboss.forge.roaster.model.source.MethodHolderSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 
@@ -22,9 +23,32 @@ import org.jboss.forge.roaster.model.source.MethodSource;
  */
 public class Methods
 {
+   /**
+    * Implement the abstract methods present in a {@link MethodHolder} to the specified {@link MethodHolderSource}
+    * 
+    * @param source the {@link MethodHolder} where the methods will be imported from
+    * @param target the {@link MethodHolderSource} where the methods will be exported to
+    * @return a {@link List} of the implemented methods added to the provided {@link MethodHolderSource}
+    */
+   @SuppressWarnings({ "rawtypes", "unchecked" })
+   public static List<MethodSource<?>> implementAbstractMethods(final MethodHolder<?> source,
+            final MethodHolderSource<?> target)
+   {
+      List<MethodSource<?>> methods = new ArrayList<MethodSource<?>>();
+      for (Method method : source.getMethods())
+      {
+         if (method.isAbstract() && !target.hasMethod(method))
+         {
+            MethodSource<?> newMethod = target.addMethod(method);
+            implementMethod(newMethod);
+            methods.add(newMethod);
+         }
+      }
+      return methods;
+   }
 
    /**
-    * This will add the abstract methods present in a {@link Class} to the specified {@link MethodHolderSource}
+    * Implement the abstract methods present in a {@link Class} to the specified {@link MethodHolderSource}
     * 
     * @param source the {@link Class} where the methods will be imported from
     * @param target the {@link MethodHolderSource} where the methods will be exported to
@@ -33,9 +57,8 @@ public class Methods
    public static List<MethodSource<?>> implementAbstractMethods(final Class<?> source,
             final MethodHolderSource<?> target)
    {
-      Class<?> currentType = source;
       List<MethodSource<?>> methods = new ArrayList<MethodSource<?>>();
-      for (Method m : currentType.getMethods())
+      for (java.lang.reflect.Method m : source.getMethods())
       {
          if (m.getDeclaringClass() == Object.class)
             continue;
@@ -125,4 +148,5 @@ public class Methods
          name.replace(0, i, name.substring(0, i).toLowerCase());
       return name.toString();
    }
+
 }

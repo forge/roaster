@@ -8,6 +8,7 @@
 package org.jboss.forge.roaster.model.source;
 
 import org.jboss.forge.roaster.model.Extendable;
+import org.jboss.forge.roaster.model.JavaClass;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.util.Methods;
 
@@ -40,6 +41,14 @@ public interface ExtendableSource<O extends JavaType<O>> extends Extendable<O>
     * @see Methods#implementAbstractMethods(Class, MethodHolderSource)
     */
    public O extendSuperType(Class<?> type);
+
+   /**
+    * Set this type's super class and import their abstract methods, if any.
+    * 
+    * @see #setSuperType(String)
+    * @see Methods#implementAbstractMethods(Class, MethodHolderSource)
+    */
+   public O extendSuperType(JavaClass<?> type);
 
    /**
     * Set this type's super class.

@@ -13,6 +13,7 @@ import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jface.text.Document;
+import org.jboss.forge.roaster.model.JavaClass;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.ast.ModifierAccessor;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
@@ -138,6 +139,17 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
 
    @Override
    public JavaClassSource extendSuperType(final Class<?> type)
+   {
+      setSuperType(type);
+      for (MethodSource<?> methodSource : Methods.implementAbstractMethods(type, this))
+      {
+         methodSource.addAnnotation(Override.class);
+      }
+      return this;
+   }
+
+   @Override
+   public JavaClassSource extendSuperType(JavaClass<?> type)
    {
       setSuperType(type);
       for (MethodSource<?> methodSource : Methods.implementAbstractMethods(type, this))
