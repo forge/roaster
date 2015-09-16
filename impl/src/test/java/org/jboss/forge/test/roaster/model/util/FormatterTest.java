@@ -7,10 +7,14 @@
 
 package org.jboss.forge.test.roaster.model.util;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.InputStream;
+import java.util.Properties;
 
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.util.Formatter;
 import org.jboss.forge.roaster.spi.Streams;
 import org.jboss.forge.test.roaster.model.FieldAnnotationTest;
@@ -23,6 +27,8 @@ import org.junit.Test;
  */
 public class FormatterTest
 {
+   public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
    private static JavaClassSource javaClass;
 
    private static String content;
@@ -56,5 +62,43 @@ public class FormatterTest
    public void testToUnformattedStringAsOriginalContent()
    {
       Assert.assertEquals(content, javaClass.toUnformattedString());
+   }
+
+   @Test
+   public void testFormatWithJavaDocOptions() throws Exception
+   {
+      // ROASTER-54
+      JavaClassSource source = Roaster.parse(JavaClassSource.class, "public class SomeClass {}");
+      JavaDocSource<JavaClassSource> javaDoc = source.getJavaDoc();
+      javaDoc.setText("Class documentation text");
+      javaDoc.addTagValue("@author", "George Gastaldi");
+
+      String result1 = Formatter.format(source);
+
+      StringBuilder sb1 = new StringBuilder();
+      sb1.append("/**" + LINE_SEPARATOR);
+      sb1.append(" * Class documentation text" + LINE_SEPARATOR);
+      sb1.append(" * " + LINE_SEPARATOR);
+      sb1.append(" * @author George Gastaldi" + LINE_SEPARATOR);
+      sb1.append(" */" + LINE_SEPARATOR);
+      sb1.append("public class SomeClass {" + LINE_SEPARATOR);
+      sb1.append("}");
+      assertEquals(sb1.toString(), result1);
+
+      Properties prefs = new Properties();
+      prefs.put("org.eclipse.jdt.core.formatter.comment.line_length", "25");
+      prefs.put("org.eclipse.jdt.core.formatter.comment.new_lines_at_javadoc_boundaries", "false");
+
+      String result2 = Formatter.format(prefs, source);
+
+      StringBuilder sb2 = new StringBuilder();
+      sb2.append("/** Class documentation" + LINE_SEPARATOR);
+      sb2.append(" * text" + LINE_SEPARATOR);
+      sb2.append(" * " + LINE_SEPARATOR);
+      sb2.append(" * @author George" + LINE_SEPARATOR);
+      sb2.append(" *         Gastaldi */" + LINE_SEPARATOR);
+      sb2.append("public class SomeClass {" + LINE_SEPARATOR);
+      sb2.append("}");
+      assertEquals(sb2.toString(), result2);
    }
 }

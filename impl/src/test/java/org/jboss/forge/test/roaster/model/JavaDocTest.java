@@ -75,6 +75,7 @@ public class JavaDocTest
    {
       String expected = "/**" + LINE_SEPARATOR
                + " * Do Something" + LINE_SEPARATOR
+               + " * " + LINE_SEPARATOR
                + " * @author George Gastaldi" + LINE_SEPARATOR + " */" + LINE_SEPARATOR
                + "public class MyClass {" + LINE_SEPARATOR + "}";
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class).setPublic().setName("MyClass");
@@ -89,6 +90,7 @@ public class JavaDocTest
    {
       String expected = "/**" + LINE_SEPARATOR
                + " * Do Something" + LINE_SEPARATOR
+               + " * " + LINE_SEPARATOR
                + " * @author George Gastaldi" + LINE_SEPARATOR + " */" + LINE_SEPARATOR
                + "public class MyClass {" + LINE_SEPARATOR + "}";
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class).setPublic().setName("MyClass");
