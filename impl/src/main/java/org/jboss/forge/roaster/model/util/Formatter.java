@@ -111,7 +111,7 @@ public abstract class Formatter
       IDocument doc = new Document(source);
       try
       {
-         TextEdit edit = codeFormatter.format(CodeFormatter.K_COMPILATION_UNIT,
+         TextEdit edit = codeFormatter.format(CodeFormatter.K_COMPILATION_UNIT | CodeFormatter.F_INCLUDE_COMMENTS,
                   source, 0, source.length(), 0, null);
          if (edit != null)
          {
