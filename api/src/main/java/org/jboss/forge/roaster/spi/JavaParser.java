@@ -7,6 +7,7 @@
 package org.jboss.forge.roaster.spi;
 
 import java.io.InputStream;
+import java.nio.charset.Charset;
 
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.JavaUnit;
@@ -29,11 +30,23 @@ public interface JavaParser
 
    /**
     * Read the given {@link InputStream} and parse the data into a new {@link JavaUnit} instance.
+    * An encoding by 'System.getProperty("file.encoding", "ISO8859_1")' is used.
     * 
     * @param data to parse
     * @return {@link JavaUnit}, {@code null} if the data format is not recognized by this {@link JavaParser}.
+    * @see #parseUnit(InputStream, Charset)
     */
+   @Deprecated
    JavaUnit parseUnit(final InputStream data);
+
+   /**
+    * Read the given {@link InputStream} and parse the data into a new {@link JavaUnit} instance.
+    * 
+    * @param data to parse
+    * @param encodingIfText encoding used when data is text
+    * @return {@link JavaUnit}, {@code null} if the data format is not recognized by this {@link JavaParser}.
+    */
+   JavaUnit parseUnit(final InputStream data, Charset encodingIfText);
 
    /**
     * Read the given {@link InputStream} and parse the data into a new {@link JavaType} instance.
