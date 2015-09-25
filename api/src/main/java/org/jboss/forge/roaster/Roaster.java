@@ -164,17 +164,8 @@ public final class Roaster
    /**
     * Read the given string and parse its data into a new {@link JavaType} instance of the given type.
     */
-   public static <T extends JavaType<?>> T parse(final Class<T> type, final String data)
-   {
-      return parse(type, Streams.fromString(data));
-   }
-
-   /**
-    * Read the given {@link InputStream} and parse its data into a new {@link JavaType} instance of the given type. The
-    * caller is responsible for closing the stream.
-    */
    @SuppressWarnings("unchecked")
-   public static <T extends JavaType<?>> T parse(final Class<T> type, final InputStream data)
+   public static <T extends JavaType<?>> T parse(final Class<T> type, final String data)
    {
       for (JavaParser parser : getParsers())
       {
@@ -195,18 +186,18 @@ public final class Roaster
    }
 
    /**
-    * Read the given {@link String} and parse its data into a new {@link JavaUnit} instance of the given type.
+    * Read the given {@link InputStream} and parse its data into a new {@link JavaType} instance of the given type. The
+    * caller is responsible for closing the stream.
     */
-   public static JavaUnit parseUnit(final String data)
+   public static <T extends JavaType<?>> T parse(final Class<T> type, final InputStream data)
    {
-      return parseUnit(Streams.fromString(data));
+      return parse(type, Streams.toString(data));
    }
 
    /**
-    * Read the given {@link InputStream} and parse its data into a new {@link JavaUnit} instance of the given type. The
-    * caller is responsible for closing the stream.
+    * Read the given {@link String} and parse its data into a new {@link JavaUnit} instance of the given type.
     */
-   public static JavaUnit parseUnit(final InputStream data)
+   public static JavaUnit parseUnit(final String data)
    {
       for (JavaParser parser : getParsers())
       {
@@ -215,6 +206,15 @@ public final class Roaster
             return unit;
       }
       throw new ParserException("Cannot find JavaParser capable of parsing the requested data");
+   }
+
+   /**
+    * Read the given {@link InputStream} and parse its data into a new {@link JavaUnit} instance of the given type. The
+    * caller is responsible for closing the stream.
+    */
+   public static JavaUnit parseUnit(final InputStream data)
+   {
+      return parseUnit(Streams.toString(data));
    }
 
    /**

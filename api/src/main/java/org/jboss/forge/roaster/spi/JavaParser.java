@@ -6,15 +6,14 @@
  */
 package org.jboss.forge.roaster.spi;
 
-import java.io.InputStream;
-
-import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.JavaUnit;
 import org.jboss.forge.roaster.model.source.JavaSource;
 
 /**
- * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+ * Roaster SPI for parser implementations
  * 
+ * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+ * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
  */
 public interface JavaParser
 {
@@ -28,21 +27,10 @@ public interface JavaParser
    <T extends JavaSource<?>> T create(final Class<T> type);
 
    /**
-    * Read the given {@link InputStream} and parse the data into a new {@link JavaUnit} instance.
+    * Read the given {@link String} and parse the data into a new {@link JavaUnit} instance.
     * 
     * @param data to parse
     * @return {@link JavaUnit}, {@code null} if the data format is not recognized by this {@link JavaParser}.
     */
-   JavaUnit parseUnit(final InputStream data);
-
-   /**
-    * Read the given {@link InputStream} and parse the data into a new {@link JavaType} instance.
-    * 
-    * @param data to parse
-    * @return {@link JavaType}, {@code null} if the data format is not recognized by this {@link JavaParser}.
-    * @deprecated {@link #parseUnit(InputStream)} should be used instead, as the JLS allows several types to be defined
-    *             in a single file
-    */
-   @Deprecated
-   JavaType<?> parse(final InputStream data);
+   JavaUnit parseUnit(final String data);
 }

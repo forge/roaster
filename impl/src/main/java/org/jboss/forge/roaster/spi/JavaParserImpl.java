@@ -7,8 +7,6 @@
 
 package org.jboss.forge.roaster.spi;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +22,6 @@ import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
-import org.eclipse.jdt.internal.compiler.util.Util;
 import org.eclipse.jface.text.Document;
 import org.jboss.forge.roaster.ParserException;
 import org.jboss.forge.roaster.model.JavaType;
@@ -49,33 +46,9 @@ import org.jboss.forge.roaster.model.source.JavaSource;
 public class JavaParserImpl implements JavaParser
 {
 
-   @Override
-   public JavaType<?> parse(final InputStream data)
-   {
-      return parseUnit(data).getGoverningType();
-   }
-
-   @Override
-   public JavaUnit parseUnit(InputStream data)
-   {
-      try
-      {
-         String encoding = System.getProperty("file.encoding", "ISO8859_1");
-         char[] source = Util.getInputStreamAsCharArray(data, data.available(), encoding);
-         return parseUnit(new String(source));
-      }
-      catch (IOException e)
-      {
-         return null;
-      }
-      finally
-      {
-         Streams.closeQuietly(data);
-      }
-   }
-
    @SuppressWarnings({ "rawtypes", "unchecked" })
-   private JavaUnit parseUnit(final String data)
+   @Override
+   public JavaUnit parseUnit(final String data)
    {
       Document document = new Document(data);
       ASTParser parser = ASTParser.newParser(AST.JLS8);
