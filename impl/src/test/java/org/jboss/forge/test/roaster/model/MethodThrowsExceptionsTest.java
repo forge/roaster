@@ -9,6 +9,8 @@ package org.jboss.forge.test.roaster.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ConcurrentModificationException;
+
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
@@ -46,9 +48,9 @@ public class MethodThrowsExceptionsTest
    public void testAddThrowsOne() throws Exception, RuntimeException
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
-               "public void hello(String foo, int bar)").addThrows(Exception.class);
+               "public void hello(String foo, int bar)").addThrows(ConcurrentModificationException.class);
       assertEquals(1, method.getThrownExceptions().size());
-      assertTrue(method.getOrigin().hasImport(Exception.class));
+      assertTrue(method.getOrigin().hasImport(ConcurrentModificationException.class));
    }
 
    @Test
@@ -82,5 +84,13 @@ public class MethodThrowsExceptionsTest
                "public void hello(String foo, int bar) throws Exception, RuntimeException")
                .removeThrows(Exception.class);
       assertEquals(1, method.getThrownExceptions().size());
+   }
+
+   @Test
+   public void testAddThrowsExceptionShouldNotImportJavaLang() throws Exception
+   {
+      JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+      javaClass.addMethod().setName("hello").addThrows(Exception.class);
+      assertEquals(0, javaClass.getImports().size());
    }
 }

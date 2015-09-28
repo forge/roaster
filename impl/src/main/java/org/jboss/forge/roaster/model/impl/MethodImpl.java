@@ -621,22 +621,22 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public MethodSource<O> addThrows(final Class<? extends Exception> type)
    {
-      return addThrows(type.getName());
+      return addThrows(type.getCanonicalName());
    }
 
    @Override
    @SuppressWarnings({ "unchecked", "rawtypes" })
    public MethodSource<O> addThrows(final String type)
    {
-      String packg = Types.getPackage(type);
-      String name = Types.toSimpleName(type);
+      String simpleTypeName = Types.toSimpleName(type);
 
-      if (!packg.isEmpty())
+      O origin = getOrigin();
+      if (!Strings.areEqual(type, simpleTypeName) && origin.requiresImport(type))
       {
-         getOrigin().addImport(type);
+         origin.addImport(type);
       }
 
-      SimpleName simpleName = method.getAST().newSimpleName(name);
+      SimpleName simpleName = method.getAST().newSimpleName(simpleTypeName);
 
       List list = (List) method.getStructuralProperty(MethodDeclaration.THROWN_EXCEPTION_TYPES_PROPERTY);
       list.add(method.getAST().newSimpleType(simpleName));
