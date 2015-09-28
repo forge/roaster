@@ -723,12 +723,6 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    }
 
    @Override
-   public List<JavaSource<?>> getNestedClasses()
-   {
-      return Collections.emptyList();
-   }
-
-   @Override
    public Import addImport(Type<?> type)
    {
       return addImport(type.getQualifiedName());

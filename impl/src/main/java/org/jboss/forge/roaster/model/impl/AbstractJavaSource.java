@@ -885,12 +885,6 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
 
    @Override
-   public List<JavaSource<?>> getNestedClasses()
-   {
-      return getNestedTypes();
-   }
-
-   @Override
    public JavaDocSource<O> getJavaDoc()
    {
       Javadoc javadoc = body.getJavadoc();

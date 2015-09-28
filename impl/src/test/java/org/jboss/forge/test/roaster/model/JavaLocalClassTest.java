@@ -40,7 +40,7 @@ public class JavaLocalClassTest
       {
          if (item instanceof JavaClass)
          {
-            return ((JavaClass) item).isLocalClass();
+            return ((JavaClass<?>) item).isLocalClass();
          }
          return false;
       }

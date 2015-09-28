@@ -897,12 +897,6 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    }
 
    @Override
-   public List<JavaSource<?>> getNestedClasses()
-   {
-      return getNestedTypes();
-   }
-
-   @Override
    public Import addImport(Type<?> type)
    {
       return getEnclosingType().addImport(type);
