@@ -6,6 +6,8 @@
  */
 package org.jboss.forge.test.roaster.model;
 
+import static org.hamcrest.CoreMatchers.is;
+
 import java.util.List;
 import java.util.Map;
 
@@ -299,6 +301,20 @@ public class MethodReturnTypeTest
                .addMethod("public Constructor(){}").setConstructor(true);
       Assert.assertTrue(method.isConstructor());
       Assert.assertTrue(method.isReturnTypeVoid());
+   }
+
+   @Test
+   public void testSetReturnTypeShouldImportClass() throws Exception
+   {
+      final JavaClassSource javaClassSource = Roaster.create(JavaClassSource.class);
+
+      javaClassSource.setPackage("org.agoncal.myproj").setName("MyEndpoint").addAnnotation(Deprecated.class)
+               .setStringValue("/mypath");
+      MethodSource<?> doGet = javaClassSource.addMethod().setPublic().setName("method")
+               .setReturnType(List.class);
+      doGet.setBody("return null;");
+      Assert.assertThat(javaClassSource.hasImport("java.util.List"), is(true));
+      Assert.assertThat(javaClassSource.hasImport(List.class), is(true));
    }
 
 }

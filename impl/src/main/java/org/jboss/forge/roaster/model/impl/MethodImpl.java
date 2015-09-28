@@ -301,7 +301,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public MethodSource<O> setReturnType(final Class<?> type)
    {
-      return setReturnType(type.getSimpleName());
+      return setReturnType(type.getCanonicalName());
    }
 
    @Override
