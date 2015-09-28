@@ -167,4 +167,17 @@ public class JavaDocTest
       Assert.assertEquals(expected, javaDoc.getFullText());
    }
 
+   @Test
+   public void testJavaDocMultiLineShouldNotConcatenateWords() throws Exception
+   {
+      String text = "/**" + LINE_SEPARATOR
+               + "* The country where this currency is used mostly. This field is just for" + LINE_SEPARATOR
+               + "* informational purposes and have no effect on any processing." + LINE_SEPARATOR
+               + "*/" + LINE_SEPARATOR
+               + "public class MyClass{}";
+      JavaClassSource javaClass = Roaster.parse(JavaClassSource.class, text);
+      JavaDocSource<JavaClassSource> javaDoc = javaClass.getJavaDoc();
+      String expected = "The country where this currency is used mostly. This field is just for informational purposes and have no effect on any processing.";
+      Assert.assertEquals(expected, javaDoc.getFullText());
+   }
 }

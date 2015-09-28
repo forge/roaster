@@ -79,10 +79,16 @@ public class JavaDocImpl<O> implements JavaDocSource<O>
       for (TagElement tagElement : tagList)
       {
          if (tagElement.getTagName() != null)
-            text.append(tagElement.getTagName());
-         for (Object fragment : tagElement.fragments())
          {
+            text.append(tagElement.getTagName());
+         }
+         List<Object> fragments = tagElement.fragments();
+         for (Iterator<Object> iterator = fragments.iterator(); iterator.hasNext();)
+         {
+            Object fragment = iterator.next();
             text.append(fragment);
+            if (iterator.hasNext())
+               text.append(' ');
          }
          text.append(System.getProperty("line.separator"));
       }
