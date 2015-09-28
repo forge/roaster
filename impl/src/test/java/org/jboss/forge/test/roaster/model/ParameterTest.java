@@ -48,4 +48,17 @@ public class ParameterTest
       Assert.assertThat(parameter.isFinal(), is(false));
    }
 
+   @Test
+   public void testParameterShouldBeVarargs() throws Exception
+   {
+      JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("TestClass");
+      ParameterSource<JavaClassSource> parameter = clazz.addMethod().setReturnTypeVoid().setName("myMethod")
+               .addParameter(String.class, "parameter").setVarArgs(true);
+      Assert.assertThat(parameter.isVarArgs(), is(true));
+      parameter.setVarArgs(false);
+      Assert.assertThat(parameter.isVarArgs(), is(false));
+      parameter.setVarArgs(true);
+      Assert.assertThat(parameter.isVarArgs(), is(true));
+   }
+
 }

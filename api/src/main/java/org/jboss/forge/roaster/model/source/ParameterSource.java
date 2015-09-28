@@ -18,4 +18,8 @@ import org.jboss.forge.roaster.model.Parameter;
 public interface ParameterSource<O extends JavaSource<O>> extends Parameter<O>,
          AnnotationTargetSource<O, ParameterSource<O>>, FinalCapableSource<ParameterSource<O>>
 {
+   /**
+    * @param variableArity if the parameter should be a var-args parameter
+    */
+   ParameterSource<O> setVarArgs(boolean variableArity);
 }

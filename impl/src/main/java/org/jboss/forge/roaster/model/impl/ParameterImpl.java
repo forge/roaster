@@ -135,6 +135,19 @@ public class ParameterImpl<O extends JavaSource<O>> implements ParameterSource<O
    }
 
    @Override
+   public ParameterSource<O> setVarArgs(boolean variableArity)
+   {
+      param.setVarargs(variableArity);
+      return this;
+   }
+
+   @Override
+   public boolean isVarArgs()
+   {
+      return param.isVarargs();
+   }
+
+   @Override
    public Object getInternal()
    {
       return param;

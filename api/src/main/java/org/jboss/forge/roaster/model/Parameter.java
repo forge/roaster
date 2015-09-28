@@ -14,7 +14,18 @@ package org.jboss.forge.roaster.model;
  */
 public interface Parameter<O extends JavaType<O>> extends AnnotationTarget<O>, FinalCapable
 {
+   /**
+    * @return the name of this parameter
+    */
    String getName();
 
+   /**
+    * @return the type of this parameter
+    */
    Type<O> getType();
+
+   /**
+    * @return if this parameter is declared as varargs (...)
+    */
+   boolean isVarArgs();
 }

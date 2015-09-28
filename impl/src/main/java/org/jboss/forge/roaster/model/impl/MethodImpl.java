@@ -561,10 +561,6 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       return Visibility.set(this, scope);
    }
 
-   /*
-    * Interfaces
-    */
-
    @Override
    public String toString()
    {
