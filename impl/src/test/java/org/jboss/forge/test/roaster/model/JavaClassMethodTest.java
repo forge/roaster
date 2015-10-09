@@ -41,6 +41,43 @@ public class JavaClassMethodTest
    }
 
    @Test
+   public void testGetMethodByString() throws Exception 
+   {
+      javaClass.addMethod("public void random() { }");
+      javaClass.addMethod("public void random(String randomString) { }");
+    
+      MethodSource<JavaClassSource> randomMethod = javaClass.getMethod("random");
+      
+      List<ParameterSource<JavaClassSource>> randomMethodParameters = randomMethod.getParameters();
+      assertEquals(0, randomMethodParameters.size());
+      assertFalse(javaClass.hasMethodSignature(method.getName()));
+      
+      MethodSource<JavaClassSource> randomMethodString = javaClass.getMethod("random", "String");
+      List<ParameterSource<JavaClassSource>> randomMethodStringParameters = randomMethodString.getParameters();
+      assertEquals(1, randomMethodStringParameters.size());
+      assertEquals("String", randomMethodStringParameters.get(0).getType().getName());
+      assertFalse(javaClass.hasMethodSignature(method.getName()));
+   }
+   
+   @Test
+   public void testGetMethodByClass() throws Exception 
+   {
+      javaClass.addMethod("public void random() { }");
+      javaClass.addMethod("public void random(String randomString) { }");
+    
+      MethodSource<JavaClassSource> randomMethod = javaClass.getMethod("random");
+      List<ParameterSource<JavaClassSource>> randomMethodParameters = randomMethod.getParameters();
+      assertEquals(0, randomMethodParameters.size());
+      assertFalse(javaClass.hasMethodSignature(method.getName()));
+      
+      MethodSource<JavaClassSource> randomMethodString = javaClass.getMethod("random", String.class);
+      List<ParameterSource<JavaClassSource>> randomMethodStringParameters = randomMethodString.getParameters();
+      assertEquals(1, randomMethodStringParameters.size());
+      assertEquals("String", randomMethodStringParameters.get(0).getType().getName());
+      assertFalse(javaClass.hasMethodSignature(method.getName()));
+   }
+   
+   @Test
    public void testSetName() throws Exception
    {
       assertEquals("rewriteURL", method.getName());

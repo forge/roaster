@@ -263,7 +263,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
             List<ParameterSource<O>> localParams = local.getParameters();
             if (paramTypes != null)
             {
-               if (localParams.isEmpty() || (localParams.size() == paramTypes.length))
+               if (localParams.size() == paramTypes.length)
                {
                   boolean matches = true;
                   for (int i = 0; i < localParams.size(); i++)
