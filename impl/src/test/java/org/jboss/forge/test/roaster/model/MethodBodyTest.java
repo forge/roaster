@@ -31,6 +31,16 @@ public class MethodBodyTest
    }
 
    @Test
+   public void testMethodBodyWithLambdas() throws Exception
+   {
+      String body = "foo((c) -> System.out::println);";
+      JavaClassSource source = Roaster.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> method = source.addMethod().setName("myMethod").setReturnType(String.class)
+               .setBody(body);
+      Assert.assertEquals(body, method.getBody());
+   }
+
+   @Test
    @Ignore("ROASTER-26")
    public void testSetMethodBodyWithComments() throws Exception
    {
