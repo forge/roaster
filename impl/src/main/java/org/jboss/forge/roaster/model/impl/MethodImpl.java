@@ -380,6 +380,22 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    }
 
    @Override
+   public boolean isDefault()
+   {
+      return modifiers.hasModifier(method, ModifierKeyword.DEFAULT_KEYWORD);
+   }
+
+   @Override
+   public MethodSource<O> setDefault(boolean value)
+   {
+      if (value)
+         modifiers.addModifier(method, ModifierKeyword.DEFAULT_KEYWORD);
+      else
+         modifiers.removeModifier(method, ModifierKeyword.DEFAULT_KEYWORD);
+      return this;
+   }
+
+   @Override
    public boolean isStatic()
    {
       return modifiers.hasModifier(method, ModifierKeyword.STATIC_KEYWORD);

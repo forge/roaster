@@ -23,12 +23,12 @@ public interface Method<O extends JavaType<O>, T extends Method<O, T>> extends A
          Origin<O>
 {
    /**
-    * @return if this method is synchronized
+    * @return <code>true</code> if this method is synchronized
     */
    boolean isSynchronized();
 
    /**
-    * @return true if this method is native
+    * @return <code>true</code> if this method is native
     */
    boolean isNative();
 
@@ -38,7 +38,7 @@ public interface Method<O extends JavaType<O>, T extends Method<O, T>> extends A
    String getBody();
 
    /**
-    * Return true if this {@link Method} is a constructor for the class in which it is defined.
+    * Return <code>true</code> if this {@link Method} is a constructor for the class in which it is defined.
     */
    boolean isConstructor();
 
@@ -66,4 +66,9 @@ public interface Method<O extends JavaType<O>, T extends Method<O, T>> extends A
     * Get a list of qualified (if possible) {@link Exception} class names thrown by this method.
     */
    List<String> getThrownExceptions();
+
+   /**
+    * @return <code>true</code> if this method is declared as default (JDK 8)
+    */
+   boolean isDefault();
 }

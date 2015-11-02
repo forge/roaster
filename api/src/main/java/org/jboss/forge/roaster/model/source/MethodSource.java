@@ -24,6 +24,14 @@ public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodS
          MemberSource<O, MethodSource<O>>, GenericCapableSource<O, MethodSource<O>>
 {
    /**
+    * Sets the <b>default</b> keyword in this method
+    * 
+    * @param value if this method should have the default keywork set
+    * @return the generic element this interface is bound to
+    */
+   MethodSource<O> setDefault(boolean value);
+
+   /**
     * Sets the <b>synchronized</b> keyword in this element.
     * 
     * @param value if this element should be set to synchronized
@@ -34,7 +42,7 @@ public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodS
    /**
     * Sets this method to be <b>native</b>
     * 
-    * <b>IMPORTANT</b>: Setting it to true will remove the method body.
+    * <b>IMPORTANT</b>: Setting it to <code>true</code> will remove the method body.
     */
    MethodSource<O> setNative(boolean value);
 

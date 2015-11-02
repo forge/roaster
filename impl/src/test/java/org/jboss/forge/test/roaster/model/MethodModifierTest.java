@@ -7,10 +7,12 @@
 package org.jboss.forge.test.roaster.model;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.junit.Assert;
 import org.junit.Test;
@@ -43,6 +45,22 @@ public class MethodModifierTest
       String body = "int a=2;";
       method.setNative(false).setBody(body);
       Assert.assertFalse(method.isNative());
+      Assert.assertEquals(body, method.getBody());
+   }
+
+   @Test
+   public void testDefaultModifier() throws Exception
+   {
+      MethodSource<JavaInterfaceSource> method = Roaster.create(JavaInterfaceSource.class).addMethod(
+               "public void test()");
+      Assert.assertFalse(method.isDefault());
+      method.setDefault(true);
+      Assert.assertTrue(method.isDefault());
+      Assert.assertThat(method.toString(), containsString("public default void test()"));
+      Assert.assertThat(method.getBody(), equalTo(""));
+      String body = "int a=2;";
+      method.setDefault(false).setBody(body);
+      Assert.assertFalse(method.isDefault());
       Assert.assertEquals(body, method.getBody());
    }
 
