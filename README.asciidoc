@@ -76,8 +76,8 @@ javaClass.addField()
   .setStatic(true)
   .setFinal(true);
 
-javaClass.addProperty("Integer", "id").setMutable(false);
-javaClass.addProperty("String", "firstName");
+javaClass.addProperty(Integer.class, "id").setMutable(false);
+javaClass.addProperty(String.class, "firstName");
 javaClass.addProperty("String", "lastName");
 
 javaClass.addMethod()
@@ -93,7 +93,6 @@ Will produce:
 package com.company.example;
 
 import java.io.Serializable;
-import java.lang.Integer;
 
 public class Person implements Serializable {
 
@@ -193,7 +192,7 @@ JavaClassSource anotherClass = (JavaClassSource) unit.getTopLevelTypes().get(1);
 Maven Artifacts
 ===============
 
-Download http://search.maven.org/#search%7Cga%7C1%7Cg:%22org.jboss.forge.roaster%22[the latest .jar] or depend via Maven:
+Download http://search.maven.org/#search%7Cga%7C1%7Cg:%22org.jboss.forge.roaster%22[the latest .jar] or dependency via Maven:
 
 ```xml
 <dependency>
