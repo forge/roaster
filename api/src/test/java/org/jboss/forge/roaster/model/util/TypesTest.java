@@ -142,6 +142,7 @@ public class TypesTest
       assertEquals("java.util.Map[][]", Types.stripGenerics("java.util.Map<org.Foo.MyEnum<T>,java.lang.Object>[][]"));
       assertEquals("java.util.Map[]", Types.stripGenerics("java.util.Map<org.foo.String[],T>[]"));
       assertEquals("Map[]", Types.stripGenerics("Map<String,List<Long>>[]"));
+      assertTrue(Types.isGeneric("java.util.Map<java.lang.String,java.util.Map<java.lang.String,java.lang.String>>"));
    }
 
    @Test
