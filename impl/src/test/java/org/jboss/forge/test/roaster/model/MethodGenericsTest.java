@@ -119,4 +119,14 @@ public class MethodGenericsTest
       Assert.assertEquals("Map<org.foo.String[],T>[]", type.toString());
    }
 
+   @Test
+   public void nestedTypedParameter()
+   {
+	   JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+	   MethodSource<JavaClassSource> method = javaClass.addMethod();
+	   method.addParameter("java.util.Map<java.lang.String,java.util.Map<java.lang.String,java.lang.String>>", "map");
+	   Type type = method.getParameters().get(0).getType();
+	   Assert.assertEquals("java.util.Map", type.getQualifiedName());
+   }
+
 }

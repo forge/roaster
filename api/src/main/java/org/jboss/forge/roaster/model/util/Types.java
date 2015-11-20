@@ -298,7 +298,12 @@ public class Types
       StringTokenizer tok = new StringTokenizer(typeArgs, ", ");
       while (tok.hasMoreTokens())
       {
-         if (!validateNameWithGenerics(tok.nextToken()))
+         String typeArg = tok.nextToken();
+         while (incompleteGenerics(typeArg) && tok.hasMoreElements()) {
+            typeArg += tok.nextToken();
+         }
+
+         if (!validateNameWithGenerics(typeArg))
          {
             return false;
          }
@@ -309,6 +314,13 @@ public class Types
    private static boolean validateNameWithGenerics(String name)
    {
       return isGeneric(name) || validateName(name) || WILDCARD_AWARE_TYPE_PATTERN.matcher(name).matches();
+   }
+
+   private static boolean incompleteGenerics(String name)
+   {
+      final int ltCount = name.length() - name.replaceAll("<", "").length();
+      final int gtCount = name.length() - name.replaceAll(">", "").length();
+      return ltCount != gtCount;
    }
 
    private static boolean validateName(String name)
