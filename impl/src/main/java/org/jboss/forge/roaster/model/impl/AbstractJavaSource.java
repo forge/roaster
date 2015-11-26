@@ -672,7 +672,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       int result = 1;
       result = prime * result + ((body == null) ? 0 : body.hashCode());
       result = prime * result + ((document == null) ? 0 : document.hashCode());
-      result = prime * result + ((enclosingType == null) ? 0 : enclosingType.hashCode());
+      result = prime * result + ((enclosingType == null || enclosingType == this) ? 0 : enclosingType.hashCode());
       result = prime * result + ((unit == null) ? 0 : unit.hashCode());
       return result;
    }

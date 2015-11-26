@@ -101,4 +101,10 @@ public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapa
       assertFalse(this.source.hasInterface(Serializable.class));
       assertEquals(2, this.source.getInterfaces().size());
    }
+
+   @Test
+   public void testHashCode() throws Exception
+   {
+      this.source.hashCode();
+   }
 }
