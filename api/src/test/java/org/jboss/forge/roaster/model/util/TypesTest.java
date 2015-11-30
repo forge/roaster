@@ -188,4 +188,9 @@ public class TypesTest
       assertEquals("0", Types.getDefaultValue("char"));
    }
 
+   @Test
+   public void testIsGeneric()
+   {
+      assertTrue(Types.isGeneric("List<Map<String, String>>"));
+   }
 }
