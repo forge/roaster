@@ -87,4 +87,11 @@ public class JavaClassPropertyTest
       assertTrue(source.hasProperty("list3"));
    }
 
+   @Test
+   public void testPrimitiveArrayProperty()
+   {
+      JavaClassSource source = Roaster.create(JavaClassSource.class).setName("MyClass");
+      source.addProperty(byte[].class, "blob");
+      assertTrue(source.hasProperty("blob"));
+   }
 }

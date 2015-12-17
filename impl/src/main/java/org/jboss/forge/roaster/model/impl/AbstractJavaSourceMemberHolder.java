@@ -562,7 +562,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @Override
    public PropertySource<O> addProperty(Class<?> type, String name)
    {
-      return addProperty(type.getName(), name);
+      return addProperty(type.getCanonicalName(), name);
    }
 
    @Override
