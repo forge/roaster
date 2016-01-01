@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.Javadoc;
@@ -45,16 +46,13 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    private AST ast;
    private final FieldDeclaration field;
    private final VariableDeclarationFragment fragment;
-
-   private void init(final O parent)
-   {
-      this.parent = parent;
-      ast = ((ASTNode) parent.getInternal()).getAST();
-   }
+   private final CompilationUnit cu;
 
    public FieldImpl(final O parent)
    {
-      init(parent);
+      this.parent = parent;
+      this.cu = (CompilationUnit) parent.getInternal();
+      this.ast = cu.getAST();
       this.fragment = ast.newVariableDeclarationFragment();
       this.field = ast.newFieldDeclaration(this.fragment);
    }
@@ -67,7 +65,9 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    @SuppressWarnings("unchecked")
    public FieldImpl(final O parent, final Object internal, boolean copy)
    {
-      init(parent);
+      this.parent = parent;
+      this.cu = (CompilationUnit) parent.getInternal();
+      this.ast = cu.getAST();
       if (copy)
       {
          VariableDeclarationFragment newFieldFragment = (VariableDeclarationFragment) internal;
@@ -464,5 +464,29 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
          field.setJavadoc(javadoc);
       }
       return new JavaDocImpl<FieldSource<O>>(this, javadoc);
+   }
+
+   @Override
+   public int getStartPosition()
+   {
+      return field.getStartPosition();
+   }
+
+   @Override
+   public int getEndPosition()
+   {
+      return getStartPosition() + field.getLength();
+   }
+
+   @Override
+   public int getLineNumber()
+   {
+      return cu.getLineNumber(getStartPosition());
+   }
+
+   @Override
+   public int getColumnNumber()
+   {
+      return cu.getColumnNumber(getStartPosition());
    }
 }

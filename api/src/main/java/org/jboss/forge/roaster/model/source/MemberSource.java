@@ -17,6 +17,6 @@ import org.jboss.forge.roaster.model.Member;
  */
 public interface MemberSource<O extends JavaSource<O>, T> extends Member<O>, AnnotationTargetSource<O, T>,
          VisibilityScopedSource<T>, NamedSource<T>, JavaDocCapableSource<T>, FinalCapableSource<T>,
-         StaticCapableSource<T>
+         StaticCapableSource<T>, LocationCapable
 {
 }

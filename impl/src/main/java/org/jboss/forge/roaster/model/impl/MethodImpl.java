@@ -908,4 +908,28 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       }
       return new JavaDocImpl<MethodSource<O>>(this, javadoc);
    }
+
+   @Override
+   public int getStartPosition()
+   {
+      return method.getStartPosition();
+   }
+
+   @Override
+   public int getEndPosition()
+   {
+      return getStartPosition() + method.getLength();
+   }
+
+   @Override
+   public int getLineNumber()
+   {
+      return cu.getLineNumber(getStartPosition());
+   }
+
+   @Override
+   public int getColumnNumber()
+   {
+      return cu.getColumnNumber(getStartPosition());
+   }
 }
