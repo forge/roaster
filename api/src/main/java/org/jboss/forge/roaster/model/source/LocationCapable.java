@@ -26,7 +26,7 @@ public interface LocationCapable
     * Returns the character index into the original source file indicating where the source fragment corresponding to
     * this element ends.
     *
-    * @return a (possibly 0) length, or <code>0</code> if no source position information is recorded for this node
+    * @return the 0-based character index, or -1 if no source position information is recorded for this element
     */
    int getEndPosition();
 

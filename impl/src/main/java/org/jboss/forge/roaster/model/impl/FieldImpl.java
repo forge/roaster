@@ -475,7 +475,8 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    @Override
    public int getEndPosition()
    {
-      return getStartPosition() + field.getLength();
+      int startPosition = getStartPosition();
+      return (startPosition == -1) ? -1 : startPosition + field.getLength();
    }
 
    @Override

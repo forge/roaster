@@ -918,7 +918,8 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public int getEndPosition()
    {
-      return getStartPosition() + method.getLength();
+      int startPosition = getStartPosition();
+      return (startPosition == -1) ? -1 : startPosition + method.getLength();
    }
 
    @Override
