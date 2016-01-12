@@ -127,7 +127,7 @@ public class Methods
    static String toParamName(String type)
    {
       // Special case for java.lang types
-      if (Types.isJavaLang(type))
+      if (Types.isBasicType(type) || Types.isJavaLang(type))
       {
          return String.valueOf(type.charAt(0)).toLowerCase();
       }

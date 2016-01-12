@@ -9,6 +9,7 @@ package org.jboss.forge.test.roaster.model;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 
 import java.util.Enumeration;
 
@@ -18,6 +19,7 @@ import org.jboss.forge.roaster.model.source.JavaEnumSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.util.Methods;
+import org.jboss.forge.test.roaster.model.common.MockInterface;
 import org.jboss.forge.test.roaster.model.common.MockSuperType;
 import org.junit.Assert;
 import org.junit.Test;
@@ -127,6 +129,17 @@ public class MethodImplementationTest
 
       Assert.assertThat(target.getMethods().size(), is(1));
       Assert.assertNotNull(source.getMethod("foo", String.class));
+   }
+
+   @Test
+   public void testJavaClassImplementInterfaceWithReflectedMethods() throws Exception
+   {
+      JavaClassSource source = Roaster.create(JavaClassSource.class);
+      source.implementInterface(MockInterface.class);
+      Assert.assertThat(source.getMethods().size(), is(3));
+      Assert.assertThat(source.getMethod("lookup", String.class, boolean.class), notNullValue());
+      Assert.assertThat(source.getMethod("lookup", int.class, boolean.class), notNullValue());
+      Assert.assertThat(source.getMethod("lookup", int.class, int.class, boolean.class), notNullValue());
    }
 
 }
