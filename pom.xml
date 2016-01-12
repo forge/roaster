@@ -112,7 +112,7 @@
             <inherited>true</inherited>
             <configuration>
                <preparationGoals>clean install</preparationGoals>
-               <releaseProfiles>gpg-sign,jboss-release,release</releaseProfiles>
+               <releaseProfiles>gpg-sign,jboss-release</releaseProfiles>
                <tagNameFormat>@{project.version}</tagNameFormat>
             </configuration>
          </plugin>
