@@ -129,6 +129,12 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    {
       return (O) annotations.removeAnnotation(this, getBodyDeclaration(), annotation);
    }
+   
+   @Override
+   public void removeAnnotations()
+   {
+     annotations.removeAnnotations(getBodyDeclaration());
+   }
 
    @Override
    public AnnotationSource<O> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)

@@ -11,10 +11,16 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jboss.forge.roaster.model.Annotation;
+import org.jboss.forge.roaster.model.AnnotationTarget;
 import org.jboss.forge.roaster.model.Method;
 import org.jboss.forge.roaster.model.MethodHolder;
+import org.jboss.forge.roaster.model.source.AnnotationSource;
+import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MethodHolderSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
+import org.jboss.forge.roaster.model.source.ParameterSource;
 
 /**
  * Utility methods for {@link MethodSource} objects
@@ -41,10 +47,20 @@ public class Methods
          {
             MethodSource<?> newMethod = target.addMethod(method);
             implementMethod(newMethod);
+            removeAnnotations(newMethod);
             methods.add(newMethod);
          }
       }
       return methods;
+   }
+
+   public static void removeAnnotations(final MethodSource<?> source)
+   {
+      source.removeAnnotations();
+      for (ParameterSource<?> parameterSource : source.getParameters())
+      {
+         parameterSource.removeAnnotations();
+      }
    }
 
    /**
@@ -67,6 +83,7 @@ public class Methods
          {
             MethodSource<?> newMethod = target.addMethod(m);
             implementMethod(newMethod);
+            removeAnnotations(newMethod);
             methods.add(newMethod);
          }
       }

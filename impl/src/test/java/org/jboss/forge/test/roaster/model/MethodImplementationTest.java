@@ -10,15 +10,19 @@ package org.jboss.forge.test.roaster.model;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 
 import java.util.Enumeration;
 
+import org.hamcrest.CoreMatchers;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaEnumSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.util.Methods;
+import org.jboss.forge.test.roaster.model.common.MockAnnotatedInterface;
+import org.jboss.forge.test.roaster.model.common.MockAnnotation;
 import org.jboss.forge.test.roaster.model.common.MockInterface;
 import org.jboss.forge.test.roaster.model.common.MockSuperType;
 import org.junit.Assert;
@@ -41,6 +45,21 @@ public class MethodImplementationTest
       Assert.assertThat(source.getMethods().size(), is(1));
       Assert.assertNotNull(source.getMethod("doSomething"));
       Assert.assertThat(source.getMethod("doSomething").isAbstract(), is(false));
+   }
+
+   @Test
+   public void testJavaClassImplementInterfaceWithAnnotation() throws Exception
+   {
+      JavaClassSource source = Roaster.create(JavaClassSource.class);
+      JavaInterfaceSource interfaceSource = Roaster.create(JavaInterfaceSource.class).setName("Bar").setPackage("test");
+      MethodSource<JavaInterfaceSource> method = interfaceSource.addMethod().setName("doSomething");
+      method.addAnnotation(MockAnnotation.class);
+      method.addParameter(String.class, "parameter").addAnnotation(MockAnnotation.class);
+      source.implementInterface(interfaceSource);
+      Assert.assertThat(source.getMethod("doSomething", String.class).getAnnotation(MockAnnotation.class), nullValue());
+      Assert.assertThat(
+               source.getMethod("doSomething", String.class).getParameters().get(0).getAnnotation(MockAnnotation.class),
+               nullValue());
    }
 
    @Test
@@ -67,6 +86,21 @@ public class MethodImplementationTest
       Assert.assertThat(source.getMethods().size(), is(1));
       Assert.assertNotNull(source.getMethod("doSomething"));
       Assert.assertThat(source.getMethod("doSomething").isAbstract(), is(false));
+   }
+
+   @Test
+   public void testJavaEnumImplementInterfaceWithAnnotation() throws Exception
+   {
+      JavaEnumSource source = Roaster.create(JavaEnumSource.class);
+      JavaInterfaceSource interfaceSource = Roaster.create(JavaInterfaceSource.class).setName("Bar").setPackage("test");
+      MethodSource<JavaInterfaceSource> method = interfaceSource.addMethod().setName("doSomething");
+      method.addAnnotation(MockAnnotation.class);
+      method.addParameter(String.class, "parameter").addAnnotation(MockAnnotation.class);
+      source.implementInterface(interfaceSource);
+      Assert.assertThat(source.getMethod("doSomething", String.class).getAnnotation(MockAnnotation.class), nullValue());
+      Assert.assertThat(
+               source.getMethod("doSomething", String.class).getParameters().get(0).getAnnotation(MockAnnotation.class),
+               nullValue());
    }
 
    @Test
@@ -142,6 +176,19 @@ public class MethodImplementationTest
       Assert.assertThat(source.getMethod("lookup", String.class, boolean.class), notNullValue());
       Assert.assertThat(source.getMethod("lookup", int.class, boolean.class), notNullValue());
       Assert.assertThat(source.getMethod("lookup", int.class, int.class, boolean.class), notNullValue());
+   }
+
+   @Test
+   public void testJavaClassImplementInterfaceWithReflectedMethodsWithAnnotation() throws Exception
+   {
+      JavaClassSource source = Roaster.create(JavaClassSource.class);
+      source.implementInterface(MockAnnotatedInterface.class);
+      Assert.assertThat(source.getMethod("lookup", String.class, boolean.class).getAnnotation(MockAnnotation.class),
+               nullValue());
+      Assert.assertThat(source.getMethod("lookup", String.class, boolean.class).getParameters().get(0)
+               .getAnnotation(MockAnnotation.class), nullValue());
+      Assert.assertThat(source.getMethod("lookup", String.class, boolean.class).getParameters().get(1)
+               .getAnnotation(MockAnnotation.class), nullValue());
    }
 
 }
