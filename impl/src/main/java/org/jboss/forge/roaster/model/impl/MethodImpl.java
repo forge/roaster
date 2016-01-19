@@ -37,6 +37,7 @@ import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaDocSource;
+import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
@@ -206,6 +207,12 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    {
       return annotations.removeAnnotation(this, method, annotation);
    }
+   
+   @Override
+   public void removeAnnotations()
+   {
+      annotations.removeAnnotations(method);
+   }
 
    @Override
    public AnnotationSource<O> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
@@ -340,24 +347,28 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public boolean isAbstract()
    {
-      return modifiers.hasModifier(method, ModifierKeyword.ABSTRACT_KEYWORD);
+      return (parent instanceof JavaInterfaceSource) ? true
+               : modifiers.hasModifier(method, ModifierKeyword.ABSTRACT_KEYWORD);
    }
 
    @Override
    public MethodSource<O> setAbstract(final boolean abstrct)
    {
-      if (abstrct)
+      if (!(parent instanceof JavaInterfaceSource))
       {
-         modifiers.addModifier(method, ModifierKeyword.ABSTRACT_KEYWORD);
-         // Abstract methods do not specify a body
-         setBody((String) null);
-      }
-      else
-      {
-         modifiers.removeModifier(method, ModifierKeyword.ABSTRACT_KEYWORD);
-         if (getBody() == null)
+         if (abstrct)
          {
-            setBody("");
+            modifiers.addModifier(method, ModifierKeyword.ABSTRACT_KEYWORD);
+            // Abstract methods do not specify a body
+            setBody((String) null);
+         }
+         else
+         {
+            modifiers.removeModifier(method, ModifierKeyword.ABSTRACT_KEYWORD);
+            if (getBody() == null)
+            {
+               setBody("");
+            }
          }
       }
       return this;

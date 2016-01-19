@@ -7,6 +7,8 @@
 
 package org.jboss.forge.roaster.model.ast;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.ListIterator;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.IExtendedModifier;
+import org.eclipse.jdt.core.dom.MarkerAnnotation;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.jboss.forge.roaster.model.Annotation;
@@ -147,6 +150,29 @@ public class AnnotationAccessor<O extends JavaSource<O>, T>
          }
       }
       return target;
+   }
+
+   public void removeAnnotations(final ASTNode body)
+   {
+      removeAnnotation(getModifiers(body));
+
+   }
+
+   public void removeAnnotations(final SingleVariableDeclaration variableDeclaration)
+   {
+      removeAnnotation(variableDeclaration.modifiers());
+   }
+
+   private void removeAnnotation(final List<?> modifiers)
+   {
+      List<?> modifiersCopy = new ArrayList<Object>(modifiers);
+      for (Object object : modifiersCopy)
+      {
+         if(object instanceof MarkerAnnotation)
+         {
+            modifiers.remove(object);
+         }
+      }
    }
 
    public <E extends AnnotationTargetSource<O, T>> boolean hasAnnotation(final E target, final ASTNode body,
