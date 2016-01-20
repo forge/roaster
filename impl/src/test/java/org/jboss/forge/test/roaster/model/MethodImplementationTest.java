@@ -35,8 +35,9 @@ public class MethodImplementationTest
    {
       JavaClassSource source = Roaster.create(JavaClassSource.class);
       JavaInterfaceSource interfaceSource = Roaster.create(JavaInterfaceSource.class).setName("Bar").setPackage("test");
-      interfaceSource.addMethod().setAbstract(true).setName("doSomething").setReturnTypeVoid();
+      interfaceSource.addMethod().setName("doSomething").setReturnTypeVoid();
       source.implementInterface(interfaceSource);
+      Assert.assertThat(interfaceSource.getMethod("doSomething").isAbstract(), is(true));
       Assert.assertThat(source.getMethods().size(), is(1));
       Assert.assertNotNull(source.getMethod("doSomething"));
       Assert.assertThat(source.getMethod("doSomething").isAbstract(), is(false));
@@ -60,8 +61,9 @@ public class MethodImplementationTest
    {
       JavaEnumSource source = Roaster.create(JavaEnumSource.class);
       JavaInterfaceSource interfaceSource = Roaster.create(JavaInterfaceSource.class).setName("Bar").setPackage("test");
-      interfaceSource.addMethod().setAbstract(true).setName("doSomething").setReturnTypeVoid();
+      interfaceSource.addMethod().setName("doSomething").setReturnTypeVoid();
       source.implementInterface(interfaceSource);
+      Assert.assertThat(interfaceSource.getMethod("doSomething").isAbstract(), is(true));
       Assert.assertThat(source.getMethods().size(), is(1));
       Assert.assertNotNull(source.getMethod("doSomething"));
       Assert.assertThat(source.getMethod("doSomething").isAbstract(), is(false));
