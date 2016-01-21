@@ -206,6 +206,12 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    {
       return annotations.removeAnnotation(this, method, annotation);
    }
+   
+   @Override
+   public void removeAnnotations()
+   {
+      annotations.removeAnnotations(method);
+   }
 
    @Override
    public AnnotationSource<O> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)

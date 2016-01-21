@@ -184,6 +184,12 @@ public class EnumConstantImpl implements EnumConstantSource
    }
 
    @Override
+   public void removeAnnotations()
+   {
+      annotations.removeAnnotations(enumConstant);
+   }
+
+   @Override
    public AnnotationSource<JavaEnumSource> getAnnotation(final Class<? extends java.lang.annotation.Annotation> type)
    {
       return annotations.getAnnotation(this, enumConstant, type);

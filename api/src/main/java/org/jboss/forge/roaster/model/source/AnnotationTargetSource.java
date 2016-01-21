@@ -51,4 +51,9 @@ public interface AnnotationTargetSource<O extends JavaSource<O>, T> extends Anno
     * Remove an annotation instance from this {@link T}.
     */
    T removeAnnotation(Annotation<O> annotation);
+   
+   /**
+    * Remove all annotations instance from this {@link T}.
+    */
+   void removeAnnotations();
 }

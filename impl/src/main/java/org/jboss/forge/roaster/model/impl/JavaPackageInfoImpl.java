@@ -117,6 +117,12 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    }
 
    @Override
+   public void removeAnnotations()
+   {
+      annotations.removeAnnotations(getPackageDeclaration());
+   }
+
+   @Override
    public AnnotationSource<JavaPackageInfoSource> getAnnotation(
             final Class<? extends java.lang.annotation.Annotation> type)
    {

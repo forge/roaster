@@ -149,6 +149,29 @@ public class AnnotationAccessor<O extends JavaSource<O>, T>
       return target;
    }
 
+   public void removeAnnotations(final ASTNode body)
+   {
+      removeAnnotation(getModifiers(body));
+
+   }
+
+   public void removeAnnotations(final SingleVariableDeclaration variableDeclaration)
+   {
+      removeAnnotation(variableDeclaration.modifiers());
+   }
+
+   private void removeAnnotation(final List<?> modifiers)
+   {
+      List<?> modifiersCopy = new ArrayList<Object>(modifiers);
+      for (Object object : modifiersCopy)
+      {
+         if(object instanceof org.eclipse.jdt.core.dom.Annotation)
+         {
+            modifiers.remove(object);
+         }
+      }
+   }
+
    public <E extends AnnotationTargetSource<O, T>> boolean hasAnnotation(final E target, final ASTNode body,
             final String type)
    {

@@ -397,6 +397,12 @@ public class AnnotationElementImpl implements AnnotationElementSource
    {
       return annotations.removeAnnotation(this, member, annotation);
    }
+   
+   @Override
+   public void removeAnnotations()
+   {
+      annotations.removeAnnotations(member);
+   }
 
    @Override
    public String toString()

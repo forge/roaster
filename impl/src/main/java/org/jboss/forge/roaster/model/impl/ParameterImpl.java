@@ -117,6 +117,12 @@ public class ParameterImpl<O extends JavaSource<O>> implements ParameterSource<O
    {
       return annotations.removeAnnotation(this, param, annotation);
    }
+   
+   @Override
+   public void removeAnnotations()
+   {
+     annotations.removeAnnotations(param);
+   }
 
    @Override
    public boolean isFinal()
