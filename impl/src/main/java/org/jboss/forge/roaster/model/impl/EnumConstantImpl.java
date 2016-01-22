@@ -184,9 +184,9 @@ public class EnumConstantImpl implements EnumConstantSource
    }
 
    @Override
-   public void removeAnnotations()
+   public void removeAllAnnotations()
    {
-      annotations.removeAnnotations(enumConstant);
+      annotations.removeAllAnnotations(enumConstant);
    }
 
    @Override

@@ -42,19 +42,19 @@ public class Methods
          {
             MethodSource<?> newMethod = target.addMethod(method);
             implementMethod(newMethod);
-            removeAnnotations(newMethod);
+            removeAllAnnotations(newMethod);
             methods.add(newMethod);
          }
       }
       return methods;
    }
 
-   public static void removeAnnotations(final MethodSource<?> source)
+   public static void removeAllAnnotations(final MethodSource<?> source)
    {
-      source.removeAnnotations();
+      source.removeAllAnnotations();
       for (ParameterSource<?> parameterSource : source.getParameters())
       {
-         parameterSource.removeAnnotations();
+         parameterSource.removeAllAnnotations();
       }
    }
 
@@ -78,7 +78,7 @@ public class Methods
          {
             MethodSource<?> newMethod = target.addMethod(m);
             implementMethod(newMethod);
-            removeAnnotations(newMethod);
+            removeAllAnnotations(newMethod);
             methods.add(newMethod);
          }
       }

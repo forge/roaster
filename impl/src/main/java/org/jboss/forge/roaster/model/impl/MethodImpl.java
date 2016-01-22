@@ -208,9 +208,9 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    }
    
    @Override
-   public void removeAnnotations()
+   public void removeAllAnnotations()
    {
-      annotations.removeAnnotations(method);
+      annotations.removeAllAnnotations(method);
    }
 
    @Override

@@ -399,9 +399,9 @@ public class AnnotationElementImpl implements AnnotationElementSource
    }
    
    @Override
-   public void removeAnnotations()
+   public void removeAllAnnotations()
    {
-      annotations.removeAnnotations(member);
+      annotations.removeAllAnnotations(member);
    }
 
    @Override

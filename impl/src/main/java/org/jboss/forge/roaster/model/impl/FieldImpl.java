@@ -171,9 +171,9 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    }
 
    @Override
-   public void removeAnnotations()
+   public void removeAllAnnotations()
    {
-      annotations.removeAnnotations(field);
+      annotations.removeAllAnnotations(field);
    }
 
    @Override

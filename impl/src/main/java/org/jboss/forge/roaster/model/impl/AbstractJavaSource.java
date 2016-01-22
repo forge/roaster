@@ -131,9 +131,9 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    }
    
    @Override
-   public void removeAnnotations()
+   public void removeAllAnnotations()
    {
-     annotations.removeAnnotations(getBodyDeclaration());
+     annotations.removeAllAnnotations(getBodyDeclaration());
    }
 
    @Override

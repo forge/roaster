@@ -405,7 +405,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    }
 
    @Override
-   public void removeAnnotations()
+   public void removeAllAnnotations()
    {
       // could pass through to enumConstant, but would require then pretending its Annotation was ours
       // which should cause no problem at the moment, but could theoretically do so in the future

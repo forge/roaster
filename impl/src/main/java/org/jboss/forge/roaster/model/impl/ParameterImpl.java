@@ -119,9 +119,9 @@ public class ParameterImpl<O extends JavaSource<O>> implements ParameterSource<O
    }
    
    @Override
-   public void removeAnnotations()
+   public void removeAllAnnotations()
    {
-     annotations.removeAnnotations(param);
+     annotations.removeAllAnnotations(param);
    }
 
    @Override
