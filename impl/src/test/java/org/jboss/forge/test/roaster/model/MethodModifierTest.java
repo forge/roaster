@@ -48,7 +48,7 @@ public class MethodModifierTest
       Assert.assertEquals(body, method.getBody());
    }
 
-   @Test
+   @Test(expected = IllegalStateException.class)
    public void testDefaultModifier() throws Exception
    {
       MethodSource<JavaInterfaceSource> method = Roaster.create(JavaInterfaceSource.class).addMethod(
@@ -60,8 +60,6 @@ public class MethodModifierTest
       Assert.assertThat(method.getBody(), equalTo(""));
       String body = "int a=2;";
       method.setDefault(false).setBody(body);
-      Assert.assertFalse(method.isDefault());
-      Assert.assertEquals(body, method.getBody());
    }
 
    @Test
