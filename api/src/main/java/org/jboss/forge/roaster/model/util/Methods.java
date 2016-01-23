@@ -15,6 +15,7 @@ import org.jboss.forge.roaster.model.Method;
 import org.jboss.forge.roaster.model.MethodHolder;
 import org.jboss.forge.roaster.model.source.MethodHolderSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
+import org.jboss.forge.roaster.model.source.ParameterSource;
 
 /**
  * Utility methods for {@link MethodSource} objects
@@ -41,10 +42,20 @@ public class Methods
          {
             MethodSource<?> newMethod = target.addMethod(method);
             implementMethod(newMethod);
+            removeAllAnnotations(newMethod);
             methods.add(newMethod);
          }
       }
       return methods;
+   }
+
+   public static void removeAllAnnotations(final MethodSource<?> source)
+   {
+      source.removeAllAnnotations();
+      for (ParameterSource<?> parameterSource : source.getParameters())
+      {
+         parameterSource.removeAllAnnotations();
+      }
    }
 
    /**
@@ -67,6 +78,7 @@ public class Methods
          {
             MethodSource<?> newMethod = target.addMethod(m);
             implementMethod(newMethod);
+            removeAllAnnotations(newMethod);
             methods.add(newMethod);
          }
       }
