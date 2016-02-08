@@ -54,7 +54,7 @@ import org.jboss.forge.roaster.spi.JavaParserImpl;
 class EnumConstantBodyImpl implements EnumConstantSource.Body
 {
    private static final String ENUM_CONSTANTS_BODY_ALLOW_ONLY_CLASSES_TO_BE_ADDED = "Enum constants body allow only classes to be added ";
-private final EnumConstantSource enumConstant;
+   private final EnumConstantSource enumConstant;
    private final JavaEnumSource javaEnum;
 
    EnumConstantBodyImpl(EnumConstantSource enumConstant)

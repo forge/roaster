@@ -31,7 +31,7 @@ import org.jboss.forge.roaster.model.util.Assert;
 public class JavaDocImpl<O> implements JavaDocSource<O>
 {
    private static final String TAG_NAME_CANNOT_BE_NULL = "Tag name cannot be null";
-private final O origin;
+   private final O origin;
    private final Javadoc javadoc;
 
    public JavaDocImpl(O origin, Javadoc javadoc)

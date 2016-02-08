@@ -25,7 +25,7 @@ public class Refactory
 {
    private static final String RETURN_FALSE = " return false;";
 
-/**
+    /**
     * Generates a getXXX and setXXX method for the supplied field
     *
     * @param clazz

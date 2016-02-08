@@ -43,10 +43,8 @@ import org.jboss.forge.roaster.model.util.Strings;
 public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSource<O>
 {
    private static final String NULL_VALUE_NOT_ACCEPTED = "null value not accepted";
-
-private static final String NULL_ARRAY_NOT_ACCEPTED = "null array not accepted";
-
-private static final String NULL_NOT_ACCEPTED = "null not accepted";
+   private static final String NULL_ARRAY_NOT_ACCEPTED = "null array not accepted";
+   private static final String NULL_NOT_ACCEPTED = "null not accepted";
 
 private class Nested extends AnnotationImpl<O, T>
    {

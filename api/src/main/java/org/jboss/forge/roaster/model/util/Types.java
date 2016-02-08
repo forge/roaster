@@ -27,7 +27,7 @@ public class Types
 {
    private static final String BOOLEAN = "boolean";
 
-// [B=byte,
+   // [B=byte,
    // [F=float,
    // [C=char,
    // [D=double,
