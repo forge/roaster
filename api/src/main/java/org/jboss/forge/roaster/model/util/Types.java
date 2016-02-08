@@ -25,7 +25,9 @@ import org.jboss.forge.roaster.model.Type;
  */
 public class Types
 {
-   // [B=byte,
+   private static final String BOOLEAN = "boolean";
+
+// [B=byte,
    // [F=float,
    // [C=char,
    // [D=double,
@@ -482,7 +484,7 @@ public class Types
             result = "short";
             break;
          case 'Z':
-            result = "boolean";
+            result = BOOLEAN;
             break;
          case 'L':
             result = matcher.group(2);
@@ -500,7 +502,7 @@ public class Types
 
    public static boolean isPrimitive(final String result)
    {
-      return Arrays.asList("byte", "short", "int", "long", "float", "double", "boolean", "char").contains(result);
+      return Arrays.asList("byte", "short", "int", "long", "float", "double", BOOLEAN, "char").contains(result);
    }
 
    /**
@@ -596,7 +598,7 @@ public class Types
       final String result;
       if (Types.isPrimitive(type))
       {
-         if ("boolean".equals(type) || Boolean.TYPE.getName().equals(type))
+         if (BOOLEAN.equals(type) || Boolean.TYPE.getName().equals(type))
          {
             result = "false";
          }

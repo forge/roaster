@@ -30,7 +30,8 @@ import org.jboss.forge.roaster.model.util.Assert;
 @SuppressWarnings("unchecked")
 public class JavaDocImpl<O> implements JavaDocSource<O>
 {
-   private final O origin;
+   private static final String TAG_NAME_CANNOT_BE_NULL = "Tag name cannot be null";
+private final O origin;
    private final Javadoc javadoc;
 
    public JavaDocImpl(O origin, Javadoc javadoc)
@@ -125,7 +126,7 @@ public class JavaDocImpl<O> implements JavaDocSource<O>
    @Override
    public List<JavaDocTag> getTags(String tagName)
    {
-      Assert.notNull(tagName, "Tag name cannot be null");
+      Assert.notNull(tagName, TAG_NAME_CANNOT_BE_NULL);
       List<JavaDocTag> tags = new ArrayList<JavaDocTag>();
       List<TagElement> tagElements = javadoc.tags();
       for (TagElement tagElement : tagElements)
@@ -174,7 +175,7 @@ public class JavaDocImpl<O> implements JavaDocSource<O>
    @Override
    public JavaDocSource<O> addTagValue(String tagName, String tagValue)
    {
-      Assert.notNull(tagName, "Tag name cannot be null");
+      Assert.notNull(tagName, TAG_NAME_CANNOT_BE_NULL);
       TagElement tagElement = javadoc.getAST().newTagElement();
       TextElement textElement = javadoc.getAST().newTextElement();
 
@@ -197,7 +198,7 @@ public class JavaDocImpl<O> implements JavaDocSource<O>
    @Override
    public JavaDocSource<O> removeTags(String tagName)
    {
-      Assert.notNull(tagName, "Tag name cannot be null");
+      Assert.notNull(tagName, TAG_NAME_CANNOT_BE_NULL);
       List<TagElement> tags = javadoc.tags();
       Iterator<TagElement> iterator = tags.iterator();
       while (iterator.hasNext())

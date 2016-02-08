@@ -23,7 +23,9 @@ import org.jboss.forge.roaster.model.source.MethodSource;
  */
 public class Refactory
 {
-   /**
+   private static final String RETURN_FALSE = " return false;";
+
+/**
     * Generates a getXXX and setXXX method for the supplied field
     *
     * @param clazz
@@ -154,7 +156,7 @@ public class Refactory
                fieldEqualityChecks.append("if (Float.floatToIntBits(").append(fieldName)
                         .append(") != Float.floatToIntBits(other.").append(fieldName)
                         .append(")) { ");
-               fieldEqualityChecks.append(" return false;");
+               fieldEqualityChecks.append(RETURN_FALSE);
                fieldEqualityChecks.append("} ");
 
             }
@@ -163,14 +165,14 @@ public class Refactory
                fieldEqualityChecks.append("if (Double.doubleToLongBits(").append(fieldName)
                         .append(") != Double.doubleToLongBits(other.").append(fieldName)
                         .append(")) { ");
-               fieldEqualityChecks.append(" return false;");
+               fieldEqualityChecks.append(RETURN_FALSE);
                fieldEqualityChecks.append("} ");
             }
             else
             {
                fieldEqualityChecks.append("if (").append(fieldName).append(" != other.").append(fieldName)
                         .append(") { ");
-               fieldEqualityChecks.append(" return false;");
+               fieldEqualityChecks.append(RETURN_FALSE);
                fieldEqualityChecks.append("} ");
             }
          }
