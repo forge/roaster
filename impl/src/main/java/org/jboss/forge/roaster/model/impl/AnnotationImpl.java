@@ -46,7 +46,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    private static final String NULL_ARRAY_NOT_ACCEPTED = "null array not accepted";
    private static final String NULL_NOT_ACCEPTED = "null not accepted";
 
-private class Nested extends AnnotationImpl<O, T>
+   private class Nested extends AnnotationImpl<O, T>
    {
       Nested(AnnotationImpl<O, T> owner)
       {
