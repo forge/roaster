@@ -523,7 +523,7 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    @Override
    public boolean isPackagePrivate()
    {
-      return (!isPublic() && !isPrivate() && !isProtected());
+      return !isPublic() && !isPrivate() && !isProtected();
    }
 
    @Override
