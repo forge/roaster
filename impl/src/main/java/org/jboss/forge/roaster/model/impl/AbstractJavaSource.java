@@ -478,11 +478,11 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    {
       String result = getName();
 
-      JavaType<?> enclosingType = this;
-      while (enclosingType != enclosingType.getEnclosingType())
+      JavaType<?> enclosingTypeLocal = this;
+      while (enclosingTypeLocal != enclosingTypeLocal.getEnclosingType())
       {
-         enclosingType = enclosingType.getEnclosingType();
-         result = enclosingType.getName() + "." + result;
+         enclosingTypeLocal = enclosingTypeLocal.getEnclosingType();
+         result = enclosingTypeLocal.getName() + "." + result;
       }
 
       if (!Strings.isNullOrEmpty(getPackage()))
@@ -501,11 +501,11 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    {
       String result = getName();
 
-      JavaType<?> enclosingType = this;
-      while (enclosingType != enclosingType.getEnclosingType())
+      JavaType<?> enclosingTypeLocal = this;
+      while (enclosingTypeLocal != enclosingTypeLocal.getEnclosingType())
       {
-         enclosingType = enclosingType.getEnclosingType();
-         result = enclosingType.getName() + "$" + result;
+         enclosingTypeLocal = enclosingTypeLocal.getEnclosingType();
+         result = enclosingTypeLocal.getName() + "$" + result;
       }
 
       if (!Strings.isNullOrEmpty(getPackage()))
@@ -640,7 +640,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    @Override
    public String toUnformattedString()
    {
-      Document document = new Document(this.document.get());
+      Document documentLocal = new Document(this.document.get());
 
       try
       {
@@ -648,15 +648,15 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
          Map options = JavaCore.getOptions();
          options.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_7);
          options.put(CompilerOptions.OPTION_Encoding, "UTF-8");
-         TextEdit edit = unit.rewrite(document, options);
-         edit.apply(document);
+         TextEdit edit = unit.rewrite(documentLocal, options);
+         edit.apply(documentLocal);
       }
       catch (Exception e)
       {
          throw new ParserException("Could not modify source: " + unit.toString(), e);
       }
 
-      return document.get();
+      return documentLocal.get();
    }
 
    @Override

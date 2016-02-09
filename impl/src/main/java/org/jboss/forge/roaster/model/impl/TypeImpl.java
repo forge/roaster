@@ -83,17 +83,17 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    @SuppressWarnings("unchecked")
    public List<Type<O>> getTypeArguments()
    {
-      org.eclipse.jdt.core.dom.Type type = this.type;
+      org.eclipse.jdt.core.dom.Type typeLocal = this.type;
 
-      if (type.isArrayType())
+      if (typeLocal.isArrayType())
       {
-         type = ((ArrayType) type).getElementType();
+         typeLocal = ((ArrayType) typeLocal).getElementType();
       }
 
-      if (type instanceof ParameterizedType)
+      if (typeLocal instanceof ParameterizedType)
       {
          List<Type<O>> result = new ArrayList<Type<O>>();
-         List<org.eclipse.jdt.core.dom.Type> arguments = ((ParameterizedType) type).typeArguments();
+         List<org.eclipse.jdt.core.dom.Type> arguments = ((ParameterizedType) typeLocal).typeArguments();
          for (org.eclipse.jdt.core.dom.Type t : arguments)
          {
             result.add(new TypeImpl<O>(origin, this, t));
@@ -269,10 +269,10 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
 
    private int getExtraDimensions()
    {
-      ASTNode parent = type.getParent();
-      if (parent instanceof FieldDeclaration)
+      ASTNode parentLocal = type.getParent();
+      if (parentLocal instanceof FieldDeclaration)
       {
-         for (Object f : ((FieldDeclaration) parent).fragments())
+         for (Object f : ((FieldDeclaration) parentLocal).fragments())
          {
             if (f instanceof VariableDeclarationFragment)
             {
