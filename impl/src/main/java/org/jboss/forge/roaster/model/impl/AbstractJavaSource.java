@@ -561,7 +561,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    @Override
    public boolean isPackagePrivate()
    {
-      return (!isPublic() && !isPrivate() && !isProtected());
+      return !isPublic() && !isPrivate() && !isProtected();
    }
 
    @Override

@@ -37,7 +37,7 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnumSource>
    {
       List<EnumConstantSource> result = new ArrayList<EnumConstantSource>();
 
-      for (Object o : (((EnumDeclaration) getBodyDeclaration()).enumConstants()))
+      for (Object o : ((EnumDeclaration) getBodyDeclaration()).enumConstants())
       {
          EnumConstantDeclaration constant = (EnumConstantDeclaration) o;
          result.add(new EnumConstantImpl(this, constant));

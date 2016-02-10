@@ -139,8 +139,8 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    public String toSignature()
    {
       StringBuilder signature = new StringBuilder();
-      signature.append((Visibility.PACKAGE_PRIVATE.equals(this.getVisibility().scope()) ? "" : this.getVisibility()
-               .scope()));
+      signature.append(Visibility.PACKAGE_PRIVATE.equals(this.getVisibility().scope()) ? "" : this.getVisibility()
+               .scope());
       signature.append(" ");
       signature.append(this.getName()).append("(");
       List<ParameterSource<O>> parameters = this.getParameters();
@@ -519,7 +519,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public boolean isPackagePrivate()
    {
-      return (!isPublic() && !isPrivate() && !isProtected());
+      return !isPublic() && !isPrivate() && !isProtected();
    }
 
    @Override
@@ -747,7 +747,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       {
          if (Strings.areEqual(name, typeParameter.getName().getIdentifier()))
          {
-            return (new TypeVariableImpl<O>(parent, typeParameter));
+            return new TypeVariableImpl<O>(parent, typeParameter);
          }
       }
       return null;

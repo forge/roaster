@@ -136,7 +136,7 @@ public class DesignPatterns
                         .getQualifiedName(), param.getName());
             }
             sb.append(");");
-            for (String o : ((List<String>) method.getThrownExceptions()))
+            for (String o : (List<String>) method.getThrownExceptions())
             {
                decoratorMethod.addThrows(o);
             }
