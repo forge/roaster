@@ -443,12 +443,12 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    {
       String result = getName();
 
-      JavaType<?> enclosingType = this;
-      while (enclosingType != enclosingType.getEnclosingType())
+      JavaType<?> enclosingTypeLocal = this;
+      while (enclosingTypeLocal != enclosingTypeLocal.getEnclosingType())
       {
-         enclosingType = getEnclosingType();
-         result = enclosingType.getEnclosingType().getName() + "." + result;
-         enclosingType = enclosingType.getEnclosingType();
+         enclosingTypeLocal = getEnclosingType();
+         result = enclosingTypeLocal.getEnclosingType().getName() + "." + result;
+         enclosingTypeLocal = enclosingTypeLocal.getEnclosingType();
       }
 
       if (!Strings.isNullOrEmpty(getPackage()))
@@ -462,12 +462,12 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    {
       String result = getName();
 
-      JavaType<?> enclosingType = this;
-      while (enclosingType != enclosingType.getEnclosingType())
+      JavaType<?> enclosingTypeLocal = this;
+      while (enclosingTypeLocal != enclosingTypeLocal.getEnclosingType())
       {
-         enclosingType = getEnclosingType();
-         result = enclosingType.getEnclosingType().getName() + "$" + result;
-         enclosingType = enclosingType.getEnclosingType();
+         enclosingTypeLocal = getEnclosingType();
+         result = enclosingTypeLocal.getEnclosingType().getName() + "$" + result;
+         enclosingTypeLocal = enclosingTypeLocal.getEnclosingType();
       }
 
       if (!Strings.isNullOrEmpty(getPackage()))
@@ -482,10 +482,10 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    @Override
    public String getPackage()
    {
-      PackageDeclaration pkg = unit.getPackage();
-      if (pkg != null)
+      PackageDeclaration pkgLocal = unit.getPackage();
+      if (pkgLocal != null)
       {
-         return pkg.getName().getFullyQualifiedName();
+         return pkgLocal.getName().getFullyQualifiedName();
       }
       else
       {
@@ -602,19 +602,19 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
    @Override
    public String toUnformattedString()
    {
-      Document document = new Document(this.document.get());
+      Document documentLocal = new Document(this.document.get());
 
       try
       {
-         TextEdit edit = unit.rewrite(document, null);
-         edit.apply(document);
+         TextEdit edit = unit.rewrite(documentLocal, null);
+         edit.apply(documentLocal);
       }
       catch (Exception e)
       {
          throw new ParserException("Could not modify source: " + unit.toString(), e);
       }
 
-      return document.get();
+      return documentLocal.get();
    }
 
    @Override
