@@ -53,6 +53,7 @@ import org.jboss.forge.roaster.spi.JavaParserImpl;
 @SuppressWarnings("unchecked")
 class EnumConstantBodyImpl implements EnumConstantSource.Body
 {
+   private static final String ENUM_CONSTANTS_BODY_ALLOW_ONLY_CLASSES_TO_BE_ADDED = "Enum constants body allow only classes to be added ";
    private final EnumConstantSource enumConstant;
    private final JavaEnumSource javaEnum;
 
@@ -402,6 +403,13 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
       // could pass through to enumConstant, but would require then pretending its Annotation was ours
       // which should cause no problem at the moment, but could theoretically do so in the future
       return this;
+   }
+
+   @Override
+   public void removeAllAnnotations()
+   {
+      // could pass through to enumConstant, but would require then pretending its Annotation was ours
+      // which should cause no problem at the moment, but could theoretically do so in the future
    }
 
    @Override
@@ -846,7 +854,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    {
       if (type != JavaClassSource.class)
       {
-         throw new IllegalArgumentException("Enum constants body allow only classes to be added ");
+         throw new IllegalArgumentException(ENUM_CONSTANTS_BODY_ALLOW_ONLY_CLASSES_TO_BE_ADDED);
       }
       JavaSource<?> nestedType = Roaster.create(type);
       return (NESTED_TYPE) addNestedType(nestedType);
@@ -858,7 +866,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
       JavaType<?> source = Roaster.parse(declaration);
       if (!source.isClass())
       {
-         throw new IllegalArgumentException("Enum constants body allow only classes to be added ");
+         throw new IllegalArgumentException(ENUM_CONSTANTS_BODY_ALLOW_ONLY_CLASSES_TO_BE_ADDED);
       }
       JavaSource<?> nestedType = Roaster.parse(JavaSource.class, declaration);
       return (NESTED_TYPE) addNestedType(nestedType);
@@ -881,7 +889,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    {
       if (!type.isClass())
       {
-         throw new IllegalArgumentException("Enum constants body allow only classes to be added ");
+         throw new IllegalArgumentException(ENUM_CONSTANTS_BODY_ALLOW_ONLY_CLASSES_TO_BE_ADDED);
       }
       if (type instanceof AbstractJavaSource)
       {

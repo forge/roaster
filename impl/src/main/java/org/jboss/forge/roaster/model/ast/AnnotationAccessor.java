@@ -9,6 +9,7 @@ package org.jboss.forge.roaster.model.ast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -147,6 +148,30 @@ public class AnnotationAccessor<O extends JavaSource<O>, T>
          }
       }
       return target;
+   }
+
+   public void removeAllAnnotations(final ASTNode body)
+   {
+      removeAllAnnotations(getModifiers(body));
+
+   }
+
+   public void removeAllAnnotations(final SingleVariableDeclaration variableDeclaration)
+   {
+      removeAllAnnotations(variableDeclaration.modifiers());
+   }
+
+   private void removeAllAnnotations(final List<?> modifiers)
+   {
+      Iterator<?> iterator = modifiers.iterator();
+      while (iterator.hasNext())
+      {
+         Object object = iterator.next();
+         if (object instanceof org.eclipse.jdt.core.dom.Annotation)
+         {
+            iterator.remove();
+         }
+      }
    }
 
    public <E extends AnnotationTargetSource<O, T>> boolean hasAnnotation(final E target, final ASTNode body,

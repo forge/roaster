@@ -171,6 +171,12 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    }
 
    @Override
+   public void removeAllAnnotations()
+   {
+      annotations.removeAllAnnotations(field);
+   }
+
+   @Override
    public String toString()
    {
       return field.toString();
@@ -215,7 +221,7 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    @Override
    public boolean isPackagePrivate()
    {
-      return (!isPublic() && !isPrivate() && !isProtected());
+      return !isPublic() && !isPrivate() && !isProtected();
    }
 
    @Override
