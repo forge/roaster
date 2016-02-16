@@ -2,7 +2,7 @@
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.jboss.forge.roaster</groupId>
    <artifactId>roaster-bom</artifactId>
-   <version>2.18.1.Final</version>
+   <version>2.18.2-SNAPSHOT</version>
    <packaging>pom</packaging>
    <name>Forge Roaster - BOM</name>
    <description>
@@ -61,7 +61,7 @@
       <connection>scm:git:git://github.com/forge/roaster.git</connection>
       <developerConnection>scm:git:git@github.com:forge/roaster.git</developerConnection>
       <url>http://github.com/forge/roaster</url>
-      <tag>2.18.1.Final</tag>
+      <tag>HEAD</tag>
    </scm>
 
    <distributionManagement>
