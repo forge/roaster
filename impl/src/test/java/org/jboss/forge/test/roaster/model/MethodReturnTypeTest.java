@@ -14,6 +14,7 @@ import java.util.Map;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.junit.Assert;
 import org.junit.Test;
@@ -315,6 +316,21 @@ public class MethodReturnTypeTest
       doGet.setBody("return null;");
       Assert.assertThat(javaClassSource.hasImport("java.util.List"), is(true));
       Assert.assertThat(javaClassSource.hasImport(List.class), is(true));
+   }
+
+   @Test
+   public void testReturnTypeShouldKeepGenerics() throws Exception
+   {
+      JavaInterfaceSource ifSource = Roaster.create(JavaInterfaceSource.class);
+      ifSource.setPackage("poc.test.bug");
+      MethodSource<JavaInterfaceSource> method = ifSource.addMethod()
+               .setReturnType("com.google.common.collect.ListMultimap<java.lang.Integer,poc.test.Test3>")
+               .setName("getMap");
+      Assert.assertTrue("com.google.common.collect.ListMultimap should have been imported",
+               ifSource.hasImport("com.google.common.collect.ListMultimap"));
+      Assert.assertTrue("Test3 should have been imported", ifSource.hasImport("poc.test.Test3"));
+      Assert.assertEquals("com.google.common.collect.ListMultimap<Integer,Test3>",
+               method.getReturnType().getQualifiedNameWithGenerics());
    }
 
 }

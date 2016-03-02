@@ -45,6 +45,8 @@ public class Types
    private static final Pattern WILDCARD_AWARE_TYPE_PATTERN = Pattern
             .compile("\\?|^\\s*(\\?\\s+(?:extends|super)\\s+)?([A-Za-z$_]\\S*)\\s*$");
 
+   private static final Pattern GENERIC_TYPE_PATTERN = Pattern.compile("<|>|,");
+
    private static final List<String> LANG_TYPES = Arrays.asList(
             // Interfaces
             "Appendable",
@@ -199,9 +201,10 @@ public class Types
       if (isGeneric(type))
       {
          final List<String> simpleParameters = new ArrayList<String>();
-         for (String typeParameter : getGenericsTypeParameter(type).split(", "))
+         for (String typeParameter : getGenericsTypeParameter(type).split(","))
          {
             String simpleType;
+            typeParameter = typeParameter.trim();
             if ("?".equals(typeParameter))
             {
                simpleType = typeParameter;
@@ -222,7 +225,7 @@ public class Types
             }
             simpleParameters.add(simpleType);
          }
-         result += new StringBuilder("<>").insert(1, Strings.join(simpleParameters, ", ")).toString();
+         result += new StringBuilder("<>").insert(1, Strings.join(simpleParameters, ",")).toString();
       }
       return result;
    }
@@ -301,7 +304,8 @@ public class Types
       while (tok.hasMoreTokens())
       {
          String typeArg = tok.nextToken();
-         while (incompleteGenerics(typeArg) && tok.hasMoreElements()) {
+         while (incompleteGenerics(typeArg) && tok.hasMoreElements())
+         {
             typeArg += tok.nextToken();
          }
 
@@ -612,5 +616,23 @@ public class Types
          result = "null";
       }
       return result;
+   }
+
+   /**
+    * 
+    * Returns the available generics as a String array
+    * 
+    * @param typeName
+    * @return
+    */
+   public static String[] splitGenerics(String typeName)
+   {
+      int begin = typeName.indexOf('<');
+      int end = typeName.indexOf('>');
+      if (begin == -1 || end == -1)
+      {
+         return new String[0];
+      }
+      return GENERIC_TYPE_PATTERN.split(typeName.substring(begin + 1, end));
    }
 }

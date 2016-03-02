@@ -7,6 +7,7 @@
 
 package org.jboss.forge.roaster.model.util;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -192,5 +193,11 @@ public class TypesTest
    public void testIsGeneric()
    {
       assertTrue(Types.isGeneric("List<Map<String, String>>"));
+   }
+
+   @Test
+   public void testSplitGenerics()
+   {
+      assertArrayEquals(new String[] { "String", "Integer" }, Types.splitGenerics("Foo<String,Integer>"));
    }
 }

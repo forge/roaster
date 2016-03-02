@@ -206,7 +206,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    {
       return annotations.removeAnnotation(this, method, annotation);
    }
-   
+
    @Override
    public void removeAllAnnotations()
    {
@@ -325,6 +325,13 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       if (!Strings.areEqual(typeName, simpleName) && origin.requiresImport(typeName))
       {
          origin.addImport(typeName);
+      }
+      for (String genericType : Types.splitGenerics(typeName))
+      {
+         if (origin.requiresImport(genericType))
+         {
+            origin.addImport(genericType);
+         }
       }
       String stub = "public class Stub { public " + simpleName + " method() {} }";
       JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
