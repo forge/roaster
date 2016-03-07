@@ -4,11 +4,11 @@
       <groupId>org.jboss</groupId>
       <artifactId>jboss-parent</artifactId>
       <version>19</version>
-      <relativePath/>
+      <relativePath />
    </parent>
    <groupId>org.jboss.forge.roaster</groupId>
    <artifactId>roaster-bom</artifactId>
-   <version>2.18.3-SNAPSHOT</version>
+   <version>2.18.3.Final</version>
    <packaging>pom</packaging>
    <name>Forge Roaster - BOM</name>
    <description>
@@ -67,7 +67,7 @@
       <connection>scm:git:git://github.com/forge/roaster.git</connection>
       <developerConnection>scm:git:git@github.com:forge/roaster.git</developerConnection>
       <url>http://github.com/forge/roaster</url>
-      <tag>HEAD</tag>
+      <tag>2.18.3.Final</tag>
    </scm>
 
    <distributionManagement>
