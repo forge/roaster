@@ -22,6 +22,7 @@ import java.util.Properties;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.ToolFactory;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
+import org.eclipse.jdt.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
@@ -178,6 +179,8 @@ public abstract class Formatter
       properties.setProperty(JavaCore.COMPILER_SOURCE, CompilerOptions.VERSION_1_8);
       properties.setProperty(JavaCore.COMPILER_COMPLIANCE, CompilerOptions.VERSION_1_8);
       properties.setProperty(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, CompilerOptions.VERSION_1_8);
+      // ROASTER-96: Add a blank line after imports. "1" is equivalent to TRUE in the formatter XML file
+      properties.setProperty(DefaultCodeFormatterConstants.FORMATTER_BLANK_LINES_AFTER_IMPORTS, "1");
       return properties;
    }
 

@@ -9,6 +9,8 @@ package org.jboss.forge.test.roaster.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.annotation.Documented;
+
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.junit.BeforeClass;
@@ -32,6 +34,20 @@ public class JavaClassCreationTest
    {
       assertEquals("JavaClass", jc.getName());
       assertTrue(jc.isPublic());
+   }
+
+   @Test
+   public void testImportStatementHasEmptyLineBeforeClassDeclaration() throws Exception
+   {
+      String expected = "package org.foo;\n" +
+               "\n" +
+               "import java.lang.annotation.Documented;\n\n" +
+               "@Documented\n" +
+               "public class JavaClass {\n" +
+               "}";
+
+      jc.setPackage("org.foo").addAnnotation(Documented.class);
+      assertEquals(expected, jc.toString());
    }
 
 }
