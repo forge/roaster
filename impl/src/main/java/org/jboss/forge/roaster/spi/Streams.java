@@ -31,7 +31,7 @@ public abstract class Streams
       StringBuilder out = new StringBuilder();
       try
       {
-         final char[] buffer = new char[0x10000];
+         final char[] buffer = new char[8192];
          Reader in = new InputStreamReader(stream, "UTF-8");
          int read;
          do
@@ -59,7 +59,7 @@ public abstract class Streams
    {
       try
       {
-         final byte[] buffer = new byte[0x10000];
+         final byte[] buffer = new byte[8192];
          int read;
          do
          {
