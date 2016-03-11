@@ -368,10 +368,9 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       }
 
       // No import matches and no wild-card/on-demand import matches means this class is in the same package.
-      if (Types.isSimpleName(result))
+      if (Types.isSimpleName(result) && getPackage() != null)
       {
-         if (getPackage() != null)
-            result = getPackage() + "." + result;
+         result = getPackage() + "." + result;
       }
 
       return result;
@@ -387,7 +386,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
             resolvers.add(r);
          }
       }
-      if (resolvers.size() == 0)
+      if (resolvers.isEmpty())
       {
          throw new IllegalStateException("No instances of [" + WildcardImportResolver.class.getName()
                   + "] were found on the classpath.");
