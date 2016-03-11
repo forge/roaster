@@ -207,9 +207,9 @@ public class Strings
          m = t.length();
       }
 
-      int p[] = new int[n + 1]; // 'previous' cost array, horizontally
-      int d[] = new int[n + 1]; // cost array, horizontally
-      int _d[]; // placeholder to assist in swapping p and d
+      int[] p = new int[n + 1]; // 'previous' cost array, horizontally
+      int[] d = new int[n + 1]; // cost array, horizontally
+      int[] _d; // placeholder to assist in swapping p and d
 
       // indexes into strings s and t
       int i; // iterates through s
@@ -347,9 +347,9 @@ public class Strings
          m = t.length();
       }
 
-      int p[] = new int[n + 1]; // 'previous' cost array, horizontally
-      int d[] = new int[n + 1]; // cost array, horizontally
-      int _d[]; // placeholder to assist in swapping p and d
+      int[] p = new int[n + 1]; // 'previous' cost array, horizontally
+      int[] d = new int[n + 1]; // cost array, horizontally
+      int[] _d; // placeholder to assist in swapping p and d
 
       // fill in starting table values
       int boundary = Math.min(n, threshold) + 1;
