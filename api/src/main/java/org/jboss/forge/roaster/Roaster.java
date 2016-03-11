@@ -31,6 +31,8 @@ import org.jboss.forge.roaster.spi.JavaParser;
  */
 public final class Roaster
 {
+   private Roaster() {}
+
    private static List<JavaParser> parsers;
    private static List<FormatterProvider> formatters;
 
@@ -46,7 +48,7 @@ public final class Roaster
                parsers.add(p);
             }
          }
-         if (parsers.size() == 0)
+         if (parsers.isEmpty())
          {
             throw new IllegalStateException("No instances of [" + JavaParser.class.getName()
                      + "] were found on the classpath.");
@@ -67,7 +69,7 @@ public final class Roaster
                formatters.add(p);
             }
          }
-         if (formatters.size() == 0)
+         if (formatters.isEmpty())
          {
             throw new IllegalStateException("No instances of [" + FormatterProvider.class.getName()
                      + "] were found on the classpath.");
@@ -173,8 +175,7 @@ public final class Roaster
 
          if (type.isInstance(unit.getGoverningType()))
          {
-            final T result = (T) unit.getGoverningType();
-            return result;
+            return (T) unit.getGoverningType();
          }
          else if (unit != null)
          {
