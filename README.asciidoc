@@ -227,7 +227,7 @@ Related / Similar projects
 
 For the writer part:
 
-* https://github.com/square/javawriter[square/javawriter]
+* https://github.com/square/javapoet[square/javapoet]
 
 
 License
