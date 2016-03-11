@@ -24,6 +24,8 @@ import org.jboss.forge.roaster.model.source.ParameterSource;
  */
 public class Methods
 {
+   private Methods() {}
+
    /**
     * Implement the abstract methods present in a {@link MethodHolder} to the specified {@link MethodHolderSource}
     * 

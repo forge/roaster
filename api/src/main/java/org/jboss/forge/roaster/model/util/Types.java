@@ -151,6 +151,8 @@ public class Types
             "SafeVarargs",
             "SuppressWarnings");
 
+   private Types() {}
+
    public static boolean areEquivalent(String left, String right)
    {
       if ((left == null) && (right == null))

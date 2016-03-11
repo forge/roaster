@@ -28,6 +28,8 @@ import org.jboss.forge.roaster.model.source.PropertySource;
  */
 public class DesignPatterns
 {
+   private DesignPatterns() {}
+
    /**
     * Creates a class based on the Builder Design pattern.
     * 

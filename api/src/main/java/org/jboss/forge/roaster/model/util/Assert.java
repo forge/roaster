@@ -12,6 +12,8 @@ package org.jboss.forge.roaster.model.util;
  */
 public class Assert
 {
+   private Assert() {}
+
    public static void isTrue(boolean condition, String message)
    {
       if (!condition)
