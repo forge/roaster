@@ -161,7 +161,7 @@ public class AnnotationAccessor<O extends JavaSource<O>, T>
       removeAllAnnotations(variableDeclaration.modifiers());
    }
 
-   private void removeAllAnnotations(final List<?> modifiers)
+   private static void removeAllAnnotations(final List<?> modifiers)
    {
       Iterator<?> iterator = modifiers.iterator();
       while (iterator.hasNext())
@@ -244,7 +244,7 @@ public class AnnotationAccessor<O extends JavaSource<O>, T>
       return null;
    }
 
-   private List<?> getModifiers(final ASTNode body)
+   private static List<?> getModifiers(final ASTNode body)
    {
       if (body instanceof BodyDeclaration)
       {
