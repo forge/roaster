@@ -51,7 +51,8 @@ public class MethodImplementationTest
    {
       JavaClassSource source = Roaster.create(JavaClassSource.class);
       JavaInterfaceSource interfaceSource = Roaster.create(JavaInterfaceSource.class).setName("Bar").setPackage("test");
-      MethodSource<JavaInterfaceSource> interfaceMethod = interfaceSource.addMethod().setAbstract(true).setName("doSomething");
+      MethodSource<JavaInterfaceSource> interfaceMethod = interfaceSource.addMethod().setAbstract(true)
+               .setName("doSomething");
       interfaceMethod.addAnnotation(MockAnnotation.class);
       interfaceMethod.addParameter(String.class, "parameter").addAnnotation(MockAnnotation.class);
       source.implementInterface(interfaceSource);
@@ -91,7 +92,8 @@ public class MethodImplementationTest
    {
       JavaEnumSource source = Roaster.create(JavaEnumSource.class);
       JavaInterfaceSource interfaceSource = Roaster.create(JavaInterfaceSource.class).setName("Bar").setPackage("test");
-      MethodSource<JavaInterfaceSource> interfaceMethod = interfaceSource.addMethod().setAbstract(true).setName("doSomething");
+      MethodSource<JavaInterfaceSource> interfaceMethod = interfaceSource.addMethod().setAbstract(true)
+               .setName("doSomething");
       interfaceMethod.addAnnotation(MockAnnotation.class);
       interfaceMethod.addParameter(String.class, "parameter").addAnnotation(MockAnnotation.class);
       source.implementInterface(interfaceSource);
@@ -189,6 +191,20 @@ public class MethodImplementationTest
                .getAnnotation(MockAnnotation.class), nullValue());
       Assert.assertThat(source.getMethod("lookup", String.class, boolean.class).getParameters().get(1)
                .getAnnotation(MockAnnotation.class), nullValue());
+   }
+
+   @Test
+   public void testJavaClassSourceImplementJavaInterfaceSourceMethods() throws Exception
+   {
+      JavaInterfaceSource javaInterface = Roaster.create(JavaInterfaceSource.class);
+      javaInterface.setPackage("foo");
+      javaInterface.addMethod().setName("bar");
+      javaInterface.addMethod().setName("aDefaultMethod").setDefault(true).setReturnTypeVoid();
+
+      JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+      javaClass.implementInterface(javaInterface);
+
+      Assert.assertThat(javaClass.getMethods().size(), equalTo(1));
    }
 
 }
