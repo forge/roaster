@@ -90,7 +90,7 @@ public class ModifierAccessor
    }
 
    @SuppressWarnings("unchecked")
-   private List<Modifier> getInternalModifiers(final ASTNode body)
+   private static List<Modifier> getInternalModifiers(final ASTNode body)
    {
       if (body instanceof BodyDeclaration)
       {

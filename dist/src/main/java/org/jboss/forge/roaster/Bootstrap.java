@@ -139,7 +139,7 @@ public class Bootstrap
       }
    }
 
-   private String help()
+   private static String help()
    {
       StringBuilder sb = new StringBuilder();
       sb.append("Usage: roaster [OPTION]... FILES ... \n");
