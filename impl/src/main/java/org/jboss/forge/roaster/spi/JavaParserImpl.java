@@ -21,7 +21,6 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jface.text.Document;
 import org.jboss.forge.roaster.ParserException;
 import org.jboss.forge.roaster.model.JavaType;
@@ -55,8 +54,8 @@ public class JavaParserImpl implements JavaParser
 
       parser.setSource(document.get().toCharArray());
       Map options = JavaCore.getOptions();
-      options.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_8);
-      options.put(CompilerOptions.OPTION_Encoding, "UTF-8");
+      options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
+      options.put(JavaCore.CORE_ENCODING, "UTF-8");
       parser.setCompilerOptions(options);
 
       parser.setResolveBindings(true);
