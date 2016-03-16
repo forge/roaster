@@ -196,7 +196,6 @@ public class JavaDocTest
                         "        return actual;\n" +
                         "    }}");
       MethodSource<JavaClassSource> method = src.getMethods().get(0);
-      System.out.println(method.getJavaDoc().getFullText());// looks not ok
       Assert.assertEquals(
                "Creates a new instance of CLASS\n@param actual the actual value.\n@return the modified text",
                method.getJavaDoc().getFullText());

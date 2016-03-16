@@ -62,6 +62,7 @@
       <module>impl</module>
       <module>bom</module>
       <module>dist</module>
+      <module>tests</module>
    </modules>
    <dependencyManagement>
       <dependencies>

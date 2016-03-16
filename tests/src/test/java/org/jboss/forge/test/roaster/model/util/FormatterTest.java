@@ -89,6 +89,9 @@ public class FormatterTest
       prefs.put("org.eclipse.jdt.core.formatter.comment.line_length", "25");
       prefs.put("org.eclipse.jdt.core.formatter.comment.new_lines_at_javadoc_boundaries", "false");
 
+      // TODO: Should we explicitly do that before calling the format method?
+      prefs = Formatter.applyShadedPackageName(prefs);
+
       String result2 = Formatter.format(prefs, source);
 
       StringBuilder sb2 = new StringBuilder();
