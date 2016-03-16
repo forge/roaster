@@ -44,10 +44,9 @@ public class MethodBodyTest
    @Ignore("ROASTER-26")
    public void testSetMethodBodyWithComments() throws Exception
    {
-      String body = "//TODO comments\n return null;";
-      JavaClassSource source = Roaster.create(JavaClassSource.class);
-      MethodSource<JavaClassSource> method = source.addMethod().setName("myMethod").setReturnType(String.class)
-               .setBody(body);
-      Assert.assertEquals(body, method.getBody());
+      String data = "public class Foo { Object bar() {\n//TODO comments\n return null;}}";
+      JavaClassSource source = Roaster.parse(JavaClassSource.class, data);
+      MethodSource<JavaClassSource> method = source.getMethod("bar");
+      Assert.assertEquals("//TODO comments\n return null;", method.getBody());
    }
 }
