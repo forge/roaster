@@ -180,4 +180,26 @@ public class JavaDocTest
       String expected = "The country where this currency is used mostly. This field is just for informational purposes and have no effect on any processing.";
       Assert.assertEquals(expected, javaDoc.getFullText());
    }
+
+   @Test
+   public void testJavaDocFullTextShouldFormatParamWithSpace() throws Exception
+   {
+      JavaClassSource src = Roaster.parse(JavaClassSource.class,
+               "package issue;\npublic class Issue { \n" +
+                        "   /**\n" +
+                        "     * Creates a new instance of CLASS\n" +
+                        "     *\n" +
+                        "     * @param actual the actual value.\n" +
+                        "     * @return the modified text\n" +
+                        "     */\n" +
+                        "    public static String someMethod(String actual) {\n" +
+                        "        return actual;\n" +
+                        "    }}");
+      MethodSource<JavaClassSource> method = src.getMethods().get(0);
+      System.out.println(method.getJavaDoc().getFullText());// looks not ok
+      Assert.assertEquals(
+               "Creates a new instance of CLASS\n@param actual the actual value.\n@return the modified text",
+               method.getJavaDoc().getFullText());
+   }
+
 }
