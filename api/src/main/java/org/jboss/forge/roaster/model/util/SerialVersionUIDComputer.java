@@ -78,7 +78,7 @@ public class SerialVersionUIDComputer
             }
          }
          dout.flush();
-         System.out.println(bout);
+
          MessageDigest md = MessageDigest.getInstance("SHA");
          byte[] hashBytes = md.digest(bout.toByteArray());
          long hash = 0;
