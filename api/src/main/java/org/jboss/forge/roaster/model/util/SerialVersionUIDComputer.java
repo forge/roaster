@@ -90,7 +90,7 @@ public class SerialVersionUIDComputer
       }
       catch (IOException ex)
       {
-         throw new InternalError(ex);
+         throw new RuntimeException("Error while calculating serialVersionUID", ex);
       }
       catch (NoSuchAlgorithmException ex)
       {
