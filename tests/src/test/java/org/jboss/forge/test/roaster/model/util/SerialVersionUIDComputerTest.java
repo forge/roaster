@@ -39,6 +39,7 @@ public class SerialVersionUIDComputerTest
       type.addField().setType(String.class).setName("bar");
       long result = 8297639620252560729L;
       Assert.assertEquals(result, SerialVersionUIDComputer.compute(type));
+      Assert.assertEquals(result, SerialVersionUIDComputer.compute(type));
    }
 
    @Test
@@ -48,6 +49,7 @@ public class SerialVersionUIDComputerTest
       type.addMethod().setName("foo");
       type.addField().setType(String.class).setName("bar");
       long result = 6931690417956417438L;
+      Assert.assertEquals(result, SerialVersionUIDComputer.compute(type));
       Assert.assertEquals(result, SerialVersionUIDComputer.compute(type));
    }
 }
