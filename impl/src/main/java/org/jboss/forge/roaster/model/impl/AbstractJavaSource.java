@@ -129,11 +129,11 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    {
       return (O) annotations.removeAnnotation(this, getBodyDeclaration(), annotation);
    }
-   
+
    @Override
    public void removeAllAnnotations()
    {
-     annotations.removeAllAnnotations(getBodyDeclaration());
+      annotations.removeAllAnnotations(getBodyDeclaration());
    }
 
    @Override
@@ -452,6 +452,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       return getBodyDeclaration().getName().getIdentifier();
    }
 
+   @SuppressWarnings("rawtypes")
    @Override
    public O setName(final String name)
    {

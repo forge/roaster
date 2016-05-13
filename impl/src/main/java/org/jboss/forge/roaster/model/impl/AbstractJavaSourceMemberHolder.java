@@ -437,7 +437,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @Override
    public O addInterface(final Class<?> type)
    {
-      return addInterface(type.getName());
+      return addInterface(type.getCanonicalName());
    }
 
    @Override
@@ -484,7 +484,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @Override
    public boolean hasInterface(final Class<?> type)
    {
-      return hasInterface(type.getName());
+      return hasInterface(type.getCanonicalName());
    }
 
    @Override
@@ -512,7 +512,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @Override
    public O removeInterface(final Class<?> type)
    {
-      return removeInterface(type.getName());
+      return removeInterface(type.getCanonicalName());
    }
 
    @Override
