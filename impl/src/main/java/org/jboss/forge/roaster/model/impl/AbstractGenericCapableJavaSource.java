@@ -69,6 +69,21 @@ public abstract class AbstractGenericCapableJavaSource<O extends JavaSource<O> &
    }
 
    @Override
+   public boolean hasTypeVariable(String name)
+   {
+      TypeDeclaration type = (TypeDeclaration) body;
+      List<TypeParameter> typeParameters = type.typeParameters();
+      for (TypeParameter typeParameter : typeParameters)
+      {
+         if (Strings.areEqual(name, typeParameter.getName().getIdentifier()))
+         {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   @Override
    public TypeVariableSource<O> addTypeVariable()
    {
       TypeDeclaration type = (TypeDeclaration) body;

@@ -6,6 +6,8 @@
  */
 package org.jboss.forge.test.roaster.model;
 
+import static org.hamcrest.CoreMatchers.containsString;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -115,18 +117,61 @@ public class MethodGenericsTest
       MethodSource<JavaClassSource> method = javaClass.addMethod();
       method.addTypeVariable().setName("T").setBounds(CharSequence.class);
       method.addParameter("java.util.Map<org.foo.String[],T>[]", "complexMap");
-      Type type = method.getParameters().get(0).getType();
+      Type<?> type = method.getParameters().get(0).getType();
       Assert.assertEquals("Map<org.foo.String[],T>[]", type.toString());
    }
 
    @Test
    public void nestedTypedParameter()
    {
-	   JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
-	   MethodSource<JavaClassSource> method = javaClass.addMethod();
-	   method.addParameter("java.util.Map<java.lang.String,java.util.Map<java.lang.String,java.lang.String>>", "map");
-	   Type type = method.getParameters().get(0).getType();
-	   Assert.assertEquals("java.util.Map", type.getQualifiedName());
+      JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> method = javaClass.addMethod();
+      method.addParameter("java.util.Map<java.lang.String,java.util.Map<java.lang.String,java.lang.String>>", "map");
+      Type<?> type = method.getParameters().get(0).getType();
+      Assert.assertEquals("java.util.Map", type.getQualifiedName());
    }
 
+   @Test
+   public void testSetReturnTypeWithGenerics()
+   {
+      JavaClassSource source = Roaster.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> srcMethod = source.addMethod();
+      srcMethod.setName("name");
+      srcMethod.setPublic();
+      srcMethod.addTypeVariable("T");
+      srcMethod.setReturnType("List");
+      Assert.assertThat(srcMethod.toString(), containsString("public <T>List name()"));
+      srcMethod.setReturnType("List<T>");
+      Assert.assertThat(srcMethod.toString(), containsString("public <T>List<T> name()"));
+   }
+
+   @Test
+   public void testTransferableReturnType()
+   {
+      JavaClassSource source = Roaster.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> srcMethod = source.addMethod();
+      srcMethod.setName("name");
+      srcMethod.addTypeVariable("T");
+      srcMethod.setReturnType("List<T>");
+      JavaClassSource dest = Roaster.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> destMethod = dest.addMethod().setName("name");
+      destMethod.addTypeVariable("T");
+      destMethod.setReturnType(srcMethod.getReturnType());
+      Assert.assertThat(destMethod.toString(), containsString("List<T> name()"));
+   }
+
+   @Test
+   public void testTransferableReturnTypeString()
+   {
+      JavaClassSource source = Roaster.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> srcMethod = source.addMethod();
+      srcMethod.setName("name");
+      srcMethod.addTypeVariable("T");
+      srcMethod.setReturnType("List<T>");
+      JavaClassSource dest = Roaster.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> destMethod = dest.addMethod().setName("name");
+      destMethod.addTypeVariable("T");
+      destMethod.setReturnType(srcMethod.getReturnType().getQualifiedNameWithGenerics());
+      Assert.assertThat(destMethod.toString(), containsString("List<T> name()"));
+   }
 }

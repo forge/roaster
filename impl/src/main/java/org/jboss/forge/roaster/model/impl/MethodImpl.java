@@ -305,6 +305,12 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    }
 
    @Override
+   public MethodSource<O> setReturnType(Type<?> type)
+   {
+      return setReturnType(type.getQualifiedNameWithGenerics());
+   }
+
+   @Override
    public MethodSource<O> setReturnType(final Class<?> type)
    {
       return setReturnType(type.getCanonicalName());
@@ -322,13 +328,14 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       String simpleName = Types.toSimpleName(typeName);
 
       O origin = getOrigin();
-      if (!Strings.areEqual(typeName, simpleName) && origin.requiresImport(typeName))
+      if (!hasTypeVariable(typeName) && !Strings.areEqual(typeName, simpleName)
+               && origin.requiresImport(typeName))
       {
          origin.addImport(typeName);
       }
       for (String genericType : Types.splitGenerics(typeName))
       {
-         if (origin.requiresImport(genericType))
+         if (!hasTypeVariable(genericType) && origin.requiresImport(genericType))
          {
             origin.addImport(genericType);
          }
@@ -730,10 +737,10 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    }
 
    @Override
+   @SuppressWarnings("unchecked")
    public List<TypeVariableSource<O>> getTypeVariables()
    {
       List<TypeVariableSource<O>> result = new ArrayList<TypeVariableSource<O>>();
-      @SuppressWarnings("unchecked")
       List<TypeParameter> typeParameters = method.typeParameters();
       if (typeParameters != null)
       {
@@ -746,9 +753,9 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    }
 
    @Override
+   @SuppressWarnings("unchecked")
    public TypeVariableSource<O> getTypeVariable(String name)
    {
-      @SuppressWarnings("unchecked")
       List<TypeParameter> typeParameters = method.typeParameters();
       for (TypeParameter typeParameter : typeParameters)
       {
@@ -758,6 +765,22 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
          }
       }
       return null;
+   }
+
+   @SuppressWarnings("unchecked")
+   @Override
+   public boolean hasTypeVariable(String name)
+   {
+      List<TypeParameter> typeParameters = method.typeParameters();
+      for (TypeParameter typeParameter : typeParameters)
+      {
+         if (Strings.areEqual(name, typeParameter.getName().getIdentifier()))
+         {
+            return true;
+         }
+      }
+      return false;
+
    }
 
    @SuppressWarnings("unchecked")
@@ -813,10 +836,14 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public ParameterSource<O> addParameter(String type, String name)
    {
-      Type<?> innerType = new TypeImpl<O>(getOrigin(), null, type);
-      Import imprt = getOrigin().addImport(innerType);
-      String resolvedType = imprt != null ? Types.rebuildGenericNameWithArrays(imprt.getSimpleName(), innerType)
-               : Types.toSimpleName(type);
+      String resolvedType = type;
+      if (!hasTypeVariable(type) && getOrigin().requiresImport(type))
+      {
+         Type<?> innerType = new TypeImpl<O>(getOrigin(), null, type);
+         Import imprt = getOrigin().addImport(innerType);
+         resolvedType = imprt != null ? Types.rebuildGenericNameWithArrays(imprt.getSimpleName(), innerType)
+                  : Types.toSimpleName(type);
+      }
 
       String stub = "public class Stub { public void method( " + resolvedType + " " + name + " ) {} }";
       JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);

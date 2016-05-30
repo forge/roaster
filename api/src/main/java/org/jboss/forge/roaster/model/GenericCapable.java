@@ -28,4 +28,12 @@ public interface GenericCapable<O extends JavaType<O>>
     * @return TypeVariable or {@code null}
     */
    TypeVariable<O> getTypeVariable(String name);
+
+   /**
+    * Returns if the value is declared as a {@link TypeVariable}
+    * 
+    * @param name the type name
+    * @return <code>true</code> if the type name is declared as a type variable, <code>false</code>
+    */
+   boolean hasTypeVariable(String name);
 }

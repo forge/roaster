@@ -6,6 +6,7 @@
  */
 package org.jboss.forge.test.roaster.model;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 
 import java.io.InputStream;
@@ -61,4 +62,28 @@ public class ParameterTest
       Assert.assertThat(parameter.isVarArgs(), is(true));
    }
 
+   @Test
+   public void testGenericTypeParameterShouldNotBeImported() throws Exception
+   {
+      JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("TestClass");
+      MethodSource<JavaClassSource> method = clazz.addMethod().setReturnTypeVoid().setName("myMethod");
+      method.addTypeVariable("T");
+      method.addParameter("T", "name");
+      Assert.assertThat(method.toString(), containsString("<T>void myMethod(T name)"));
+   }
+
+   @Test
+   public void testPreserveParameterGenericTypes() throws Exception
+   {
+      JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("TestClass");
+      final MethodSource<JavaClassSource> newMethod = clazz.addMethod()
+               .setName("name")
+               .setPublic()
+               .setFinal(true);
+      newMethod.addTypeVariable("T");
+      newMethod.setReturnType("T").setBody("String.class.as(((Class<T>) as));");
+      newMethod.addParameter(int.class, "index");
+      newMethod.addParameter("Class<T>", "as");
+      Assert.assertThat(clazz.toString(), containsString("public final <T> T name(int index, Class<T> as)"));
+   }
 }

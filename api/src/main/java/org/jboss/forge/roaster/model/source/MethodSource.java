@@ -12,6 +12,7 @@ import java.util.List;
 import org.jboss.forge.roaster.model.JavaClass;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.Method;
+import org.jboss.forge.roaster.model.Type;
 
 /**
  * Represents a Java Method in source form.
@@ -60,6 +61,11 @@ public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodS
     * Set this {@link Method} to return the given {@link JavaType} type.
     */
    MethodSource<O> setReturnType(JavaType<?> type);
+
+   /**
+    * Set this {@link Method} to return the given {@link Type}
+    */
+   MethodSource<O> setReturnType(Type<?> type);
 
    /**
     * Set this {@link Method} to return 'void'
