@@ -39,10 +39,6 @@ public class SerialVersionUIDComputer
     */
    public static long compute(JavaClassSource source)
    {
-      if (!source.hasInterface(Serializable.class))
-      {
-         return 0L;
-      }
       try
       {
          ByteArrayOutputStream bout = new ByteArrayOutputStream();
