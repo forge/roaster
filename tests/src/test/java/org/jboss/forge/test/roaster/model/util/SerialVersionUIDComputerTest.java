@@ -23,15 +23,6 @@ public class SerialVersionUIDComputerTest
 {
 
    @Test
-   public void testNonSerializableSerialVersionUID() throws Exception
-   {
-      JavaClassSource type = Roaster.create(JavaClassSource.class).setName("Foo");
-      type.addMethod().setName("foo");
-      type.addField().setType(String.class).setName("bar");
-      Assert.assertEquals(0, SerialVersionUIDComputer.compute(type));
-   }
-
-   @Test
    public void testSerialVersionUID1() throws Exception
    {
       JavaClassSource type = Roaster.create(JavaClassSource.class).setName("Foo").addInterface(Serializable.class);
