@@ -44,11 +44,17 @@ public class MethodSignatureTest
    public void testMethodParams() throws Exception
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
-               "public void hello(String foo, int bar)");
+               "public void hello(String foo, int bar, char[] array, char value[])");
       List<ParameterSource<JavaClassSource>> parameters = method.getParameters();
 
       Assert.assertEquals("String", parameters.get(0).getType().toString());
       Assert.assertEquals("int", parameters.get(1).getType().toString());
+
+      Assert.assertEquals("char[]", parameters.get(2).getType().toString());
+      Assert.assertTrue(parameters.get(2).getType().isArray());
+
+      Assert.assertEquals("char", parameters.get(3).getType().toString());
+      Assert.assertTrue(parameters.get(3).getType().isArray());
    }
 
    @Test(expected = UnsupportedOperationException.class)

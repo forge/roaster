@@ -17,6 +17,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.ParameterizedType;
+import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.JavaType;
@@ -279,6 +280,10 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
                return ((VariableDeclarationFragment) f).getExtraDimensions();
             }
          }
+      }
+      if (parentLocal instanceof SingleVariableDeclaration)
+      {
+         return ((SingleVariableDeclaration) parentLocal).getExtraDimensions();
       }
       return 0;
    }
