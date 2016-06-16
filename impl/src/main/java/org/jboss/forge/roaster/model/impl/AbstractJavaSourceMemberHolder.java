@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
@@ -46,11 +47,13 @@ import org.jboss.forge.roaster.model.util.Types;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
- *
  */
-public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & PropertyHolderSource<O>> extends AbstractJavaSource<O>
+public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & PropertyHolderSource<O>>
+         extends AbstractJavaSource<O>
          implements InterfaceCapableSource<O>, PropertyHolderSource<O>
 {
+   private static final Pattern GET_SET_PATTERN = Pattern.compile("^[gs]et.+$");
+
    protected AbstractJavaSourceMemberHolder(JavaSource<?> enclosingType, final Document document,
             final CompilationUnit unit, BodyDeclaration declaration)
    {
@@ -627,7 +630,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
 
    private String extractPropertyName(Method<O, ?> method)
    {
-      if (method.getName().matches("^[gs]et.+$"))
+      if (GET_SET_PATTERN.matcher(method.getName()).matches())
       {
          return Strings.uncapitalize(method.getName().substring(3));
       }
