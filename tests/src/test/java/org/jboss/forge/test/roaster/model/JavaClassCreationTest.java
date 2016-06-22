@@ -6,15 +6,15 @@
  */
 package org.jboss.forge.test.roaster.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.lang.annotation.Documented;
 
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -39,11 +39,12 @@ public class JavaClassCreationTest
    @Test
    public void testImportStatementHasEmptyLineBeforeClassDeclaration() throws Exception
    {
-      String expected = "package org.foo;\n" +
-               "\n" +
-               "import java.lang.annotation.Documented;\n\n" +
-               "@Documented\n" +
-               "public class JavaClass {\n" +
+      String lineSeparator = System.getProperty("line.separator");
+      String expected = "package org.foo;" + lineSeparator +
+               lineSeparator +
+               "import java.lang.annotation.Documented;" + lineSeparator + lineSeparator +
+               "@Documented" + lineSeparator +
+               "public class JavaClass {" + lineSeparator +
                "}";
 
       jc.setPackage("org.foo").addAnnotation(Documented.class);
