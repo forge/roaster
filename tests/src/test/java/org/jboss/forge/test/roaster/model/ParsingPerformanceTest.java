@@ -9,6 +9,7 @@ import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.PropertySource;
 import org.junit.AssumptionViolatedException;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Stopwatch;
@@ -23,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 public class ParsingPerformanceTest
 {
    @Test(timeout = 5000)
+   @Ignore
    public void testRoaster106() throws Exception
    {
       URL resource = getClass().getResource("ROASTER106.java");
