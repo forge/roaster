@@ -6,8 +6,6 @@
  */
 package org.jboss.forge.test.roaster.model;
 
-import static org.hamcrest.CoreMatchers.is;
-
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +16,9 @@ import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.junit.Assert;
 import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -331,6 +332,19 @@ public class MethodReturnTypeTest
       Assert.assertTrue("Test3 should have been imported", ifSource.hasImport("poc.test.Test3"));
       Assert.assertEquals("com.google.common.collect.ListMultimap<Integer,Test3>",
                method.getReturnType().getQualifiedNameWithGenerics());
+   }
+
+   @Test
+   public void testSpaceInTwoGenericTypesShouldNotThrowException() throws Exception
+   {
+      JavaClassSource classSource = Roaster.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> newMethod = classSource.addMethod()
+               .setName("tstMethod")
+               .setPublic();
+      newMethod.setReturnType(
+               "java.util.TreeMap<java.util.String, java.util.Object>"); // Counts space as part of the second type's name
+      newMethod.setBody("return new TreeMap<String, Object>();");
+      Assert.assertThat(classSource.toString(), containsString("public TreeMap<String, Object> tstMethod()"));
    }
 
 }

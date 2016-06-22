@@ -629,6 +629,7 @@ public class Types
     */
    public static String[] splitGenerics(String typeName)
    {
+      typeName = typeName.replaceAll(" ","");
       int begin = typeName.indexOf('<');
       int end = typeName.indexOf('>');
       if (begin == -1 || end == -1)
