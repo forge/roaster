@@ -185,15 +185,15 @@ public class JavaDocTest
    public void testJavaDocFullTextShouldFormatParamWithSpace() throws Exception
    {
       JavaClassSource src = Roaster.parse(JavaClassSource.class,
-               "package issue;\npublic class Issue { \n" +
-                        "   /**\n" +
-                        "     * Creates a new instance of CLASS\n" +
-                        "     *\n" +
-                        "     * @param actual the actual value.\n" +
-                        "     * @return the modified text\n" +
-                        "     */\n" +
-                        "    public static String someMethod(String actual) {\n" +
-                        "        return actual;\n" +
+               "package issue;\npublic class Issue { " + LINE_SEPARATOR +
+                        "   " + LINE_SEPARATOR +
+                        "     * Creates a new instance of CLASS" + LINE_SEPARATOR +
+                        "     *" + LINE_SEPARATOR +
+                        "     * @param actual the actual value." + LINE_SEPARATOR +
+                        "     * @return the modified text" + LINE_SEPARATOR +
+                        "     */" + LINE_SEPARATOR +
+                        "    public static String someMethod(String actual) {" + LINE_SEPARATOR +
+                        "        return actual;" + LINE_SEPARATOR +
                         "    }}");
       MethodSource<JavaClassSource> method = src.getMethods().get(0);
       Assert.assertEquals(
