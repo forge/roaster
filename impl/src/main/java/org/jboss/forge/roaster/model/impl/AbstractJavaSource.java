@@ -396,7 +396,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
 
    private boolean validImport(final String type)
    {
-      return !Strings.isNullOrEmpty(type) && !Types.isPrimitive(type);
+      return !Strings.isNullOrEmpty(type) && !Types.isPrimitive(type) && !Strings.isNullOrEmpty(Types.getPackage(type));
    }
 
    @Override

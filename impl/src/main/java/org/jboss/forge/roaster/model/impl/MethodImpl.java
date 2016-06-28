@@ -780,7 +780,6 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
          }
       }
       return false;
-
    }
 
    @SuppressWarnings("unchecked")

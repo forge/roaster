@@ -48,8 +48,7 @@ import org.jboss.forge.roaster.model.util.Types;
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & PropertyHolderSource<O>>
-         extends AbstractJavaSource<O>
+public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & PropertyHolderSource<O>> extends AbstractJavaSource<O>
          implements InterfaceCapableSource<O>, PropertyHolderSource<O>
 {
    private static final Pattern GET_SET_PATTERN = Pattern.compile("^[gs]et.+$");
@@ -541,7 +540,20 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    {
       Assert.isFalse(hasProperty(name), "Cannot create existing property " + name);
 
-      final org.jboss.forge.roaster.model.Type<O> typeObject = new TypeImpl<O>(getOrigin(), null, type);
+      O origin = getOrigin();
+      if (origin.requiresImport(type))
+      {
+         origin.addImport(type);
+      }
+      for (String genericType : Types.splitGenerics(type))
+      {
+         if (origin.requiresImport(genericType))
+         {
+            origin.addImport(genericType);
+         }
+      }
+      final org.jboss.forge.roaster.model.Type<O> typeObject = new TypeImpl<O>(getOrigin(), null,
+               Types.toSimpleName(type));
       final PropertySource<O> result = new PropertyImpl<O>(name, getOrigin())
       {
          @Override
