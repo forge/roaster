@@ -6,6 +6,8 @@
  */
 package org.jboss.forge.test.roaster.model;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
@@ -48,5 +50,19 @@ public class MethodBodyTest
       JavaClassSource source = Roaster.parse(JavaClassSource.class, data);
       MethodSource<JavaClassSource> method = source.getMethod("bar");
       Assert.assertEquals("//TODO comments\n return null;", method.getBody());
+   }
+
+   @Test
+   public void testBodyShouldBeSet()
+   {
+      JavaClassSource javaClass = Roaster.create(JavaClassSource.class).setName("Foo");
+      MethodSource<JavaClassSource> method = javaClass.addMethod()
+               .setPublic()
+               .setStatic(false)
+               .setName("setupIAB")
+               .setReturnTypeVoid()
+               .setBody("OpenIabHelper.Options.Builder builder = new OpenIabHelper.Options.Builder(); \n\t builder.setStoreSearchStrategy(OpenIabHelper.Options.SEARCH_STRATEGY_INSTALLER);");
+      assertThat(method.getBody()).isNotNull();
+      assertThat(method.getBody()).isNotEmpty();
    }
 }
