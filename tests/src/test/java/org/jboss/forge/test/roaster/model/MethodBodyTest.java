@@ -6,7 +6,9 @@
  */
 package org.jboss.forge.test.roaster.model;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
@@ -62,7 +64,7 @@ public class MethodBodyTest
                .setName("setupIAB")
                .setReturnTypeVoid()
                .setBody("OpenIabHelper.Options.Builder builder = new OpenIabHelper.Options.Builder(); \n\t builder.setStoreSearchStrategy(OpenIabHelper.Options.SEARCH_STRATEGY_INSTALLER);");
-      assertThat(method.getBody()).isNotNull();
-      assertThat(method.getBody()).isNotEmpty();
+      assertThat(method.getBody(), notNullValue());
+      assertThat(method.getBody(), not(""));
    }
 }
