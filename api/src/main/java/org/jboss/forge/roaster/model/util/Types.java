@@ -227,7 +227,15 @@ public class Types
             }
             simpleParameters.add(simpleType);
          }
-         result += new StringBuilder("<>").insert(1, Strings.join(simpleParameters, ",")).toString();
+         final String generics = new StringBuilder("<>").insert(1, Strings.join(simpleParameters, ",")).toString();
+         if (isArray(result))
+         {
+             result = new StringBuilder(result).insert(result.indexOf("["), generics).toString();
+         }
+         else
+         {
+            result += generics;
+         }
       }
       return result;
    }

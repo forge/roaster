@@ -166,6 +166,12 @@ public class TypesTest
       assertEquals("List<List<String>>", Types.toSimpleName("java.util.List<java.util.List<String>>"));
       assertEquals("List<? extends List<String>>",
                Types.toSimpleName("java.util.List<? extends java.util.List<String>>"));
+      // now identical tests with array types
+      assertEquals("List<String>[]", Types.toSimpleName("List<String>[]"));
+      assertEquals("List<String>[]", Types.toSimpleName("java.util.List<String>[]"));
+      assertEquals("List<String>[]", Types.toSimpleName("java.util.List<java.lang.String>[]"));
+      assertEquals("List<? extends List<String>>[]",
+               Types.toSimpleName("java.util.List<? extends java.util.List<String>>[]"));
    }
 
    @Test
