@@ -312,6 +312,15 @@ public abstract class JavaClassTestBase
 
       source.setSuperType(getClass());
       assertEquals(getClass().getName(), source.getSuperType());
+      
+      // test if identical simple names work
+      source = Roaster.create(JavaClassSource.class);
+      source.setName("Foo").setSuperType("bar.Foo");
+      assertEquals("test if super type is not changed", "bar.Foo", source.getSuperType());
+      assertEquals("test if import is not added", 0, source.getImports().size());
+      source.setSuperType("foo.Bar");
+      assertEquals("test if super type is simplified", "Bar", source.getSuperType());
+      assertEquals("test if import is added", source.getImports().get(0).toString(), "foo.Bar");      
    }
 
    @Test
