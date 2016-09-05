@@ -6,6 +6,9 @@
  */
 package org.jboss.forge.test.roaster.model;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,10 +18,8 @@ import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -342,9 +343,21 @@ public class MethodReturnTypeTest
                .setName("tstMethod")
                .setPublic();
       newMethod.setReturnType(
-               "java.util.TreeMap<java.util.String, java.util.Object>"); // Counts space as part of the second type's name
+               "java.util.TreeMap<java.util.String, java.util.Object>"); // Counts space as part of the second type's
+                                                                         // name
       newMethod.setBody("return new TreeMap<String, Object>();");
       Assert.assertThat(classSource.toString(), containsString("public TreeMap<String, Object> tstMethod()"));
    }
 
+   @Test
+   @Ignore("ROASTER-110")
+   public void testNestedTypedParametersShouldNotThrowException() throws Exception
+   {
+      final JavaClassSource javaClass = Roaster.create(JavaClassSource.class).setPackage("com.scratch")
+               .setName("Example");
+      final MethodSource<JavaClassSource> method = javaClass.addMethod().setName("createMap")
+               .setReturnType("java.util.Map<String,java.util.Map<String,String>>");
+      Assert.assertEquals("java.util.Map<String,java.util.Map<String,String>>",
+               method.getReturnType().getQualifiedNameWithGenerics());
+   }
 }

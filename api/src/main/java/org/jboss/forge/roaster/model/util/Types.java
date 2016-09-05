@@ -151,7 +151,9 @@ public class Types
             "SafeVarargs",
             "SuppressWarnings");
 
-   private Types() {}
+   private Types()
+   {
+   }
 
    public static boolean areEquivalent(String left, String right)
    {
@@ -230,7 +232,7 @@ public class Types
          final String generics = new StringBuilder("<>").insert(1, Strings.join(simpleParameters, ",")).toString();
          if (isArray(result))
          {
-             result = new StringBuilder(result).insert(result.indexOf("["), generics).toString();
+            result = new StringBuilder(result).insert(result.indexOf("["), generics).toString();
          }
          else
          {
@@ -637,7 +639,7 @@ public class Types
     */
    public static String[] splitGenerics(String typeName)
    {
-      typeName = typeName.replaceAll("\\s","");
+      typeName = typeName.replaceAll("\\s", "");
       int begin = typeName.indexOf('<');
       int end = typeName.indexOf('>');
       if (begin == -1 || end == -1)
