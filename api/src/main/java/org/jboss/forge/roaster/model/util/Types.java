@@ -354,11 +354,11 @@ public class Types
       }
       if (isGeneric(type))
       {
-         return type.substring(0, type.indexOf('<')) + type.substring(type.lastIndexOf('>') + 1);
+         return type.substring(0, type.indexOf('<')) + type.substring(type.lastIndexOf('>') + 1).trim();
       }
       else
       {
-         return type;
+         return type.trim();
       }
    }
 

@@ -6,6 +6,7 @@
  */
 package org.jboss.forge.test.roaster.model.common;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -22,6 +23,7 @@ import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -334,7 +336,20 @@ public abstract class JavaClassTestBase
       assertEquals(NumberFormat.class.getName(), source.getSuperType());
       assertFalse(source.hasSyntaxErrors());
       assertEquals(3, source.getMethods().size());
+   }
 
+   @Test
+   public void testSuperTypeGenericsWithSpaces()
+   {
+      final JavaClassSource myClass = Roaster.create(JavaClassSource.class);
+      myClass.setPackage("test");
+      myClass.setPublic()
+               .setName("MyClass")
+               .setSuperType("test.MyClassParent<java.util.String, java.util.Object>");
+      Assert.assertTrue(myClass.hasImport("java.util.String"));
+      Assert.assertTrue(myClass.hasImport("java.util.Object"));
+      Assert.assertTrue(myClass.hasImport("test.MyClassParent"));
+      Assert.assertThat(myClass.getSuperType(), equalTo("test.MyClassParent<String,Object>"));
    }
 
    @Test

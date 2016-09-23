@@ -40,6 +40,7 @@ public class MethodReturnTypeTest
                .addMethod("public List<Long> getLong(return null;)");
       method.getOrigin().addImport(List.class);
       Assert.assertEquals("java.util.List", method.getReturnType().getQualifiedName());
+      Assert.assertEquals("java.util.List<Long>", method.getReturnType().getQualifiedNameWithGenerics());
    }
 
    @Test

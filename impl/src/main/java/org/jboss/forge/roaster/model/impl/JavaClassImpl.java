@@ -27,7 +27,7 @@ import org.jboss.forge.roaster.model.util.Types;
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSource>implements JavaClassSource
+public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSource> implements JavaClassSource
 {
    private final ModifierAccessor modifiers = new ModifierAccessor();
 
@@ -118,7 +118,7 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
       Object superType = getBodyDeclaration().getStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY);
       if (superType == null)
          superType = Object.class.getName();
-      return resolveType(superType.toString());
+      return resolveType(superType.toString()) + Types.getGenerics(superType.toString());
    }
 
    @Override
