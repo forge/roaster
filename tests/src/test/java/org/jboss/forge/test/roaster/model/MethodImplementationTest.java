@@ -15,6 +15,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import java.util.Enumeration;
 
 import org.jboss.forge.roaster.Roaster;
+import org.jboss.forge.roaster.model.Visibility;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaEnumSource;
@@ -44,6 +45,7 @@ public class MethodImplementationTest
       Assert.assertThat(source.getMethods().size(), is(1));
       Assert.assertNotNull(source.getMethod("doSomething"));
       Assert.assertThat(source.getMethod("doSomething").isAbstract(), is(false));
+      Assert.assertThat(source.getMethod("doSomething").isPublic(), is(true));
    }
 
    @Test
@@ -205,6 +207,17 @@ public class MethodImplementationTest
       javaClass.implementInterface(javaInterface);
 
       Assert.assertThat(javaClass.getMethods().size(), equalTo(1));
+   }
+
+   @Test
+   public void testImplementedMethodShouldBePublic()
+   {
+      JavaInterfaceSource interfaceSource = Roaster.create(JavaInterfaceSource.class).setPackage("test");
+      interfaceSource.addMethod().setName("foo");
+      JavaClassSource implSource = Roaster.create(JavaClassSource.class);
+      implSource.implementInterface(interfaceSource);
+      Assert.assertEquals(Visibility.PUBLIC, interfaceSource.getMethod("foo").getVisibility());
+      Assert.assertEquals(Visibility.PUBLIC, implSource.getMethod("foo").getVisibility());
    }
 
 }

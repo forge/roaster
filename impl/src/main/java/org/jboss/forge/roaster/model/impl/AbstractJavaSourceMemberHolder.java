@@ -448,7 +448,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
       O obj = addInterface(type);
       for (MethodSource<?> methodSource : Methods.implementAbstractMethods(type, this))
       {
-         methodSource.addAnnotation(Override.class);
+         methodSource.setPublic().addAnnotation(Override.class);
       }
       return obj;
    }
@@ -459,7 +459,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
       O obj = addInterface(type);
       for (MethodSource<?> methodSource : Methods.implementAbstractMethods(type, this))
       {
-         methodSource.addAnnotation(Override.class);
+         methodSource.setPublic().addAnnotation(Override.class);
       }
       return obj;
    }

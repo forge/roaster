@@ -7,6 +7,7 @@
 
 package org.jboss.forge.roaster.model.impl;
 
+import org.jboss.forge.roaster.model.Visibility;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 
 /**
@@ -29,5 +30,11 @@ public class JavaInterfaceMethodImpl extends MethodImpl<JavaInterfaceSource>
    public boolean isAbstract()
    {
       return !isDefault();
+   }
+
+   @Override
+   public Visibility getVisibility()
+   {
+      return Visibility.PUBLIC;
    }
 }
