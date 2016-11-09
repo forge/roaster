@@ -16,7 +16,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.eclipse.jdt.core.JavaCore;
@@ -155,13 +154,20 @@ public abstract class Formatter
       return null;
    }
 
-   public static Properties applyShadedPackageName(Properties config)
+   public static Properties applyShadedPackageName(final Properties config)
    {
       Properties modified = new Properties();
       String shadePackage = JavaCore.class.getPackage().getName().replaceAll("org\\.eclipse.*$", "");
-      for (Entry<Object, Object> property : config.entrySet())
+      for (String property : config.stringPropertyNames())
       {
-         modified.put(shadePackage + property.getKey(), property.getValue());
+         if (property.startsWith(shadePackage))
+         {
+            modified.put(property, config.getProperty(property));
+         }
+         else
+         {
+            modified.put(shadePackage + property, config.getProperty(property));
+         }
       }
 
       return modified;

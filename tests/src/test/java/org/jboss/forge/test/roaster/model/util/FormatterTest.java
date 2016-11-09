@@ -7,6 +7,7 @@
 
 package org.jboss.forge.test.roaster.model.util;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 
 import java.io.InputStream;
@@ -103,5 +104,25 @@ public class FormatterTest
       sb2.append("public class SomeClass {" + LINE_SEPARATOR);
       sb2.append("}");
       assertEquals(sb2.toString(), result2);
+   }
+
+   @Test
+   public void testApplyShadedPackageName()
+   {
+      Properties prefs = new Properties();
+      prefs.put("org.eclipse.jdt.core.formatter.comment.line_length", "123");
+      Properties newPrefs = Formatter.applyShadedPackageName(prefs);
+      Assert.assertThat(newPrefs.keys().nextElement().toString(),
+               equalTo("org.eclipse.jdt.core.formatter.comment.line_length"));
+   }
+
+   @Test
+   public void testApplyShadedPackageNameShadedProperty()
+   {
+      Properties prefs = new Properties();
+      prefs.put("org.eclipse.jdt.core.formatter.comment.line_length", "123");
+      Properties newPrefs = Formatter.applyShadedPackageName(prefs);
+      Assert.assertThat(newPrefs.keys().nextElement().toString(),
+               equalTo("org.eclipse.jdt.core.formatter.comment.line_length"));
    }
 }
