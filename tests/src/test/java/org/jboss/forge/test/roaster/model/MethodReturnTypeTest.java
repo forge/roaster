@@ -351,14 +351,13 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   @Ignore("ROASTER-110")
    public void testNestedTypedParametersShouldNotThrowException() throws Exception
    {
       final JavaClassSource javaClass = Roaster.create(JavaClassSource.class).setPackage("com.scratch")
                .setName("Example");
       final MethodSource<JavaClassSource> method = javaClass.addMethod().setName("createMap")
-               .setReturnType("java.util.Map<String,java.util.Map<String,String>>");
-      Assert.assertEquals("java.util.Map<String,java.util.Map<String,String>>",
+               .setReturnType("java.util.Map<java.lang.String,java.util.Map<java.lang.String,java.lang.String>>");
+      Assert.assertEquals("java.util.Map<String,Map<String,String>>",
                method.getReturnType().getQualifiedNameWithGenerics());
    }
 }
