@@ -205,8 +205,15 @@ public class Types
       if (isGeneric(type))
       {
          final List<String> simpleParameters = new ArrayList<String>();
-         for (String typeParameter : getGenericsTypeParameter(type).split(","))
+         StringTokenizer tok = new StringTokenizer(getGenericsTypeParameter(type), ",");
+         while (tok.hasMoreTokens())
          {
+            String typeParameter = tok.nextToken();
+            while (incompleteGenerics(typeParameter) && tok.hasMoreElements())
+            {
+               typeParameter += ',' + tok.nextToken();
+            }
+
             String simpleType;
             typeParameter = typeParameter.trim();
             if ("?".equals(typeParameter))
@@ -318,7 +325,7 @@ public class Types
          String typeArg = tok.nextToken();
          while (incompleteGenerics(typeArg) && tok.hasMoreElements())
          {
-            typeArg += tok.nextToken();
+            typeArg += ',' + tok.nextToken();
          }
 
          if (!validateNameWithGenerics(typeArg))
