@@ -34,6 +34,7 @@ import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.InterfaceCapableSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MemberSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
@@ -457,6 +458,14 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    public O implementInterface(JavaInterface<?> type)
    {
       O obj = addInterface(type);
+
+      if (type instanceof JavaInterfaceSource) {
+         for (Import imprt : ((JavaInterfaceSource) type).getImports())
+         {
+            addImport(imprt);
+         }
+      }
+
       for (MethodSource<?> methodSource : Methods.implementAbstractMethods(type, this))
       {
          methodSource.setPublic().addAnnotation(Override.class);
