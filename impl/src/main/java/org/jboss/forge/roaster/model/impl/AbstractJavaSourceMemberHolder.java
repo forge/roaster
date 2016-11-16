@@ -8,6 +8,7 @@ package org.jboss.forge.roaster.model.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -460,9 +461,33 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
       O obj = addInterface(type);
 
       if (type instanceof JavaInterfaceSource) {
-         for (Import imprt : ((JavaInterfaceSource) type).getImports())
+         Set<Import> usedImports = new HashSet<Import>();
+
+         JavaInterfaceSource interfaceSource = (JavaInterfaceSource) type;
+         for (MethodSource<JavaInterfaceSource> method : interfaceSource.getMethods())
          {
-            addImport(imprt);
+            if (method.isDefault()) {
+               // Do not add default implementations
+               continue;
+            }
+
+            if (!method.isReturnTypeVoid())
+            {
+               usedImports.add(interfaceSource.getImport(method.getReturnType().getQualifiedName()));
+            }
+
+            for (ParameterSource<JavaInterfaceSource> parameter : method.getParameters())
+            {
+               usedImports.add(interfaceSource.getImport(parameter.getType().getQualifiedName()));
+            }
+         }
+
+         for (Import imprt : interfaceSource.getImports())
+         {
+            if (usedImports.contains(imprt))
+            {
+               addImport(imprt);
+            }
          }
       }
 
