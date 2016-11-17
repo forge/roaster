@@ -21,11 +21,11 @@ public interface PackagedSource<T> extends Packaged<T>
    /**
     * Set this {@link T}' package.
     */
-   public T setPackage(String name);
+   T setPackage(String name);
 
    /**
     * Set this {@link T} to be in the default package (removes any current package declaration.)
     */
-   public T setDefaultPackage();
+   T setDefaultPackage();
 
 }

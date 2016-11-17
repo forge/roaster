@@ -22,5 +22,5 @@ public interface Named
     * <code>{@link Class#getSimpleName()}.</code> For a Java method, this would be equivalent to calling
     * {@link Method#getName()} ... and so on.
     */
-   public String getName();
+   String getName();
 }

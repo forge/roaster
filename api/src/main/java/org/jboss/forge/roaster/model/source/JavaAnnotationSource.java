@@ -26,20 +26,20 @@ public interface JavaAnnotationSource extends JavaAnnotation<JavaAnnotationSourc
     * Get the {@link AnnotationElementSource} with the given name and return it, otherwise, return null.
     */
    @Override
-   public AnnotationElementSource getAnnotationElement(String name);
+   AnnotationElementSource getAnnotationElement(String name);
 
    /**
     * Get a list of all {@link AnnotationElementSource}s declared by this {@link JavaAnnotation}, or return an empty
     * list if no {@link AnnotationElementSource}s are declared.
     */
    @Override
-   public List<AnnotationElementSource> getAnnotationElements();
+   List<AnnotationElementSource> getAnnotationElements();
 
    /**
     * Add a new Java {@link AnnotationElementSource} to this {@link JavaAnnotationSource} instance. This will be a stub
     * until further modified.
     */
-   public AnnotationElementSource addAnnotationElement();
+   AnnotationElementSource addAnnotationElement();
 
    /**
     * Add a new {@link AnnotationElementSource} declaration to this {@link JavaAnnotationSource} instance, using the
@@ -48,11 +48,11 @@ public interface JavaAnnotationSource extends JavaAnnotation<JavaAnnotationSourc
     * <strong>For example:</strong><br>
     * <code>AnnotationElement e = javaClass.addAnnotationElement("String newAnnotationElement();");</code>
     */
-   public AnnotationElementSource addAnnotationElement(final String declaration);
+   AnnotationElementSource addAnnotationElement(final String declaration);
 
    /**
     * Remove the given {@link AnnotationElement} from this {@link JavaAnnotationSource} instance, if it exists;
     * otherwise, do nothing.
     */
-   public JavaAnnotationSource removeAnnotationElement(final AnnotationElement<?> annotationElement);
+   JavaAnnotationSource removeAnnotationElement(final AnnotationElement<?> annotationElement);
 }

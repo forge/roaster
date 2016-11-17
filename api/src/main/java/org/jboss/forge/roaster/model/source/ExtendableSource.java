@@ -25,14 +25,14 @@ public interface ExtendableSource<O extends JavaType<O>> extends Extendable<O>
     * 
     * @see #setSuperType(String)
     */
-   public O setSuperType(JavaType<?> type);
+   O setSuperType(JavaType<?> type);
 
    /**
     * Set this type's super class.
     * 
     * @see #setSuperType(String)
     */
-   public O setSuperType(Class<?> type);
+   O setSuperType(Class<?> type);
 
    /**
     * Set this type's super class and import their abstract methods, if any.
@@ -40,7 +40,7 @@ public interface ExtendableSource<O extends JavaType<O>> extends Extendable<O>
     * @see #setSuperType(String)
     * @see Methods#implementAbstractMethods(Class, MethodHolderSource)
     */
-   public O extendSuperType(Class<?> type);
+   O extendSuperType(Class<?> type);
 
    /**
     * Set this type's super class and import their abstract methods, if any.
@@ -48,7 +48,7 @@ public interface ExtendableSource<O extends JavaType<O>> extends Extendable<O>
     * @see #setSuperType(String)
     * @see Methods#implementAbstractMethods(Class, MethodHolderSource)
     */
-   public O extendSuperType(JavaClass<?> type);
+   O extendSuperType(JavaClass<?> type);
 
    /**
     * Set this type's super class.
@@ -60,5 +60,5 @@ public interface ExtendableSource<O extends JavaType<O>> extends Extendable<O>
     * Attempt to add an import statement to this object's {@link O} if required. (Note that the given className must be
     * fully-qualified in order to properly import required classes)
     */
-   public O setSuperType(String type);
+   O setSuperType(String type);
 }

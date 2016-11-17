@@ -20,46 +20,46 @@ public interface MethodHolder<O extends JavaType<O>> extends MemberHolder<O>
    /**
     * Return true if this {@link O} has a method with the given name and zero parameters; otherwise return false.
     */
-   public boolean hasMethod(final Method<O, ?> name);
+   boolean hasMethod(final Method<O, ?> name);
 
    /**
     * Return true if this {@link O} has a method with signature matching the given method's signature.
     */
-   public boolean hasMethodSignature(final Method<?, ?> method);
+   boolean hasMethodSignature(final Method<?, ?> method);
 
    /**
     * Return true if this {@link O} has a method with the given name and zero parameters; otherwise return false.
     */
-   public boolean hasMethodSignature(final String name);
+   boolean hasMethodSignature(final String name);
 
    /**
     * Return true if this {@link O} has a method with the given name and signature types; otherwise return false.
     */
-   public boolean hasMethodSignature(final String name, String... paramTypes);
+   boolean hasMethodSignature(final String name, String... paramTypes);
 
    /**
     * Return true if this {@link O} has a method with the given name and signature types; otherwise return false.
     */
-   public boolean hasMethodSignature(final String name, Class<?>... paramTypes);
+   boolean hasMethodSignature(final String name, Class<?>... paramTypes);
 
    /**
     * Return the {@link Method} with the given name and zero parameters; otherwise return null.
     */
-   public Method<O, ?> getMethod(final String name);
+   Method<O, ?> getMethod(final String name);
 
    /**
     * Return the {@link Method} with the given name and signature types; otherwise return null.
     */
-   public Method<O, ?> getMethod(final String name, String... paramTypes);
+   Method<O, ?> getMethod(final String name, String... paramTypes);
 
    /**
     * Return the {@link Method} with the given name and signature types; otherwise return null.
     */
-   public Method<O, ?> getMethod(final String name, Class<?>... paramTypes);
+   Method<O, ?> getMethod(final String name, Class<?>... paramTypes);
 
    /**
     * Get a {@link List} of all {@link Method}s declared by this {@link O} instance, if any; otherwise, return an empty
     * {@link List}
     */
-   public List<? extends Method<O, ?>> getMethods();
+   List<? extends Method<O, ?>> getMethods();
 }

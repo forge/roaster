@@ -21,7 +21,7 @@ public interface EnumConstant<O extends JavaEnum<O>> extends Internal, Origin<O>
    /**
     * Represents the anonymous subclass "body" of a {@link EnumConstant}.
     */
-   public interface ReadBody<O extends ReadBody<O>> extends JavaType<O>, FieldHolder<O>, MethodHolder<O>
+   interface ReadBody<O extends ReadBody<O>> extends JavaType<O>, FieldHolder<O>, MethodHolder<O>
    {
    }
 

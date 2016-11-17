@@ -17,5 +17,5 @@ import org.jboss.forge.roaster.model.Abstractable;
  */
 public interface AbstractableSource<T> extends Abstractable<T>
 {
-   public abstract T setAbstract(boolean abstrct);
+   T setAbstract(boolean abstrct);
 }

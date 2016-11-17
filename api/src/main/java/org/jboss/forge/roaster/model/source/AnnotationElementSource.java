@@ -22,7 +22,7 @@ public interface AnnotationElementSource extends AnnotationElement<JavaAnnotatio
    /**
     * Represents the default value of an {@link AnnotationElementSource} and provides mechanisms to set that value.
     */
-   public interface DefaultValue extends AnnotationElement.ReadDefaultValue<JavaAnnotationSource>
+   interface DefaultValue extends AnnotationElement.ReadDefaultValue<JavaAnnotationSource>
    {
       @Override
       AnnotationSource<JavaAnnotationSource> getAnnotation();

@@ -17,32 +17,32 @@ public interface SyntaxError
    /**
     * Get a textual description of the type of problem encountered.
     */
-   public String getDescription();
+   String getDescription();
 
    /**
     * Gets the 1 based line number for the syntax error whenever it's possible to calculate it, or < 0 when the line is
     * unknown.
     */
-   public int getLine();
+   int getLine();
 
    /**
     * Get the 0 based column number for the error start whenever it's possible to calculate it, or < 0 when the column
     * is unknown.
     */
-   public int getColumn();
+   int getColumn();
 
    /**
     * True if the syntax error is an error, false in any other case. (see isWarning())
     * 
     * @return
     */
-   public boolean isError();
+   boolean isError();
 
    /**
     * True if the syntax error is a warning, false in any other case. (see isError())
     * 
     * @return
     */
-   public boolean isWarning();
+   boolean isWarning();
 
 }

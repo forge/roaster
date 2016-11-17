@@ -664,6 +664,32 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
       return result;
    }
 
+   @Override
+   public List<PropertySource<O>> getProperties(Class<?> type)
+   {
+      final Set<String> propertyNames = new LinkedHashSet<String>();
+      for (MethodSource<O> method : getMethods())
+      {
+         if ((isAccessor(method) || isMutator(method)) && method.getReturnType().getQualifiedName().equals(type.getCanonicalName()))
+         {
+            propertyNames.add(extractPropertyName(method));
+         }
+      }
+      for (FieldSource<O> field : getFields())
+      {
+         if (!field.isStatic() && field.getType().getQualifiedName().equals(type.getCanonicalName()))
+         {
+            propertyNames.add(field.getName());
+         }
+      }
+      final List<PropertySource<O>> result = new ArrayList<PropertySource<O>>(propertyNames.size());
+      for (String name : propertyNames)
+      {
+         result.add(new PropertyImpl<O>(name, getOrigin()));
+      }
+      return result;
+   }
+
    private boolean isAccessor(Method<O, ?> method)
    {
       return extractPropertyName(method) != null && method.getParameters().isEmpty() && !method.isReturnTypeVoid();

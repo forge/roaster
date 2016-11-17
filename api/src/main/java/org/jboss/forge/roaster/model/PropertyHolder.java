@@ -33,6 +33,12 @@ public interface PropertyHolder<O extends JavaType<O>> extends MethodHolder<O>,
    Property<O> getProperty(String name);
 
    /**
+    * Get a list of all {@link Property Properties} declared by this {@link O} with the given type,
+    * or return an empty list if no matching {@link Property Properties} are declared.
+    */
+   List<? extends Property<O>> getProperties(Class<?> type);
+
+   /**
     * Get a list of all {@link Property Properties} declared by this {@link O}, or return an empty list if no
     * {@link Property Properties} are declared.
     */

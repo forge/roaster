@@ -20,5 +20,5 @@ public interface MemberHolder<O extends JavaType<O>>
    /**
     * Return a list of all class members (fields, methods, etc.)
     */
-   public List<? extends Member<O>> getMembers();
+   List<? extends Member<O>> getMembers();
 }

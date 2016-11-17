@@ -79,7 +79,7 @@ public class JavaPackageInfoTest
       assertEquals(2, packageInfo.getImports().size());
    }
 
-   public static @interface MyPLAnnotation
+   public @interface MyPLAnnotation
    {
    }
 }
