@@ -17,6 +17,7 @@ import java.util.Enumeration;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.Visibility;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
+import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaEnumSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
@@ -30,7 +31,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- *
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
  */
 public class MethodImplementationTest
@@ -218,6 +218,25 @@ public class MethodImplementationTest
       implSource.implementInterface(interfaceSource);
       Assert.assertEquals(Visibility.PUBLIC, interfaceSource.getMethod("foo").getVisibility());
       Assert.assertEquals(Visibility.PUBLIC, implSource.getMethod("foo").getVisibility());
+   }
+
+   @Test
+   public void testOmitImportsOfDefaultImplementations()
+   {
+      final String packageName = "test";
+      final String className = "java.util.List";
+
+      JavaInterfaceSource interfaceSource = Roaster.create(JavaInterfaceSource.class).setPackage(packageName);
+      interfaceSource.addMethod().setDefault(true).setName("foo").addParameter(className, "list");
+      Assert.assertEquals("Interface should contain a single import", 1, interfaceSource.getImports().size());
+      final Import listImport = interfaceSource.getImport(className);
+      Assert.assertNotNull("Import of '" + className + "' not found", listImport);
+
+      JavaClassSource implSource = Roaster.create(JavaClassSource.class).setPackage(packageName);
+      implSource.implementInterface(interfaceSource);
+
+      final Import implListImport = implSource.getImport(className);
+      Assert.assertNull("Import of '" + className + "' should not exist.", implListImport);
    }
 
 }

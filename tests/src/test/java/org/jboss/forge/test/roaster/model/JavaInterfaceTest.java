@@ -16,8 +16,10 @@ import java.util.List;
 
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.Import;
+import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.MemberSource;
+import org.jboss.forge.roaster.model.source.MethodSource;
 import org.junit.Test;
 
 /**
@@ -90,6 +92,26 @@ public class JavaInterfaceTest
       assertTrue(iface.isStatic());
       iface.setStatic(false);
       assertFalse(iface.isStatic());
+   }
+
+   @Test
+   public void testImportInterface()
+   {
+      JavaInterfaceSource javaInterface = Roaster.create(JavaInterfaceSource.class);
+      javaInterface.setName("MyInterface");
+      javaInterface.setPackage("org.jboss.forge");
+
+      MethodSource<JavaInterfaceSource> methodSource = javaInterface.addMethod();
+      methodSource.setName("methodExample");
+      methodSource.addParameter("java.util.List<String>", "listParameter");
+
+      JavaClassSource javaImplementation = Roaster.create(JavaClassSource.class);
+      javaImplementation.implementInterface(javaInterface);
+
+      assertTrue("The interface does not import java.util.List properly", javaInterface.hasImport("java.util.List"));
+      assertTrue("The implementation does not import java.util.List properly",
+              javaImplementation.hasImport("java.util.List"));
+
    }
 
 }
