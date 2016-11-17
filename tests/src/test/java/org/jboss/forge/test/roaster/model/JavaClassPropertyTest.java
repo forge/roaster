@@ -94,4 +94,16 @@ public class JavaClassPropertyTest
       source.addProperty(byte[].class, "blob");
       assertTrue(source.hasProperty("blob"));
    }
+
+   @Test
+   public void testGetPropertiesByClass()
+   {
+      JavaClassSource source = Roaster.create(JavaClassSource.class).setName("MyClass");
+      source.addProperty(Date.class, "myDate");
+      source.addProperty(List.class, "myList");
+
+      List<PropertySource<JavaClassSource>> properties = source.getProperties(List.class);
+      Assert.assertEquals("Incorrect number of properties found.", 1, properties.size());
+      Assert.assertEquals("Wrong property returned.", List.class.getCanonicalName(), properties.get(0).getType().getQualifiedName());
+   }
 }

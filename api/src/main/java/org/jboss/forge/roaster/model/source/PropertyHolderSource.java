@@ -45,5 +45,8 @@ public interface PropertyHolderSource<O extends JavaSource<O>> extends
    List<PropertySource<O>> getProperties();
 
    @Override
+   List<PropertySource<O>> getProperties(Class<?> type);
+
+   @Override
    PropertySource<O> getProperty(String name);
 }
