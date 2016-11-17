@@ -18,10 +18,10 @@ public interface Packaged<T>
    /**
     * Get the package of this {@link T}, or return null if it is in the default package.
     */
-   public String getPackage();
+   String getPackage();
 
    /**
     * Return whether or not this {@link T} is in the default package.
     */
-   public boolean isDefaultPackage();
+   boolean isDefaultPackage();
 }

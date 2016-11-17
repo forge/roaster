@@ -23,5 +23,5 @@ public interface NamedSource<T> extends Named
     * 
     * @see #getName()
     */
-   public T setName(String name);
+   T setName(String name);
 }

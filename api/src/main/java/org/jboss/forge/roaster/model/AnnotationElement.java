@@ -21,7 +21,7 @@ public interface AnnotationElement<O extends JavaAnnotation<O>> extends Annotati
    /**
     * Represents the default value of a given {@link AnnotationElement}.
     */
-   public interface ReadDefaultValue<O extends JavaAnnotation<O>>
+   interface ReadDefaultValue<O extends JavaAnnotation<O>>
    {
       String getString();
 

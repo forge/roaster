@@ -43,64 +43,64 @@ public interface Importer<O extends JavaSource<O>>
    /**
     * Return whether or not this {@link O} has an import for the given {@link T} type.
     */
-   public <T extends JavaType<T>> boolean hasImport(T type);
+   <T extends JavaType<T>> boolean hasImport(T type);
 
    /**
     * Return whether or not this {@link O} has the given {@link Import} type.
     */
-   public boolean hasImport(Import imprt);
+   boolean hasImport(Import imprt);
 
    /**
     * Get the {@link Import} for the given fully-qualified class name, if it exists; otherwise, return null;
     */
-   public Import getImport(String literalValue);
+   Import getImport(String literalValue);
 
    /**
     * Get the {@link Import} for the given {@link Class} type, if it exists; otherwise, return null;
     */
-   public Import getImport(Class<?> type);
+   Import getImport(Class<?> type);
 
    /**
     * Get the {@link Import} for the given {@link T} type, if it exists; otherwise, return null;
     */
-   public <T extends JavaType<?>> Import getImport(T type);
+   <T extends JavaType<?>> Import getImport(T type);
 
    /**
     * Get the {@link Import} of the given {@link Import} type, if it exists; otherwise, return null;
     */
-   public Import getImport(Import imprt);
+   Import getImport(Import imprt);
 
    /**
     * Get an immutable list of all {@link Import}s currently imported by this {@link O}
     */
-   public List<Import> getImports();
+   List<Import> getImports();
 
    /**
     * Given a simple or qualified type, resolve that type against the available imports and return the referenced type.
     * If the type cannot be resolved, return the given type unchanged.
     */
-   public String resolveType(String type);
+   String resolveType(String type);
 
    /**
     * Add an import by qualified class name. (E.g: "com.example.Imported") unless it is in the provided 'java.lang.*'
     * package.
     */
-   public Import addImport(final String className);
+   Import addImport(final String className);
 
    /**
     * Add an import for the given {@link Class} type.
     */
-   public Import addImport(final Class<?> type);
+   Import addImport(final Class<?> type);
 
    /**
     * Add an import for the given {@link Import} type.
     */
-   public Import addImport(Import imprt);
+   Import addImport(Import imprt);
 
    /**
     * Add an import for the given {@link JavaType} type.
     */
-   public <T extends JavaType<?>> Import addImport(T type);
+   <T extends JavaType<?>> Import addImport(T type);
 
    /**
     * Ensures the type passed as argument is included in the list of imports for this java source. The method will also
@@ -113,26 +113,26 @@ public interface Importer<O extends JavaSource<O>>
     * @return The name (simple or fully qualified) that should be used to reference the imported type in the code
     * @seeAlso org.jboss.forge.roaster.model.Type
     */
-   public Import addImport(Type<?> type);
+   Import addImport(Type<?> type);
 
    /**
     * Remove any {@link Import} for the given fully-qualified class name, if it exists; otherwise, do nothing;
     */
-   public O removeImport(String name);
+   O removeImport(String name);
 
    /**
     * Remove any {@link Import} for the given {@link Class} type, if it exists; otherwise, do nothing;
     */
-   public O removeImport(Class<?> type);
+   O removeImport(Class<?> type);
 
    /**
     * Remove any {@link Import} for the given {@link T} type, if it exists; otherwise, do nothing;
     */
-   public <T extends JavaType<?>> O removeImport(T type);
+   <T extends JavaType<?>> O removeImport(T type);
 
    /**
     * Remove the given {@link Import} from this {@link O} instance, if it exists; otherwise, do nothing;
     */
-   public O removeImport(Import imprt);
+   O removeImport(Import imprt);
 
 }

@@ -20,5 +20,5 @@ public interface Extendable<O extends JavaType<O>>
     * 
     * @see #setSuperType(String)
     */
-   public String getSuperType();
+   String getSuperType();
 }

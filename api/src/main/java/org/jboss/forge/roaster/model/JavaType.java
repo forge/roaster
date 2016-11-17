@@ -29,7 +29,7 @@ public interface JavaType<T extends JavaType<T>> extends
     * Return the canonical name of this {@link T} instance. This is equivalent to calling
     * {@link Class#getCanonicalName()}
     */
-   public String getCanonicalName();
+   String getCanonicalName();
 
    /**
     * Get the qualified-name of this {@link T} instance, where the qualified-name contains both the Java package and
@@ -38,48 +38,48 @@ public interface JavaType<T extends JavaType<T>> extends
     * <strong>For example</strong>, calling: {@link #getQualifiedName()} is equivalent to calling "{@link #getPackage()}
     * + "." + {@link #getName()}", which in turn is equivalent to calling: {@link Class#getName()}
     */
-   public String getQualifiedName();
+   String getQualifiedName();
 
    /**
     * Get a list of all {@link SyntaxError}s detected in the current {@link T}. Note that when errors are present, the
     * class may still be modified, but changes may not be completely accurate.
     */
-   public List<SyntaxError> getSyntaxErrors();
+   List<SyntaxError> getSyntaxErrors();
 
    /**
     * Return whether or not this {@link T} currently has any {@link SyntaxError} s.
     */
-   public boolean hasSyntaxErrors();
+   boolean hasSyntaxErrors();
 
    /**
     * Return <code>true</code> if this {@link JavaType} represents a {@link JavaClass}
     */
-   public boolean isClass();
+   boolean isClass();
 
    /**
     * Return <code>true</code> if this {@link JavaType} represents a {@link JavaEnum}
     */
-   public boolean isEnum();
+   boolean isEnum();
 
    /**
     * Return <code>true</code> if this {@link JavaType} represents a {@link JavaClass} interface.
     */
-   public boolean isInterface();
+   boolean isInterface();
 
    /**
     * Return <code>true</code> if this {@link JavaType} represents a {@link JavaAnnotation}
     */
-   public boolean isAnnotation();
+   boolean isAnnotation();
 
    /**
     * Return the enclosing {@link JavaType} type in which this class is defined. If this class is a top-level type, and
     * is not a nested type, this object will return itself.
     */
-   public JavaType<?> getEnclosingType();
+   JavaType<?> getEnclosingType();
 
    /**
     * Return the generated code without any formatting.
     */
-   public String toUnformattedString();
+   String toUnformattedString();
 
 }

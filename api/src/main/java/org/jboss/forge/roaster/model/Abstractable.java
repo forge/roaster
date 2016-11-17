@@ -15,5 +15,5 @@ package org.jboss.forge.roaster.model;
  */
 public interface Abstractable<T>
 {
-   public abstract boolean isAbstract();
+   boolean isAbstract();
 }
