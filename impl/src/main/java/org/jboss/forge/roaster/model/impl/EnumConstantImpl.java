@@ -30,7 +30,7 @@ public class EnumConstantImpl implements EnumConstantSource
    private final AnnotationAccessor<JavaEnumSource, EnumConstantSource> annotations = new AnnotationAccessor<JavaEnumSource, EnumConstantSource>();
    private JavaEnumSource parent;
    private AST ast;
-   private EnumConstantDeclaration enumConstant;
+   private final EnumConstantDeclaration enumConstant;
 
    private void init(final JavaEnumSource parent)
    {

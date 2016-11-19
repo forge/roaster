@@ -27,14 +27,13 @@ import org.junit.Test;
  */
 public class JavaEnumMethodTest
 {
-   private InputStream stream;
    private JavaEnumSource javaEnum;
    private MethodSource<JavaEnumSource> method;
 
    @Before
    public void reset()
    {
-      stream = JavaEnumMethodTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockEnum.java");
+      InputStream stream = JavaEnumMethodTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockEnum.java");
       javaEnum = Roaster.parse(JavaEnumSource.class, stream);
       javaEnum.addMethod("public URL rewriteURL(String pattern, String replacement) { return null; }");
       method = javaEnum.getMethods().get(javaEnum.getMethods().size() - 1);

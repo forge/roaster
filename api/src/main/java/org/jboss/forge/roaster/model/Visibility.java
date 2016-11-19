@@ -10,6 +10,8 @@ package org.jboss.forge.roaster.model;
 import org.jboss.forge.roaster.model.source.VisibilityScopedSource;
 import org.jboss.forge.roaster.model.util.Assert;
 
+import java.util.Arrays;
+
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
@@ -18,12 +20,12 @@ public enum Visibility
 {
    PUBLIC("public"), PROTECTED("protected"), PRIVATE("private"), PACKAGE_PRIVATE("");
 
-   private Visibility(String scope)
+   Visibility(String scope)
    {
       this.scope = scope;
    }
 
-   private String scope;
+   private final String scope;
 
    /**
     * private, public, protected, package private("")
@@ -49,7 +51,7 @@ public enum Visibility
       else
       {
          throw new IllegalStateException(VisibilityScoped.class.getSimpleName()
-                  + " target does not comply with visibility scoping. Must be one of " + Visibility.values() + "[ "
+                  + " target does not comply with visibility scoping. Must be one of " + Arrays.toString(Visibility.values()) + "[ "
                   + target + "]");
       }
    }

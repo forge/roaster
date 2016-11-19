@@ -27,14 +27,13 @@ import org.junit.Test;
  */
 public class JavaClassMethodTest
 {
-   private InputStream stream;
    private JavaClassSource javaClass;
    private MethodSource<JavaClassSource> method;
 
    @Before
    public void reset()
    {
-      stream = JavaClassMethodTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockClass.java");
+      InputStream stream = JavaClassMethodTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockClass.java");
       javaClass = Roaster.parse(JavaClassSource.class, stream);
       javaClass.addMethod("public URL rewriteURL(String pattern, String replacement) { return null; }");
       method = javaClass.getMethods().get(javaClass.getMethods().size() - 1);

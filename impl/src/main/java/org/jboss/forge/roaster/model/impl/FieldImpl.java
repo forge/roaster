@@ -42,8 +42,8 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    private final AnnotationAccessor<O, FieldSource<O>> annotations = new AnnotationAccessor<O, FieldSource<O>>();
    private final ModifierAccessor modifiers = new ModifierAccessor();
 
-   private O parent;
-   private AST ast;
+   private final O parent;
+   private final AST ast;
    private final FieldDeclaration field;
    private final VariableDeclarationFragment fragment;
    private final CompilationUnit cu;

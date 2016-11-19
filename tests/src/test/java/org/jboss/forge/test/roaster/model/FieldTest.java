@@ -26,14 +26,13 @@ import org.junit.Test;
  */
 public class FieldTest
 {
-   private InputStream stream;
    private JavaClassSource javaClass;
    private FieldSource<JavaClassSource> field;
 
    @Before
    public void reset()
    {
-      stream = FieldTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedField.java");
+      InputStream stream = FieldTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedField.java");
       javaClass = Roaster.parse(JavaClassSource.class, stream);
       field = javaClass.getFields().get(javaClass.getFields().size() - 1);
    }

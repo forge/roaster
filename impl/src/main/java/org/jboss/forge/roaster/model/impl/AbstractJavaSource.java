@@ -293,14 +293,10 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       {
          resultType = Types.stripGenerics(resultType);
       }
-      if (!validImport(resultType)
+      return !(!validImport(resultType)
                || hasImport(resultType)
                || Types.isJavaLang(resultType)
-               || Strings.areEqual(getPackage(), Types.getPackage(resultType)))
-      {
-         return false;
-      }
-      return true;
+               || Strings.areEqual(getPackage(), Types.getPackage(resultType)));
    }
 
    @Override

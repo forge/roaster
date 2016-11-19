@@ -19,12 +19,11 @@ import org.jboss.forge.roaster.model.util.Types;
 public class ImportImpl implements Import
 {
    private AST ast = null;
-   private CompilationUnit cu = null;
    private ImportDeclaration imprt = null;
 
    private void init(final JavaSource<?> parent)
    {
-      cu = (CompilationUnit) parent.getInternal();
+      CompilationUnit cu = (CompilationUnit) parent.getInternal();
       ast = cu.getAST();
    }
 
@@ -111,11 +110,7 @@ public class ImportImpl implements Import
          return false;
 
       Import other = (Import) obj;
-      if (!getQualifiedName().equals(other.getQualifiedName()))
-      {
-         return false;
-      }
-      return true;
+      return getQualifiedName().equals(other.getQualifiedName());
    }
 
    @Override

@@ -9,6 +9,7 @@ package org.jboss.forge.roaster.model.source;
 
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.Property;
+import org.jboss.forge.roaster.model.util.Refactory;
 
 /**
  * Source variant of {@link Property} interface.
@@ -23,6 +24,9 @@ public interface PropertySource<O extends JavaSource<O>> extends Property<O>,
    /**
     * Set the type of this {@link Property} to the given {@link Class} type. Attempt to add an import statement to this
     * Property's base {@link O} if required.
+    *
+    * It is the caller's responsibility to create new {@code equals(Object)} and {@code hashCode()} methods,
+    * e.g. by using {@link Refactory#createHashCodeAndEquals(JavaClassSource, FieldSource[])}
     */
    PropertySource<O> setType(Class<?> clazz);
 
@@ -30,12 +34,18 @@ public interface PropertySource<O extends JavaSource<O>> extends Property<O>,
     * Set the type of this {@link Property} to the given type. Attempt to add an import statement to this Property's
     * base {@link O} if required. (Note that the given className must be fully-qualified in order to properly import
     * required classes)
+    *
+    * It is the caller's responsibility to create new {@code equals(Object)} and {@code hashCode()} methods,
+    * e.g. by using {@link Refactory#createHashCodeAndEquals(JavaClassSource, FieldSource[])}
     */
    PropertySource<O> setType(String type);
 
    /**
     * Set the type of this {@link Property} to the given {@link JavaType<?>} type. Attempt to add an import statement to
     * this field's base {@link O} if required.
+    *
+    * It is the caller's responsibility to create new {@code equals(Object)} and {@code hashCode()} methods,
+    * e.g. by using {@link Refactory#createHashCodeAndEquals(JavaClassSource, FieldSource[])}
     */
    PropertySource<O> setType(JavaType<?> entity);
 

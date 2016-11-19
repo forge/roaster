@@ -539,7 +539,7 @@ public class RefactoryTest
    {
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
-      assertEquals("int", hashcode.getReturnType());
+      assertEquals("int", hashcode.getReturnType().getName());
       assertThat(hashcode.getBody(), containsString("result=prime * result + getOuterType().hashCode();"));
       assertThat(hashcode.getBody(), containsString("result=prime * result + ((flag == null) ? 0 : flag.hashCode());"));
 

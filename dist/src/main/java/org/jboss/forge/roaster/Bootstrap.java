@@ -93,7 +93,6 @@ public class Bootstrap
    }
 
    private void format(List<File> files, String configFile, final boolean recursive, final boolean quiet)
-            throws IOException
    {
       for (File file : files)
       {

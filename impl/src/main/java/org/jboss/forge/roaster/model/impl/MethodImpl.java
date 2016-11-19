@@ -153,7 +153,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
          }
       }
 
-      signature.append(") : " + (this.getReturnType() == null ? "void" : this.getReturnType().getName()));
+      signature.append(") : ").append((this.getReturnType() == null ? "void" : this.getReturnType().getName()));
       return signature.toString();
    }
 
