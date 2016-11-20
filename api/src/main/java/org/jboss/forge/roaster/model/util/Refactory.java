@@ -203,7 +203,7 @@ public class Refactory
       clazz.addMethod(
                "public boolean equals(Object obj) { " +
                         "if (this == obj) { return true; } " +
-                        superEqualsCheck.toString() +
+                        superEqualsCheck +
                         typeCheckAndAssignment.toString() +
                         fieldEqualityChecks.toString() +
                         "return true; " +

@@ -282,13 +282,9 @@ public class JavaPackageInfoImpl implements JavaPackageInfoSource
       {
          resultType = Types.stripGenerics(resultType);
       }
-      if (!validImport(resultType)
+      return !(!validImport(resultType)
                || hasImport(resultType)
-               || Types.isJavaLang(resultType))
-      {
-         return false;
-      }
-      return true;
+               || Types.isJavaLang(resultType));
    }
 
    @Override

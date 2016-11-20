@@ -209,8 +209,8 @@ public abstract class Formatter
    {
       String newLine = System.getProperty("line.separator");
 
-      if (content.indexOf("\n") != -1
-               && content.indexOf(newLine) == -1)
+      if (content.contains("\n")
+               && !content.contains(newLine))
          return content.replaceAll("\n", newLine);
 
       return content;

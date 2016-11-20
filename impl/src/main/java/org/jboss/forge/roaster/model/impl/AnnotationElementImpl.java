@@ -289,8 +289,8 @@ public class AnnotationElementImpl implements AnnotationElementSource
 
    private final AnnotationAccessor<JavaAnnotationSource, AnnotationElementSource> annotations = new AnnotationAccessor<JavaAnnotationSource, AnnotationElementSource>();
 
-   private JavaAnnotationSource parent;
-   private AST ast;
+   private final JavaAnnotationSource parent;
+   private final AST ast;
    private final AnnotationTypeMemberDeclaration member;
 
    public AnnotationElementImpl(final JavaAnnotationSource parent)

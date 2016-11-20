@@ -24,14 +24,13 @@ import org.junit.Test;
  */
 public class JavaEnumFieldTest
 {
-   private InputStream stream;
    private JavaEnumSource javaEnum;
    private FieldSource<JavaEnumSource> field;
 
    @Before
    public void reset()
    {
-      stream = JavaEnumFieldTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockEnum.java");
+      InputStream stream = JavaEnumFieldTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockEnum.java");
       javaEnum = Roaster.parse(JavaEnumSource.class, stream);
       field = javaEnum.getFields().get(javaEnum.getFields().size() - 1);
    }

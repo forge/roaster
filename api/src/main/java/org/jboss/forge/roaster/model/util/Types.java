@@ -175,11 +175,7 @@ public class Types
 
       if (l.equals(r))
       {
-         if (!lp.isEmpty() && !rp.isEmpty())
-         {
-            return false;
-         }
-         return true;
+         return !(!lp.isEmpty() && !rp.isEmpty());
       }
 
       return false;
@@ -267,7 +263,7 @@ public class Types
 
    public static String getPackage(final String className)
    {
-      if (className.indexOf(".") > -1)
+      if (className.contains("."))
       {
          return className.substring(0, className.lastIndexOf("."));
       }
