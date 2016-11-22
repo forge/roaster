@@ -9,7 +9,8 @@ package org.jboss.forge.roaster.model.impl;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
-import org.eclipse.jdt.core.dom.SimpleType;
+import org.eclipse.jdt.core.dom.Name;
+import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jface.text.Document;
@@ -24,7 +25,7 @@ import org.jboss.forge.roaster.model.util.Types;
 
 /**
  * Represents a Java Source File
- * 
+ *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSource> implements JavaClassSource
@@ -170,11 +171,11 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
       else if (Types.isGeneric(type))
       {
          String typeD = Types.stripGenerics(type);
-         String sympleTypeDName = Types.toSimpleName(typeD);
+         String simpleTypeDName = Types.toSimpleName(typeD);
          String typesGeneric = Types.getGenericsTypeParameter(type);
 
          org.eclipse.jdt.core.dom.ParameterizedType pt = body.getAST().newParameterizedType(
-                  body.getAST().newSimpleType(body.getAST().newSimpleName(sympleTypeDName)));
+                  body.getAST().newSimpleType(body.getAST().newSimpleName(simpleTypeDName)));
 
          if (!hasImport(typeD) && Types.isQualified(typeD))
          {
@@ -195,13 +196,27 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
       }
       else
       {
-         SimpleType simpleType = body.getAST().newSimpleType(body.getAST().newSimpleName(Types.toSimpleName(type)));
-         getBodyDeclaration().setStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY, simpleType);
+         final SimpleName simpleName = body.getAST().newSimpleName(Types.toSimpleName(type));
 
-         if (!hasImport(type) && Types.isQualified(type))
+         final Type superType;
+
+         if (!hasImport(type) && hasImport(simpleName.getIdentifier()) && Types.isQualified(type))
          {
-            addImport(type);
+            // Conflicting import found, use qualified name for new super type
+            final Name qualifier = body.getAST().newName(Types.getPackage(type));
+            superType = body.getAST().newNameQualifiedType(qualifier, simpleName);
          }
+         else
+         {
+            // Same type as existing import or not qualified at all (maybe from same package)
+            superType = body.getAST().newSimpleType(simpleName);
+            if (Types.isQualified(type))
+            {
+               addImport(type);
+            }
+         }
+
+         getBodyDeclaration().setStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY, superType);
       }
 
       return this;
