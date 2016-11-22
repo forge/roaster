@@ -353,6 +353,19 @@ public abstract class JavaClassTestBase
    }
 
    @Test
+   public void testSuperTypeWithConflictingImport()
+   {
+      final JavaClassSource myClass = Roaster.create(JavaClassSource.class);
+      myClass.setPackage("test");
+      final Import utilListImport = myClass.addImport(List.class);
+      myClass.setSuperType("java.awt.List");
+
+      assertEquals("Class should only contain one import.", 1, myClass.getImports().size());
+      assertEquals("Wrong import detected.", utilListImport, myClass.getImport("List"));
+      assertEquals("Wrong super type set.", "java.awt.List", myClass.getSuperType());
+   }
+
+   @Test
    public void testFinal() throws Exception
    {
       source.setFinal(false);
