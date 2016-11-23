@@ -65,6 +65,20 @@ public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapa
       assertTrue(this.source.hasInterface(i2.getQualifiedName()));
    }
 
+   @Test
+   public void testAddInterfaceWithConflictingImport()
+   {
+      final JavaInterfaceSource iface = Roaster.parse(JavaInterfaceSource.class, "package com.foo; public interface List {}");
+      assertFalse(source.hasInterface(iface));
+      assertEquals(0, source.getInterfaces().size());
+      source.addImport("java.util.List");
+      source.addInterface(iface);
+      assertEquals("No imports should have been added.", 1, source.getImports().size());
+      assertTrue(source.hasImport("java.util.List"));
+      assertFalse(source.hasImport("com.foo.List"));
+      assertEquals(1, source.getInterfaces().size());
+   }
+
    @Test(expected = IllegalArgumentException.class)
    public void testAddImproperInterface() throws Exception
    {
@@ -83,7 +97,7 @@ public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapa
       assertTrue(this.source.hasInterface("com.other.Custom"));
       assertTrue(this.source.hasImport(Serializable.class));
       assertTrue(this.source.hasImport("com.example.Custom"));
-      assertTrue(this.source.hasImport("com.other.Custom"));
+      assertFalse(this.source.hasImport("com.other.Custom"));
    }
 
    @Test

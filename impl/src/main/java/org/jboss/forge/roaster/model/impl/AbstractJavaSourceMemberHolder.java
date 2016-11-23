@@ -417,20 +417,24 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    {
       if (!this.hasInterface(type))
       {
+         final String simpleName = Types.toSimpleName(type);
+
          Type interfaceType = JDTHelper.getInterfaces(
                   Roaster.parse(JavaInterfaceImpl.class,
-                           "public interface Mock extends " + Types.toSimpleName(type)
-                                    + " {}")
+                           "public interface Mock extends " + simpleName + " {}")
                            .getBodyDeclaration())
                   .get(0);
 
-         if (this.hasInterface(Types.toSimpleName(type)) || this.hasImport(Types.toSimpleName(type)))
+         if (this.hasInterface(simpleName) || this.hasImport(simpleName))
          {
             interfaceType = JDTHelper.getInterfaces(Roaster.parse(JavaInterfaceImpl.class,
                      "public interface Mock extends " + type + " {}").getBodyDeclaration()).get(0);
          }
 
-         this.addImport(type);
+         if (!this.hasImport(simpleName))
+         {
+            this.addImport(type);
+         }
 
          ASTNode node = ASTNode.copySubtree(unit.getAST(), interfaceType);
          JDTHelper.getInterfaces(getBodyDeclaration()).add((Type) node);
