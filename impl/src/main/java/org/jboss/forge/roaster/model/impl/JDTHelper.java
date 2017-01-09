@@ -51,7 +51,7 @@ public class JDTHelper
       }
       else if (type instanceof ParameterizedType)
       {
-         return ((ParameterizedType) type).getType().toString();
+         return ((ParameterizedType) type).toString();
       }
       else if (type instanceof WildcardType)
       {

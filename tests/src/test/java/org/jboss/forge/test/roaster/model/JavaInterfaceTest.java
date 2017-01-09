@@ -6,9 +6,11 @@
  */
 package org.jboss.forge.test.roaster.model;
 
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
@@ -110,8 +112,17 @@ public class JavaInterfaceTest
 
       assertTrue("The interface does not import java.util.List properly", javaInterface.hasImport("java.util.List"));
       assertTrue("The implementation does not import java.util.List properly",
-              javaImplementation.hasImport("java.util.List"));
+               javaImplementation.hasImport("java.util.List"));
 
+   }
+
+   @Test
+   public void testGenericTypesExtendsInterfaceDeclaration()
+   {
+      String data = "import com.foo.Bar;\n"
+               + "public interface Foo extends Bar<String,Integer>{}";
+      JavaInterfaceSource iface = Roaster.parse(JavaInterfaceSource.class, data);
+      assertThat(iface.getInterfaces(), hasItem("Bar<String,Integer>"));
    }
 
 }
