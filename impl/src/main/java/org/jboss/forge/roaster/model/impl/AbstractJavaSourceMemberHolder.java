@@ -397,9 +397,10 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
       for (Type type : superTypes)
       {
          String name = JDTHelper.getTypeName(type);
-         if (Types.isSimpleName(name) && this.hasImport(name))
+         String rawName = Types.stripGenerics(name);
+         if (Types.isSimpleName(rawName) && this.hasImport(rawName))
          {
-            Import imprt = this.getImport(name);
+            Import imprt = this.getImport(rawName);
             String pkg = imprt.getPackage();
             if (!Strings.isNullOrEmpty(pkg))
             {
@@ -464,13 +465,15 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    {
       O obj = addInterface(type);
 
-      if (type instanceof JavaInterfaceSource) {
+      if (type instanceof JavaInterfaceSource)
+      {
          Set<Import> usedImports = new HashSet<Import>();
 
          JavaInterfaceSource interfaceSource = (JavaInterfaceSource) type;
          for (MethodSource<JavaInterfaceSource> method : interfaceSource.getMethods())
          {
-            if (method.isDefault()) {
+            if (method.isDefault())
+            {
                // Do not add default implementations
                continue;
             }
@@ -674,7 +677,8 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
       final Set<String> propertyNames = new LinkedHashSet<String>();
       for (MethodSource<O> method : getMethods())
       {
-         if ((isAccessor(method) || isMutator(method)) && method.getReturnType().getQualifiedName().equals(type.getCanonicalName()))
+         if ((isAccessor(method) || isMutator(method))
+                  && method.getReturnType().getQualifiedName().equals(type.getCanonicalName()))
          {
             propertyNames.add(extractPropertyName(method));
          }

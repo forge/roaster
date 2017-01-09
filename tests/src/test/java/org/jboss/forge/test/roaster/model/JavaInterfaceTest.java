@@ -122,7 +122,7 @@ public class JavaInterfaceTest
       String data = "import com.foo.Bar;\n"
                + "public interface Foo extends Bar<String,Integer>{}";
       JavaInterfaceSource iface = Roaster.parse(JavaInterfaceSource.class, data);
-      assertThat(iface.getInterfaces(), hasItem("Bar<String,Integer>"));
+      assertThat(iface.getInterfaces(), hasItem("com.foo.Bar<String,Integer>"));
    }
 
 }
