@@ -6,8 +6,12 @@
  */
 package org.jboss.forge.test.roaster.model;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.JavaInterface;
@@ -15,6 +19,7 @@ import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.TypeVariableSource;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class JavaClassGenericsTest
@@ -195,5 +200,15 @@ public class JavaClassGenericsTest
       Assert.assertTrue(typeVariables.get(0).getBounds().isEmpty());
       Assert.assertEquals("O", typeVariables.get(1).getName());
       Assert.assertTrue(typeVariables.get(1).getBounds().isEmpty());
+   }
+
+   @Test
+   @Ignore("Reproduces ROASTER-117")
+   public void testNestedGenericsInSuperType() throws Exception
+   {
+      JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+      javaClass.setSuperType("SomeClass<java.util.Map<String,SomeOtherClass>>");
+      Assert.assertThat(javaClass.hasImport(Map.class), is(true));
+      Assert.assertThat(javaClass.getSuperType(), equalTo("SomeClass<Map<String,SomeOtherClass>>"));
    }
 }
