@@ -1023,9 +1023,12 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       {
          literalValue = literalValue.substring(1, literalValue.length() - 1);
       }
-      for (String value : literalValue.split(","))
+      if (!Strings.isNullOrEmpty(literalValue))
       {
-         result.add(Strings.unquote(value));
+         for (String value : literalValue.split(","))
+         {
+            result.add(Strings.unquote(value));
+         }
       }
       return result.toArray(new String[result.size()]);
    }

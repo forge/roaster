@@ -6,12 +6,15 @@
  */
 package org.jboss.forge.test.roaster.model;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
@@ -21,6 +24,7 @@ import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.source.AnnotationElementSource;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.JavaAnnotationSource;
+import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.test.roaster.model.common.MockEnumType;
 import org.junit.Before;
 import org.junit.Test;
@@ -241,6 +245,17 @@ public class JavaAnnotationTest
       assertEquals("0", valueDefaultValue.getLiteralValue());
       assertEquals(StringBuffer.class.getName(), valueDefaultValue.getLiteralValue("charSequenceType"));
       assertEquals(MockEnumType.BAR, valueDefaultValue.getEnumValue(MockEnumType.class, "metasyntacticVariable"));
+   }
+
+   @Test
+   public void testAnnotationGetStringArrayValueShouldNotReturnValueIfEmpty()
+   {
+      String data = "@Test(test = {}) public class AnnotationTest {}";
+      JavaClassSource type = Roaster.parse(JavaClassSource.class, data);
+      AnnotationSource<JavaClassSource> ann = type.getAnnotation("Test");
+      assertThat(ann, notNullValue());
+      String[] arrayValue = ann.getStringArrayValue("test");
+      assertThat(arrayValue.length, equalTo(0));
    }
 
 }
