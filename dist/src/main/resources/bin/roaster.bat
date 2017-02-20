@@ -150,7 +150,7 @@ goto runRoaster
 
 set ROASTER_MAIN_CLASS=org.jboss.forge.roaster.Bootstrap
 %ROASTER_JAVA_EXE% %ROASTER_DEBUG_ARGS% %ROASTER_OPTS% "-Droaster.standalone=true" "-Droaster.home=%ROASTER_HOME%" ^
-   -cp ".;%ROASTER_HOME%\lib\*" %ROASTER_MAIN_CLASS% %ROASTER_CMD_LINE_ARGS%
+   -cp ".;%ROASTER_HOME%\lib\*;%ROASTER_HOME%" %ROASTER_MAIN_CLASS% %ROASTER_CMD_LINE_ARGS%
 if ERRORLEVEL 1 goto error
 goto end
 
