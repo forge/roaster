@@ -157,6 +157,6 @@ if $cygwin; then
 fi
 
 roaster_exec_cmd="\"$JAVACMD\" $ROASTER_DEBUG_ARGS $ROASTER_OPTS \"-Droaster.home=${ROASTER_HOME}\" \
-   -cp \"${ROASTER_HOME}/lib/*\" $ROASTER_MAIN_CLASS"
+   -cp \"${ROASTER_HOME}\" $ROASTER_MAIN_CLASS"
 
 eval $roaster_exec_cmd "$QUOTED_ARGS"
