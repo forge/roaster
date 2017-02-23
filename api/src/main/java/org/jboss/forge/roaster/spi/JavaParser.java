@@ -6,6 +6,10 @@
  */
 package org.jboss.forge.roaster.spi;
 
+import java.util.List;
+
+import org.jboss.forge.roaster.ParserException;
+import org.jboss.forge.roaster.Problem;
 import org.jboss.forge.roaster.model.JavaUnit;
 import org.jboss.forge.roaster.model.source.JavaSource;
 
@@ -33,4 +37,12 @@ public interface JavaParser
     * @return {@link JavaUnit}, {@code null} if the data format is not recognized by this {@link JavaParser}.
     */
    JavaUnit parseUnit(final String data);
+
+   /**
+    * Checks if the code is valid
+    * 
+    * @param code
+    * @throws ParserException if it's not
+    */
+   List<Problem> validateSnippet(String code) throws ParserException;
 }

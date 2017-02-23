@@ -180,7 +180,7 @@ System.out.println(javaClass);
 Formatting the Java Source Code
 -------------------------------
 
-Roaster formats the Java Source Code by calling the format() method:
+Roaster formats the Java Source Code by calling the `format()` method:
 
 ```java
 String javaCode = "public class MyClass{ private String field;}";
@@ -201,6 +201,23 @@ JavaUnit unit = Roaster.parseUnit(javaCode);
 JavaClassSource myClass = unit.getGoverningType();
 JavaClassSource anotherClass = (JavaClassSource) unit.getTopLevelTypes().get(1);
 ```
+
+
+Validate Code Snippets
+----------------------
+
+Roaster validates Java snippets and reports as Problem objects by calling the `validateSnippet()` method: 
+
+Example:
+```java
+List<Problem> problem = Roaster.validateSnippet("public class HelloWorld {}");
+// problem.size() == 0
+
+List<Problem> problem = Roaster.validateSnippet(""public class MyClass {");
+// problem.size() == 1 containing a new Problem("Syntax error, insert \"}\" to complete ClassBody", 21, 21, 1)
+
+```
+
 
 Issue tracker
 =============

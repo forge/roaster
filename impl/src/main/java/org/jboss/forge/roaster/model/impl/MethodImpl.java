@@ -10,12 +10,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
@@ -28,10 +25,8 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeParameter;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
-import org.eclipse.jdt.internal.compiler.CompilationResult;
-import org.eclipse.jdt.internal.compiler.ast.ConstructorDeclaration;
-import org.eclipse.jdt.internal.core.util.CodeSnippetParsingUtil;
 import org.jboss.forge.roaster.ParserException;
+import org.jboss.forge.roaster.Problem;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.Annotation;
 import org.jboss.forge.roaster.model.JavaType;
@@ -258,7 +253,6 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       }
    }
 
-   @SuppressWarnings({ "rawtypes", "unchecked" })
    @Override
    public MethodSource<O> setBody(final String body)
    {
@@ -268,23 +262,11 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       }
       else
       {
-         Hashtable options = JavaCore.getOptions();
-         options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
-         options.put(JavaCore.CORE_ENCODING, "UTF-8");
-         CodeSnippetParsingUtil codeSnippetParsingUtil = new CodeSnippetParsingUtil(false);
-         ConstructorDeclaration constructorDeclaration = codeSnippetParsingUtil.parseStatements(body.toCharArray(), 0,
-                  body.length(), options, true, false);
-         CompilationResult compilationResult = constructorDeclaration.compilationResult();
-         if (compilationResult.hasErrors())
+         List<Problem> problems = Roaster.validateSnippet(body);
+         if (problems.size() > 0)
          {
-            StringBuilder sb = new StringBuilder("PROBLEMS:\n");
-            for (CategorizedProblem problem : compilationResult.getErrors())
-            {
-               sb.append("\t - ").append(problem.getMessage()).append('\n');
-            }
-            throw new ParserException(sb.toString());
+            throw new ParserException(problems);
          }
-         // TODO: Reuse ConstructorDeclaration somehow
          String stub = "public class Stub { public void method() {" + body + "} }";
          JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
          List<MethodSource<JavaClassSource>> methods = temp.getMethods();

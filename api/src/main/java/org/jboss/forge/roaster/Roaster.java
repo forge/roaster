@@ -31,7 +31,9 @@ import org.jboss.forge.roaster.spi.JavaParser;
  */
 public final class Roaster
 {
-   private Roaster() {}
+   private Roaster()
+   {
+   }
 
    private static List<JavaParser> parsers;
    private static List<FormatterProvider> formatters;
@@ -161,6 +163,21 @@ public final class Roaster
    public static <T extends JavaType<?>> T parse(final Class<T> type, final char[] data)
    {
       return parse(type, new String(data));
+   }
+
+   /**
+    * Validates a code snippet and returns a {@link List} of {@link Problem}. Never returns <code>null</code>.
+    * 
+    * @param snippet any Java code
+    * @throws ParserException if no {@link JavaParser} implementation could be found
+    */
+   public static List<Problem> validateSnippet(String snippet) throws ParserException
+   {
+      for (JavaParser parser : getParsers())
+      {
+         return parser.validateSnippet(snippet);
+      }
+      throw new ParserException("Cannot find JavaParser capable of validating the requested data");
    }
 
    /**

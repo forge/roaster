@@ -8,10 +8,12 @@
 package org.jboss.forge.roaster.spi;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
@@ -21,8 +23,12 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.internal.compiler.CompilationResult;
+import org.eclipse.jdt.internal.compiler.ast.ConstructorDeclaration;
+import org.eclipse.jdt.internal.core.util.CodeSnippetParsingUtil;
 import org.eclipse.jface.text.Document;
 import org.jboss.forge.roaster.ParserException;
+import org.jboss.forge.roaster.Problem;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.JavaUnit;
 import org.jboss.forge.roaster.model.ast.TypeDeclarationFinderVisitor;
@@ -154,4 +160,29 @@ public class JavaParserImpl implements JavaParser
       return null;
    }
 
+   @SuppressWarnings({ "unchecked", "rawtypes" })
+   @Override
+   public List<Problem> validateSnippet(String snippet)
+   {
+      Hashtable options = JavaCore.getOptions();
+      options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
+      options.put(JavaCore.CORE_ENCODING, "UTF-8");
+      CodeSnippetParsingUtil codeSnippetParsingUtil = new CodeSnippetParsingUtil(false);
+      ConstructorDeclaration constructorDeclaration = codeSnippetParsingUtil.parseStatements(snippet.toCharArray(), 0,
+               snippet.length(), options, true, false);
+      CompilationResult compilationResult = constructorDeclaration.compilationResult();
+      List<Problem> problems = new ArrayList<Problem>();
+      if (compilationResult.hasErrors())
+      {
+         for (CategorizedProblem problem : compilationResult.getErrors())
+         {
+            Problem p = new Problem(problem.getMessage(),
+                     problem.getSourceStart(),
+                     problem.getSourceEnd(),
+                     problem.getSourceLineNumber());
+            problems.add(p);
+         }
+      }
+      return problems;
+   }
 }
