@@ -14,6 +14,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 
 import java.util.Enumeration;
 
+import org.jboss.forge.roaster.ParserException;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.Visibility;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
@@ -239,4 +240,29 @@ public class MethodImplementationTest
       Assert.assertNull("Import of '" + className + "' should not exist.", implListImport);
    }
 
+   @Test(expected = ParserException.class)
+   public void testMethodBodyShouldNotBeEmptyOnInvalidCode()
+   {
+      JavaClassSource source = Roaster.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> method = source.addMethod().setName("foo");
+      method.setBody("{}{{}{dasfasdfasdfga");
+   }
+
+   @Test
+   public void testEmptyMethodBodyShouldNotThrowException()
+   {
+      JavaClassSource source = Roaster.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> method = source.addMethod().setName("foo");
+      method.setBody("");
+      Assert.assertThat(method.getBody(), equalTo(""));
+   }
+
+   @Test
+   public void testMethodBodyShouldParseCorrectly()
+   {
+      JavaClassSource source = Roaster.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> method = source.addMethod().setName("foo");
+      method.setBody("System.out.println(\"Hello World\");");
+      Assert.assertThat(method.getBody(), equalTo("System.out.println(\"Hello World\");"));
+   }
 }
