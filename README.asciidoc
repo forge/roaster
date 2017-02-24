@@ -213,7 +213,7 @@ Example:
 List<Problem> problem = Roaster.validateSnippet("public class HelloWorld {}");
 // problem.size() == 0
 
-List<Problem> problem = Roaster.validateSnippet(""public class MyClass {");
+List<Problem> problem = Roaster.validateSnippet("public class MyClass {");
 // problem.size() == 1 containing a new Problem("Syntax error, insert \"}\" to complete ClassBody", 21, 21, 1)
 
 ```
