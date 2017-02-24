@@ -86,4 +86,18 @@ public class ParameterTest
       newMethod.addParameter("Class<T>", "as");
       Assert.assertThat(clazz.toString(), containsString("public final <T> T name(int index, Class<T> as)"));
    }
+
+   @Test
+   public void testEllipsisSupport() throws Exception
+   {
+      JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("TestClass");
+      final MethodSource<JavaClassSource> newMethod = clazz.addMethod()
+               .setName("name")
+               .setPublic()
+               .setReturnTypeVoid()
+               .setFinal(true);
+      newMethod.addParameter("String", "name").setVarArgs(true);
+      Assert.assertThat(clazz.toString(), containsString("public final void name(String... name)"));
+   }
+
 }
