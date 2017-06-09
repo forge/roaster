@@ -14,6 +14,10 @@ Installation
 * If you are using Maven, add the following dependencies to your project: 
 
 ```xml
+<properties>
+  <version.roaster>2.20.0.Final</version.roaster>
+</properties>
+
 <dependency>
   <groupId>org.jboss.forge.roaster</groupId>
   <artifactId>roaster-api</artifactId>
@@ -27,7 +31,7 @@ Installation
 </dependency>
 ```
 
-* Otherwise, download and extract (or build from sources) the most recent http://search.maven.org/#search|ga|1|a%3A%22roaster-distribution%22[the most recent distribution] containing the Roaster distribution and command line tools
+* Otherwise, download and extract (or build from sources) the most recent http://search.maven.org/#search|ga|1|a%3A%22roaster-distribution%22[distribution] containing the Roaster distribution and command line tools
 
 Usage
 =====
