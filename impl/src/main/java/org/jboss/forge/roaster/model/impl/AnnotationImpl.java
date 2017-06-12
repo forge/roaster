@@ -305,6 +305,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       return this;
    }
 
+   @SuppressWarnings("unchecked")
    @Override
    public AnnotationSource<O> setLiteralValue(final String value)
    {
@@ -317,15 +318,33 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
 
       if (isSingleValue())
       {
-         SingleMemberAnnotation sa = (SingleMemberAnnotation) annotation;
 
          String stub = "@" + getName() + "(" + value + ") public class Stub { }";
          JavaClass<?> temp = Roaster.parse(JavaClass.class, stub);
 
-         SingleMemberAnnotation anno = (SingleMemberAnnotation) temp.getAnnotations().get(0).getInternal();
+         Object internal = temp.getAnnotations().get(0).getInternal();
+         if (internal instanceof SingleMemberAnnotation)
+         {
+            SingleMemberAnnotation sa = (SingleMemberAnnotation) annotation;
+            Expression expression = ((SingleMemberAnnotation) internal).getValue();
+            sa.setValue((Expression) ASTNode.copySubtree(ast, expression));
+         }
+         else if (internal instanceof NormalAnnotation)
+         {
+            NormalAnnotation anno = (NormalAnnotation) internal;
+            convertTo(AnnotationType.NORMAL);
+            NormalAnnotation na = (NormalAnnotation) annotation;
 
-         Expression expression = anno.getValue();
-         sa.setValue((Expression) ASTNode.copySubtree(ast, expression));
+            for (MemberValuePair mvp : (List<MemberValuePair>) anno.values())
+            {
+               na.values().add(ASTNode.copySubtree(annotation.getAST(), mvp));
+            }
+         }
+         else
+         {
+            throw new IllegalArgumentException(
+                     "Type " + internal.getClass().getName() + " cannot be handled in this method");
+         }
       }
       else
       {

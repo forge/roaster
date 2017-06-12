@@ -824,4 +824,15 @@ public abstract class AnnotationTest<O extends JavaSource<O>, T>
       Assert.assertEquals(IllegalStateException.class.getName(), annotation.getStringValue("expected"));
    }
 
+   @Test
+   public void testSetLiteralValueStructured()
+   {
+      String annotationValue = "clazz = String.class, method = \"startAnalyse\"";
+      AnnotationSource<O> ann = target.addAnnotation(Test.class);
+      ann.setLiteralValue(annotationValue);
+      Assert.assertEquals("startAnalyse", ann.getStringValue("method"));
+      ann.setLiteralValue(annotationValue);
+      Assert.assertEquals(String.class, ann.getClassValue("clazz"));
+   }
+
 }
