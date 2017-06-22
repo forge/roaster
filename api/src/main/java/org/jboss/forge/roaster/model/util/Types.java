@@ -421,9 +421,13 @@ public class Types
       {
          return false;
       }
-      if (CLASS_ARRAY_PATTERN.matcher(type).matches())
+      if (type.charAt(0) == '[' && CLASS_ARRAY_PATTERN.matcher(type).matches())
       {
          return true;
+      }
+      if(!type.endsWith("]"))
+      {
+          return false;
       }
       Matcher matcher = SIMPLE_ARRAY_PATTERN.matcher(type);
       if (matcher.find())
@@ -468,6 +472,10 @@ public class Types
 
    private static boolean isClassArray(String type)
    {
+      if( type == null || type.length() == 0 || type.charAt(0) != '[' )
+      {
+          return false;
+      }
       Matcher matcher = CLASS_ARRAY_PATTERN.matcher(type);
       return matcher.find();
    }
