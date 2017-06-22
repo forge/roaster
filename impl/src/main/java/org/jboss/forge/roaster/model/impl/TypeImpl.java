@@ -222,16 +222,20 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    @Override
    public boolean isType(final Class<?> type)
    {
-      final String qualifiedName = getQualifiedName();
+      final String simpleName = type.getSimpleName();
+      if(!getName().contains(simpleName))
+      {
+         return false;
+      }
 
-      if (Strings.areEqual(type.getName(), qualifiedName))
+      if (isPrimitive() && type.isPrimitive() && simpleName.equals(getName()))
       {
          return true;
       }
 
-      final String simpleName = type.getSimpleName();
+      final String qualifiedName = getQualifiedName();
 
-      if (isPrimitive() && type.isPrimitive() && simpleName.equals(getName()))
+      if (Strings.areEqual(type.getName(), qualifiedName))
       {
          return true;
       }
