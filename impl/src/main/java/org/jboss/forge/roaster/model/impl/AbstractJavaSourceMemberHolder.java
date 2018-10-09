@@ -398,10 +398,18 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
       {
          String name = JDTHelper.getTypeName(type);
          String rawName = Types.stripGenerics(name);
-         if (Types.isSimpleName(rawName) && this.hasImport(rawName))
+         if (Types.isSimpleName(rawName))
          {
-            Import imprt = this.getImport(rawName);
-            String pkg = imprt.getPackage();
+            String pkg;
+            if (this.hasImport(rawName))
+            {
+               Import imprt = this.getImport(rawName);
+               pkg = imprt.getPackage();
+            }
+            else
+            {
+               pkg = this.getPackage();
+            }
             if (!Strings.isNullOrEmpty(pkg))
             {
                name = pkg + "." + name;

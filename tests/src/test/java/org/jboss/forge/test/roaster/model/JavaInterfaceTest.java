@@ -125,4 +125,13 @@ public class JavaInterfaceTest
       assertThat(iface.getInterfaces(), hasItem("com.foo.Bar<String,Integer>"));
    }
 
+   @Test
+   public void testImportInterfaceFromSamePackage()
+   {
+      JavaClassSource javaImplementation = Roaster.parse(JavaClassSource.class, "package com.foo.forge; public class MockClass implements MyInterface {}");
+      assertThat(javaImplementation.getInterfaces(), hasItem("com.foo.forge.MyInterface"));
+      javaImplementation.addImport("com.foo.forge.MyInterface");
+      assertThat(javaImplementation.getInterfaces(), hasItem("com.foo.forge.MyInterface"));
+   }
+
 }
