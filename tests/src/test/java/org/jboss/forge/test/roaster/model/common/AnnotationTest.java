@@ -33,6 +33,7 @@ import org.junit.Test;
 public abstract class AnnotationTest<O extends JavaSource<O>, T>
 {
    private AnnotationTargetSource<O, T> target;
+   private AnnotationTargetSource<O, T> targetWithoutMockAnnotation;
 
    protected AnnotationTargetSource<O, T> getTarget()
    {
@@ -42,6 +43,16 @@ public abstract class AnnotationTest<O extends JavaSource<O>, T>
    protected void setTarget(final AnnotationTargetSource<O, T> target)
    {
       this.target = target;
+   }
+
+   protected AnnotationTargetSource<O, T> getTargetWithoutMockAnnotation()
+   {
+      return targetWithoutMockAnnotation;
+   }
+
+   protected void setTargetWithoutMockAnnotation(final AnnotationTargetSource<O, T> targetWithoutMockAnnotation)
+   {
+      this.targetWithoutMockAnnotation = targetWithoutMockAnnotation;
    }
 
    @Before
@@ -789,10 +800,10 @@ public abstract class AnnotationTest<O extends JavaSource<O>, T>
    @Test
    public void testAddAnnotationArrayElementClass() throws Exception
    {
-      final AnnotationSource<O> annotation = target.addAnnotation().setName("MyAnnotation");
-      assertFalse(target.getOrigin().hasImport(MockAnnotation.class));
+      final AnnotationSource<O> annotation = targetWithoutMockAnnotation.addAnnotation().setName("MyAnnotation");
+      assertFalse(targetWithoutMockAnnotation.getOrigin().hasImport(MockAnnotation.class));
       annotation.addAnnotationValue(MockAnnotation.class);
-      assertTrue(target.getOrigin().hasImport(MockAnnotation.class));
+      assertTrue(targetWithoutMockAnnotation.getOrigin().hasImport(MockAnnotation.class));
       assertEquals(1, annotation.getAnnotationArrayValue().length);
       assertEquals("MockAnnotation", annotation.getAnnotationArrayValue()[0].getName());
    }
@@ -800,10 +811,10 @@ public abstract class AnnotationTest<O extends JavaSource<O>, T>
    @Test
    public void testAddAnnotationArrayElementClassNamed() throws Exception
    {
-      final AnnotationSource<O> annotation = target.addAnnotation().setName("MyAnnotation");
-      assertFalse(target.getOrigin().hasImport(MockAnnotation.class));
+      final AnnotationSource<O> annotation = targetWithoutMockAnnotation.addAnnotation().setName("MyAnnotation");
+      assertFalse(targetWithoutMockAnnotation.getOrigin().hasImport(MockAnnotation.class));
       annotation.addAnnotationValue("nested", MockAnnotation.class);
-      assertTrue(target.getOrigin().hasImport(MockAnnotation.class));
+      assertTrue(targetWithoutMockAnnotation.getOrigin().hasImport(MockAnnotation.class));
       assertEquals(1, annotation.getAnnotationArrayValue("nested").length);
       assertEquals("MockAnnotation", annotation.getAnnotationArrayValue("nested")[0].getName());
    }

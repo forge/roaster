@@ -25,5 +25,10 @@ public class MethodAnnotationTest extends AnnotationTest<JavaClassSource, Method
                .getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedMethod.java");
       MethodSource<JavaClassSource> method = Roaster.parse(JavaClassSource.class, stream).getMethods().get(0);
       setTarget(method);
+      
+      stream = MethodAnnotationTest.class
+               .getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedMethodWithoutMockAnnotation.java");
+      method = Roaster.parse(JavaClassSource.class, stream).getMethods().get(0);
+      setTargetWithoutMockAnnotation(method);
    }
 }

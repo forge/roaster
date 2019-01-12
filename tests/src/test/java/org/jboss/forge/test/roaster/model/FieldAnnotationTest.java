@@ -31,6 +31,11 @@ public class FieldAnnotationTest extends AnnotationTest<JavaClassSource, FieldSo
                .getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedField.java");
       FieldSource<JavaClassSource> field = Roaster.parse(JavaClassSource.class, stream).getFields().get(0);
       setTarget(field);
+      
+      stream = FieldAnnotationTest.class
+               .getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedFieldWithoutMockAnnotation.java");
+       field = Roaster.parse(JavaClassSource.class, stream).getFields().get(0);
+      setTargetWithoutMockAnnotation(field);
    }
 
    @Test

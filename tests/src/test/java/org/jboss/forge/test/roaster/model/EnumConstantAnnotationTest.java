@@ -25,6 +25,11 @@ public class EnumConstantAnnotationTest extends AnnotationTest<JavaEnumSource, E
                .getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedEnumConstant.java");
       EnumConstantSource field = Roaster.parse(JavaEnumSource.class, stream).getEnumConstants().get(0);
       setTarget(field);
+      
+      stream = EnumConstantAnnotationTest.class
+               .getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedEnumConstantWithoutMockAnnotation.java");
+      field = Roaster.parse(JavaEnumSource.class, stream).getEnumConstants().get(0);
+      setTargetWithoutMockAnnotation(field);
    }
 
 }

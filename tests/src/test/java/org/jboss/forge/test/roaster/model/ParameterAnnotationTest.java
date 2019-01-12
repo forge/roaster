@@ -29,6 +29,11 @@ public class ParameterAnnotationTest extends AnnotationTest<JavaClassSource, Par
                .getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedParameter.java");
       MethodSource<JavaClassSource> method = Roaster.parse(JavaClassSource.class, stream).getMethods().get(0);
       setTarget(method.getParameters().get(0));
+      
+      stream = ParameterAnnotationTest.class
+               .getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedParameterWithoutMockAnnotation.java");
+      method = Roaster.parse(JavaClassSource.class, stream).getMethods().get(0);
+      setTargetWithoutMockAnnotation(method.getParameters().get(0));
    }
 
    @Test
