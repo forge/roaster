@@ -790,7 +790,6 @@ public abstract class AnnotationTest<O extends JavaSource<O>, T>
    public void testAddAnnotationArrayElementClass() throws Exception
    {
       final AnnotationSource<O> annotation = target.addAnnotation().setName("MyAnnotation");
-      target.getOrigin().removeImport(MockAnnotation.class);
       assertFalse(target.getOrigin().hasImport(MockAnnotation.class));
       annotation.addAnnotationValue(MockAnnotation.class);
       assertTrue(target.getOrigin().hasImport(MockAnnotation.class));
@@ -802,7 +801,6 @@ public abstract class AnnotationTest<O extends JavaSource<O>, T>
    public void testAddAnnotationArrayElementClassNamed() throws Exception
    {
       final AnnotationSource<O> annotation = target.addAnnotation().setName("MyAnnotation");
-      target.getOrigin().removeImport(MockAnnotation.class);
       assertFalse(target.getOrigin().hasImport(MockAnnotation.class));
       annotation.addAnnotationValue("nested", MockAnnotation.class);
       assertTrue(target.getOrigin().hasImport(MockAnnotation.class));

@@ -184,10 +184,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       if (!hasImport(strippedClassName) && validImport(strippedClassName))
       {
          imprt = new ImportImpl(this).setName(strippedClassName);
-         if (isValidToImport(strippedClassName))
-         {
-            unit.imports().add(imprt.getInternal());
-         }
+         unit.imports().add(imprt.getInternal());
       }
       else if (hasImport(strippedClassName))
       {
@@ -198,26 +195,6 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
          throw new IllegalArgumentException("Attempted to import the illegal type [" + strippedClassName + "]");
       }
       return imprt;
-   }
-
-   private boolean isValidToImport(String fqnClassName)
-   {
-      String className = Types.toSimpleName(fqnClassName);
-      // check if this class name is equal to the class to import
-      if (className.equals(getName()))
-      {
-         return false;
-      }
-      // check if any import has the same class name
-      for (final Import imprt : getImports())
-      {
-         String importClassName = imprt.getSimpleName();
-         if (importClassName.equals(className))
-         {
-            return false;
-         }
-      }
-      return true;
    }
 
    @Override
