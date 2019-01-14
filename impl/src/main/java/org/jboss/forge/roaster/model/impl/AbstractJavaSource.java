@@ -392,6 +392,21 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
 
    private boolean validImport(final String type)
    {
+      String className = Types.toSimpleName(type);
+      // check if this class name is equal to the class to import
+      if (className.equals(getName()))
+      {
+         return false;
+      }
+      // check if any import has the same class name
+      for (final Import imprt : getImports())
+      {
+         String importClassName = imprt.getSimpleName();
+         if (importClassName.equals(className))
+         {
+            return false;
+         }
+      }
       return !Strings.isNullOrEmpty(type) && !Types.isPrimitive(type) && !Strings.isNullOrEmpty(Types.getPackage(type));
    }
 
