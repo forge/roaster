@@ -2,5 +2,6 @@ language: java
 sudo: false
 jdk:
   - oraclejdk8
+  - openjdk11
 notifications:
   irc: chat.freenode.net#forge

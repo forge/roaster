@@ -8,8 +8,6 @@ package org.jboss.forge.test.roaster.model;
 
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
-
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
@@ -73,20 +71,20 @@ public class FieldMultipleTest
       Assert.assertEquals("java.lang.String", fields.get(0).getType().getQualifiedName());
       Assert.assertEquals("String", fields.get(0).getType().getName());
       Assert.assertFalse(fields.get(0).getType().isArray());
-      Assert.assertTrue(fields.get(0).hasAnnotation(XmlElement.class));
+      Assert.assertTrue(fields.get(0).hasAnnotation("javax.xml.bind.annotation.XmlElement"));
 
       Assert.assertEquals("b", fields.get(1).getName());
       Assert.assertEquals("java.lang.String", fields.get(1).getType().getQualifiedName());
       Assert.assertEquals("String", fields.get(1).getType().getName());
       Assert.assertFalse(fields.get(1).getType().isArray());
-      Assert.assertTrue(fields.get(1).hasAnnotation(XmlElement.class));
+      Assert.assertTrue(fields.get(1).hasAnnotation("javax.xml.bind.annotation.XmlElement"));
 
       Assert.assertEquals("c", fields.get(2).getName());
       Assert.assertEquals("java.lang.String", fields.get(2).getType().getQualifiedName());
       Assert.assertEquals("String[]", fields.get(2).getType().getName());
       Assert.assertTrue(fields.get(2).getType().isArray());
       Assert.assertEquals(1, fields.get(2).getType().getArrayDimensions());
-      Assert.assertTrue(fields.get(2).hasAnnotation(XmlElement.class));
+      Assert.assertTrue(fields.get(2).hasAnnotation("javax.xml.bind.annotation.XmlElement"));
    }
 
    @Test
