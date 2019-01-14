@@ -7,9 +7,11 @@
 package org.jboss.forge.test.roaster.model.common;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.annotation.Annotation;
@@ -381,5 +383,25 @@ public abstract class JavaClassTestBase
       assertTrue(source.isStatic());
       source.setStatic(false);
       assertFalse(source.isStatic());
+   }
+
+   @Test
+   public void testNoDuplicateImportForTypes()
+   {
+      final JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+      javaClass.setPackage("testPackage").setName("testClass");
+      javaClass.addField().setName("field1").setType("package1.Type");
+      javaClass.addField().setName("field2").setType("package2.Type");
+      assertThat(javaClass.getImports().size(), is(1));
+      assertThat(javaClass.getImports().get(0).getQualifiedName(), is("package1.Type"));
+   }
+
+   @Test
+   public void testNoImportForTypeWithClassName()
+   {
+      final JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+      javaClass.setPackage("testPackage").setName("testClass");
+      javaClass.addField().setName("field1").setType("package1.testClass");
+      assertThat(javaClass.getImports().size(), is(0));
    }
 }
