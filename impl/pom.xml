@@ -15,43 +15,39 @@
       </dependency>
 
       <dependency>
-         <groupId>org.eclipse.tycho</groupId>
+         <groupId>org.eclipse.jdt</groupId>
          <artifactId>org.eclipse.jdt.core</artifactId>
-         <version>3.10.0.v20140604-1726</version>
+         <version>3.16.0</version>
       </dependency>
 
       <dependency>
-         <groupId>org.eclipse.core</groupId>
+         <groupId>org.eclipse.platform</groupId>
          <artifactId>org.eclipse.core.resources</artifactId>
-         <version>3.7.100</version>
+         <version>3.13.200</version>
          <exclusions>
             <exclusion>
+               <groupId>org.eclipse.platform</groupId>
                <artifactId>org.eclipse.core.filesystem</artifactId>
+            </exclusion>
+            <exclusion>
                <groupId>org.eclipse.core</groupId>
-            </exclusion>
-            <exclusion>
-               <artifactId>org.eclipse.equinox.registry</artifactId>
-               <groupId>org.eclipse.equinox</groupId>
-            </exclusion>
-            <exclusion>
                <artifactId>org.eclipse.core.expressions</artifactId>
-               <groupId>org.eclipse.core</groupId>
             </exclusion>
             <exclusion>
-               <artifactId>org.eclipse.equinox.app</artifactId>
-               <groupId>org.eclipse.equinox</groupId>
+               <groupId>org.eclipse.platform</groupId>
+               <artifactId>org.eclipse.core.runtime</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
 
       <dependency>
-         <groupId>org.eclipse.text</groupId>
+         <groupId>org.eclipse.platform</groupId>
          <artifactId>org.eclipse.text</artifactId>
-         <version>3.5.101</version>
+         <version>3.8.0</version>
          <exclusions>
             <exclusion>
+               <groupId>org.eclipse.platform</groupId>
                <artifactId>org.eclipse.core.commands</artifactId>
-               <groupId>org.eclipse.core</groupId>
             </exclusion>
          </exclusions>
       </dependency>
