@@ -183,9 +183,9 @@ public abstract class Formatter
    private static Properties readConfigInternal()
    {
       Properties properties = new Properties();
-      properties.setProperty(JavaCore.COMPILER_SOURCE, CompilerOptions.VERSION_1_8);
-      properties.setProperty(JavaCore.COMPILER_COMPLIANCE, CompilerOptions.VERSION_1_8);
-      properties.setProperty(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, CompilerOptions.VERSION_1_8);
+      properties.setProperty(JavaCore.COMPILER_SOURCE, CompilerOptions.VERSION_11);
+      properties.setProperty(JavaCore.COMPILER_COMPLIANCE, CompilerOptions.VERSION_11);
+      properties.setProperty(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, CompilerOptions.VERSION_11);
       // ROASTER-96: Add a blank line after imports. "1" is equivalent to TRUE in the formatter XML file
       properties.setProperty(DefaultCodeFormatterConstants.FORMATTER_BLANK_LINES_AFTER_IMPORTS, "1");
       return properties;
