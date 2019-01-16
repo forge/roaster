@@ -14,9 +14,8 @@ import org.jboss.forge.roaster.model.Type;
 
 /**
  * Defines the aspect of {@link JavaSource} that handles type imports.
- * 
+ *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
- * 
  */
 public interface Importer<O extends JavaSource<O>>
 {
@@ -114,7 +113,10 @@ public interface Importer<O extends JavaSource<O>>
     *
     * @param type The {@link org.jboss.forge.roaster.model.Type} to be imported.
     * @return The name (simple or fully qualified) that should be used to reference the imported type in the code or
-    *    null if the import could not be performed
+    * null if the import could not be performed due to one of the following conditions is met:
+    * - This type is the same type as the Class name
+    * - This type cannot be added to the import statement because it references a type with the same name but from a different package
+    * - This type belongs to the java.lang package
     * @seeAlso org.jboss.forge.roaster.model.Type
     */
    Import addImport(Type<?> type);
