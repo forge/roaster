@@ -105,8 +105,8 @@ public interface Importer<O extends JavaSource<O>>
    /**
     * Ensures the type passed as argument is included in the list of imports for this java source. The method will also
     * recursively import parameter types. This method is idempotent: if a type has already been imported, no further
-    * action will be required. The method returns an {@link Import} object if the import operation is valid or null if
-    * one of the following conditions is met:
+    * action will be required. The method returns an {@link Import} object which should be used to reference the imported type in the code
+    * if the import operation is valid or null if one of the following conditions is met:
     *
     * - This type is the same type as the Class name
     * - This type cannot be added to the import statement because it references a type with the same name but from a different package
