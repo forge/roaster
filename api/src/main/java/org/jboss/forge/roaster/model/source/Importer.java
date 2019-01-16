@@ -105,12 +105,16 @@ public interface Importer<O extends JavaSource<O>>
    /**
     * Ensures the type passed as argument is included in the list of imports for this java source. The method will also
     * recursively import parameter types. This method is idempotent: if a type has already been imported, no further
-    * action will be required. The method returns the name that can be used inside the code to reference the type. The
-    * name will be simple if no ambiguity exists with other types having the same (local) name, or fully qualified
-    * otherwise.
-    * 
+    * action will be required. The method returns an {@link Import} object if the import operation is valid or null if
+    * one of the following conditions is met:
+    *
+    * - This type is the same type as the Class name
+    * - This type cannot be added to the import statement because it references a type with the same name but from a different package
+    * - This type belongs to the java.lang package
+    *
     * @param type The {@link org.jboss.forge.roaster.model.Type} to be imported.
-    * @return The name (simple or fully qualified) that should be used to reference the imported type in the code
+    * @return The name (simple or fully qualified) that should be used to reference the imported type in the code or
+    *    null if the import could not be performed
     * @seeAlso org.jboss.forge.roaster.model.Type
     */
    Import addImport(Type<?> type);

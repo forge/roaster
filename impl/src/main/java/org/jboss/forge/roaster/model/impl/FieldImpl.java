@@ -340,8 +340,11 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
       O origin = getOrigin();
       Type<O> innerType = new TypeImpl<O>(origin, null, typeName);
       Import imprt = getOrigin().addImport(innerType);
-      String resolvedType = imprt != null ? Types.rebuildGenericNameWithArrays(imprt.getSimpleName(), innerType)
-               : Types.toSimpleName(typeName);
+      String resolvedType = (imprt != null) ? Types.rebuildGenericNameWithArrays(imprt.getSimpleName(), innerType)
+               : typeName;
+      if (Types.isJavaLang(resolvedType)) {
+         resolvedType = Types.toSimpleName(typeName);
+      }
       org.eclipse.jdt.core.dom.Type fieldType = TypeImpl.fromString(resolvedType, this.ast);
       field.setType(fieldType);
 

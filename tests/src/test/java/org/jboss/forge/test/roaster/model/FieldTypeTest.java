@@ -16,6 +16,8 @@ import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
@@ -322,6 +324,32 @@ public class FieldTypeTest
       String type = "java.util.List<java.util.List<java.util.List<String>>>";
       FieldSource<JavaClassSource> field = clazz.addField().setName("param").setType(type);
       Assert.assertEquals(type, field.getType().getQualifiedNameWithGenerics());
+   }
+
+   @Test
+   public void testFieldFQNTypeIsMaintainedIfAnotherImportExists()
+   {
+      final JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+      javaClass.setPackage("testPackage").setName("Main");
+      // Field one
+      javaClass.addField().setName("field1").setType("package1.Type");
+      // Field two
+      javaClass.addField().setName("field2").setType("package2.Type");
+      // out
+      assertThat(javaClass.getField("field2").getType().getQualifiedName())
+               .isEqualTo("package2.Type");
+   }
+
+   @Test
+   public void testFieldFQNTypeIsMaintainedIfTypeNameMatchesClassName()
+   {
+      final JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+      javaClass.setPackage("testPackage").setName("Main");
+      // Field one
+      javaClass.addField().setName("field1").setType("anotherPackage.Main");
+      // out
+      assertThat(javaClass.getField("field1").getType().getQualifiedName())
+               .isEqualTo("anotherPackage.Main");
    }
 
 }
