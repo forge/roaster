@@ -192,7 +192,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       }
       else
       {
-         throw new IllegalArgumentException("Attempted to import the illegal type [" + strippedClassName + "]");
+         imprt = null;
       }
       return imprt;
    }
@@ -976,7 +976,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       }
       else
       {
-         imprt = getImport(type.getSimpleName());
+         imprt = getImport(type.getQualifiedName());
       }
       for (Type<?> arg : type.getTypeArguments())
       {
