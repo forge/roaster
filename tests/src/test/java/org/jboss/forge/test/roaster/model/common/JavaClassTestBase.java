@@ -316,6 +316,16 @@ public abstract class JavaClassTestBase
 
       source.setSuperType(getClass());
       assertEquals(getClass().getName(), source.getSuperType());
+
+      source = Roaster.create(JavaClassSource.class);
+      source.setName("Foo").setSuperType("bar.Foo");
+      assertEquals("bar.Foo", source.getSuperType());
+      assertEquals(0, source.getImports().size());
+
+      source.setSuperType("foo.Bar");
+      // getSuperType retuns a fqn name
+      assertEquals("foo.Bar", source.getSuperType());
+      assertEquals(source.getImports().get(0).getQualifiedName(), "foo.Bar");
    }
 
    @Test

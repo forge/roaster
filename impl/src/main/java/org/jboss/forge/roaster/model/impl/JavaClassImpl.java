@@ -17,6 +17,7 @@ import org.eclipse.jface.text.Document;
 import org.jboss.forge.roaster.model.JavaClass;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.ast.ModifierAccessor;
+import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
@@ -197,10 +198,14 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
       else
       {
          final SimpleName simpleName = body.getAST().newSimpleName(Types.toSimpleName(type));
-
          final Type superType;
+         Import imprt = null;
+         
+         if(Types.isQualified(type)) {
+            imprt = addImport(type);
+         }         
 
-         if (!hasImport(type) && hasImport(simpleName.getIdentifier()) && Types.isQualified(type))
+         if (imprt == null)
          {
             // Conflicting import found, use qualified name for new super type
             final Name qualifier = body.getAST().newName(Types.getPackage(type));
@@ -210,10 +215,6 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
          {
             // Same type as existing import or not qualified at all (maybe from same package)
             superType = body.getAST().newSimpleType(simpleName);
-            if (Types.isQualified(type))
-            {
-               addImport(type);
-            }
          }
 
          getBodyDeclaration().setStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY, superType);
