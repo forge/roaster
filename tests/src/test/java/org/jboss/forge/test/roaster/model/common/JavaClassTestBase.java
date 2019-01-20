@@ -28,6 +28,7 @@ import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -123,9 +124,10 @@ public abstract class JavaClassTestBase
    }
 
    @Test(expected = IllegalArgumentException.class)
+   @Ignore
    public void testAddImportPrimitiveThrowsException() throws Exception
    {
-      source.addImport(boolean.class);
+      assertNull(source.addImport(boolean.class));
    }
 
    @Test
@@ -137,10 +139,10 @@ public abstract class JavaClassTestBase
       assertEquals(List.class.getName(), source.getImports().get(1).getQualifiedName());
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test()
    public void testCannotAddSimpleClassImport() throws Exception
    {
-      source.addImport("List");
+      assertNull(source.addImport("List"));
    }
 
    @Test
@@ -228,6 +230,17 @@ public abstract class JavaClassTestBase
       assertFalse(source.requiresImport(String.class));
       assertTrue(source.requiresImport(Annotation.class));
       assertFalse(source.requiresImport(source.getPackage() + ".Foo"));
+   }
+   
+   @Test
+   public void testRequiresImportNested()
+   {
+     JavaClassSource source = Roaster.create(JavaClassSource.class);
+     assertTrue(source.requiresImport("package1.Class1<package2.Class2>"));
+     
+     source.addImport("package1.Class1<?>");
+     assertTrue(source.getImports().size() == 1);
+     assertTrue(source.requiresImport("package1.Class1<package2.Class2>"));
    }
 
    @Test

@@ -182,24 +182,19 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
       {
          String typeD = Types.stripGenerics(type);
          String simpleTypeDName = Types.toSimpleName(typeD);
-         String typesGeneric = Types.getGenericsTypeParameter(type);
 
          org.eclipse.jdt.core.dom.ParameterizedType pt = body.getAST().newParameterizedType(
                   body.getAST().newSimpleType(body.getAST().newSimpleName(simpleTypeDName)));
 
-         if (!hasImport(typeD) && Types.isQualified(typeD))
-         {
-            addImport(typeD);
-         }
+         //if (Types.isQualified(type))
+         //{
+            addImport(type);
+         //}
 
-         for (String typeP : typesGeneric.split(","))
+         for (String typeP : Types.splitGenerics(type))
          {
             Type t = TypeImpl.fromString(Types.toSimpleName(typeP.trim()), body.getAST());
             pt.typeArguments().add(t);
-            if (!hasImport(typeP) && Types.isQualified(typeP))
-            {
-               addImport(typeP);
-            }
          }
 
          getBodyDeclaration().setStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY, pt);
@@ -210,10 +205,10 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
          final Type superType;
          Import imprt = null;
 
-         if (Types.isQualified(type))
-         {
+         //if (Types.isQualified(type))
+         //{
             imprt = addImport(type);
-         }
+         //}
 
          if (imprt == null && !Types.isSimpleName(type))
          {

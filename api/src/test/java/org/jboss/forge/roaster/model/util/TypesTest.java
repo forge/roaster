@@ -7,11 +7,14 @@
 
 package org.jboss.forge.roaster.model.util;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -205,5 +208,6 @@ public class TypesTest
    public void testSplitGenerics()
    {
       assertArrayEquals(new String[] { "String", "Integer" }, Types.splitGenerics("Foo<String,Integer>"));
+      assertArrayEquals(new String[] { "Bar<A>", "Bar<B>"}, Types.splitGenerics("Foo<Bar<A>, Bar<B>>"));
    }
 }
