@@ -123,7 +123,7 @@ public abstract class JavaClassTestBase
       assertTrue(source.isDefaultPackage());
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test()
    public void testAddImportPrimitiveThrowsException()
    {
       assertNull(source.addImport(boolean.class));
