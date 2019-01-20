@@ -35,7 +35,8 @@ public interface Importer<O extends JavaSource<O>>
    boolean requiresImport(Class<?> type);
 
    /**
-    * Return whether or not this {@link O} would require an import to reference the given fully-qualified class name.
+    * Return whether or not this {@link O} would require an import to reference the given fully-qualified class name. If
+    * the type is generic, the generic parts are also checked in a recursive way.
     */
    boolean requiresImport(String type);
 
@@ -82,7 +83,7 @@ public interface Importer<O extends JavaSource<O>>
 
    /**
     * Add an import by qualified class name. (E.g: "com.example.Imported") unless it is in the provided 'java.lang.*'
-    * package.
+    * package. In the case of a generic type, the classes used are recursively also imported.
     */
    Import addImport(final String className);
 
@@ -104,19 +105,17 @@ public interface Importer<O extends JavaSource<O>>
    /**
     * Ensures the type passed as argument is included in the list of imports for this java source. The method will also
     * recursively import parameter types. This method is idempotent: if a type has already been imported, no further
-    * action will be required. The method returns an {@link Import} object which should be used to reference the imported type in the code
-    * if the import operation is valid or null if one of the following conditions is met:
+    * action will be required. The method returns an {@link Import} object which should be used to reference the
+    * imported type in the code if the import operation is valid or null if one of the following conditions is met:
     *
-    * - This type is the same type as the Class name
-    * - This type cannot be added to the import statement because it references a type with the same name but from a different package
-    * - This type belongs to the java.lang package
+    * - This type is the same type as the Class name - This type cannot be added to the import statement because it
+    * references a type with the same name but from a different package - This type belongs to the java.lang package
     *
     * @param type The {@link org.jboss.forge.roaster.model.Type} to be imported.
     * @return The name (simple or fully qualified) that should be used to reference the imported type in the code or
-    * null if the import could not be performed due to one of the following conditions is met:
-    * - This type is the same type as the Class name
-    * - This type cannot be added to the import statement because it references a type with the same name but from a different package
-    * - This type belongs to the java.lang package
+    *         null if the import could not be performed due to one of the following conditions is met: - This type is
+    *         the same type as the Class name - This type cannot be added to the import statement because it references
+    *         a type with the same name but from a different package - This type belongs to the java.lang package
     * @seeAlso org.jboss.forge.roaster.model.Type
     */
    Import addImport(Type<?> type);

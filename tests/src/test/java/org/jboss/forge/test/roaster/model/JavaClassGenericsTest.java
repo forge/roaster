@@ -10,6 +10,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -203,12 +204,12 @@ public class JavaClassGenericsTest
    }
 
    @Test
-   @Ignore("Reproduces ROASTER-117")
-   public void testNestedGenericsInSuperType() throws Exception
+   public void testNestedGenericsInSuperType()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
-      javaClass.setSuperType("SomeClass<java.util.Map<String,SomeOtherClass>>");
+      javaClass.setSuperType("SomeClass<java.util.Map<String,java.util.Date>>");
       Assert.assertThat(javaClass.hasImport(Map.class), is(true));
-      Assert.assertThat(javaClass.getSuperType(), equalTo("SomeClass<Map<String,SomeOtherClass>>"));
+      Assert.assertThat(javaClass.hasImport(Date.class), is(true));
+      Assert.assertThat(javaClass.getSuperType(), equalTo("SomeClass<Map<String,Date>>"));
    }
 }

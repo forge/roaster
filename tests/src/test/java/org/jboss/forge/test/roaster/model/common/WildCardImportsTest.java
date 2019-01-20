@@ -6,6 +6,8 @@
  */
 package org.jboss.forge.test.roaster.model.common;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import org.jboss.forge.roaster.Roaster;
@@ -26,6 +28,14 @@ public class WildCardImportsTest
       javaClass.addImport("org.junit.Assert.*");
       assertTrue(javaClass.getImport("org.junit.Assert") != null);
       assertTrue(javaClass.getImport("org.junit.Assert").isWildcard());
+   }
+   
+   @Test
+   public void testImportWithGenerics()
+   {
+      JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
+      javaClass.addImport("package1.Class1<package2.Class2>");
+      assertThat(javaClass.getImports().size(), is(2));
    }
 
    @Test

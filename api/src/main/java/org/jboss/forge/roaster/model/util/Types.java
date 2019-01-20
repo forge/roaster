@@ -425,9 +425,9 @@ public class Types
       {
          return true;
       }
-      if(!type.endsWith("]"))
+      if (!type.endsWith("]"))
       {
-          return false;
+         return false;
       }
       Matcher matcher = SIMPLE_ARRAY_PATTERN.matcher(type);
       if (matcher.find())
@@ -472,9 +472,9 @@ public class Types
 
    private static boolean isClassArray(String type)
    {
-      if( type == null || type.length() == 0 || type.charAt(0) != '[' )
+      if (type == null || type.length() == 0 || type.charAt(0) != '[')
       {
-          return false;
+         return false;
       }
       Matcher matcher = CLASS_ARRAY_PATTERN.matcher(type);
       return matcher.find();
@@ -650,13 +650,45 @@ public class Types
     */
    public static String[] splitGenerics(String typeName)
    {
-      typeName = typeName.replaceAll("\\s", "");
-      int begin = typeName.indexOf('<');
-      int end = typeName.indexOf('>');
+      String workingString = typeName.replaceAll("\\s", "");
+      int begin = workingString.indexOf('<');
+      int end = workingString.lastIndexOf('>');
+
       if (begin == -1 || end == -1)
       {
          return new String[0];
       }
-      return GENERIC_TYPE_PATTERN.split(typeName.substring(begin + 1, end));
+
+      workingString = workingString.substring(begin + 1, end);
+      int depth = 0;
+      final StringBuilder currentPart = new StringBuilder();
+      final List<String> genericParts = new ArrayList<>();
+      for (int currentIndex = 0; currentIndex < workingString.length(); currentIndex++)
+      {
+         char currentChar = workingString.charAt(currentIndex);
+         if (currentChar == ',' && depth == 0)
+         {
+            genericParts.add(currentPart.toString());
+            currentPart.setLength(0);
+            continue;
+         }
+         else if (currentChar == '<')
+         {
+            depth++;
+
+         }
+         else if (currentChar == '>')
+         {
+            depth--;
+         }
+         currentPart.append(currentChar);
+      }
+
+      if (currentPart.length() != 0)
+      {
+         genericParts.add(currentPart.toString());
+      }
+
+      return genericParts.toArray(new String[genericParts.size()]);
    }
 }

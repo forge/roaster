@@ -175,12 +175,17 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    public Import addImport(final String className)
    {
       String strippedClassName = Types.stripGenerics(Types.stripArray(className));
-      Import imprt;
-      if (Types.isSimpleName(strippedClassName) && !hasImport(strippedClassName))
+
+      if (Types.isGeneric(className))
       {
-         throw new IllegalArgumentException("Cannot import class without a package [" + strippedClassName + "]");
+         for (String genericPart : Types.splitGenerics(className))
+         {
+            if (Types.isQualified(genericPart))
+               addImport(genericPart);
+         }
       }
 
+      Import imprt;
       if (!hasImport(strippedClassName) && validImport(strippedClassName))
       {
          imprt = new ImportImpl(this).setName(strippedClassName);
@@ -284,19 +289,25 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    @Override
    public boolean requiresImport(final String type)
    {
+      boolean requiresImport = false;
       String resultType = type;
       if (Types.isArray(resultType))
       {
-         resultType = Types.stripArray(type);
+         resultType = Types.stripArray(resultType);
       }
       if (Types.isGeneric(resultType))
       {
+         for (String genericPart : Types.splitGenerics(resultType))
+         {
+            requiresImport |= requiresImport(genericPart);
+         }
          resultType = Types.stripGenerics(resultType);
       }
-      return !(!validImport(resultType)
+      requiresImport |= !(!validImport(resultType)
                || hasImport(resultType)
                || Types.isJavaLang(resultType)
                || Strings.areEqual(getPackage(), Types.getPackage(resultType)));
+      return requiresImport;
    }
 
    @Override
