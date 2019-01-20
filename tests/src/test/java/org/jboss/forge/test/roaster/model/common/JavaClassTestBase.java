@@ -124,8 +124,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test(expected = IllegalArgumentException.class)
-   @Ignore
-   public void testAddImportPrimitiveThrowsException() throws Exception
+   public void testAddImportPrimitiveThrowsException()
    {
       assertNull(source.addImport(boolean.class));
    }
