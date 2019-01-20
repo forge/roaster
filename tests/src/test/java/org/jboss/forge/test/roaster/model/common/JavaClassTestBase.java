@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.jboss.forge.roaster.Roaster;
+import org.jboss.forge.roaster.model.JavaClass;
 import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
@@ -326,6 +327,38 @@ public abstract class JavaClassTestBase
       // getSuperType retuns a fqn name
       assertEquals("foo.Bar", source.getSuperType());
       assertEquals(source.getImports().get(0).getQualifiedName(), "foo.Bar");
+   }
+
+   @Test
+   public void testSuperTypeWithNull()
+   {
+      JavaClassSource source = Roaster.parse(JavaClassSource.class, "public class Base{}");
+      String objectClass = Object.class.getName();
+      assertThat(source.getSuperType(), is(objectClass));
+
+      // set super type per Class
+      source.setSuperType("Super");
+      assertThat(source.getSuperType(), is("Super"));
+      source.setSuperType((Class<?>) null);
+      assertThat(source.getSuperType(), is(objectClass));
+
+      // set super type per JavaClass
+      source.setSuperType("Super");
+      assertThat(source.getSuperType(), is("Super"));
+      source.setSuperType((JavaClass<?>) null);
+      assertThat(source.getSuperType(), is(objectClass));
+
+      // set super type per String (null)
+      source.setSuperType("Super");
+      assertThat(source.getSuperType(), is("Super"));
+      source.setSuperType((String) null);
+      assertThat(source.getSuperType(), is(objectClass));
+
+      // set super type per String (empty)
+      source.setSuperType("Super");
+      assertThat(source.getSuperType(), is("Super"));
+      source.setSuperType("  ");
+      assertThat(source.getSuperType(), is(objectClass));
    }
 
    @Test

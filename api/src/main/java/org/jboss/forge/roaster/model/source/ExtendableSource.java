@@ -21,14 +21,14 @@ import org.jboss.forge.roaster.model.util.Methods;
 public interface ExtendableSource<O extends JavaType<O>> extends Extendable<O>
 {
    /**
-    * Set this type's super class.
+    * Set this type's super class. If the provided type is {@code null} the previous super class is removed.
     * 
     * @see #setSuperType(String)
     */
    O setSuperType(JavaType<?> type);
 
    /**
-    * Set this type's super class.
+    * Set this type's super class. If the provided type is {@code null} the previous super class is removed.
     * 
     * @see #setSuperType(String)
     */
@@ -51,7 +51,7 @@ public interface ExtendableSource<O extends JavaType<O>> extends Extendable<O>
    O extendSuperType(JavaClass<?> type);
 
    /**
-    * Set this type's super class.
+    * Set this type's super class. If the provided type is {@code null} the previous super class is removed.
     * <p>
     * <strong>For example:</strong><br/>
     * In the case of " <code>public class Foo extends Bar {}</code>" - <code>Foo</code> is the base type, and

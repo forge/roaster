@@ -126,12 +126,20 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
    @Override
    public JavaClassSource setSuperType(final JavaType<?> type)
    {
+      if (handleNullSuperType(type))
+      {
+         return this;
+      }
       return setSuperType(type.getQualifiedName());
    }
 
    @Override
    public JavaClassSource setSuperType(final Class<?> type)
    {
+      if (handleNullSuperType(type))
+      {
+         return this;
+      }
       if (type.isAnnotation() || type.isEnum() || type.isInterface() || type.isPrimitive())
       {
          throw new IllegalArgumentException("Super-type must be a Class type, but was [" + type.getName() + "]");
@@ -165,11 +173,12 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
    @Override
    public JavaClassSource setSuperType(final String type)
    {
-      if (type == null || type.trim().isEmpty())
+      if (handleNullSuperType(type))
       {
-         getBodyDeclaration().setStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY, null);
+         return this;
       }
-      else if (Types.isGeneric(type))
+
+      if (Types.isGeneric(type))
       {
          String typeD = Types.stripGenerics(type);
          String simpleTypeDName = Types.toSimpleName(typeD);
@@ -200,12 +209,13 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
          final SimpleName simpleName = body.getAST().newSimpleName(Types.toSimpleName(type));
          final Type superType;
          Import imprt = null;
-         
-         if(Types.isQualified(type)) {
-            imprt = addImport(type);
-         }         
 
-         if (imprt == null)
+         if (Types.isQualified(type))
+         {
+            imprt = addImport(type);
+         }
+
+         if (imprt == null && !Types.isSimpleName(type))
          {
             // Conflicting import found, use qualified name for new super type
             final Name qualifier = body.getAST().newName(Types.getPackage(type));
@@ -221,5 +231,24 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
       }
 
       return this;
+   }
+
+   private boolean handleNullSuperType(String type)
+   {
+      if (type == null || type.trim().isEmpty())
+      {
+         return handleNullSuperType((Object) null);
+      }
+      return false;
+   }
+
+   private boolean handleNullSuperType(Object type)
+   {
+      if (type == null)
+      {
+         getBodyDeclaration().setStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY, null);
+         return true;
+      }
+      return false;
    }
 }
