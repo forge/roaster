@@ -185,11 +185,7 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
 
          org.eclipse.jdt.core.dom.ParameterizedType pt = body.getAST().newParameterizedType(
                   body.getAST().newSimpleType(body.getAST().newSimpleName(simpleTypeDName)));
-
-         //if (Types.isQualified(type))
-         //{
             addImport(type);
-         //}
 
          for (String typeP : Types.splitGenerics(type))
          {
@@ -203,12 +199,7 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
       {
          final SimpleName simpleName = body.getAST().newSimpleName(Types.toSimpleName(type));
          final Type superType;
-         Import imprt = null;
-
-         //if (Types.isQualified(type))
-         //{
-            imprt = addImport(type);
-         //}
+         Import imprt = addImport(type);
 
          if (imprt == null && !Types.isSimpleName(type))
          {
