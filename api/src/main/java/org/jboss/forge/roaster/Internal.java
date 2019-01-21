@@ -16,9 +16,12 @@ package org.jboss.forge.roaster;
 public interface Internal
 {
    /**
-    * Returns the implementation-specific Object representing <code>this</code>. <b>Do not call this method</b> unless
-    * you are willing to risk breaking backwards compatibility if future versions do not use the same internal object
-    * implementations.
+    * Returns the implementation-specific object representing <code>this</code>. The caller is responsible for the correct casting.
+    * <p>
+    * <b>Do not call this method</b> unless you are willing to risk breaking backwards compatibility if future versions
+    * do not use the same internal object implementations.
+    * </p>
+    * @return the implementation-specific object 
     */
    Object getInternal();
 }

@@ -7,7 +7,10 @@
 
 package org.jboss.forge.roaster;
 
+import java.util.Objects;
+
 /**
+ * During the parsing of code, problems can occur which can be wrapped inside a object with this class.
  *
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
  */
@@ -19,14 +22,15 @@ public class Problem
    private final int sourceLineNumber;
 
    /**
-    * @param message
-    * @param sourceStart
-    * @param sourceEnd
-    * @param sourceLineNumber
+    * Constructs a new <code>Problem</code> with the given attributes.
+    * 
+    * @param message the message of this problem in a human readable form
+    * @param sourceStart the start position of the problem
+    * @param sourceEnd the end position of the problem
+    * @param sourceLineNumber the source line number of the start of the problem
     */
    public Problem(String message, int sourceStart, int sourceEnd, int sourceLineNumber)
    {
-      super();
       this.message = message;
       this.sourceStart = sourceStart;
       this.sourceEnd = sourceEnd;
@@ -34,6 +38,8 @@ public class Problem
    }
 
    /**
+    * Returns the message of this problem.
+    * 
     * @return the message
     */
    public String getMessage()
@@ -42,7 +48,9 @@ public class Problem
    }
 
    /**
-    * @return the sourceStart
+    * Returns the start position of this problem or -1 if unknown.
+    * 
+    * @return the start position
     */
    public int getSourceStart()
    {
@@ -50,7 +58,9 @@ public class Problem
    }
 
    /**
-    * @return the sourceEnd
+    * Returns the end position of this problem or -1 if unknown.
+    * 
+    * @return the end position 
     */
    public int getSourceEnd()
    {
@@ -58,7 +68,9 @@ public class Problem
    }
 
    /**
-    * @return the sourceLineNumber
+    * Returns the source line number of the start of the problem.
+    * 
+    * @return the source line number
     */
    public int getSourceLineNumber()
    {
@@ -68,13 +80,7 @@ public class Problem
    @Override
    public int hashCode()
    {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((message == null) ? 0 : message.hashCode());
-      result = prime * result + sourceEnd;
-      result = prime * result + sourceLineNumber;
-      result = prime * result + sourceStart;
-      return result;
+      return Objects.hash(message, sourceEnd, sourceLineNumber, sourceStart);
    }
 
    @Override
@@ -106,7 +112,6 @@ public class Problem
    @Override
    public String toString()
    {
-      return "Problem [message=" + message + ", sourceStart=" + sourceStart + ", sourceEnd=" + sourceEnd
-               + ", sourceLineNumber=" + sourceLineNumber + "]";
+      return "Problem: '" + message + "' at " + sourceLineNumber + ":" + sourceStart + "-" + sourceEnd;
    }
 }
