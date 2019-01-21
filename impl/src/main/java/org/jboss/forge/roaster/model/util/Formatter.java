@@ -32,14 +32,14 @@ import org.jboss.forge.roaster.spi.Streams;
 
 /**
  * Formats Java source code.
- * 
+ *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 public abstract class Formatter
 {
    /**
     * Format the given Java source {@link File}, using the built in code format style.
-    * 
+    *
     * @throws IOException When the file cannot be read or written
     */
    public static void format(File source) throws IOException
@@ -49,7 +49,7 @@ public abstract class Formatter
 
    /**
     * Format the given Java source {@link File} using the given Eclipse code format properties {@link File}.
-    * 
+    *
     * @throws IOException When the file cannot be read or written, or the preferences cannot be read.
     */
    public static void format(File prefs, File source) throws IOException
@@ -137,7 +137,15 @@ public abstract class Formatter
          InputStream stream = new BufferedInputStream(new FileInputStream(prefs));
          try
          {
-            Properties config = parseConfig(stream);
+            Properties config;
+            if (prefs.getName().toLowerCase().endsWith(".xml"))
+            {
+               config = parseXmlConfig(stream);
+            }
+            else
+            {
+               config = parseConfig(stream);
+            }
             return applyShadedPackageName(config);
          }
          catch (IOException e)
@@ -176,7 +184,7 @@ public abstract class Formatter
    /**
     * The given options should at least provide the source level (JavaCore.COMPILER_SOURCE), the compiler compliance
     * level (JavaCore.COMPILER_COMPLIANCE) and the target platform (JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM).
-    * 
+    *
     * Without these options, it is not possible for the code formatter to know what kind of source it needs to format.
     */
    private static Properties readConfigInternal()
@@ -198,6 +206,18 @@ public abstract class Formatter
          final Properties formatterOptions = new Properties();
          formatterOptions.load(stream);
          return formatterOptions;
+      }
+      finally
+      {
+         Streams.closeQuietly(stream);
+      }
+   }
+
+   private static Properties parseXmlConfig(InputStream stream) throws IOException
+   {
+      try
+      {
+         return FormatterProfileReader.fromEclipseXml(stream).getDefaultProperties();
       }
       finally
       {
