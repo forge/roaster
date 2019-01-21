@@ -203,7 +203,7 @@ public abstract class Formatter
    {
       try
       {
-         final Properties formatterOptions = new Properties();
+         final Properties formatterOptions = readConfigInternal();
          formatterOptions.load(stream);
          return formatterOptions;
       }
@@ -217,7 +217,10 @@ public abstract class Formatter
    {
       try
       {
-         return FormatterProfileReader.fromEclipseXml(stream).getDefaultProperties();
+         Properties properties = readConfigInternal();
+         Properties defaultProperties = FormatterProfileReader.fromEclipseXml(stream).getDefaultProperties();
+         properties.putAll(defaultProperties);
+         return properties;
       }
       finally
       {
