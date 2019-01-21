@@ -107,7 +107,7 @@ public abstract class Formatter
     */
    public static String format(Properties prefs, String source)
    {
-      CodeFormatter codeFormatter = ToolFactory.createCodeFormatter(prefs);
+      CodeFormatter codeFormatter = ToolFactory.createCodeFormatter(prefs, ToolFactory.M_FORMAT_EXISTING);
       IDocument doc = new Document(source);
       try
       {
