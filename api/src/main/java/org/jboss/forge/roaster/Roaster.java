@@ -99,7 +99,8 @@ public final class Roaster
             return result;
          }
       }
-      throw new ParserException("Cannot find JavaParser capable of parsing the requested data"); 
+      throw new ParserException("Cannot find JavaParserProvider capable of producing JavaSource of type "
+               + type.getSimpleName(), new IllegalArgumentException(type.getName()));
    }
 
    /**
