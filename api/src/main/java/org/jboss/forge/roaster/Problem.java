@@ -112,6 +112,6 @@ public class Problem
    @Override
    public String toString()
    {
-      return "Problem: " + message;
+      return "Problem: '" + message + "' at " + sourceLineNumber + ":" + sourceStart + "-" + sourceEnd;
    }
 }

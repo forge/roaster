@@ -87,6 +87,7 @@ public final class Roaster
     * @param <T> the java type
     * @return a new {@link JavaType} instance of the given type
     * @throws IllegalStateException if no parser is available in the classPath
+    * @throws ParserException if no parser is capable of parsing the provided data
     */
    public static <T extends JavaSource<?>> T create(final Class<T> type)
    {
@@ -98,8 +99,7 @@ public final class Roaster
             return result;
          }
       }
-      // this point shoudn't be reached, since getParsers will not return a empty list
-      return null;
+      throw new ParserException("Cannot find JavaParser capable of parsing the requested data"); 
    }
 
    /**
@@ -265,8 +265,7 @@ public final class Roaster
          throw new ParserException("Source does not represent a [" + type.getSimpleName() + "], instead was ["
                   + unit.getGoverningType().getClass().getSimpleName() + "] - Cannot convert.");
       }
-      // this point shoudn't be reached, since getParsers will not return a empty list
-      return null;
+      throw new ParserException("Cannot find JavaParser capable of parsing the requested data"); 
    }
 
    /**
@@ -301,8 +300,7 @@ public final class Roaster
          if (unit != null)
             return unit;
       }
-      // this point shoudn't be reached, since getParsers will not return a empty list
-      return null;
+      throw new ParserException("Cannot find JavaParser capable of parsing the requested data"); 
    }
 
    /**
