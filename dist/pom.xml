@@ -5,7 +5,7 @@
    <parent>
       <groupId>org.jboss.forge.roaster</groupId>
       <artifactId>roaster-parent</artifactId>
-      <version>2.20.7.Final</version>
+      <version>2.20.8-SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
