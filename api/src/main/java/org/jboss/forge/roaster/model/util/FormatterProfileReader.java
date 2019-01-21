@@ -26,17 +26,17 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Reads Formatter profiles
- * 
+ *
  * @author <a href="ggastald@redhat.com">George Gastaldi</a>
  */
 public class FormatterProfileReader
 {
 
-   private final Map<String, Properties> profiles = new LinkedHashMap<String, Properties>();
+   private final Map<String, Properties> profiles = new LinkedHashMap<>();
 
    /**
     * Creates a new {@link FormatterProfileReader} instance
-    * 
+    *
     * @param inputStream a XML with the Eclipse Formatter format
     * @return
     * @throws IOException
@@ -48,7 +48,6 @@ public class FormatterProfileReader
 
    /**
     * Private constructor. Use the static methods to create instances of this object
-    * 
     */
    private FormatterProfileReader(InputStream is) throws IOException
    {
@@ -96,18 +95,18 @@ public class FormatterProfileReader
 
    private class EclipseFormatterProfileHandler extends DefaultHandler
    {
-      private final static String XML_NODE_PROFILE = "profile"; //$NON-NLS-1$
-      private final static String XML_NODE_SETTING = "setting"; //$NON-NLS-1$
+      private static final String XML_NODE_PROFILE = "profile"; //$NON-NLS-1$
+      private static final String XML_NODE_SETTING = "setting"; //$NON-NLS-1$
 
-      private final static String XML_ATTRIBUTE_ID = "id"; //$NON-NLS-1$
-      private final static String XML_ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
-      private final static String XML_ATTRIBUTE_VALUE = "value"; //$NON-NLS-1$
+      private static final String XML_ATTRIBUTE_ID = "id"; //$NON-NLS-1$
+      private static final String XML_ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
+      private static final String XML_ATTRIBUTE_VALUE = "value"; //$NON-NLS-1$
 
       private String currentProfileName;
       private Properties currentProperties;
 
       @Override
-      public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
+      public void startElement(String uri, String localName, String qName, Attributes attributes)
       {
          if (XML_NODE_PROFILE.equals(qName))
          {
@@ -124,7 +123,7 @@ public class FormatterProfileReader
       }
 
       @Override
-      public void endElement(String uri, String localName, String qName) throws SAXException
+      public void endElement(String uri, String localName, String qName)
       {
          if (XML_NODE_PROFILE.equals(qName))
          {
