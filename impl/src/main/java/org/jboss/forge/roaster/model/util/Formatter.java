@@ -133,8 +133,7 @@ public abstract class Formatter
    {
       if (prefs != null)
       {
-         InputStream stream = new BufferedInputStream(new FileInputStream(prefs));
-         try
+         try (InputStream stream = new BufferedInputStream(new FileInputStream(prefs)))
          {
             Properties config;
             if (prefs.getName().toLowerCase().endsWith(".xml"))
@@ -151,10 +150,6 @@ public abstract class Formatter
          {
             throw new IOException("Error reading preferences file: ["
                      + prefs.getAbsolutePath() + "]", e);
-         }
-         finally
-         {
-            Streams.closeQuietly(stream);
          }
       }
 
