@@ -107,12 +107,12 @@ public abstract class Formatter
     */
    public static String format(Properties prefs, String source)
    {
-      CodeFormatter codeFormatter = ToolFactory.createCodeFormatter(prefs, ToolFactory.M_FORMAT_EXISTING);
+      CodeFormatter codeFormatter = ToolFactory.createCodeFormatter(prefs);
       IDocument doc = new Document(source);
       try
       {
          TextEdit edit = codeFormatter.format(CodeFormatter.K_COMPILATION_UNIT | CodeFormatter.F_INCLUDE_COMMENTS,
-                  source, 0, source.length(), 0, null);
+                  source, 0, source.length(), 0, System.lineSeparator());
          if (edit != null)
          {
             edit.apply(doc);
@@ -126,8 +126,7 @@ public abstract class Formatter
       {
          throw new FormatterException(source, e);
       }
-
-      return ensureCorrectNewLines(doc.get());
+      return doc.get();
    }
 
    private static Properties readConfig(File prefs) throws IOException
@@ -177,7 +176,6 @@ public abstract class Formatter
             modified.put(shadePackage + property, config.getProperty(property));
          }
       }
-
       return modified;
    }
 
@@ -227,16 +225,4 @@ public abstract class Formatter
          Streams.closeQuietly(stream);
       }
    }
-
-   private static String ensureCorrectNewLines(String content)
-   {
-      String newLine = System.getProperty("line.separator");
-
-      if (content.contains("\n")
-               && !content.contains(newLine))
-         return content.replaceAll("\n", newLine);
-
-      return content;
-   }
-
 }
