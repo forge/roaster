@@ -222,6 +222,11 @@ List<Problem> problem = Roaster.validateSnippet("public class MyClass {");
 
 ```
 
+Building from sources
+=====================
+
+Just run `mvn clean install` to build the sources
+
 
 Issue tracker
 =============
