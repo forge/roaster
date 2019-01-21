@@ -10,6 +10,8 @@ package org.jboss.forge.test.roaster.model.util;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -116,5 +118,13 @@ public class FormatterTest
       Properties newPrefs = Formatter.applyShadedPackageName(prefs);
       Assert.assertThat(newPrefs.keys().nextElement().toString(),
                equalTo("org.jboss.forge.roaster._shade.org.eclipse.jdt.core.formatter.comment.line_length"));
+   }
+
+   @Test(timeout = 3000)
+   public void testFormatShouldNotFail() throws IOException
+   {
+      File prefs = new File(getClass().getResource("jdk11/eclipse-formatter.xml").getFile());
+      File source = new File(getClass().getResource("jdk11/ROASTER130.java").getFile());
+      Formatter.format(prefs, source);
    }
 }
