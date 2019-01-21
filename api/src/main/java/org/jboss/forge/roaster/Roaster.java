@@ -44,7 +44,7 @@ public final class Roaster
       {
          if (parsers == null || parsers.isEmpty())
          {
-            parsers = new ArrayList<JavaParser>();
+            parsers = new ArrayList<>();
             for (JavaParser p : ServiceLoader.load(JavaParser.class, Roaster.class.getClassLoader()))
             {
                parsers.add(p);
@@ -65,7 +65,7 @@ public final class Roaster
       {
          if (formatters == null || formatters.isEmpty())
          {
-            formatters = new ArrayList<FormatterProvider>();
+            formatters = new ArrayList<>();
             for (FormatterProvider p : ServiceLoader.load(FormatterProvider.class, Roaster.class.getClassLoader()))
             {
                formatters.add(p);
@@ -82,6 +82,11 @@ public final class Roaster
 
    /**
     * Create a new empty {@link JavaSource} instance.
+    * 
+    * @param type the type of the source
+    * @param <T> the java type
+    * @return a new {@link JavaType} instance of the given type
+    * @throws IllegalStateException if no parser is available in the classPath
     */
    public static <T extends JavaSource<?>> T create(final Class<T> type)
    {
@@ -93,36 +98,59 @@ public final class Roaster
             return result;
          }
       }
-      throw new ParserException("Cannot find JavaParserProvider capable of producing JavaSource of type "
-               + type.getSimpleName(), new IllegalArgumentException(type.getName()));
+      // this point shoudn't be reached, since getParsers will not return a empty list
+      return null;
    }
 
    /**
     * Open the given {@link File}, parsing its contents into a new {@link JavaType} instance.
+    * 
+    * @param file the file to read from
+    * @return a the new {@link JavaType} instance
+    * @throws IOException if the reading of the file fails
+    * @throws ParserException if no parser is capable of parsing the provided data
+    * @throws IllegalStateException if no parser is available in the classPath
     */
-   public static JavaType<?> parse(final File file) throws FileNotFoundException
+   public static JavaType<?> parse(final File file) throws IOException
    {
       return parse(JavaType.class, file);
    }
 
    /**
     * Parse the given {@link URL} data into a new {@link JavaType} instance.
+    * 
+    * @param url the url to read from
+    * @return a the new {@link JavaType} instance
+    * @throws IOException if the reading fails
+    * @throws ParserException if no parser is capable of parsing the provided data
+    * @throws IllegalStateException if no parser is available in the classPath
     */
-   public static JavaType<?> parse(final URL data) throws IOException
+   public static JavaType<?> parse(final URL url) throws IOException
    {
-      return parse(JavaType.class, data);
+      return parse(JavaType.class, url);
    }
 
    /**
-    * Read the given {@link InputStream} and parse the data into a new {@link JavaType} instance.
+    * Read the given {@link InputStream} and parse the data into a new {@link JavaType} instance. The caller is
+    * responsible to close the stream.
+    * 
+    * @param stream the stream to read from
+    * @return a new {@link JavaType} instance
+    * @throws ParserException if no parser is capable of parsing the provided data
+    * @throws IllegalStateException if no parser is available in the classPath
     */
-   public static JavaType<?> parse(final InputStream data)
+   public static JavaType<?> parse(final InputStream stream)
    {
-      return parse(JavaType.class, data);
+      return parse(JavaType.class, stream);
    }
 
    /**
     * Parse the given character array into a new {@link JavaType} instance.
+    * 
+    * @param data the characters to parse
+    * @return a the new {@link JavaType} instance
+    * @throws ParserException if no parser is capable of parsing the provided data
+    * @throws IllegalStateException if no parser is available in the classPath
     */
    public static JavaType<?> parse(final char[] data)
    {
@@ -131,6 +159,11 @@ public final class Roaster
 
    /**
     * Parse the given String data into a new {@link JavaType} instance.
+    * 
+    * @param data the data to parse
+    * @return the new {@link JavaType} instance
+    * @throws ParserException if no parser is capable of parsing the provided data
+    * @throws IllegalStateException if no parser is available in the classPath
     */
    public static JavaType<?> parse(final String data)
    {
@@ -139,26 +172,53 @@ public final class Roaster
 
    /**
     * Read the given {@link URL} and parse its data into a new {@link JavaType} instance of the given type.
-    *
-    * @throws FileNotFoundException
+    * 
+    * @param type the type of the source
+    * @param url the url to read from
+    * @param <T> the java type
+    * @return a new {@link JavaType} instance of the given type
+    * @throws IOException if a exception occurs while reading
+    * @throws ParserException if no parser is capable of parsing the provided data
+    * @throws IllegalStateException if no parser is available in the classPath
     */
    public static <T extends JavaType<?>> T parse(final Class<T> type, final URL url) throws IOException
    {
-      return internalParse(type, url.openStream());
+      try (InputStream stream = url.openStream())
+      {
+         return parse(type, stream);
+      }
    }
 
    /**
     * Read the given {@link File} and parse its data into a new {@link JavaType} instance of the given type.
-    *
-    * @throws FileNotFoundException
+    * 
+    * @param type the type of the source
+    * @param <T> the java type
+    * @param file the file to read from
+    * @return a new {@link JavaType} instance of the given type
+    * @throws IOException if a exception occurs while reading
+    * @throws FileNotFoundException if the file doesn't exists
+    * @throws ParserException if no parser is capable of parsing the provided data
+    * @throws IllegalStateException if no parser is available in the classPath
     */
-   public static <T extends JavaType<?>> T parse(final Class<T> type, final File file) throws FileNotFoundException
+   public static <T extends JavaType<?>> T parse(final Class<T> type, final File file)
+            throws FileNotFoundException, IOException
    {
-      return internalParse(type, new FileInputStream(file));
+      try (FileInputStream stream = new FileInputStream(file))
+      {
+         return parse(type, stream);
+      }
    }
 
    /**
     * Read the given character array and parse its data into a new {@link JavaType} instance of the given type.
+    * 
+    * @param type the type of the source
+    * @param data the characters to parse
+    * @param <T> the java type
+    * @return a new {@link JavaType} instance of the given type
+    * @throws ParserException if no parser is capable of parsing the provided data
+    * @throws IllegalStateException if no parser is available in the classPath
     */
    public static <T extends JavaType<?>> T parse(final Class<T> type, final char[] data)
    {
@@ -169,6 +229,7 @@ public final class Roaster
     * Validates a code snippet and returns a {@link List} of {@link Problem}. Never returns <code>null</code>.
     * 
     * @param snippet any Java code
+    * @return a list of problems (maybe empty)
     * @throws ParserException if no {@link JavaParser} implementation could be found
     */
    public static List<Problem> validateSnippet(String snippet) throws ParserException
@@ -182,6 +243,13 @@ public final class Roaster
 
    /**
     * Read the given string and parse its data into a new {@link JavaType} instance of the given type.
+    * 
+    * @param type the type of the source
+    * @param data the data to parse
+    * @param <T> the java type
+    * @return a new {@link JavaType} instance of the given type
+    * @throws ParserException if no parser is capable of parsing the provided data
+    * @throws IllegalStateException if no parser is available in the classPath
     */
    @SuppressWarnings("unchecked")
    public static <T extends JavaType<?>> T parse(final Class<T> type, final String data)
@@ -194,26 +262,36 @@ public final class Roaster
          {
             return (T) unit.getGoverningType();
          }
-         else if (unit != null)
-         {
-            throw new ParserException("Source does not represent a [" + type.getSimpleName() + "], instead was ["
-                     + unit.getGoverningType().getClass().getSimpleName() + "] - Cannot convert.");
-         }
+         throw new ParserException("Source does not represent a [" + type.getSimpleName() + "], instead was ["
+                  + unit.getGoverningType().getClass().getSimpleName() + "] - Cannot convert.");
       }
-      throw new ParserException("Cannot find JavaParser capable of parsing the requested data");
+      // this point shoudn't be reached, since getParsers will not return a empty list
+      return null;
    }
 
    /**
     * Read the given {@link InputStream} and parse its data into a new {@link JavaType} instance of the given type. The
     * caller is responsible for closing the stream.
+    * 
+    * @param stream the stream to read from
+    * @param <T> the java type
+    * @param type the type of the source
+    * @return a new {@link JavaType} instance of the given type
+    * @throws ParserException if no parser is capable of parsing the provided data
+    * @throws IllegalStateException if no parser is available in the classPath
     */
-   public static <T extends JavaType<?>> T parse(final Class<T> type, final InputStream data)
+   public static <T extends JavaType<?>> T parse(final Class<T> type, final InputStream stream)
    {
-      return parse(type, Streams.toString(data));
+      return parse(type, Streams.toString(stream));
    }
 
    /**
     * Read the given {@link String} and parse its data into a new {@link JavaUnit} instance of the given type.
+    * 
+    * @param data the data to parse
+    * @return a new {@link JavaUnit} instance of the given type
+    * @throws ParserException if no parser is capable of parsing the requested data
+    * @throws IllegalStateException if no parser is available in the classPath
     */
    public static JavaUnit parseUnit(final String data)
    {
@@ -223,12 +301,18 @@ public final class Roaster
          if (unit != null)
             return unit;
       }
-      throw new ParserException("Cannot find JavaParser capable of parsing the requested data");
+      // this point shoudn't be reached, since getParsers will not return a empty list
+      return null;
    }
 
    /**
     * Read the given {@link InputStream} and parse its data into a new {@link JavaUnit} instance of the given type. The
     * caller is responsible for closing the stream.
+    * 
+    * @param data the stream to read from
+    * @return a new {@link JavaUnit} instance of the given type
+    * @throws ParserException if no parser is capable of parsing the provided data
+    * @throws IllegalStateException if no parser is available in the classPath
     */
    public static JavaUnit parseUnit(final InputStream data)
    {
@@ -240,6 +324,7 @@ public final class Roaster
     * 
     * @param source a java source code
     * @return the formatted source code
+    * @throws IllegalStateException if no formatter is available in the classPath
     */
    public static String format(String source)
    {
@@ -253,6 +338,11 @@ public final class Roaster
 
    /**
     * Format the given {@link String} as a Java source type, using the given code format {@link Properties}
+    * 
+    * @param properties the properties to use to format
+    * @param source a java source code
+    * @return the formatted source code
+    * @throws IllegalStateException if no formatter is available in the classPath
     */
    public static String format(Properties properties, String source)
    {
@@ -262,17 +352,5 @@ public final class Roaster
          result = formatter.format(properties, result);
       }
       return result;
-   }
-
-   private static <T extends JavaType<?>> T internalParse(final Class<T> type, final InputStream data)
-   {
-      try
-      {
-         return parse(type, data);
-      }
-      finally
-      {
-         Streams.closeQuietly(data);
-      }
    }
 }

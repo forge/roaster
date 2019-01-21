@@ -10,12 +10,15 @@ package org.jboss.forge.roaster;
  * Represents an object that has a root ancestor that should be made accessible to its clients.
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+ * @param <T> the concrete type of the origin
  * 
  */
 public interface Origin<T>
 {
    /**
-    * @return the instance of the root ancestor.
+    * Returns the root ancestor of this object.
+    * 
+    * @return the instance of the root ancestor
     */
    T getOrigin();
 }
