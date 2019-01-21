@@ -119,12 +119,12 @@ public abstract class Formatter
          }
          else
          {
-            return source;
+            throw new FormatterException(source, null);
          }
       }
       catch (BadLocationException e)
       {
-         throw new RuntimeException(e);
+         throw new FormatterException(source, e);
       }
 
       return ensureCorrectNewLines(doc.get());
