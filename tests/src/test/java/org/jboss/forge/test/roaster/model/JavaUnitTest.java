@@ -15,7 +15,7 @@ import java.io.InputStream;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.JavaUnit;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
-import org.jboss.forge.roaster.spi.Streams;
+import org.jboss.forge.roaster.Streams;
 import org.junit.Assert;
 import org.junit.Test;
 

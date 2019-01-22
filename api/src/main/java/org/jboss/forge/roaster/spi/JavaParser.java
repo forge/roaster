@@ -14,7 +14,7 @@ import org.jboss.forge.roaster.model.JavaUnit;
 import org.jboss.forge.roaster.model.source.JavaSource;
 
 /**
- * Roaster SPI for parser implementations
+ * Main interface for Roaster parser implementations.
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
@@ -23,26 +23,27 @@ public interface JavaParser
 {
    /**
     * Create a new empty {@link JavaSource} instance.
-    * 
-    * @param type desired source type
-    * @return instance of {@code T}, {@code null} if the {@link JavaSource} type is not supported by this
+    * @param <T> the java type
+    * @param type desired source type for the java source
+    * @return either a instance of {@code T} or {@code null} if the {@link JavaSource} type is not supported by this
     *         {@link JavaParser}.
     */
    <T extends JavaSource<?>> T create(final Class<T> type);
 
    /**
-    * Read the given {@link String} and parse the data into a new {@link JavaUnit} instance.
+    * Read the given source and parse the data into a new {@link JavaUnit} instance.
     * 
-    * @param data to parse
-    * @return {@link JavaUnit}, {@code null} if the data format is not recognized by this {@link JavaParser}.
+    * @param data the source to parse
+    * @return a {@link JavaUnit} or {@code null} if the data format is not recognised by this {@link JavaParser}
+    * @throws ParserException if the source coudn't be parsed
     */
    JavaUnit parseUnit(final String data);
 
    /**
-    * Checks if the code is valid
+    * Checks which problems occur while parsing the provided source code.
     * 
-    * @param code
-    * @throws ParserException if it's not
+    * @param code the code to parse
+    * @return a list of problems which occurred (maybe empty but not {@code null})
     */
-   List<Problem> validateSnippet(String code) throws ParserException;
+   List<Problem> validateSnippet(String code);
 }

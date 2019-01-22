@@ -28,10 +28,10 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.TextEdit;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
-import org.jboss.forge.roaster.spi.Streams;
+import org.jboss.forge.roaster.Streams;
 
 /**
- * Formats Java source code.
+ * Formatter for java source code.
  *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
@@ -39,7 +39,9 @@ public abstract class Formatter
 {
    /**
     * Format the given Java source {@link File}, using the built in code format style.
-    *
+    * 
+    * @param source the file which contains the source to format
+    * @throws FormatterException if the source coudn't be formatted
     * @throws IOException When the file cannot be read or written
     */
    public static void format(File source) throws IOException
@@ -49,7 +51,10 @@ public abstract class Formatter
 
    /**
     * Format the given Java source {@link File} using the given Eclipse code format properties {@link File}.
-    *
+    * 
+    * @param prefs the format properties file
+    * @param source the file which contains the source to format
+    * @throws FormatterException if the source coudn't be formatted
     * @throws IOException When the file cannot be read or written, or the preferences cannot be read.
     */
    public static void format(File prefs, File source) throws IOException
@@ -58,27 +63,21 @@ public abstract class Formatter
       if (options == null)
          options = readConfigInternal();
 
-      InputStream in = null;
-      OutputStream out = null;
-      try
+      try (InputStream in = new BufferedInputStream(new FileInputStream(source));
+               OutputStream out = new BufferedOutputStream(new FileOutputStream(source)))
       {
-         in = new BufferedInputStream(new FileInputStream(source));
          String content = Streams.toString(in);
          String formatted = format(options, content);
-
-         out = new BufferedOutputStream(new FileOutputStream(source));
          Streams.write(new ByteArrayInputStream(formatted.getBytes()), out);
       }
-      finally
-      {
-         Streams.closeQuietly(in);
-         Streams.closeQuietly(out);
-      }
-
    }
 
    /**
     * Format the given {@link JavaClassSource}, using the built in code format style.
+    * 
+    * @param javaClass the class to format
+    * @return the formatted source code
+    * @throws FormatterException if the source coudn't be formatted
     */
    public static String format(JavaClassSource javaClass)
    {
@@ -87,6 +86,11 @@ public abstract class Formatter
 
    /**
     * Format the given {@link JavaClassSource}, using the given Eclipse code format {@link Properties}.
+    * 
+    * @param prefs the format properties
+    * @param javaClass the class to format
+    * @return the formatted source code
+    * @throws FormatterException if the source coudn't be formatted
     */
    public static String format(Properties prefs, JavaClassSource javaClass)
    {
@@ -95,6 +99,10 @@ public abstract class Formatter
 
    /**
     * Format the given {@link String} as a Java source file, using the built in code format style.
+    * 
+    * @param source the source to format
+    * @return the formatted source code
+    * @throws FormatterException if the source coudn't be formatted
     */
    public static String format(String source)
    {
@@ -104,6 +112,11 @@ public abstract class Formatter
 
    /**
     * Format the given {@link String} as a Java source type, using the given Eclipse code format {@link Properties}.
+    * 
+    * @param prefs the format properties
+    * @param source the source to format
+    * @return the formatted source code
+    * @throws FormatterException if the source coudn't be formatted
     */
    public static String format(Properties prefs, String source)
    {
@@ -191,33 +204,18 @@ public abstract class Formatter
       return properties;
    }
 
-   private static Properties parseConfig(InputStream stream)
-            throws IOException
+   private static Properties parseConfig(InputStream stream) throws IOException
    {
-      try
-      {
-         final Properties formatterOptions = readConfigInternal();
-         formatterOptions.load(stream);
-         return formatterOptions;
-      }
-      finally
-      {
-         Streams.closeQuietly(stream);
-      }
+      final Properties formatterOptions = readConfigInternal();
+      formatterOptions.load(stream);
+      return formatterOptions;
    }
 
    private static Properties parseXmlConfig(InputStream stream) throws IOException
    {
-      try
-      {
-         Properties properties = readConfigInternal();
-         Properties defaultProperties = FormatterProfileReader.fromEclipseXml(stream).getDefaultProperties();
-         properties.putAll(defaultProperties);
-         return properties;
-      }
-      finally
-      {
-         Streams.closeQuietly(stream);
-      }
+      Properties properties = readConfigInternal();
+      Properties defaultProperties = FormatterProfileReader.fromEclipseXml(stream).getDefaultProperties();
+      properties.putAll(defaultProperties);
+      return properties;
    }
 }

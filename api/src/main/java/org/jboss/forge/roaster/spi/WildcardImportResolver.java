@@ -19,6 +19,10 @@ public interface WildcardImportResolver
 {
    /**
     * Resolves the wildcard type from the specified source
+    * 
+    * @param source the source to resolve from
+    * @param type the type to resolve
+    * @return the resolved type
     */
    String resolve(JavaType<?> source, String type);
 }

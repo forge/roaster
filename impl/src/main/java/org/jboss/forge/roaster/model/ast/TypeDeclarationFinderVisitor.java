@@ -21,7 +21,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
  */
 public class TypeDeclarationFinderVisitor extends ASTVisitor
 {
-   private final List<AbstractTypeDeclaration> declarations = new ArrayList<AbstractTypeDeclaration>();
+   private final List<AbstractTypeDeclaration> declarations = new ArrayList<>();
 
    private PackageDeclaration packageDeclaration;
 
@@ -62,5 +62,4 @@ public class TypeDeclarationFinderVisitor extends ASTVisitor
    {
       return declarations;
    }
-
 }

@@ -29,7 +29,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
  */
 public class MethodFinderVisitor extends ASTVisitor
 {
-   private final List<MethodDeclaration> methods = new ArrayList<MethodDeclaration>();
+   private final List<MethodDeclaration> methods = new ArrayList<>();
    private ASTNode parent;
 
    @Override
@@ -66,6 +66,12 @@ public class MethodFinderVisitor extends ASTVisitor
       return false;
    }
 
+   /**
+    * Returns the found method declarations.
+    * 
+    * @return a unmodifiable list of the found method declarations
+    * @see Collections#unmodifiableList(List)
+    */
    public List<MethodDeclaration> getMethods()
    {
       return Collections.unmodifiableList(methods);
