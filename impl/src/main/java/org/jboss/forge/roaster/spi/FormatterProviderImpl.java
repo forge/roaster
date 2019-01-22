@@ -12,7 +12,7 @@ import java.util.Properties;
 import org.jboss.forge.roaster.model.util.Formatter;
 
 /**
- * Implementation of the {@link FormatterProvider} interface
+ * Implementation of the {@link FormatterProvider} interface.
  * 
  * @author <a href="ggastald@redhat.com">George Gastaldi</a>
  */

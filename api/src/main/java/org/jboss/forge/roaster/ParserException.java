@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * <code>ParserException</code> is the exception which is thrown if a parsing process fails. The problems occurred
+ * {@code ParserException} is the exception which is thrown if a parsing process fails. The problems occurred
  * during the parsing can be accessed with {@link #getProblems()}.
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -23,8 +23,8 @@ public class ParserException extends RuntimeException
    private final List<Problem> problems;
 
    /**
-    * Constructs a new <code>ParserException</code> with no problems, a <code>null</code> error message and a
-    * <code>null</code> cause.
+    * Constructs a new {@code ParserException} with no problems, a {@code null} error message and a
+    * {@code null} cause.
     */
    public ParserException()
    {
@@ -32,7 +32,7 @@ public class ParserException extends RuntimeException
    }
 
    /**
-    * Constructs a new <code>ParserException</code> with no problems, the given error message and a <code>null</code>
+    * Constructs a new {@code ParserException} with no problems, the given error message and a {@code null}
     * cause.
     * 
     * @param message the error message of this exception
@@ -44,7 +44,7 @@ public class ParserException extends RuntimeException
    }
 
    /**
-    * Constructs a new <code>ParserException</code> with no problems, a <code>null</code> error message and the given
+    * Constructs a new {@code ParserException} with no problems, a {@code null} error message and the given
     * cause.
     * 
     * @param cause the cause of this exception
@@ -56,7 +56,7 @@ public class ParserException extends RuntimeException
    }
 
    /**
-    * Constructs a new <code>ParserException</code> with no problems, the given error message and the given cause.
+    * Constructs a new {@code ParserException} with no problems, the given error message and the given cause.
     * 
     * @param message the error message of this exception
     * @param cause the cause of this exception
@@ -68,8 +68,8 @@ public class ParserException extends RuntimeException
    }
 
    /**
-    * Constructs a new <code>ParserException</code> with the given problems, the given error message and a
-    * <code>null</code> cause.
+    * Constructs a new {@code ParserException} with the given problems, the given error message and a
+    * {@code null} cause.
     * <p>
     * Note that the problems list instance is <b>not</b> copied.
     * </p>
@@ -84,8 +84,8 @@ public class ParserException extends RuntimeException
    }
 
    /**
-    * Constructs a new <code>ParserException</code> with the given problems, a error message constructed from the
-    * problems list and a <code>null</code> cause.
+    * Constructs a new {@code ParserException} with the given problems, a error message constructed from the
+    * problems list and a {@code null} cause.
     * <p>
     * Note that the problems list instance is <b>not</b> copied.
     * </p>
@@ -99,7 +99,7 @@ public class ParserException extends RuntimeException
    }
 
    /**
-    * Get the problems occurred during a parsing process. The returned list is maybe empty but never <code>null</code>.
+    * Get the problems occurred during a parsing process. The returned list is maybe empty but never {@code null}.
     * 
     * @return a unmodifiable list of the problems occurred during a parsing process
     * @see Collections#unmodifiableList(List)

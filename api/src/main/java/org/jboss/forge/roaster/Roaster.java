@@ -227,7 +227,7 @@ public final class Roaster
    }
 
    /**
-    * Validates a code snippet and returns a {@link List} of {@link Problem}. Never returns <code>null</code>.
+    * Validates a code snippet and returns a {@link List} of {@link Problem}. Never returns {@code null}.
     * 
     * @param snippet any Java code
     * @return a list of problems (maybe empty)

@@ -22,7 +22,7 @@ public class Problem
    private final int sourceLineNumber;
 
    /**
-    * Constructs a new <code>Problem</code> with the given attributes.
+    * Constructs a new {@code Problem} with the given attributes.
     * 
     * @param message the message of this problem in a human readable form
     * @param sourceStart the start position of the problem

@@ -9,6 +9,7 @@ package org.jboss.forge.roaster.model.ast;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
@@ -18,24 +19,14 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 
 public class ModifierAccessor
 {
-   public boolean hasModifier(ASTNode body, final ModifierKeyword modifier)
+   public boolean hasModifier(ASTNode body, final ModifierKeyword keyword)
    {
-      boolean result = false;
-      List<Modifier> modifiers = getModifiers(body);
-      for (Modifier m : modifiers)
-      {
-         if (m.getKeyword() == modifier)
-         {
-            result = true;
-            break;
-         }
-      }
-      return result;
+      return getModifiers(body).stream().filter(modifier -> modifier.getKeyword() == keyword).count() != 0;
    }
 
    private List<Modifier> getModifiers(ASTNode body)
    {
-      List<Modifier> result = new ArrayList<Modifier>();
+      List<Modifier> result = new ArrayList<>();
       List<?> modifiers = getInternalModifiers(body);
       for (Object m : modifiers)
       {
@@ -52,7 +43,7 @@ public class ModifierAccessor
    {
       List<Modifier> modifiers = getModifiers(body);
 
-      List<Modifier> toBeRemoved = new ArrayList<Modifier>();
+      List<Modifier> toBeRemoved = new ArrayList<>();
       for (Modifier modifier : modifiers)
       {
          if (modifier.isPrivate() || modifier.isProtected() || modifier.isPublic())
@@ -75,17 +66,9 @@ public class ModifierAccessor
 
    public void removeModifier(ASTNode body, ModifierKeyword keyword)
    {
-      List<Modifier> modifiers = getModifiers(body);
-
-      List<Modifier> toBeRemoved = new ArrayList<Modifier>();
-      for (Modifier modifier : modifiers)
-      {
-         if (modifier.getKeyword().equals(keyword))
-         {
-            toBeRemoved.add(modifier);
-         }
-      }
-
+      List<Modifier> toBeRemoved = getModifiers(body).stream()
+               .filter(modifier -> modifier.getKeyword().equals(keyword))
+               .collect(Collectors.toList());
       getInternalModifiers(body).removeAll(toBeRemoved);
    }
 

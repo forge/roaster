@@ -46,15 +46,16 @@ public class AnnotationAccessor<O extends JavaSource<O>, T>
    {
       @SuppressWarnings("unchecked")
       ListIterator<IExtendedModifier> iter = (ListIterator<IExtendedModifier>) modifiers.listIterator();
-      while (iter.hasNext() && iter.next().isAnnotation())
-         ;
+      while (iter.hasNext() && iter.next().isAnnotation()) {
+         //ignore these nodes
+      }
 
       // the effect of this is to back up only if the last encountered modifier is _not_ an annotation:
       if (iter.hasPrevious() && iter.previous().isAnnotation())
       {
          iter.next();
       }
-      AnnotationSource<O> annotation = new AnnotationImpl<O, T>(target);
+      AnnotationSource<O> annotation = new AnnotationImpl<>(target);
       iter.add((IExtendedModifier) annotation.getInternal());
       return annotation;
    }
@@ -109,13 +110,13 @@ public class AnnotationAccessor<O extends JavaSource<O>, T>
 
    private List<AnnotationSource<O>> getAnnotations(final AnnotationTargetSource<O, T> target, final List<?> modifiers)
    {
-      List<AnnotationSource<O>> result = new ArrayList<AnnotationSource<O>>();
+      List<AnnotationSource<O>> result = new ArrayList<>();
 
       for (Object object : modifiers)
       {
          if (object instanceof org.eclipse.jdt.core.dom.Annotation)
          {
-            AnnotationSource<O> annotation = new AnnotationImpl<O, T>(target, object);
+            AnnotationSource<O> annotation = new AnnotationImpl<>(target, object);
             result.add(annotation);
          }
       }
@@ -136,6 +137,7 @@ public class AnnotationAccessor<O extends JavaSource<O>, T>
       return removeAnnotation(target, variableDeclaration.modifiers(), annotation);
    }
 
+   @SuppressWarnings("unlikely-arg-type")
    private <E extends AnnotationTargetSource<O, T>> E removeAnnotation(final E target, final List<?> modifiers,
             final Annotation<O> annotation)
    {
@@ -194,7 +196,7 @@ public class AnnotationAccessor<O extends JavaSource<O>, T>
       {
          if (object instanceof org.eclipse.jdt.core.dom.Annotation)
          {
-            AnnotationSource<O> annotation = new AnnotationImpl<O, T>(target, object);
+            AnnotationSource<O> annotation = new AnnotationImpl<>(target, object);
             String annotationType = annotation.getName();
             if (Types.areEquivalent(type, annotationType))
             {

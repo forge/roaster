@@ -13,27 +13,29 @@ import org.jboss.forge.roaster.Roaster;
 
 /**
  * Allows attaching a custom source formatter.
- * 
- * This interface is meant to be consumed by {@link Roaster} only
+ * <p>
+ * Note: This interface is meant to be consumed by {@link Roaster} <b>only</b>.
+ * </p>
  * 
  * @author <a href="ggastald@redhat.com">George Gastaldi</a>
  */
 public interface FormatterProvider
 {
    /**
-    * Format the provided source code
+    * Format the provided source code.
     * 
     * @param source a Java source file content
-    * @return the formatted version of the source parameter
+    * @return the formatted version of the source
     */
    String format(String source);
 
    /**
-    * Format the source code, given the required {@link Properties}
+    * Format the source code, given the required {@link Properties}. The properties are meant to interpreted
+    * implementation specific.
     * 
     * @param properties implementation specific formatting options
     * @param source a Java source file content
-    * @return the formatted version of the source parameter
+    * @return the formatted version of the source
     */
    String format(Properties properties, String source);
 }

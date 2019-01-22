@@ -10,6 +10,7 @@ package org.jboss.forge.roaster;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 
@@ -18,7 +19,7 @@ import java.nio.charset.StandardCharsets;
  *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-abstract class Streams
+public abstract class Streams
 {
    private Streams()
    {
@@ -57,5 +58,34 @@ abstract class Streams
          throw new RuntimeException(e);
       }
       return out.toString();
+   }
+
+   /**
+    * Writes the content of the source stream to the destination stream. The caller is responsible to close the streams.
+    * 
+    * @param source the source stream to read from
+    * @param destination the destination stream to write to
+    * @throws RuntimeException if a {@link IOException} occurs.
+    */
+   public static void write(final InputStream source, final OutputStream destination)
+   {
+      try
+      {
+         final byte[] buffer = new byte[8192];
+         int read;
+         do
+         {
+            read = source.read(buffer, 0, buffer.length);
+            if (read > 0)
+            {
+               destination.write(buffer, 0, read);
+            }
+         }
+         while (read >= 0);
+      }
+      catch (IOException e)
+      {
+         throw new RuntimeException(e);
+      }
    }
 }

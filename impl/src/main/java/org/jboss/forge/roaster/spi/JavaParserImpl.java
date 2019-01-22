@@ -7,11 +7,10 @@
 
 package org.jboss.forge.roaster.spi;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
-
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.core.dom.AST;
@@ -46,12 +45,13 @@ import org.jboss.forge.roaster.model.source.JavaPackageInfoSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 
 /**
+ * The default implementation of a {@link JavaParser}.
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 public class JavaParserImpl implements JavaParser
 {
 
-   @SuppressWarnings({ "rawtypes", "unchecked" })
    @Override
    public JavaUnit parseUnit(final String data)
    {
@@ -59,10 +59,7 @@ public class JavaParserImpl implements JavaParser
       ASTParser parser = ASTParser.newParser(AST.JLS8);
 
       parser.setSource(document.get().toCharArray());
-      Map options = JavaCore.getOptions();
-      options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
-      options.put(JavaCore.CORE_ENCODING, "UTF-8");
-      parser.setCompilerOptions(options);
+      parser.setCompilerOptions(getParserOptions());
 
       parser.setResolveBindings(true);
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
@@ -73,7 +70,7 @@ public class JavaParserImpl implements JavaParser
       unit.accept(visitor);
 
       List<AbstractTypeDeclaration> declarations = visitor.getTypeDeclarations();
-      List<JavaType<?>> types = new ArrayList<JavaType<?>>();
+      List<JavaType<?>> types = new ArrayList<>();
       if (!declarations.isEmpty())
       {
          for (AbstractTypeDeclaration declaration : declarations)
@@ -99,6 +96,13 @@ public class JavaParserImpl implements JavaParser
    /**
     * Create a {@link JavaType} instance from the given {@link Document}, {@link CompilationUnit},
     * {@link TypeDeclaration}, and enclosing {@link JavaType} type.
+    * 
+    * @param enclosingType the enclosing type of the new java type
+    * @param document the document of the new java type
+    * @param unit the compilation unit of the new java type
+    * @param declaration the AST node of the new java type
+    * @return a new java type instance with the provided parameters
+    * @throws ParserException if the java type in the {@code declaration} is unknown
     */
    public static JavaSource<?> getJavaSource(JavaSource<?> enclosingType, Document document, CompilationUnit unit,
             ASTNode declaration)
@@ -110,10 +114,7 @@ public class JavaParserImpl implements JavaParser
          {
             return new JavaInterfaceImpl(enclosingType, document, unit, typeDeclaration);
          }
-         else
-         {
-            return new JavaClassImpl(enclosingType, document, unit, typeDeclaration);
-         }
+         return new JavaClassImpl(enclosingType, document, unit, typeDeclaration);
       }
       else if (declaration instanceof EnumDeclaration)
       {
@@ -140,38 +141,32 @@ public class JavaParserImpl implements JavaParser
    @SuppressWarnings("unchecked")
    public <T extends JavaSource<?>> T create(final Class<T> type)
    {
-      if (type != null)
-      {
-         if (type.isAssignableFrom(JavaClassSource.class))
-            return (T) parseUnit("public class JavaClass { }").getGoverningType();
+      if (type.isAssignableFrom(JavaClassSource.class))
+         return (T) parseUnit("public class JavaClass { }").getGoverningType();
 
-         if (type.isAssignableFrom(JavaEnumSource.class))
-            return (T) parseUnit("public enum JavaEnum { }").getGoverningType();
+      if (type.isAssignableFrom(JavaEnumSource.class))
+         return (T) parseUnit("public enum JavaEnum { }").getGoverningType();
 
-         if (type.isAssignableFrom(JavaAnnotationSource.class))
-            return (T) parseUnit("public @interface JavaAnnotation { }").getGoverningType();
+      if (type.isAssignableFrom(JavaAnnotationSource.class))
+         return (T) parseUnit("public @interface JavaAnnotation { }").getGoverningType();
 
-         if (type.isAssignableFrom(JavaInterfaceSource.class))
-            return (T) parseUnit("public interface JavaInterface { }").getGoverningType();
+      if (type.isAssignableFrom(JavaInterfaceSource.class))
+         return (T) parseUnit("public interface JavaInterface { }").getGoverningType();
 
-         if (type.isAssignableFrom(JavaPackageInfoSource.class))
-            return (T) parseUnit("package org.example;").getGoverningType();
-      }
+      if (type.isAssignableFrom(JavaPackageInfoSource.class))
+         return (T) parseUnit("package org.example;").getGoverningType();
+
       return null;
    }
 
-   @SuppressWarnings({ "unchecked", "rawtypes" })
    @Override
    public List<Problem> validateSnippet(String snippet)
    {
-      Hashtable options = JavaCore.getOptions();
-      options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
-      options.put(JavaCore.CORE_ENCODING, "UTF-8");
       CodeSnippetParsingUtil codeSnippetParsingUtil = new CodeSnippetParsingUtil(false);
       ConstructorDeclaration constructorDeclaration = codeSnippetParsingUtil.parseStatements(snippet.toCharArray(), 0,
-               snippet.length(), options, true, false);
+               snippet.length(), getParserOptions(), true, false);
       CompilationResult compilationResult = constructorDeclaration.compilationResult();
-      List<Problem> problems = new ArrayList<Problem>();
+      List<Problem> problems = new ArrayList<>();
       if (compilationResult.hasErrors())
       {
          for (CategorizedProblem problem : compilationResult.getErrors())
@@ -184,5 +179,13 @@ public class JavaParserImpl implements JavaParser
          }
       }
       return problems;
+   }
+
+   private Hashtable<String, String> getParserOptions()
+   {
+      Hashtable<String, String> options = JavaCore.getOptions();
+      options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
+      options.put(JavaCore.CORE_ENCODING, StandardCharsets.UTF_8.name());
+      return options;
    }
 }
