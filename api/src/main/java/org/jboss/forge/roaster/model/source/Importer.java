@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.Type;
+import org.jboss.forge.roaster.spi.WildcardImportResolver;
 
 /**
  * Defines the aspect of {@link JavaSource} that handles type imports.
@@ -77,7 +78,18 @@ public interface Importer<O extends JavaSource<O>>
 
    /**
     * Given a simple or qualified type, resolve that type against the available imports and return the referenced type.
-    * If the type cannot be resolved, return the given type unchanged.
+    * The resolving processing order is as followed:
+    * <ol>
+    * <li>If the type is primitive or full qualified, the type is returned as it</li>
+    * <li>Find the type in the imports</li>
+    * <li>If only one wildcard import is used, use this import for resolving</li>
+    * <li>Use the available {@link WildcardImportResolver}. The first qualified name is used</li>
+    * <li>The current package if defined is used for resolving</li>
+    * <li>The type is returned as it</li>
+    * </ol>
+    * If the type is returned as it, maybe parts which can hinder we matching process like generic's are stripped of.
+    * @param type the type to resolve
+    * @return the (resolved) type
     */
    String resolveType(String type);
 
