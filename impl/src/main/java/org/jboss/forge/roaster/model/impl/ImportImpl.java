@@ -6,6 +6,8 @@
  */
 package org.jboss.forge.roaster.model.impl;
 
+import java.util.Objects;
+
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
@@ -42,6 +44,10 @@ public class ImportImpl implements Import
    @Override
    public String getSimpleName()
    {
+      if (isWildcard())
+      {
+         return WILDCARD;
+      }
       return Types.toSimpleName(imprt.getName().getFullyQualifiedName());
    }
 
@@ -94,10 +100,7 @@ public class ImportImpl implements Import
    @Override
    public int hashCode()
    {
-      final int prime = 31;
-      int result = 1;
-      result = (prime * result) + ((imprt == null) ? 0 : imprt.hashCode());
-      return result;
+      return Objects.hashCode(imprt);
    }
 
    @Override
@@ -122,6 +125,10 @@ public class ImportImpl implements Import
    @Override
    public String getPackage()
    {
+      if (isWildcard())
+      {
+         return imprt.getName().getFullyQualifiedName();
+      }
       return Types.getPackage(getQualifiedName());
    }
 }

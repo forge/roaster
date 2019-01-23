@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.stream.Collectors;
 
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.IProblem;
@@ -60,7 +61,7 @@ import org.jboss.forge.roaster.spi.WildcardImportResolver;
 public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
          JavaSource<O>, TypeHolderSource<O>, StaticCapableSource<O>
 {
-   private final AnnotationAccessor<O, O> annotations = new AnnotationAccessor<O, O>();
+   private final AnnotationAccessor<O, O> annotations = new AnnotationAccessor<>();
    private final ModifierAccessor modifiers = new ModifierAccessor();
 
    protected final Document document;
@@ -205,8 +206,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    @Override
    public Import getImport(final String className)
    {
-      List<Import> imports = getImports();
-      for (Import imprt : imports)
+      for (Import imprt : getImports())
       {
          if (imprt.getQualifiedName().equals(className) || imprt.getSimpleName().equals(className))
          {
@@ -237,7 +237,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    @Override
    public List<Import> getImports()
    {
-      List<Import> results = new ArrayList<Import>();
+      List<Import> results = new ArrayList<>();
 
       for (ImportDeclaration i : (List<ImportDeclaration>) unit.imports())
       {
@@ -313,52 +313,58 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    @Override
    public String resolveType(final String type)
    {
-      String original = type;
       String result = type;
 
       // Strip away any characters that might hinder the type matching process
       if (Types.isArray(result))
       {
-         original = Types.stripArray(result);
          result = Types.stripArray(result);
       }
 
       if (Types.isGeneric(result))
       {
-         original = Types.stripGenerics(result);
          result = Types.stripGenerics(result);
       }
 
+      // primitive types don't need a import -> direct return
       if (Types.isPrimitive(result))
       {
          return result;
       }
 
-      // Check for direct import matches first since they are the fastest and least work-intensive
-      if (Types.isSimpleName(result))
+      // qualified names don't need to be resolved
+      if (Types.isQualified(result))
       {
-         if (!hasImport(result) && Types.isJavaLang(result))
-         {
-            result = "java.lang." + result;
-         }
-
-         if (result.equals(original))
-         {
-            for (Import imprt : getImports())
-            {
-               if (Types.areEquivalent(result, imprt.getQualifiedName()))
-               {
-                  result = imprt.getQualifiedName();
-                  break;
-               }
-            }
-         }
+         return result;
       }
 
-      // If we didn't match any imports directly, we might have a wild-card/on-demand import.
-      if (Types.isSimpleName(result))
+      // java lang types are implicitly imported and we don't allow a duplicate simple name in another package
+      if (Types.isJavaLang(result))
       {
-         for (Import imprt : getImports())
+         return "java.lang." + result;
+      }
+
+      // Check for an existing direct import
+      Import directImport = getImport(result);
+      if (directImport != null)
+      {
+         return directImport.getQualifiedName();
+      }
+
+      List<Import> imports = getImports(); // fetch imports only once
+
+      // if we have no imports and no fqn name the following doesn't need to be executed
+      if (!imports.isEmpty())
+      {
+         // if we have only one wildcard import we can use this
+         List<Import> wildcardImports = imports.stream().filter(Import::isWildcard).collect(Collectors.toList());
+         if (wildcardImports.size() == 1)
+         {
+            return wildcardImports.get(0).getPackage() + "." + result;
+         }
+
+         // If we didn't match any imports directly, we might have a wild-card/on-demand import.
+         for (Import imprt : imports)
          {
             if (imprt.isWildcard())
             {
@@ -368,16 +374,16 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
                {
                   result = r.resolve(this, result);
                   if (Types.isQualified(result))
-                     break;
+                     return result;
                }
             }
          }
       }
 
-      // No import matches and no wild-card/on-demand import matches means this class is in the same package.
-      if (Types.isSimpleName(result) && getPackage() != null)
+      // Nothing matched since here, so try to resolve it with the current package
+      if (getPackage() != null)
       {
-         result = getPackage() + "." + result;
+         return getPackage() + "." + result;
       }
 
       return result;
@@ -387,7 +393,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    {
       if (resolvers == null)
       {
-         resolvers = new ArrayList<WildcardImportResolver>();
+         resolvers = new ArrayList<>();
          for (WildcardImportResolver r : ServiceLoader.load(WildcardImportResolver.class, getClass().getClassLoader()))
          {
             resolvers.add(r);
@@ -547,10 +553,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       {
          return pkg.getName().getFullyQualifiedName();
       }
-      else
-      {
-         return null;
-      }
+      return null;
    }
 
    @Override
@@ -749,7 +752,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    @Override
    public List<SyntaxError> getSyntaxErrors()
    {
-      List<SyntaxError> result = new ArrayList<SyntaxError>();
+      List<SyntaxError> result = new ArrayList<>();
 
       IProblem[] problems = unit.getProblems();
       if (problems != null)
@@ -808,7 +811,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
    {
       List<AbstractTypeDeclaration> declarations = getNestedDeclarations(body);
 
-      List<JavaSource<?>> result = new ArrayList<JavaSource<?>>();
+      List<JavaSource<?>> result = new ArrayList<>();
       for (AbstractTypeDeclaration declaration : declarations)
       {
          result.add(JavaParserImpl.getJavaSource(this, document, unit, declaration));
@@ -921,7 +924,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
          javadoc = body.getAST().newJavadoc();
          body.setJavadoc(javadoc);
       }
-      return new JavaDocImpl<O>((O) this, javadoc);
+      return new JavaDocImpl<>((O) this, javadoc);
    }
 
    @Override
@@ -963,7 +966,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> implements
       body.accept(typeDeclarationFinder);
       List<AbstractTypeDeclaration> declarations = typeDeclarationFinder.getTypeDeclarations();
 
-      List<AbstractTypeDeclaration> result = new ArrayList<AbstractTypeDeclaration>(declarations);
+      List<AbstractTypeDeclaration> result = new ArrayList<>(declarations);
       if (!declarations.isEmpty())
       {
          // We don't want to return the current class' declaration.

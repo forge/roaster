@@ -28,7 +28,6 @@ import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -230,16 +229,47 @@ public abstract class JavaClassTestBase
       assertTrue(source.requiresImport(Annotation.class));
       assertFalse(source.requiresImport(source.getPackage() + ".Foo"));
    }
-   
+
+   @Test
+   public void testResolvedType()
+   {
+      JavaClassSource source = Roaster.create(JavaClassSource.class);
+      String type = "ClassA";
+
+      // if the type is qualified or primitive, return the type as it
+      assertThat(source.resolveType(boolean.class.getName()), is(boolean.class.getName()));
+      assertThat(source.resolveType("package1.Class1"), is("package1.Class1"));
+
+      // if the source has no imports & no package, return the type as it
+      assertThat(source.resolveType(type), is(type));
+
+      // if the source has a package, use it
+      String pckage = "myPackage";
+      source.setPackage(pckage);
+      assertThat(source.resolveType(type), is(pckage + "." + type));
+
+      // TODO add tests for wildcard resolver
+
+      // test for single wildcard
+      String wildcarPacke = "wildcard.pckage";
+      source.addImport(wildcarPacke + ".*");
+      assertThat(source.resolveType(type), is(wildcarPacke + "." + type));
+
+      // test direct import resolving
+      String directImport = "direct.imprt." + type;
+      source.addImport(directImport);
+      assertThat(source.resolveType(type), is(directImport));
+   }
+
    @Test
    public void testRequiresImportNested()
    {
-     JavaClassSource source = Roaster.create(JavaClassSource.class);
-     assertTrue(source.requiresImport("package1.Class1<package2.Class2>"));
-     
-     source.addImport("package1.Class1<?>");
-     assertTrue(source.getImports().size() == 1);
-     assertTrue(source.requiresImport("package1.Class1<package2.Class2>"));
+      JavaClassSource source = Roaster.create(JavaClassSource.class);
+      assertTrue(source.requiresImport("package1.Class1<package2.Class2>"));
+
+      source.addImport("package1.Class1<?>");
+      assertTrue(source.getImports().size() == 1);
+      assertTrue(source.requiresImport("package1.Class1<package2.Class2>"));
    }
 
    @Test
