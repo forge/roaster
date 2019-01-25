@@ -22,6 +22,7 @@ import org.junit.Test;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+ * @param <T> the type of interface to test
  *
  */
 public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapableSource<T>>
@@ -38,7 +39,7 @@ public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapa
    protected abstract T getSource();
 
    @Test
-   public void testAddInterfaceString() throws Exception
+   public void testAddInterfaceString()
    {
       assertFalse(this.source.hasInterface("com.foo.Bar"));
       assertFalse(this.source.hasInterface("java.io.Serializable"));
@@ -47,7 +48,7 @@ public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapa
    }
 
    @Test
-   public void testAddInterfaceClass() throws Exception
+   public void testAddInterfaceClass()
    {
       assertFalse(this.source.hasInterface(Serializable.class));
       this.source.addInterface(Serializable.class);
@@ -55,7 +56,7 @@ public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapa
    }
 
    @Test
-   public void testAddInterfaceJavaInterface() throws Exception
+   public void testAddInterfaceJavaInterface()
    {
       JavaInterfaceSource i2 = Roaster.parse(JavaInterfaceSource.class, "package com.foo; public interface Bar<T> {}");
       assertFalse(this.source.hasInterface(i2));
@@ -68,7 +69,8 @@ public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapa
    @Test
    public void testAddInterfaceWithConflictingImport()
    {
-      final JavaInterfaceSource iface = Roaster.parse(JavaInterfaceSource.class, "package com.foo; public interface List {}");
+      final JavaInterfaceSource iface = Roaster.parse(JavaInterfaceSource.class,
+               "package com.foo; public interface List {}");
       assertFalse(source.hasInterface(iface));
       assertEquals(0, source.getInterfaces().size());
       source.addImport("java.util.List");
@@ -80,14 +82,14 @@ public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapa
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void testAddImproperInterface() throws Exception
+   public void testAddImproperInterface()
    {
       this.source.addInterface("43 23omg.omg.omg");
       fail();
    }
 
    @Test
-   public void testGetInterfaces() throws Exception
+   public void testGetInterfaces()
    {
       this.source.addInterface(Serializable.class);
       this.source.addInterface("com.example.Custom");
@@ -101,7 +103,7 @@ public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapa
    }
 
    @Test
-   public void testRemoveInterface() throws Exception
+   public void testRemoveInterface()
    {
       this.source.addInterface(Serializable.class);
       this.source.addInterface("com.example.Custom");
@@ -117,7 +119,7 @@ public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapa
    }
 
    @Test
-   public void testHashCode() throws Exception
+   public void testHashCode()
    {
       this.source.hashCode();
    }

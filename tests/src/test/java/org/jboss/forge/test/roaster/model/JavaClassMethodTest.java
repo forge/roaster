@@ -11,6 +11,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -31,53 +32,56 @@ public class JavaClassMethodTest
    private MethodSource<JavaClassSource> method;
 
    @Before
-   public void reset()
+   public void reset() throws IOException
    {
-      InputStream stream = JavaClassMethodTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockClass.java");
-      javaClass = Roaster.parse(JavaClassSource.class, stream);
-      javaClass.addMethod("public URL rewriteURL(String pattern, String replacement) { return null; }");
-      method = javaClass.getMethods().get(javaClass.getMethods().size() - 1);
+      String fileName = "/org/jboss/forge/grammar/java/MockClass.java";
+      try (InputStream stream = JavaClassMethodTest.class.getResourceAsStream(fileName))
+      {
+         javaClass = Roaster.parse(JavaClassSource.class, stream);
+         javaClass.addMethod("public URL rewriteURL(String pattern, String replacement) { return null; }");
+         method = javaClass.getMethods().get(javaClass.getMethods().size() - 1);
+      }
    }
 
    @Test
-   public void testGetMethodByString() throws Exception 
+   public void testGetMethodByString() 
    {
       javaClass.addMethod("public void random() { }");
       javaClass.addMethod("public void random(String randomString) { }");
-    
+
       MethodSource<JavaClassSource> randomMethod = javaClass.getMethod("random");
-      
+
       List<ParameterSource<JavaClassSource>> randomMethodParameters = randomMethod.getParameters();
       assertEquals(0, randomMethodParameters.size());
       assertFalse(javaClass.hasMethodSignature(method.getName()));
-      
+
       MethodSource<JavaClassSource> randomMethodString = javaClass.getMethod("random", "String");
       List<ParameterSource<JavaClassSource>> randomMethodStringParameters = randomMethodString.getParameters();
       assertEquals(1, randomMethodStringParameters.size());
       assertEquals("String", randomMethodStringParameters.get(0).getType().getName());
       assertFalse(javaClass.hasMethodSignature(method.getName()));
    }
-   
+
    @Test
-   public void testGetMethodByClass() throws Exception 
+   public void testGetMethodByClass() 
    {
       javaClass.addMethod("public void random() { }");
       javaClass.addMethod("public void random(String randomString) { }");
-    
+
       MethodSource<JavaClassSource> randomMethod = javaClass.getMethod("random");
       List<ParameterSource<JavaClassSource>> randomMethodParameters = randomMethod.getParameters();
       assertEquals(0, randomMethodParameters.size());
       assertFalse(javaClass.hasMethodSignature(method.getName()));
-      
+
       MethodSource<JavaClassSource> randomMethodString = javaClass.getMethod("random", String.class);
       List<ParameterSource<JavaClassSource>> randomMethodStringParameters = randomMethodString.getParameters();
       assertEquals(1, randomMethodStringParameters.size());
       assertEquals("String", randomMethodStringParameters.get(0).getType().getName());
       assertFalse(javaClass.hasMethodSignature(method.getName()));
    }
-   
+
    @Test
-   public void testSetName() throws Exception
+   public void testSetName() 
    {
       assertEquals("rewriteURL", method.getName());
       method.setName("doSomething");
@@ -85,7 +89,7 @@ public class JavaClassMethodTest
    }
 
    @Test
-   public void testSetReturnType() throws Exception
+   public void testSetReturnType() 
    {
       assertEquals("java.net.URL", method.getReturnType().getQualifiedName());
       method.setReturnType(Class.class);
@@ -94,7 +98,7 @@ public class JavaClassMethodTest
    }
 
    @Test
-   public void testSetReturnTypeVoid() throws Exception
+   public void testSetReturnTypeVoid() 
    {
       assertEquals("java.net.URL", method.getReturnType().getQualifiedName());
       method.setReturnTypeVoid();
@@ -102,7 +106,7 @@ public class JavaClassMethodTest
    }
 
    @Test
-   public void testSetConstructor() throws Exception
+   public void testSetConstructor() 
    {
       assertFalse(method.isConstructor());
       method.setConstructor(true);
@@ -111,14 +115,14 @@ public class JavaClassMethodTest
    }
 
    @Test
-   public void testSetAbstract() throws Exception
+   public void testSetAbstract() 
    {
       method.setAbstract(true);
       assertTrue(method.isAbstract());
    }
 
    @Test
-   public void testSetParameters() throws Exception
+   public void testSetParameters() 
    {
       method.setParameters("final int foo, final String bar");
       List<ParameterSource<JavaClassSource>> parameters = method.getParameters();
@@ -128,7 +132,7 @@ public class JavaClassMethodTest
    }
 
    @Test
-   public void testGetParameterType() throws Exception
+   public void testGetParameterType() 
    {
       method.setParameters("final int foo, final String bar");
       List<ParameterSource<JavaClassSource>> parameters = method.getParameters();
@@ -139,21 +143,21 @@ public class JavaClassMethodTest
    }
 
    @Test
-   public void testHasMethodZeroParametersIgnoresMethodWithParameters() throws Exception
+   public void testHasMethodZeroParametersIgnoresMethodWithParameters() 
    {
       assertTrue(javaClass.hasMethodSignature(method));
       assertFalse(javaClass.hasMethodSignature(method.getName()));
    }
 
    @Test
-   public void testHasMethodZeroParameters() throws Exception
+   public void testHasMethodZeroParameters() 
    {
       javaClass.addMethod("public void doSomething(){/*done*/}");
       assertTrue(javaClass.hasMethodSignature("doSomething"));
    }
 
    @Test
-   public void testGetMembers() throws Exception
+   public void testGetMembers() 
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class).addMethod("public void doSomething();")
                .getOrigin()
@@ -163,7 +167,7 @@ public class JavaClassMethodTest
    }
 
    @Test
-   public void testAddParameter() throws Exception
+   public void testAddParameter() 
    {
       ParameterSource<JavaClassSource> param = method.addParameter(Number.class, "number");
       assertNotNull(param);
@@ -171,7 +175,7 @@ public class JavaClassMethodTest
    }
 
    @Test
-   public void testAddParameterStringType() throws Exception
+   public void testAddParameterStringType() 
    {
       ParameterSource<JavaClassSource> param = method.addParameter(Number.class.getName(), "number");
       assertNotNull(param);
@@ -179,7 +183,7 @@ public class JavaClassMethodTest
    }
 
    @Test
-   public void testAddParameterJavaType() throws Exception
+   public void testAddParameterJavaType() 
    {
       JavaClassSource type = Roaster.create(JavaClassSource.class).setName("Mock").setPackage("mock.pkg");
       ParameterSource<JavaClassSource> param = method.addParameter(type, "mock");
@@ -189,7 +193,7 @@ public class JavaClassMethodTest
    }
 
    @Test
-   public void testRemoveParameter() throws Exception
+   public void testRemoveParameter() 
    {
       ParameterSource<JavaClassSource> param = method.getParameters().get(0);
       assertNotNull(param);
@@ -198,25 +202,24 @@ public class JavaClassMethodTest
    }
 
    @Test
-   public void testRemoveParameterByClassType() throws Exception
+   public void testRemoveParameterByClassType() 
    {
       method.removeParameter(String.class, "pattern");
       assertEquals(1, method.getParameters().size());
    }
 
    @Test
-   public void testRemoveParameterByStringType() throws Exception
+   public void testRemoveParameterByStringType() 
    {
       method.removeParameter("String", "pattern");
       assertEquals(1, method.getParameters().size());
    }
 
    @Test
-   public void testRemoveParameterByJavaType() throws Exception
+   public void testRemoveParameterByJavaType() 
    {
       JavaClassSource type = Roaster.create(JavaClassSource.class).setName("String").setPackage("java.lang");
       method.removeParameter(type, "pattern");
       assertEquals(1, method.getParameters().size());
    }
-
 }

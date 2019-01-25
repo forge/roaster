@@ -6,6 +6,7 @@
  */
 package org.jboss.forge.test.roaster.model;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.jboss.forge.roaster.Roaster;
@@ -18,9 +19,12 @@ import org.jboss.forge.test.roaster.model.common.JavaClassTestBase;
 public class JavaClassTest extends JavaClassTestBase
 {
    @Override
-   public JavaClassSource getSource()
+   public JavaClassSource getSource() throws IOException
    {
-      InputStream stream = JavaClassTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockClass.java");
-      return Roaster.parse(JavaClassSource.class, stream);
+      String fileName = "/org/jboss/forge/grammar/java/MockClass.java";
+      try (InputStream stream = JavaClassTest.class.getResourceAsStream(fileName))
+      {
+         return Roaster.parse(JavaClassSource.class, stream);
+      }
    }
 }

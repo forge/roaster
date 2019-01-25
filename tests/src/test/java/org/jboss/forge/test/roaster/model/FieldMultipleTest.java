@@ -30,7 +30,7 @@ public class FieldMultipleTest
    }
 
    @Test
-   public void testMultipleFieldDeclaration() throws Exception
+   public void testMultipleFieldDeclaration() 
    {
       final JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.addField("public String a,b,c[];");
@@ -59,7 +59,7 @@ public class FieldMultipleTest
    }
 
    @Test
-   public void testMultipleFieldDeclarationWithAnnotation() throws Exception
+   public void testMultipleFieldDeclarationWithAnnotation() 
    {
       final JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.addField("@javax.xml.bind.annotation.XmlElement public String a,b,c[];");
@@ -88,7 +88,7 @@ public class FieldMultipleTest
    }
 
    @Test
-   public void testMultipleFieldDeclarationWithInitializers() throws Exception
+   public void testMultipleFieldDeclarationWithInitializers() 
    {
       final JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.addField("private static final String a = \"A\",b =\"B\",c[] = {\"C\"};");

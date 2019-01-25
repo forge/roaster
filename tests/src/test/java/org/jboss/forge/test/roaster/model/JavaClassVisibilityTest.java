@@ -6,6 +6,7 @@
  */
 package org.jboss.forge.test.roaster.model;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.jboss.forge.roaster.Roaster;
@@ -18,11 +19,13 @@ import org.jboss.forge.test.roaster.model.common.VisibilityTest;
 public class JavaClassVisibilityTest extends VisibilityTest
 {
    @Override
-   public void resetTests()
+   public void resetTests() throws IOException
    {
-      InputStream stream = JavaClassVisibilityTest.class
-               .getResourceAsStream("/org/jboss/forge/grammar/java/MockClass.java");
-      JavaClassSource clazz = Roaster.parse(JavaClassSource.class, stream);
-      setTarget(clazz);
+      String fileName = "/org/jboss/forge/grammar/java/MockClass.java";
+      try (InputStream stream = JavaClassVisibilityTest.class.getResourceAsStream(fileName))
+      {
+         JavaClassSource clazz = Roaster.parse(JavaClassSource.class, stream);
+         setTarget(clazz);
+      }
    }
 }

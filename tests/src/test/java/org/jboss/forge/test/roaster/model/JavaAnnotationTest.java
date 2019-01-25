@@ -17,6 +17,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.jboss.forge.roaster.Roaster;
@@ -37,15 +38,17 @@ public class JavaAnnotationTest
    private JavaAnnotationSource javaAnnotation;
 
    @Before
-   public void setup()
+   public void setup() throws IOException
    {
-      InputStream stream = JavaAnnotationTest.class
-               .getResourceAsStream("/org/jboss/forge/grammar/java/MockJavaAnnotationType.java");
-      javaAnnotation = Roaster.parse(JavaAnnotationSource.class, stream);
+      String fileName = "/org/jboss/forge/grammar/java/MockJavaAnnotationType.java";
+      try (InputStream stream = JavaAnnotationTest.class.getResourceAsStream(fileName))
+      {
+         javaAnnotation = Roaster.parse(JavaAnnotationSource.class, stream);
+      }
    }
 
    @Test
-   public void testCanParseOuterAnnotation() throws Exception
+   public void testCanParseOuterAnnotation()
    {
       assertEquals("MockJavaAnnotationType", javaAnnotation.getName());
       assertEquals(1, javaAnnotation.getAnnotationElements().size());
@@ -64,7 +67,7 @@ public class JavaAnnotationTest
    }
 
    @Test
-   public void testCanParseInnerAnnotation() throws Exception
+   public void testCanParseInnerAnnotation()
    {
       assertEquals(1, javaAnnotation.getNestedTypes().size());
       JavaAnnotationSource nestedAnnotation = (JavaAnnotationSource) javaAnnotation.getNestedTypes().get(0);

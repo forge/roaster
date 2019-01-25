@@ -38,16 +38,18 @@ public class FormatterTest
    private static String content;
 
    @BeforeClass
-   public static void resetTests()
+   public static void resetTests() throws IOException
    {
-      InputStream stream = FieldAnnotationTest.class
-               .getResourceAsStream("/org/jboss/forge/grammar/java/MockUnformattedClass.java");
-      content = Streams.toString(stream);
-      javaClass = Roaster.parse(JavaClassSource.class, content);
+      String fileName = "/org/jboss/forge/grammar/java/MockUnformattedClass.java";
+      try (InputStream stream = FieldAnnotationTest.class.getResourceAsStream(fileName))
+      {
+         content = Streams.toString(stream);
+         javaClass = Roaster.parse(JavaClassSource.class, content);
+      }
    }
 
    @Test
-   public void testFormatSource() throws Exception
+   public void testFormatSource()
    {
       String result = Formatter.format(javaClass);
       String original = javaClass.toUnformattedString();
@@ -55,7 +57,7 @@ public class FormatterTest
    }
 
    @Test
-   public void testFormatterSource() throws Exception
+   public void testFormatterSource()
    {
       String result = Roaster.format(javaClass.toString());
       String original = javaClass.toUnformattedString();
@@ -69,7 +71,7 @@ public class FormatterTest
    }
 
    @Test
-   public void testFormatWithJavaDocOptions() throws Exception
+   public void testFormatWithJavaDocOptions()
    {
       // ROASTER-54
       JavaClassSource source = Roaster.parse(JavaClassSource.class, "public class SomeClass {}");

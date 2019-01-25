@@ -18,56 +18,56 @@ import org.junit.Test;
 public class ResolveTypeTest
 {
    @Test
-   public void testResolveTypePrimitiveByte() throws Exception
+   public void testResolveTypePrimitiveByte() 
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public byte get()");
       Assert.assertEquals("byte", method.getReturnType().getQualifiedName());
    }
 
    @Test
-   public void testResolveTypePrimitiveShort() throws Exception
+   public void testResolveTypePrimitiveShort() 
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public short get()");
       Assert.assertEquals("short", method.getReturnType().getQualifiedName());
    }
 
    @Test
-   public void testResolveTypePrimitiveInt() throws Exception
+   public void testResolveTypePrimitiveInt() 
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public int get()");
       Assert.assertEquals("int", method.getReturnType().getQualifiedName());
    }
 
    @Test
-   public void testResolveTypePrimitiveLong() throws Exception
+   public void testResolveTypePrimitiveLong() 
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public long get()");
       Assert.assertEquals("long", method.getReturnType().getQualifiedName());
    }
 
    @Test
-   public void testResolveTypePrimitiveFloat() throws Exception
+   public void testResolveTypePrimitiveFloat() 
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public float get()");
       Assert.assertEquals("float", method.getReturnType().getQualifiedName());
    }
 
    @Test
-   public void testResolveTypePrimitiveDouble() throws Exception
+   public void testResolveTypePrimitiveDouble() 
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public double get()");
       Assert.assertEquals("double", method.getReturnType().getQualifiedName());
    }
 
    @Test
-   public void testResolveTypePrimitiveBoolean() throws Exception
+   public void testResolveTypePrimitiveBoolean() 
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public boolean get()");
       Assert.assertEquals("boolean", method.getReturnType().getQualifiedName());
    }
 
    @Test
-   public void testResolveTypePrimitiveChar() throws Exception
+   public void testResolveTypePrimitiveChar() 
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public char get()");
       Assert.assertEquals("char", method.getReturnType().getQualifiedName());
@@ -75,60 +75,59 @@ public class ResolveTypeTest
 
    /* Object Types */
    @Test
-   public void testResolveTypeByte() throws Exception
+   public void testResolveTypeByte() 
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public Byte get()");
       Assert.assertEquals("java.lang.Byte", method.getReturnType().getQualifiedName());
    }
 
    @Test
-   public void testResolveTypeShort() throws Exception
+   public void testResolveTypeShort() 
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public Short get()");
       Assert.assertEquals("java.lang.Short", method.getReturnType().getQualifiedName());
    }
 
    @Test
-   public void testResolveTypeInt() throws Exception
+   public void testResolveTypeInt() 
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public Integer get()");
       Assert.assertEquals("java.lang.Integer", method.getReturnType().getQualifiedName());
    }
 
    @Test
-   public void testResolveTypeLong() throws Exception
+   public void testResolveTypeLong() 
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public Long get()");
       Assert.assertEquals("java.lang.Long", method.getReturnType().getQualifiedName());
    }
 
    @Test
-   public void testResolveTypeFloat() throws Exception
+   public void testResolveTypeFloat() 
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public Float get()");
       Assert.assertEquals("java.lang.Float", method.getReturnType().getQualifiedName());
    }
 
    @Test
-   public void testResolveTypeDouble() throws Exception
+   public void testResolveTypeDouble() 
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public Double get()");
       Assert.assertEquals("java.lang.Double", method.getReturnType().getQualifiedName());
    }
 
    @Test
-   public void testResolveTypeBoolean() throws Exception
+   public void testResolveTypeBoolean() 
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public Boolean get()");
       Assert.assertEquals("java.lang.Boolean", method.getReturnType().getQualifiedName());
    }
 
    @Test
-   public void testResolveTypeChar() throws Exception
+   public void testResolveTypeChar() 
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public CharSequence get()");
       Assert.assertEquals("java.lang.CharSequence", method.getReturnType().getQualifiedName());
    }
-
 }

@@ -8,6 +8,7 @@ package org.jboss.forge.test.roaster.model;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.jboss.forge.roaster.Roaster;
@@ -23,20 +24,24 @@ import org.junit.Test;
 public class ParameterAnnotationTest extends AnnotationTest<JavaClassSource, ParameterSource<JavaClassSource>>
 {
    @Override
-   public void resetTests()
+   public void resetTests() throws IOException
    {
-      InputStream stream = ParameterAnnotationTest.class
-               .getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedParameter.java");
-      MethodSource<JavaClassSource> method = Roaster.parse(JavaClassSource.class, stream).getMethods().get(0);
-      setTarget(method.getParameters().get(0));
+      String fileName = "/org/jboss/forge/grammar/java/MockAnnotatedParameter.java";
+      try (InputStream stream = ParameterAnnotationTest.class.getResourceAsStream(fileName))
+      {
+         MethodSource<JavaClassSource> method = Roaster.parse(JavaClassSource.class, stream).getMethods().get(0);
+         setTarget(method.getParameters().get(0));
+      }
    }
 
    @Test
-   public void testNoAnnotations()
+   public void testNoAnnotations() throws IOException
    {
-      InputStream stream = ParameterAnnotationTest.class
-               .getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedParameter.java");
-      MethodSource<JavaClassSource> method = Roaster.parse(JavaClassSource.class, stream).getMethods().get(0);
-      assertEquals(0, method.getParameters().get(1).getAnnotations().size());
+      String fileName = "/org/jboss/forge/grammar/java/MockAnnotatedParameter.java";
+      try (InputStream stream = ParameterAnnotationTest.class.getResourceAsStream(fileName))
+      {
+         MethodSource<JavaClassSource> method = Roaster.parse(JavaClassSource.class, stream).getMethods().get(0);
+         assertEquals(0, method.getParameters().get(1).getAnnotations().size());
+      }
    }
 }

@@ -24,7 +24,7 @@ import org.junit.Test;
 public class MethodSignatureTest
 {
    @Test
-   public void testEmptyMethodSignature() throws Exception
+   public void testEmptyMethodSignature()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public void hello()");
       String signature = method.toSignature();
@@ -32,7 +32,7 @@ public class MethodSignatureTest
    }
 
    @Test
-   public void testMethodSignatureParams() throws Exception
+   public void testMethodSignatureParams()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public void hello(String foo, int bar)");
@@ -41,7 +41,7 @@ public class MethodSignatureTest
    }
 
    @Test
-   public void testMethodParams() throws Exception
+   public void testMethodParams()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public void hello(String foo, int bar, char[] array, char value[])");
@@ -58,14 +58,14 @@ public class MethodSignatureTest
    }
 
    @Test(expected = UnsupportedOperationException.class)
-   public void testUnmodifiableMethodParams() throws Exception
+   public void testUnmodifiableMethodParams()
    {
       Roaster.create(JavaClassSource.class).addMethod("public void hello(String foo, int bar)").getParameters()
                .add(null);
    }
 
    @Test
-   public void testMethodVisibility() throws Exception
+   public void testMethodVisibility()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
 
@@ -87,7 +87,7 @@ public class MethodSignatureTest
    }
 
    @Test
-   public void testMethodVisibilityWithSetter() throws Exception
+   public void testMethodVisibilityWithSetter()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       MethodSource<JavaClassSource> method = javaClass.addMethod().setName("hello");
@@ -107,7 +107,7 @@ public class MethodSignatureTest
    }
 
    @Test
-   public void testMethodWithPrimitiveParameters() throws Exception
+   public void testMethodWithPrimitiveParameters()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       MethodSource<JavaClassSource> method = javaClass.addMethod().setPublic().setName("doSomething")
@@ -135,10 +135,11 @@ public class MethodSignatureTest
 
    public static class Inner
    {
+      //empty for testing
    }
 
    @Test
-   public void testMethodWithInnerClassParameter() throws Exception
+   public void testMethodWithInnerClassParameter()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       MethodSource<JavaClassSource> method = javaClass.addMethod().setPublic().setName("doSomething")
@@ -150,7 +151,7 @@ public class MethodSignatureTest
    }
 
    @Test
-   public void testMethodWithGenericParameters() throws Exception
+   public void testMethodWithGenericParameters()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       MethodSource<JavaClassSource> method = javaClass.addMethod().setPublic().setName("hello")
@@ -167,7 +168,7 @@ public class MethodSignatureTest
    }
 
    @Test
-   public void testMethodSignatureParamsWithGenerics() throws Exception
+   public void testMethodSignatureParamsWithGenerics()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public java.util.List<String> hello(java.util.Map<java.util.Set<String>,Object> map)");
@@ -181,5 +182,4 @@ public class MethodSignatureTest
                method.toString().trim());
       assertEquals(1, method.getReturnType().getTypeArguments().size());
    }
-
 }

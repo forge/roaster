@@ -23,7 +23,7 @@ import org.junit.Test;
 public class MethodModifierTest
 {
    @Test
-   public void testDuplicateMethodModifier() throws Exception
+   public void testDuplicateMethodModifier()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public static void test()");
@@ -33,7 +33,7 @@ public class MethodModifierTest
    }
 
    @Test
-   public void testNativeModifier() throws Exception
+   public void testNativeModifier()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public void test(){}");
@@ -49,7 +49,7 @@ public class MethodModifierTest
    }
 
    @Test
-   public void testDefaultModifier() throws Exception
+   public void testDefaultModifier()
    {
       MethodSource<JavaInterfaceSource> method = Roaster.create(JavaInterfaceSource.class).addMethod(
                "public void test()");
@@ -65,7 +65,7 @@ public class MethodModifierTest
    }
 
    @Test
-   public void testNativeMethodBody() throws Exception
+   public void testNativeMethodBody()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public native void test();");
@@ -77,7 +77,7 @@ public class MethodModifierTest
    }
 
    @Test
-   public void testAbstractMethodBody() throws Exception
+   public void testAbstractMethodBody()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public abstract void test();");
@@ -89,7 +89,7 @@ public class MethodModifierTest
    }
 
    @Test
-   public void testSynchronizedMethod() throws Exception
+   public void testSynchronizedMethod()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public void test(){}");
@@ -99,5 +99,4 @@ public class MethodModifierTest
       method.setSynchronized(false);
       Assert.assertFalse(method.isSynchronized());
    }
-
 }

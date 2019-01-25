@@ -6,6 +6,7 @@
  */
 package org.jboss.forge.test.roaster.model;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.jboss.forge.roaster.Roaster;
@@ -19,12 +20,13 @@ import org.jboss.forge.test.roaster.model.common.AnnotationTest;
 public class EnumConstantAnnotationTest extends AnnotationTest<JavaEnumSource, EnumConstantSource>
 {
    @Override
-   public void resetTests()
+   public void resetTests() throws IOException
    {
-      InputStream stream = EnumConstantAnnotationTest.class
-               .getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedEnumConstant.java");
-      EnumConstantSource field = Roaster.parse(JavaEnumSource.class, stream).getEnumConstants().get(0);
-      setTarget(field);
+      String fileName = "/org/jboss/forge/grammar/java/MockAnnotatedEnumConstant.java";
+      try (InputStream stream = EnumConstantAnnotationTest.class.getResourceAsStream(fileName))
+      {
+         EnumConstantSource field = Roaster.parse(JavaEnumSource.class, stream).getEnumConstants().get(0);
+         setTarget(field);
+      }
    }
-
 }

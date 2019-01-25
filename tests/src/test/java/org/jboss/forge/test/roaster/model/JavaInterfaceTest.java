@@ -13,6 +13,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -30,29 +31,33 @@ import org.junit.Test;
 public class JavaInterfaceTest
 {
    @Test
-   public void testCanParseInterface() throws Exception
+   public void testCanParseInterface() throws IOException
    {
-      InputStream stream = JavaInterfaceTest.class
-               .getResourceAsStream("/org/jboss/forge/grammar/java/MockInterface.java");
-      JavaInterfaceSource javaClass = Roaster.parse(JavaInterfaceSource.class, stream);
-      String name = javaClass.getName();
-      assertEquals("MockInterface", name);
+      String fileName = "/org/jboss/forge/grammar/java/MockInterface.java";
+      try (InputStream stream = JavaInterfaceTest.class.getResourceAsStream(fileName))
+      {
+         JavaInterfaceSource javaClass = Roaster.parse(JavaInterfaceSource.class, stream);
+         String name = javaClass.getName();
+         assertEquals("MockInterface", name);
+      }
    }
 
    @Test
-   public void testCanParseBigInterface() throws Exception
+   public void testCanParseBigInterface() throws IOException
    {
-      InputStream stream = JavaInterfaceTest.class
-               .getResourceAsStream("/org/jboss/forge/grammar/java/BigInterface.java");
-      JavaInterfaceSource javaClass = Roaster.parse(JavaInterfaceSource.class, stream);
-      String name = javaClass.getName();
-      assertEquals("BigInterface", name);
-      List<MemberSource<JavaInterfaceSource, ?>> members = javaClass.getMembers();
-      assertFalse(members.isEmpty());
+      String fileName = "/org/jboss/forge/grammar/java/BigInterface.java";
+      try (InputStream stream = JavaInterfaceTest.class.getResourceAsStream(fileName))
+      {
+         JavaInterfaceSource javaClass = Roaster.parse(JavaInterfaceSource.class, stream);
+         String name = javaClass.getName();
+         assertEquals("BigInterface", name);
+         List<MemberSource<JavaInterfaceSource, ?>> members = javaClass.getMembers();
+         assertFalse(members.isEmpty());
+      }
    }
 
    @Test
-   public void testImportJavaSource() throws Exception
+   public void testImportJavaSource()
    {
       JavaInterfaceSource foo = Roaster.parse(JavaInterfaceSource.class,
                "package org.jboss.forge; public interface Foo{}");
@@ -75,7 +80,7 @@ public class JavaInterfaceTest
    }
 
    @Test
-   public void testImportImport() throws Exception
+   public void testImportImport()
    {
       JavaInterfaceSource foo = Roaster.parse(JavaInterfaceSource.class, "public interface Foo{}");
       Import i = foo.addImport(getClass());
@@ -128,7 +133,8 @@ public class JavaInterfaceTest
    @Test
    public void testImportInterfaceFromSamePackage()
    {
-      JavaClassSource javaImplementation = Roaster.parse(JavaClassSource.class, "package com.foo.forge; public class MockClass implements MyInterface {}");
+      JavaClassSource javaImplementation = Roaster.parse(JavaClassSource.class,
+               "package com.foo.forge; public class MockClass implements MyInterface {}");
       assertThat(javaImplementation.getInterfaces(), hasItem("com.foo.forge.MyInterface"));
       javaImplementation.addImport("com.foo.forge.MyInterface");
       assertThat(javaImplementation.getInterfaces(), hasItem("com.foo.forge.MyInterface"));

@@ -11,6 +11,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.jboss.forge.roaster.Roaster;
@@ -30,14 +31,17 @@ public class JavaEnumTest
    private JavaEnumSource javaEnum;
 
    @Before
-   public void reset()
+   public void reset() throws IOException
    {
-      InputStream stream = JavaEnumTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockEnum.java");
-      javaEnum = Roaster.parse(JavaEnumSource.class, stream);
+      String fileName = "/org/jboss/forge/grammar/java/MockEnum.java";
+      try (InputStream stream = JavaEnumTest.class.getResourceAsStream(fileName))
+      {
+         javaEnum = Roaster.parse(JavaEnumSource.class, stream);
+      }
    }
 
    @Test
-   public void testCanParseEnum() throws Exception
+   public void testCanParseEnum()
    {
       assertEquals("MockEnum", javaEnum.getName());
    }

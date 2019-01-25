@@ -9,6 +9,7 @@ package org.jboss.forge.test.roaster.model;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -27,21 +28,27 @@ import org.junit.Test;
 public class JavaClassPropertyTest
 {
    @Test
-   public void testProperties()
+   public void testProperties() throws IOException
    {
-      InputStream stream = JavaClassTest.class
-               .getResourceAsStream("/org/jboss/forge/grammar/java/MockUnformattedClass.java");
-      JavaClassSource source = Roaster.parse(JavaClassSource.class, stream);
-      List<PropertySource<JavaClassSource>> properties = source.getProperties();
-      Assert.assertEquals(2, properties.size());
+      String fileName = "/org/jboss/forge/grammar/java/MockUnformattedClass.java";
+      try (InputStream stream = JavaClassTest.class.getResourceAsStream(fileName))
+      {
+         JavaClassSource source = Roaster.parse(JavaClassSource.class, stream);
+         List<PropertySource<JavaClassSource>> properties = source.getProperties();
+         Assert.assertEquals(2, properties.size());
+      }
    }
 
    @Test
-   public void testPrimitiveBooleanProperties()
+   public void testPrimitiveBooleanProperties() throws IOException
    {
-      InputStream stream = JavaClassTest.class
-               .getResourceAsStream("/org/jboss/forge/grammar/java/BooleanPrimitiveClass.java");
-      JavaClassSource source = Roaster.parse(JavaClassSource.class, stream);
+      JavaClassSource source;
+      String fileName = "/org/jboss/forge/grammar/java/BooleanPrimitiveClass.java";
+      try (InputStream stream = JavaClassTest.class.getResourceAsStream(fileName))
+      {
+         source = Roaster.parse(JavaClassSource.class, stream);
+      }
+
       List<PropertySource<JavaClassSource>> properties = source.getProperties();
       Assert.assertEquals(2, properties.size());
       Assert.assertNotNull(source.getProperty("myString").getAccessor());
@@ -51,11 +58,15 @@ public class JavaClassPropertyTest
    }
 
    @Test
-   public void testBooleanProperties()
+   public void testBooleanProperties() throws IOException
    {
-      InputStream stream = JavaClassTest.class
-               .getResourceAsStream("/org/jboss/forge/grammar/java/BooleanClass.java");
-      JavaClassSource source = Roaster.parse(JavaClassSource.class, stream);
+      JavaClassSource source;
+      String fileName = "/org/jboss/forge/grammar/java/BooleanClass.java";
+      try (InputStream stream = JavaClassTest.class.getResourceAsStream(fileName))
+      {
+         source = Roaster.parse(JavaClassSource.class, stream);
+      }
+
       List<PropertySource<JavaClassSource>> properties = source.getProperties();
       Assert.assertEquals(2, properties.size());
       Assert.assertNotNull(source.getProperty("myString").getAccessor());
@@ -76,7 +87,7 @@ public class JavaClassPropertyTest
    }
 
    @Test
-   public void testFQNTypes() throws Exception
+   public void testFQNTypes()
    {
       JavaClassSource source = Roaster.create(JavaClassSource.class).setName("MyClass");
       source.addProperty("java.util.List<java.lang.String>", "list1");
@@ -104,6 +115,7 @@ public class JavaClassPropertyTest
 
       List<PropertySource<JavaClassSource>> properties = source.getProperties(List.class);
       Assert.assertEquals("Incorrect number of properties found.", 1, properties.size());
-      Assert.assertEquals("Wrong property returned.", List.class.getCanonicalName(), properties.get(0).getType().getQualifiedName());
+      Assert.assertEquals("Wrong property returned.", List.class.getCanonicalName(),
+               properties.get(0).getType().getQualifiedName());
    }
 }

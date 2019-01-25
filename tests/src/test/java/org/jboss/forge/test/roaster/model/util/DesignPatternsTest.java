@@ -25,7 +25,7 @@ public class DesignPatternsTest
 {
 
    @Test
-   public void testCreateDecorator() throws Exception
+   public void testCreateDecorator()
    {
       JavaInterfaceSource interfaceClass = Roaster
                .create(JavaInterfaceSource.class).setPackage("org.test.demo")
@@ -45,7 +45,7 @@ public class DesignPatternsTest
    }
 
    @Test
-   public void testCreateBuilder() throws Exception
+   public void testCreateBuilder()
    {
       JavaClassSource javaClass = Roaster
                .create(JavaClassSource.class).setPackage("org.test.demo")

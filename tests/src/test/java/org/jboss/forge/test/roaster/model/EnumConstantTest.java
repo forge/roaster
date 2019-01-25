@@ -10,6 +10,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.regex.Pattern;
 
@@ -30,10 +31,13 @@ public class EnumConstantTest
    private JavaEnumSource javaEnum;
 
    @Before
-   public void reset()
+   public void reset() throws IOException
    {
-      InputStream stream = EnumConstantTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockEnum.java");
-      javaEnum = Roaster.parse(JavaEnumSource.class, stream);
+      String fileName = "/org/jboss/forge/grammar/java/MockEnum.java";
+      try (InputStream stream = EnumConstantTest.class.getResourceAsStream(fileName))
+      {
+         javaEnum = Roaster.parse(JavaEnumSource.class, stream);
+      }
    }
 
    @Test

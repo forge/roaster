@@ -25,7 +25,7 @@ import org.junit.Test;
 public class MethodBodyTest
 {
    @Test
-   public void testSetMethodBody() throws Exception
+   public void testSetMethodBody()
    {
       String body = "return null;";
       JavaClassSource source = Roaster.create(JavaClassSource.class);
@@ -35,7 +35,7 @@ public class MethodBodyTest
    }
 
    @Test
-   public void testMethodBodyWithLambdas() throws Exception
+   public void testMethodBodyWithLambdas()
    {
       String body = "foo((c) -> System.out::println);";
       JavaClassSource source = Roaster.create(JavaClassSource.class);
@@ -46,7 +46,7 @@ public class MethodBodyTest
 
    @Test
    @Ignore("ROASTER-26")
-   public void testSetMethodBodyWithComments() throws Exception
+   public void testSetMethodBodyWithComments()
    {
       String data = "public class Foo { Object bar() {\n//TODO comments\n return null;}}";
       JavaClassSource source = Roaster.parse(JavaClassSource.class, data);

@@ -20,14 +20,13 @@ import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.TypeVariableSource;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class JavaClassGenericsTest
 {
 
    @Test
-   public void addAndRemoveGenericType() throws ClassNotFoundException
+   public void addAndRemoveGenericType()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
@@ -40,7 +39,7 @@ public class JavaClassGenericsTest
    }
 
    @Test
-   public void addGenericSuperTypeWithPackage() throws ClassNotFoundException
+   public void addGenericSuperTypeWithPackage()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
@@ -51,7 +50,7 @@ public class JavaClassGenericsTest
    }
 
    @Test
-   public void addConcreteGenericSuperTypeWithPackageAndArray() throws ClassNotFoundException
+   public void addConcreteGenericSuperTypeWithPackageAndArray()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
@@ -63,7 +62,7 @@ public class JavaClassGenericsTest
    }
 
    @Test
-   public void addConcreteGenericSuperTypeWithPackage() throws ClassNotFoundException
+   public void addConcreteGenericSuperTypeWithPackage()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
@@ -75,7 +74,7 @@ public class JavaClassGenericsTest
    }
 
    @Test
-   public void addMultipleConcreteGenericSuperTypeWithPackage() throws ClassNotFoundException
+   public void addMultipleConcreteGenericSuperTypeWithPackage()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
@@ -89,7 +88,7 @@ public class JavaClassGenericsTest
    }
 
    @Test
-   public void addGenericSuperTypeWithoutPackage() throws ClassNotFoundException
+   public void addGenericSuperTypeWithoutPackage()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
@@ -100,7 +99,7 @@ public class JavaClassGenericsTest
    }
 
    @Test
-   public void removeGenericSuperType() throws ClassNotFoundException
+   public void removeGenericSuperType()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.addImport("it.coopservice.test.Bar");
@@ -113,7 +112,7 @@ public class JavaClassGenericsTest
    }
 
    @Test
-   public void addMultipleGenerics() throws ClassNotFoundException
+   public void addMultipleGenerics()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
@@ -126,7 +125,7 @@ public class JavaClassGenericsTest
    }
 
    @Test
-   public void classTypeVariableBounds() throws ClassNotFoundException
+   public void classTypeVariableBounds()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
@@ -140,7 +139,7 @@ public class JavaClassGenericsTest
    }
 
    @Test
-   public void javaTypeTypeVariableBounds() throws ClassNotFoundException
+   public void javaTypeTypeVariableBounds()
    {
       JavaInterface<?> foo = Roaster.create(JavaInterfaceSource.class).setPackage("it.coopservice.test").setName("Foo");
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
@@ -156,7 +155,7 @@ public class JavaClassGenericsTest
    }
 
    @Test
-   public void stringTypeVariableBounds() throws ClassNotFoundException
+   public void stringTypeVariableBounds()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
@@ -170,7 +169,7 @@ public class JavaClassGenericsTest
    }
 
    @Test
-   public void getClassGenerics() throws ClassNotFoundException
+   public void getClassGenerics()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
@@ -187,7 +186,7 @@ public class JavaClassGenericsTest
    }
 
    @Test
-   public void getClassGenericsName() throws ClassNotFoundException
+   public void getClassGenericsName()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");

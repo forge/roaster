@@ -210,7 +210,7 @@ public class NestedClassTest
    }
 
    @Test
-   public void testRenamedOuterClass() throws Exception
+   public void testRenamedOuterClass() 
    {
       JavaClassSource source = Roaster
                .parse(JavaClassSource.class,
@@ -243,6 +243,6 @@ public class NestedClassTest
 
    public class NestedClass
    {
+      //empty for testing
    }
-
 }

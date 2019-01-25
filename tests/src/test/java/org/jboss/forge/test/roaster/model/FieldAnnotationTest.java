@@ -8,6 +8,7 @@ package org.jboss.forge.test.roaster.model;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -25,16 +26,18 @@ import org.junit.Test;
 public class FieldAnnotationTest extends AnnotationTest<JavaClassSource, FieldSource<JavaClassSource>>
 {
    @Override
-   public void resetTests()
+   public void resetTests() throws IOException
    {
-      InputStream stream = FieldAnnotationTest.class
-               .getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedField.java");
-      FieldSource<JavaClassSource> field = Roaster.parse(JavaClassSource.class, stream).getFields().get(0);
-      setTarget(field);
+      String fileName = "/org/jboss/forge/grammar/java/MockAnnotatedField.java";
+      try (InputStream stream = FieldAnnotationTest.class.getResourceAsStream(fileName))
+      {
+         FieldSource<JavaClassSource> field = Roaster.parse(JavaClassSource.class, stream).getFields().get(0);
+         setTarget(field);
+      }
    }
 
    @Test
-   public void testParseEnumValueStaticImport() throws Exception
+   public void testParseEnumValueStaticImport()
    {
       List<AnnotationSource<JavaClassSource>> annotations = getTarget().getAnnotations();
       AnnotationSource<JavaClassSource> annotation = annotations.get(3);

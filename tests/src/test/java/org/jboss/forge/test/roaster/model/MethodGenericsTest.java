@@ -26,7 +26,7 @@ public class MethodGenericsTest
 {
 
    @Test
-   public void addAndRemoveGenericType() throws ClassNotFoundException
+   public void addAndRemoveGenericType()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
 
@@ -40,7 +40,7 @@ public class MethodGenericsTest
    }
 
    @Test
-   public void addMultipleGenerics() throws ClassNotFoundException
+   public void addMultipleGenerics()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       MethodSource<JavaClassSource> method = javaClass.addMethod();
@@ -53,7 +53,7 @@ public class MethodGenericsTest
    }
 
    @Test
-   public void getMethodGenerics() throws ClassNotFoundException
+   public void getMethodGenerics()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       MethodSource<JavaClassSource> method = javaClass.addMethod();
@@ -70,7 +70,7 @@ public class MethodGenericsTest
    }
 
    @Test
-   public void classTypeVariableBounds() throws ClassNotFoundException
+   public void classTypeVariableBounds()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       MethodSource<JavaClassSource> method = javaClass.addMethod();
@@ -83,7 +83,7 @@ public class MethodGenericsTest
    }
 
    @Test
-   public void javaTypeTypeVariableBounds() throws ClassNotFoundException
+   public void javaTypeTypeVariableBounds()
    {
       JavaInterface<?> foo = Roaster.create(JavaInterfaceSource.class).setPackage("it.coopservice.test").setName("Foo");
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
@@ -98,7 +98,7 @@ public class MethodGenericsTest
    }
 
    @Test
-   public void stringTypeVariableBounds() throws ClassNotFoundException
+   public void stringTypeVariableBounds()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       MethodSource<JavaClassSource> method = javaClass.addMethod();
@@ -111,7 +111,7 @@ public class MethodGenericsTest
    }
 
    @Test
-   public void fullyQualifiedArrayArguments() throws ClassNotFoundException
+   public void fullyQualifiedArrayArguments()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       MethodSource<JavaClassSource> method = javaClass.addMethod();
