@@ -21,7 +21,7 @@ import org.jboss.forge.roaster.model.source.JavaPackageInfoSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.util.Formatter;
 
-public class JavaPackageInfoImpl<O extends JavaPackageInfoSource> extends JavaSourceImpl<JavaPackageInfoSource>
+public class JavaPackageInfoImpl extends JavaSourceImpl<JavaPackageInfoSource>
          implements JavaPackageInfoSource
 {
 
@@ -50,7 +50,7 @@ public class JavaPackageInfoImpl<O extends JavaPackageInfoSource> extends JavaSo
    }
 
    @Override
-   public O setName(final String name)
+   public JavaPackageInfoImpl setName(final String name)
    {
       throw new UnsupportedOperationException("Changing name of [" + getQualifiedName() + "] not supported.");
    }
@@ -100,7 +100,7 @@ public class JavaPackageInfoImpl<O extends JavaPackageInfoSource> extends JavaSo
          return false;
       if (getClass() != obj.getClass())
          return false;
-      JavaPackageInfoImpl<?> other = (JavaPackageInfoImpl<?>) obj;
+      JavaPackageInfoImpl other = (JavaPackageInfoImpl) obj;
       if (pkg == null)
       {
          if (other.pkg != null)
