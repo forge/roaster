@@ -9,6 +9,8 @@ package org.jboss.forge.test.roaster.model.common;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.jboss.forge.roaster.model.source.VisibilityScopedSource;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,15 +28,15 @@ public abstract class VisibilityTest
    }
 
    @Before
-   public void reset() throws Exception
+   public void reset() throws IOException
    {
       resetTests();
    }
 
-   public abstract void resetTests() throws Exception;
+   public abstract void resetTests() throws IOException;
 
    @Test
-   public void testSetPublic() throws Exception
+   public void testSetPublic()
    {
       target.setPublic();
       assertTrue(target.isPublic());
@@ -44,7 +46,7 @@ public abstract class VisibilityTest
    }
 
    @Test
-   public void testSetPrivate() throws Exception
+   public void testSetPrivate()
    {
       target.setPrivate();
       assertFalse(target.isPublic());
@@ -54,7 +56,7 @@ public abstract class VisibilityTest
    }
 
    @Test
-   public void testSetProtected() throws Exception
+   public void testSetProtected()
    {
       target.setProtected();
       assertFalse(target.isPublic());
@@ -64,7 +66,7 @@ public abstract class VisibilityTest
    }
 
    @Test
-   public void testSetPackagePrivate() throws Exception
+   public void testSetPackagePrivate()
    {
       target.setPackagePrivate();
       assertFalse(target.isPublic());

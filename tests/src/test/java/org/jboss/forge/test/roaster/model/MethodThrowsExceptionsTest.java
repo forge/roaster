@@ -22,14 +22,14 @@ import org.junit.Test;
 public class MethodThrowsExceptionsTest
 {
    @Test
-   public void testParseThrowsNone() throws Exception
+   public void testParseThrowsNone()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public void hello()");
       assertTrue(method.getThrownExceptions().isEmpty());
    }
 
    @Test
-   public void testParseThrowsOne() throws Exception, RuntimeException
+   public void testParseThrowsOne()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public void hello(String foo, int bar) throws Exception");
@@ -37,7 +37,7 @@ public class MethodThrowsExceptionsTest
    }
 
    @Test
-   public void testParseThrowsMany() throws Exception
+   public void testParseThrowsMany()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public void hello(String foo, int bar) throws Exception, RuntimeException");
@@ -45,7 +45,7 @@ public class MethodThrowsExceptionsTest
    }
 
    @Test
-   public void testAddThrowsOne() throws Exception, RuntimeException
+   public void testAddThrowsOne()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public void hello(String foo, int bar)").addThrows(ConcurrentModificationException.class);
@@ -54,7 +54,7 @@ public class MethodThrowsExceptionsTest
    }
 
    @Test
-   public void testAddThrowsMany() throws Exception
+   public void testAddThrowsMany()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public void hello(String foo, int bar)").addThrows(Exception.class).addThrows(RuntimeException.class);
@@ -62,7 +62,7 @@ public class MethodThrowsExceptionsTest
    }
 
    @Test
-   public void testRemoveThrowsNone() throws Exception, RuntimeException
+   public void testRemoveThrowsNone()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public void hello(String foo, int bar)").removeThrows(Exception.class);
@@ -70,7 +70,7 @@ public class MethodThrowsExceptionsTest
    }
 
    @Test
-   public void testRemoveThrowsOne() throws Exception, RuntimeException
+   public void testRemoveThrowsOne()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public void hello(String foo, int bar) throws Exception").removeThrows(Exception.class);
@@ -78,7 +78,7 @@ public class MethodThrowsExceptionsTest
    }
 
    @Test
-   public void testRemoveThrowsMany() throws Exception
+   public void testRemoveThrowsMany()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public void hello(String foo, int bar) throws Exception, RuntimeException")
@@ -87,7 +87,7 @@ public class MethodThrowsExceptionsTest
    }
 
    @Test
-   public void testAddThrowsExceptionShouldNotImportJavaLang() throws Exception
+   public void testAddThrowsExceptionShouldNotImportJavaLang()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.addMethod().setName("hello").addThrows(Exception.class);

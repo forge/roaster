@@ -10,6 +10,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -31,16 +32,19 @@ public class JavaEnumMethodTest
    private MethodSource<JavaEnumSource> method;
 
    @Before
-   public void reset()
+   public void reset() throws IOException
    {
-      InputStream stream = JavaEnumMethodTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockEnum.java");
-      javaEnum = Roaster.parse(JavaEnumSource.class, stream);
-      javaEnum.addMethod("public URL rewriteURL(String pattern, String replacement) { return null; }");
-      method = javaEnum.getMethods().get(javaEnum.getMethods().size() - 1);
+      String fileName = "/org/jboss/forge/grammar/java/MockEnum.java";
+      try (InputStream stream = JavaEnumMethodTest.class.getResourceAsStream(fileName))
+      {
+         javaEnum = Roaster.parse(JavaEnumSource.class, stream);
+         javaEnum.addMethod("public URL rewriteURL(String pattern, String replacement) { return null; }");
+         method = javaEnum.getMethods().get(javaEnum.getMethods().size() - 1);
+      }
    }
 
    @Test
-   public void testSetName() throws Exception
+   public void testSetName()
    {
       assertEquals("rewriteURL", method.getName());
       method.setName("doSomething");
@@ -48,7 +52,7 @@ public class JavaEnumMethodTest
    }
 
    @Test
-   public void testSetReturnType() throws Exception
+   public void testSetReturnType()
    {
       assertEquals("java.net.URL", method.getReturnType().getQualifiedName());
       method.setReturnType(Class.class);
@@ -57,7 +61,7 @@ public class JavaEnumMethodTest
    }
 
    @Test
-   public void testSetReturnTypeVoid() throws Exception
+   public void testSetReturnTypeVoid()
    {
       assertEquals("java.net.URL", method.getReturnType().getQualifiedName());
       method.setReturnTypeVoid();
@@ -65,7 +69,7 @@ public class JavaEnumMethodTest
    }
 
    @Test
-   public void testSetConstructor() throws Exception
+   public void testSetConstructor()
    {
       assertFalse(method.isConstructor());
       method.setConstructor(true);
@@ -74,14 +78,14 @@ public class JavaEnumMethodTest
    }
 
    @Test
-   public void testSetAbstract() throws Exception
+   public void testSetAbstract()
    {
       method.setAbstract(true);
       assertTrue(method.isAbstract());
    }
 
    @Test
-   public void testSetParameters() throws Exception
+   public void testSetParameters()
    {
       method.setParameters("final int foo, final String bar");
       List<ParameterSource<JavaEnumSource>> parameters = method.getParameters();
@@ -91,7 +95,7 @@ public class JavaEnumMethodTest
    }
 
    @Test
-   public void testGetParameterType() throws Exception
+   public void testGetParameterType()
    {
       method.setParameters("final int foo, final String bar");
       List<ParameterSource<JavaEnumSource>> parameters = method.getParameters();
@@ -102,21 +106,21 @@ public class JavaEnumMethodTest
    }
 
    @Test
-   public void testHasMethodZeroParametersIgnoresMethodWithParameters() throws Exception
+   public void testHasMethodZeroParametersIgnoresMethodWithParameters()
    {
       assertTrue(javaEnum.hasMethodSignature(method));
       assertFalse(javaEnum.hasMethodSignature(method.getName()));
    }
 
    @Test
-   public void testHasMethodZeroParameters() throws Exception
+   public void testHasMethodZeroParameters()
    {
       javaEnum.addMethod("public void doSomething(){/*done*/}");
       assertTrue(javaEnum.hasMethodSignature("doSomething"));
    }
 
    @Test
-   public void testGetMembers() throws Exception
+   public void testGetMembers()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class).addMethod("public void doSomething();")
                .getOrigin()

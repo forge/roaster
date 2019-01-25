@@ -18,7 +18,7 @@ import org.junit.Test;
 public class JavaParserTest
 {
    @Test(expected = ParserException.class)
-   public void testExceptionWhenBadFileParsed() throws Exception
+   public void testExceptionWhenBadFileParsed()
    {
       Roaster.parse(JavaClass.class, "asdfa$%(*&#$%sdfdsf");
    }

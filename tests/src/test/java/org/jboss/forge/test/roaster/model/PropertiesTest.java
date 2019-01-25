@@ -14,6 +14,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -75,7 +76,7 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
    @Parameters(name = "{2} {1}.{3}")
    public static List<Object[]> createParameters()
    {
-      final List<Object[]> parameters = new ArrayList<Object[]>();
+      final List<Object[]> parameters = new ArrayList<>();
       parameters.add(new Object[] { JavaClassSource.class, "MockClass", String.class, "field",
                EnumSet.of(PropertyComponent.FIELD) });
       parameters.add(new Object[] { JavaEnumSource.class, "MockEnum", String.class, "field",
@@ -105,11 +106,13 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
    private O source;
 
    @Before
-   public void reset()
+   public void reset() throws IOException
    {
-      final InputStream stream = JavaClassTest.class.getResourceAsStream(String.format(
-               "/org/jboss/forge/grammar/java/%s.java", resourceName));
-      source = Roaster.parse(sourceType, stream);
+      String fileName = String.format("/org/jboss/forge/grammar/java/%s.java", resourceName);
+      try (final InputStream stream = JavaClassTest.class.getResourceAsStream(fileName))
+      {
+         source = Roaster.parse(sourceType, stream);
+      }
    }
 
    @Test

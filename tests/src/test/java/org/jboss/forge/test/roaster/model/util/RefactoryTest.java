@@ -40,7 +40,7 @@ public class RefactoryTest
    }
 
    @Test
-   public void testAddGettersAndSetters() throws Exception
+   public void testAddGettersAndSetters()
    {
       FieldSource<JavaClassSource> field = javaClass.getField("foo");
       Refactory.createGetterAndSetter(javaClass, field);
@@ -56,7 +56,7 @@ public class RefactoryTest
    }
 
    @Test
-   public void testAddGettersAndSettersCamelCase() throws Exception
+   public void testAddGettersAndSettersCamelCase()
    {
       FieldSource<JavaClassSource> field = javaClass.getField("firstName");
       Refactory.createGetterAndSetter(javaClass, field);
@@ -72,7 +72,7 @@ public class RefactoryTest
    }
 
    @Test
-   public void testAddGetterNotSetterForFinalField() throws Exception
+   public void testAddGetterNotSetterForFinalField()
    {
       FieldSource<JavaClassSource> field = javaClass.getField("bar");
       Refactory.createGetterAndSetter(javaClass, field);
@@ -86,7 +86,7 @@ public class RefactoryTest
    }
 
    @Test
-   public void testAddGettersAndSettersGeneric() throws Exception
+   public void testAddGettersAndSettersGeneric()
    {
       FieldSource<JavaClassSource> field = javaClass.getField("names");
       Refactory.createGetterAndSetter(javaClass, field);
@@ -109,7 +109,7 @@ public class RefactoryTest
    }
 
    @Test
-   public void testCreateToStringFromFields() throws Exception
+   public void testCreateToStringFromFields()
    {
       assertFalse(javaClass.hasMethodSignature("toString"));
       Refactory.createToStringFromFields(javaClass);
@@ -120,7 +120,7 @@ public class RefactoryTest
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void testCreateHashCodeAndEqualsForStatics() throws Exception
+   public void testCreateHashCodeAndEqualsForStatics()
    {
       JavaClassSource aClass = Roaster
                .parse(JavaClassSource.class,
@@ -130,7 +130,7 @@ public class RefactoryTest
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void testCreateHashCodeForStatics() throws Exception
+   public void testCreateHashCodeForStatics()
    {
       JavaClassSource aClass = Roaster
                .parse(JavaClassSource.class,
@@ -140,7 +140,7 @@ public class RefactoryTest
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void testCreateEqualsForStatics() throws Exception
+   public void testCreateEqualsForStatics()
    {
       JavaClassSource aClass = Roaster
                .parse(JavaClassSource.class,
@@ -150,7 +150,7 @@ public class RefactoryTest
    }
 
    @Test
-   public void testCreateHashCodeAndEqualsForPrimitives() throws Exception
+   public void testCreateHashCodeAndEqualsForPrimitives()
    {
       JavaClassSource aClass = Roaster
                .parse(JavaClassSource.class,
@@ -237,7 +237,7 @@ public class RefactoryTest
    }
 
    @Test
-   public void testCreateHashCodeAndEqualsForArrays() throws Exception
+   public void testCreateHashCodeAndEqualsForArrays()
    {
       JavaClassSource aClass = Roaster
                .parse(JavaClassSource.class,
@@ -297,7 +297,7 @@ public class RefactoryTest
    }
 
    @Test
-   public void testCreateHashCodeAndEqualsForObjects() throws Exception
+   public void testCreateHashCodeAndEqualsForObjects()
    {
       JavaClassSource aClass = Roaster
                .parse(JavaClassSource.class,
@@ -362,7 +362,7 @@ public class RefactoryTest
 
    @SuppressWarnings("deprecation")
    @Test
-   public void testCreateHashCodeAndEqualsNoArgs() throws Exception
+   public void testCreateHashCodeAndEqualsNoArgs()
    {
       Refactory.createHashCodeAndEquals(javaClass);
 
@@ -380,7 +380,7 @@ public class RefactoryTest
    }
 
    @Test
-   public void testCreateHashCodeAndEqualsSubclass() throws Exception
+   public void testCreateHashCodeAndEqualsSubclass()
    {
       JavaClassSource subClass = Roaster
                .parse(JavaClassSource.class,
@@ -436,7 +436,7 @@ public class RefactoryTest
    }
 
    @Test
-   public void testCreateHashCodeAndEqualsOuterClass() throws Exception
+   public void testCreateHashCodeAndEqualsOuterClass()
    {
       JavaClassSource outerClass = Roaster
                .parse(JavaClassSource.class,
@@ -495,7 +495,7 @@ public class RefactoryTest
    @Test
    @Ignore
    // This is not supported for now
-   public void testCreateHashCodeAndEqualsInnerClass() throws Exception
+   public void testCreateHashCodeAndEqualsInnerClass()
    {
       JavaClassSource outerClass = Roaster
                .parse(JavaClassSource.class,
@@ -557,7 +557,7 @@ public class RefactoryTest
    }
 
    @Test
-   public void testCreateHashCodeAndEqualsMultipleLongFields() throws Exception
+   public void testCreateHashCodeAndEqualsMultipleLongFields()
    {
       JavaClassSource aClass = Roaster
                .parse(JavaClassSource.class,

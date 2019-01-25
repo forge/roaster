@@ -37,7 +37,7 @@ import org.junit.Test;
 public class MethodImplementationTest
 {
    @Test
-   public void testJavaClassImplementInterface() throws Exception
+   public void testJavaClassImplementInterface()
    {
       JavaClassSource source = Roaster.create(JavaClassSource.class);
       JavaInterfaceSource interfaceSource = Roaster.create(JavaInterfaceSource.class).setName("Bar").setPackage("test");
@@ -50,7 +50,7 @@ public class MethodImplementationTest
    }
 
    @Test
-   public void testJavaClassImplementInterfaceWithAnnotation() throws Exception
+   public void testJavaClassImplementInterfaceWithAnnotation()
    {
       JavaClassSource source = Roaster.create(JavaClassSource.class);
       JavaInterfaceSource interfaceSource = Roaster.create(JavaInterfaceSource.class).setName("Bar").setPackage("test");
@@ -66,7 +66,7 @@ public class MethodImplementationTest
    }
 
    @Test
-   public void testJavaClassExtendJavaClass() throws Exception
+   public void testJavaClassExtendJavaClass()
    {
       JavaClassSource source = Roaster.create(JavaClassSource.class);
       JavaClassSource superType = Roaster.create(JavaClassSource.class).setName("Bar").setPackage("test");
@@ -79,7 +79,7 @@ public class MethodImplementationTest
    }
 
    @Test
-   public void testJavaEnumImplementInterface() throws Exception
+   public void testJavaEnumImplementInterface()
    {
       JavaEnumSource source = Roaster.create(JavaEnumSource.class);
       JavaInterfaceSource interfaceSource = Roaster.create(JavaInterfaceSource.class).setName("Bar").setPackage("test");
@@ -91,7 +91,7 @@ public class MethodImplementationTest
    }
 
    @Test
-   public void testJavaEnumImplementInterfaceWithAnnotation() throws Exception
+   public void testJavaEnumImplementInterfaceWithAnnotation()
    {
       JavaEnumSource source = Roaster.create(JavaEnumSource.class);
       JavaInterfaceSource interfaceSource = Roaster.create(JavaInterfaceSource.class).setName("Bar").setPackage("test");
@@ -109,7 +109,7 @@ public class MethodImplementationTest
    }
 
    @Test
-   public void testJavaClassExtendSuperTypeWithReflectedMethod() throws Exception
+   public void testJavaClassExtendSuperTypeWithReflectedMethod()
    {
       JavaClassSource source = Roaster.create(JavaClassSource.class);
       source.extendSuperType(MockSuperType.class);
@@ -122,7 +122,7 @@ public class MethodImplementationTest
    }
 
    @Test
-   public void testJavaClassImplementInterfaceWithReflectedMethod() throws Exception
+   public void testJavaClassImplementInterfaceWithReflectedMethod()
    {
       JavaClassSource source = Roaster.create(JavaClassSource.class);
       source.implementInterface(Enumeration.class);
@@ -134,7 +134,7 @@ public class MethodImplementationTest
    }
 
    @Test
-   public void testJavaInterfaceImplementInterfaceWithReflectedMethod() throws Exception
+   public void testJavaInterfaceImplementInterfaceWithReflectedMethod()
    {
       JavaInterfaceSource source = Roaster.create(JavaInterfaceSource.class);
       source.implementInterface(Enumeration.class);
@@ -146,7 +146,7 @@ public class MethodImplementationTest
    }
 
    @Test
-   public void testJavaEnumImplementInterfaceWithReflectedMethod() throws Exception
+   public void testJavaEnumImplementInterfaceWithReflectedMethod()
    {
       JavaEnumSource source = Roaster.create(JavaEnumSource.class);
       source.implementInterface(Enumeration.class);
@@ -158,7 +158,7 @@ public class MethodImplementationTest
    }
 
    @Test
-   public void testCopyMethod() throws Exception
+   public void testCopyMethod()
    {
       JavaClassSource source = Roaster.create(JavaClassSource.class);
       MethodSource<JavaClassSource> method = source.addMethod().setName("foo").setReturnTypeVoid();
@@ -173,7 +173,7 @@ public class MethodImplementationTest
    }
 
    @Test
-   public void testJavaClassImplementInterfaceWithReflectedMethods() throws Exception
+   public void testJavaClassImplementInterfaceWithReflectedMethods()
    {
       JavaClassSource source = Roaster.create(JavaClassSource.class);
       source.implementInterface(MockInterface.class);
@@ -184,7 +184,7 @@ public class MethodImplementationTest
    }
 
    @Test
-   public void testJavaClassImplementInterfaceWithReflectedMethodsWithAnnotation() throws Exception
+   public void testJavaClassImplementInterfaceWithReflectedMethodsWithAnnotation()
    {
       JavaClassSource source = Roaster.create(JavaClassSource.class);
       source.implementInterface(MockAnnotatedInterface.class);
@@ -197,7 +197,7 @@ public class MethodImplementationTest
    }
 
    @Test
-   public void testJavaClassSourceImplementJavaInterfaceSourceMethods() throws Exception
+   public void testJavaClassSourceImplementJavaInterfaceSourceMethods()
    {
       JavaInterfaceSource javaInterface = Roaster.create(JavaInterfaceSource.class);
       javaInterface.setPackage("foo");

@@ -23,7 +23,7 @@ public class SerialVersionUIDComputerTest
 {
 
    @Test
-   public void testSerialVersionUID1() throws Exception
+   public void testSerialVersionUID1()
    {
       JavaClassSource type = Roaster.create(JavaClassSource.class).setName("Foo").addInterface(Serializable.class);
       type.addMethod().setName("foo");
@@ -34,7 +34,7 @@ public class SerialVersionUIDComputerTest
    }
 
    @Test
-   public void testSerialVersionUID2() throws Exception
+   public void testSerialVersionUID2()
    {
       JavaClassSource type = Roaster.create(JavaClassSource.class).setName("Bar").addInterface(Serializable.class);
       type.addMethod().setName("foo");

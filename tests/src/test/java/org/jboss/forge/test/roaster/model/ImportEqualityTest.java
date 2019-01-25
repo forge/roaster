@@ -23,7 +23,7 @@ public class ImportEqualityTest
    private static final String DEFAULT_IMPORT = DEFAULT_IMPORT_PACKAGE + "." + DEFAULT_IMPORT_CLASS;
 
    @Test
-   public void testImportEqualsAnotherInstance() throws Exception
+   public void testImportEqualsAnotherInstance() 
    {
       Import firstImport = buildImport(DEFAULT_IMPORT);
       Import secondImport = buildImport(DEFAULT_IMPORT);
@@ -32,7 +32,7 @@ public class ImportEqualityTest
    }
 
    @Test
-   public void testEqualsReturnsFalseForDifferentImport() throws Exception
+   public void testEqualsReturnsFalseForDifferentImport() 
    {
       Import classImport = buildImport(DEFAULT_IMPORT);
       Import interfaceImport = buildImport("org.jboss.forge.roaster.model.impl.ImportImpl");
@@ -40,14 +40,14 @@ public class ImportEqualityTest
    }
 
    @Test
-   public void testEqualsIsReflexive() throws Exception
+   public void testEqualsIsReflexive() 
    {
       Import reflexiveImport = buildImport(DEFAULT_IMPORT);
       assertEquals(reflexiveImport, reflexiveImport);
    }
 
    @Test
-   public void testEqualsIsTransitive() throws Exception
+   public void testEqualsIsTransitive() 
    {
       Import firstImport = buildImport(DEFAULT_IMPORT);
       Import secondImport = buildImport(DEFAULT_IMPORT);
@@ -58,20 +58,21 @@ public class ImportEqualityTest
    }
 
    @Test
-   public void testNotEqualToNull() throws Exception
+   public void testNotEqualToNull() 
    {
       assertFalse(buildImport(DEFAULT_IMPORT).equals(null));
    }
 
    @Test
-   public void testNotEqualsToDifferentClass() throws Exception
+   @SuppressWarnings("unlikely-arg-type")
+   public void testNotEqualsToDifferentClass() 
    {
       Import myImport = buildImport(DEFAULT_IMPORT);
       assertFalse(myImport.equals(DEFAULT_IMPORT));
    }
 
    @Test
-   public void testEqualsToDifferentImportImplementation() throws Exception
+   public void testEqualsToDifferentImportImplementation() 
    {
       Import myImport = buildImport(DEFAULT_IMPORT);
       Import mockImport = new MockImportImpl(DEFAULT_IMPORT_PACKAGE, DEFAULT_IMPORT_CLASS);

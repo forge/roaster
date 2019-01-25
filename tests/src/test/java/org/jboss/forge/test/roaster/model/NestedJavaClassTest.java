@@ -6,6 +6,7 @@
  */
 package org.jboss.forge.test.roaster.model;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.jboss.forge.roaster.Roaster;
@@ -14,10 +15,13 @@ import org.jboss.forge.roaster.model.source.JavaClassSource;
 public class NestedJavaClassTest extends JavaClassTest
 {
    @Override
-   public JavaClassSource getSource()
+   public JavaClassSource getSource() throws IOException
    {
-      InputStream stream = JavaClassTest.class
-               .getResourceAsStream("/org/jboss/forge/grammar/java/NestedMockClass.java");
-      return (JavaClassSource) Roaster.parse(JavaClassSource.class, stream).getNestedTypes().get(0);
+      String fileName = "/org/jboss/forge/grammar/java/NestedMockClass.java";
+
+      try (InputStream stream = JavaClassTest.class.getResourceAsStream(fileName))
+      {
+         return (JavaClassSource) Roaster.parse(JavaClassSource.class, stream).getNestedTypes().get(0);
+      }
    }
 }

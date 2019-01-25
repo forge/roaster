@@ -6,6 +6,7 @@
  */
 package org.jboss.forge.test.roaster.model;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.jboss.forge.roaster.Roaster;
@@ -19,11 +20,13 @@ import org.jboss.forge.test.roaster.model.common.VisibilityTest;
 public class FieldVisibilityTest extends VisibilityTest
 {
    @Override
-   public void resetTests()
+   public void resetTests() throws IOException
    {
-      InputStream stream = FieldVisibilityTest.class
-               .getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedField.java");
-      FieldSource<JavaClassSource> field = Roaster.parse(JavaClassSource.class, stream).getFields().get(0);
-      setTarget(field);
+      String fieldName = "/org/jboss/forge/grammar/java/MockAnnotatedField.java";
+      try (InputStream stream = FieldVisibilityTest.class.getResourceAsStream(fieldName))
+      {
+         FieldSource<JavaClassSource> field = Roaster.parse(JavaClassSource.class, stream).getFields().get(0);
+         setTarget(field);
+      }
    }
 }

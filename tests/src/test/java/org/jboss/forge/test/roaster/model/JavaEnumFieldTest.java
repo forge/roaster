@@ -11,6 +11,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.jboss.forge.roaster.Roaster;
@@ -28,15 +29,18 @@ public class JavaEnumFieldTest
    private FieldSource<JavaEnumSource> field;
 
    @Before
-   public void reset()
+   public void reset() throws IOException
    {
-      InputStream stream = JavaEnumFieldTest.class.getResourceAsStream("/org/jboss/forge/grammar/java/MockEnum.java");
-      javaEnum = Roaster.parse(JavaEnumSource.class, stream);
-      field = javaEnum.getFields().get(javaEnum.getFields().size() - 1);
+      String fileName = "/org/jboss/forge/grammar/java/MockEnum.java";
+      try (InputStream stream = JavaEnumFieldTest.class.getResourceAsStream(fileName))
+      {
+         javaEnum = Roaster.parse(JavaEnumSource.class, stream);
+         field = javaEnum.getFields().get(javaEnum.getFields().size() - 1);
+      }
    }
 
    @Test
-   public void testParse() throws Exception
+   public void testParse()
    {
       assertNotNull(field);
       assertEquals("field", field.getName());
@@ -44,7 +48,7 @@ public class JavaEnumFieldTest
    }
 
    @Test
-   public void testSetName() throws Exception
+   public void testSetName()
    {
       assertEquals("field", field.getName());
       field.setName("newName");
@@ -54,7 +58,7 @@ public class JavaEnumFieldTest
    }
 
    @Test
-   public void testSetNameWithReservedWordPart() throws Exception
+   public void testSetNameWithReservedWordPart()
    {
       assertEquals("field", field.getName());
       field.setName("privateIpAddress");
@@ -62,7 +66,7 @@ public class JavaEnumFieldTest
    }
 
    @Test
-   public void testIsTypeChecksImports() throws Exception
+   public void testIsTypeChecksImports()
    {
       FieldSource<JavaEnumSource> field = javaEnum.addField().setType(JavaEnumFieldTest.class).setPublic()
                .setName("test");
@@ -72,7 +76,7 @@ public class JavaEnumFieldTest
    }
 
    @Test
-   public void testIsTypeChecksImportsIgnoresJavaLang() throws Exception
+   public void testIsTypeChecksImportsIgnoresJavaLang()
    {
       FieldSource<JavaEnumSource> field = javaEnum.addField("private Boolean bar;").setPublic().setName("test");
       assertTrue(field.getType().isType(Boolean.class));
@@ -82,7 +86,7 @@ public class JavaEnumFieldTest
    }
 
    @Test
-   public void testIsTypeStringChecksImports() throws Exception
+   public void testIsTypeStringChecksImports()
    {
       FieldSource<JavaEnumSource> field = javaEnum.addField().setType(JavaEnumFieldTest.class.getName()).setPublic()
                .setName("test");
@@ -91,7 +95,7 @@ public class JavaEnumFieldTest
    }
 
    @Test
-   public void testIsTypeChecksImportsTypes() throws Exception
+   public void testIsTypeChecksImportsTypes()
    {
       FieldSource<JavaEnumSource> field = javaEnum.addField("private org.jboss.JavaEnumFieldTest test;");
       FieldSource<JavaEnumSource> field2 = javaEnum.addField().setType(JavaEnumFieldTest.class).setName("test2")
@@ -107,7 +111,7 @@ public class JavaEnumFieldTest
    }
 
    @Test
-   public void testSetTypeSimpleNameDoesNotAddImport() throws Exception
+   public void testSetTypeSimpleNameDoesNotAddImport()
    {
       FieldSource<JavaEnumSource> field = javaEnum.addField().setType(JavaEnumFieldTest.class.getSimpleName())
                .setPublic()
@@ -117,7 +121,7 @@ public class JavaEnumFieldTest
    }
 
    @Test
-   public void testSetType() throws Exception
+   public void testSetType()
    {
       assertEquals("field", field.getName());
       field.setType(JavaEnumFieldTest.class);
@@ -127,7 +131,7 @@ public class JavaEnumFieldTest
    }
 
    @Test
-   public void testSetTypeStringIntPrimitive() throws Exception
+   public void testSetTypeStringIntPrimitive()
    {
       assertEquals("field", field.getName());
       field.setType("int");
@@ -137,7 +141,7 @@ public class JavaEnumFieldTest
    }
 
    @Test
-   public void testSetTypeClassIntPrimitive() throws Exception
+   public void testSetTypeClassIntPrimitive()
    {
       assertEquals("field", field.getName());
       field.setType(int.class.getName());
@@ -147,7 +151,7 @@ public class JavaEnumFieldTest
    }
 
    @Test
-   public void testSetTypeString() throws Exception
+   public void testSetTypeString()
    {
       assertEquals("field", field.getName());
       field.setType("FooBarType");
@@ -157,7 +161,7 @@ public class JavaEnumFieldTest
    }
 
    @Test
-   public void testAddField() throws Exception
+   public void testAddField()
    {
       javaEnum.addField("public Boolean flag = false;");
       FieldSource<JavaEnumSource> fld = javaEnum.getFields().get(javaEnum.getFields().size() - 1);
@@ -170,14 +174,14 @@ public class JavaEnumFieldTest
    }
 
    @Test
-   public void testAddFieldWithVisibilityScope() throws Exception
+   public void testAddFieldWithVisibilityScope()
    {
       javaEnum.addField("private String privateIpAddress;");
       assertTrue(javaEnum.hasField("privateIpAddress"));
    }
 
    @Test
-   public void testIsPrimitive() throws Exception
+   public void testIsPrimitive()
    {
       FieldSource<JavaEnumSource> objectField = javaEnum.addField("public Boolean flag = false;");
       FieldSource<JavaEnumSource> primitiveField = javaEnum.addField("public boolean flag = false;");
@@ -188,7 +192,7 @@ public class JavaEnumFieldTest
    }
 
    @Test
-   public void testAddFieldInitializerLiteral() throws Exception
+   public void testAddFieldInitializerLiteral()
    {
       javaEnum.addField("public int flag;").setLiteralInitializer("1234").setPrivate();
       FieldSource<JavaEnumSource> fld = javaEnum.getFields().get(javaEnum.getFields().size() - 1);
@@ -201,7 +205,7 @@ public class JavaEnumFieldTest
    }
 
    @Test
-   public void testAddFieldInitializerLiteralIgnoresTerminator() throws Exception
+   public void testAddFieldInitializerLiteralIgnoresTerminator()
    {
       javaEnum.addField("public int flag;").setLiteralInitializer("1234;").setPrivate();
       FieldSource<JavaEnumSource> fld = javaEnum.getFields().get(javaEnum.getFields().size() - 1);
@@ -214,7 +218,7 @@ public class JavaEnumFieldTest
    }
 
    @Test
-   public void testAddFieldInitializerString() throws Exception
+   public void testAddFieldInitializerString()
    {
       javaEnum.addField("public String flag;").setStringInitializer("american");
       FieldSource<JavaEnumSource> fld = javaEnum.getFields().get(javaEnum.getFields().size() - 1);
@@ -228,7 +232,7 @@ public class JavaEnumFieldTest
    }
 
    @Test
-   public void testAddQualifiedFieldType() throws Exception
+   public void testAddQualifiedFieldType()
    {
       javaEnum.addField().setName("flag").setType(String.class.getName()).setStringInitializer("american")
                .setPrivate();
@@ -244,7 +248,7 @@ public class JavaEnumFieldTest
    }
 
    @Test
-   public void testHasField() throws Exception
+   public void testHasField()
    {
       javaEnum.addField().setName("flag").setType(String.class.getName()).setStringInitializer("american")
                .setPrivate();

@@ -29,7 +29,7 @@ public class JavaDocTest
    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
    @Test
-   public void testJavaDocParsing() throws Exception
+   public void testJavaDocParsing()
    {
       String text = "/** Text */ public class MyClass{}";
       JavaClassSource javaClass = Roaster.parse(JavaClassSource.class, text);
@@ -40,7 +40,7 @@ public class JavaDocTest
    }
 
    @Test
-   public void testJavaDocParsingTags() throws Exception
+   public void testJavaDocParsingTags()
    {
       String text = "/** Do Something\n*@author George Gastaldi*/ public class MyClass{}";
       JavaClassSource javaClass = Roaster.parse(JavaClassSource.class, text);
@@ -54,7 +54,7 @@ public class JavaDocTest
    }
 
    @Test
-   public void testJavaDocRefTag() throws Exception
+   public void testJavaDocRefTag()
    {
       String text = "/** Do Something\n*@author George Gastaldi\n*@see JavaDocTest#testJavaDocCreation()\n*/ public class MyClass{}";
       JavaClassSource javaClass = Roaster.parse(JavaClassSource.class, text);
@@ -71,7 +71,7 @@ public class JavaDocTest
    }
 
    @Test
-   public void testJavaDocCreation() throws Exception
+   public void testJavaDocCreation()
    {
       String expected = "/**" + LINE_SEPARATOR
                + " * Do Something" + LINE_SEPARATOR
@@ -86,7 +86,7 @@ public class JavaDocTest
    }
 
    @Test
-   public void testJavaDocSetFullText() throws Exception
+   public void testJavaDocSetFullText()
    {
       String expected = "/**" + LINE_SEPARATOR
                + " * Do Something" + LINE_SEPARATOR
@@ -101,7 +101,7 @@ public class JavaDocTest
    }
 
    @Test
-   public void testJavaDocGetFullText() throws Exception
+   public void testJavaDocGetFullText()
    {
       String text = "/**" + LINE_SEPARATOR
                + " * Do Something" + LINE_SEPARATOR
@@ -115,7 +115,7 @@ public class JavaDocTest
    }
 
    @Test
-   public void testJavaDocField() throws Exception
+   public void testJavaDocField()
    {
       String text = "public class MyClass {"
                + "/**" + LINE_SEPARATOR
@@ -133,7 +133,7 @@ public class JavaDocTest
    }
 
    @Test
-   public void testJavaDocMethod() throws Exception
+   public void testJavaDocMethod()
    {
       String text = "public class MyClass {"
                + "/**" + LINE_SEPARATOR
@@ -151,7 +151,7 @@ public class JavaDocTest
    }
 
    @Test
-   public void testJavaDocEnumConstant() throws Exception
+   public void testJavaDocEnumConstant()
    {
       String text = "public enum MyEnum {"
                + "/**" + LINE_SEPARATOR
@@ -168,7 +168,7 @@ public class JavaDocTest
    }
 
    @Test
-   public void testJavaDocMultiLineShouldNotConcatenateWords() throws Exception
+   public void testJavaDocMultiLineShouldNotConcatenateWords()
    {
       String text = "/**" + LINE_SEPARATOR
                + "* The country where this currency is used mostly. This field is just for" + LINE_SEPARATOR
@@ -182,7 +182,7 @@ public class JavaDocTest
    }
 
    @Test
-   public void testJavaDocFullTextShouldFormatParamWithSpace() throws Exception
+   public void testJavaDocFullTextShouldFormatParamWithSpace()
    {
       JavaClassSource src = Roaster.parse(JavaClassSource.class,
                "package issue;\npublic class Issue { \n" +
@@ -197,8 +197,8 @@ public class JavaDocTest
                         "    }}");
       MethodSource<JavaClassSource> method = src.getMethods().get(0);
       Assert.assertEquals(
-               "Creates a new instance of CLASS" + LINE_SEPARATOR + "@param actual the actual value." + LINE_SEPARATOR + "@return the modified text",
+               "Creates a new instance of CLASS" + LINE_SEPARATOR + "@param actual the actual value." + LINE_SEPARATOR
+                        + "@return the modified text",
                method.getJavaDoc().getFullText());
    }
-
 }

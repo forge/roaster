@@ -14,6 +14,7 @@ public @interface MockNestingAnnotation
 {
    @interface MockNestedAnnotation
    {
+      // empty for testing
    }
 
    MockNestedAnnotation value();

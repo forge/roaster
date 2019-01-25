@@ -6,6 +6,7 @@
  */
 package org.jboss.forge.test.roaster.model;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.jboss.forge.roaster.Roaster;
@@ -19,11 +20,13 @@ import org.jboss.forge.test.roaster.model.common.AnnotationTest;
 public class MethodAnnotationTest extends AnnotationTest<JavaClassSource, MethodSource<JavaClassSource>>
 {
    @Override
-   public void resetTests()
+   public void resetTests() throws IOException
    {
-      InputStream stream = MethodAnnotationTest.class
-               .getResourceAsStream("/org/jboss/forge/grammar/java/MockAnnotatedMethod.java");
-      MethodSource<JavaClassSource> method = Roaster.parse(JavaClassSource.class, stream).getMethods().get(0);
-      setTarget(method);
+      String fileName = "/org/jboss/forge/grammar/java/MockAnnotatedMethod.java";
+      try (InputStream stream = MethodAnnotationTest.class.getResourceAsStream(fileName))
+      {
+         MethodSource<JavaClassSource> method = Roaster.parse(JavaClassSource.class, stream).getMethods().get(0);
+         setTarget(method);
+      }
    }
 }

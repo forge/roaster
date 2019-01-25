@@ -17,7 +17,7 @@ public class JavaSourceCompatibilityTest
 {
 
    @Test
-   public void testSupportsGenericsSource() throws Exception
+   public void testSupportsGenericsSource()
    {
       JavaType<?> source = Roaster
                .parse("public class Test{public void test() {java.util.List<String> s = new java.util.ArrayList<String>(); for (String item : s){}}}");
@@ -25,7 +25,7 @@ public class JavaSourceCompatibilityTest
    }
 
    @Test
-   public void testSupportsGenericsSourceFromConstructor() throws Exception
+   public void testSupportsGenericsSourceFromConstructor()
    {
       JavaType<?> source = Roaster
                .parse("public class Test{public Test() {java.util.List<String> s = new java.util.ArrayList<String>(); for (String item : s){}}}");
@@ -33,7 +33,7 @@ public class JavaSourceCompatibilityTest
    }
 
    @Test
-   public void testSupportsGenericsSourceFromMethod() throws Exception
+   public void testSupportsGenericsSourceFromMethod()
    {
       JavaClassSource source = Roaster.parse(JavaClassSource.class, "public class Test{}");
       source.addMethod(
@@ -42,7 +42,7 @@ public class JavaSourceCompatibilityTest
    }
 
    @Test
-   public void testSupportsGenericsSourceFromAddedConstructor() throws Exception
+   public void testSupportsGenericsSourceFromAddedConstructor()
    {
       JavaClassSource source = Roaster.parse(JavaClassSource.class, "public class Test{}");
       // Add a new method to get JDT to recognize the new ASTs
@@ -54,7 +54,7 @@ public class JavaSourceCompatibilityTest
    }
 
    @Test
-   public void testSupportsGenericsSourceFromAddedMethod() throws Exception
+   public void testSupportsGenericsSourceFromAddedMethod()
    {
       JavaClassSource source = Roaster.parse(JavaClassSource.class, "public class Test{}");
       // Add a new method to get JDT to recognize the new ASTs
@@ -66,7 +66,7 @@ public class JavaSourceCompatibilityTest
    }
 
    @Test
-   public void testSupportsDefaultMethods() throws Exception
+   public void testSupportsDefaultMethods()
    {
       JavaInterfaceSource source = Roaster.parse(JavaInterfaceSource.class,
                "public interface Test{ public default String blah() {return null;}}");

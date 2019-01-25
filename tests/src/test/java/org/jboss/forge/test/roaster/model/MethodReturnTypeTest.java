@@ -26,14 +26,14 @@ import org.junit.Test;
 public class MethodReturnTypeTest
 {
    @Test
-   public void testGetReturnTypeReturnsFullTypeForJavaLang() throws Exception
+   public void testGetReturnTypeReturnsFullTypeForJavaLang()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public Long getLong()");
       Assert.assertEquals("java.lang.Long", method.getReturnType().getQualifiedName());
    }
 
    @Test
-   public void testGetReturnTypeReturnsFullTypeForJavaLangGeneric() throws Exception
+   public void testGetReturnTypeReturnsFullTypeForJavaLangGeneric()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class)
                .addMethod("public List<Long> getLong(return null;)");
@@ -43,7 +43,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testGetQualifiedReturnTypePrimitiveArray() throws Exception
+   public void testGetQualifiedReturnTypePrimitiveArray()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public long[] getLongArray()");
@@ -53,7 +53,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testGetQualifiedReturnTypeObjectArray() throws Exception
+   public void testGetQualifiedReturnTypeObjectArray()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public Long[] getLongArray()");
@@ -63,7 +63,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testGetQualifiedReturnTypeNDimensionObjectArray() throws Exception
+   public void testGetQualifiedReturnTypeNDimensionObjectArray()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public Long[][] getLongArray()");
@@ -73,7 +73,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testGetQualifiedReturnTypeObjectArrayOfImportedType() throws Exception
+   public void testGetQualifiedReturnTypeObjectArrayOfImportedType()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public List[] getListArray()");
@@ -84,7 +84,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testGetQualifiedReturnTypeImportedObjectArrayParameterizedImportedType() throws Exception
+   public void testGetQualifiedReturnTypeImportedObjectArrayParameterizedImportedType()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public List<Long>[] getListArray()");
@@ -95,7 +95,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testGetReturnTypePrimitiveObjectArray() throws Exception
+   public void testGetReturnTypePrimitiveObjectArray()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class)
                .addMethod("public long[] getList(return null;)");
@@ -114,7 +114,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testGetReturnTypeBoxedObjectArray() throws Exception
+   public void testGetReturnTypeBoxedObjectArray()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class)
                .addMethod("public Long[] getList(return null;)");
@@ -133,7 +133,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testGetReturnTypeObjectArray() throws Exception
+   public void testGetReturnTypeObjectArray()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class)
                .addMethod("public List[] getList(return null;)");
@@ -152,7 +152,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testGetReturnTypeObjectArrayParameterized() throws Exception
+   public void testGetReturnTypeObjectArrayParameterized()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class)
                .addMethod("public List<Long>[] getList(return null;)");
@@ -171,7 +171,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testGetReturnTypeObjectUnparameterized() throws Exception
+   public void testGetReturnTypeObjectUnparameterized()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class)
                .addMethod("public List getLong(return null;)");
@@ -181,7 +181,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testGetReturnTypeObjectParameterized() throws Exception
+   public void testGetReturnTypeObjectParameterized()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class)
                .addMethod("public List<Long> getList(return null;)");
@@ -198,7 +198,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testGetReturnTypeObjectWildcard() throws Exception
+   public void testGetReturnTypeObjectWildcard()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class)
                .addMethod("public List<?> getList(return null;)");
@@ -215,7 +215,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testGetReturnTypeObjectParameterizedMultiple() throws Exception
+   public void testGetReturnTypeObjectParameterizedMultiple()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class)
                .addMethod("public Map<String, Long> getMap(return null;)");
@@ -235,7 +235,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testGetReturnTypeObjectParameterizedNested() throws Exception
+   public void testGetReturnTypeObjectParameterizedNested()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class)
                .addMethod("public List<List<Long>> getLists(return null;)");
@@ -256,7 +256,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testGetReturnTypeObjectParameterizedMultipleNested() throws Exception
+   public void testGetReturnTypeObjectParameterizedMultipleNested()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class)
                .addMethod("public Map<String, List<Long>> getMap(return null;)");
@@ -277,7 +277,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testGetReturnTypeObjectParameterizedArrayMultipleNested() throws Exception
+   public void testGetReturnTypeObjectParameterizedArrayMultipleNested()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class)
                .addMethod("public Map<String, List<Long>>[] getMaps(return null;)");
@@ -307,7 +307,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testSetReturnTypeShouldImportClass() throws Exception
+   public void testSetReturnTypeShouldImportClass()
    {
       final JavaClassSource javaClassSource = Roaster.create(JavaClassSource.class);
 
@@ -321,7 +321,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testReturnTypeShouldKeepGenerics() throws Exception
+   public void testReturnTypeShouldKeepGenerics()
    {
       JavaInterfaceSource ifSource = Roaster.create(JavaInterfaceSource.class);
       ifSource.setPackage("poc.test.bug");
@@ -336,7 +336,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testSpaceInTwoGenericTypesShouldNotThrowException() throws Exception
+   public void testSpaceInTwoGenericTypesShouldNotThrowException()
    {
       JavaClassSource classSource = Roaster.create(JavaClassSource.class);
       MethodSource<JavaClassSource> newMethod = classSource.addMethod()
@@ -350,7 +350,7 @@ public class MethodReturnTypeTest
    }
 
    @Test
-   public void testNestedTypedParametersShouldNotThrowException() throws Exception
+   public void testNestedTypedParametersShouldNotThrowException()
    {
       final JavaClassSource javaClass = Roaster.create(JavaClassSource.class).setPackage("com.scratch")
                .setName("Example");

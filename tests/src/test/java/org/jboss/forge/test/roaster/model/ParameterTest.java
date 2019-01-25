@@ -9,6 +9,7 @@ package org.jboss.forge.test.roaster.model;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.jboss.forge.roaster.Roaster;
@@ -24,11 +25,14 @@ import org.junit.Test;
 public class ParameterTest
 {
    @Test
-   public void testMethodIsFinal()
+   public void testMethodIsFinal() throws IOException
    {
-      InputStream stream = ParameterTest.class
-               .getResourceAsStream("/org/jboss/forge/grammar/java/MockFinalParameter.java");
-      MethodSource<JavaClassSource> method = Roaster.parse(JavaClassSource.class, stream).getMethods().get(0);
+      MethodSource<JavaClassSource> method;
+      String fileName = "/org/jboss/forge/grammar/java/MockFinalParameter.java";
+      try (InputStream stream = ParameterTest.class.getResourceAsStream(fileName))
+      {
+         method = Roaster.parse(JavaClassSource.class, stream).getMethods().get(0);
+      }
       Assert.assertThat(method.getParameters().size(), is(2));
       ParameterSource<JavaClassSource> parameterOne = method.getParameters().get(0);
       Assert.assertThat(parameterOne.isFinal(), is(true));
@@ -37,7 +41,7 @@ public class ParameterTest
    }
 
    @Test
-   public void testParameterAsFinal() throws Exception
+   public void testParameterAsFinal()
    {
       JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("TestClass");
       ParameterSource<JavaClassSource> parameter = clazz.addMethod().setReturnTypeVoid().setName("myMethod")
@@ -50,7 +54,7 @@ public class ParameterTest
    }
 
    @Test
-   public void testParameterShouldBeVarargs() throws Exception
+   public void testParameterShouldBeVarargs()
    {
       JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("TestClass");
       ParameterSource<JavaClassSource> parameter = clazz.addMethod().setReturnTypeVoid().setName("myMethod")
@@ -63,7 +67,7 @@ public class ParameterTest
    }
 
    @Test
-   public void testGenericTypeParameterShouldNotBeImported() throws Exception
+   public void testGenericTypeParameterShouldNotBeImported()
    {
       JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("TestClass");
       MethodSource<JavaClassSource> method = clazz.addMethod().setReturnTypeVoid().setName("myMethod");
@@ -73,7 +77,7 @@ public class ParameterTest
    }
 
    @Test
-   public void testPreserveParameterGenericTypes() throws Exception
+   public void testPreserveParameterGenericTypes()
    {
       JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("TestClass");
       final MethodSource<JavaClassSource> newMethod = clazz.addMethod()
@@ -88,7 +92,7 @@ public class ParameterTest
    }
 
    @Test
-   public void testEllipsisSupport() throws Exception
+   public void testEllipsisSupport()
    {
       JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("TestClass");
       final MethodSource<JavaClassSource> newMethod = clazz.addMethod()

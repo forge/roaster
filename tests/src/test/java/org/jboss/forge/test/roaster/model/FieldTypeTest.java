@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class FieldTypeTest
 {
    @Test
-   public void testGetReturnTypeReturnsFullTypeForJavaLang() throws Exception
+   public void testGetReturnTypeReturnsFullTypeForJavaLang() 
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class).addField("public Long l;");
       Assert.assertEquals("java.lang.Long", field.getType().getQualifiedName());
@@ -32,7 +32,7 @@ public class FieldTypeTest
    }
 
    @Test
-   public void testGetReturnTypeReturnsFullTypeForJavaLangGeneric() throws Exception
+   public void testGetReturnTypeReturnsFullTypeForJavaLangGeneric() 
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public List<Long> list;");
@@ -42,7 +42,7 @@ public class FieldTypeTest
    }
 
    @Test
-   public void testGetReturnTypeObjectArray() throws Exception
+   public void testGetReturnTypeObjectArray() 
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public List[] field;");
@@ -61,7 +61,7 @@ public class FieldTypeTest
    }
 
    @Test
-   public void testGetReturnTypeObjectArrayParameterized() throws Exception
+   public void testGetReturnTypeObjectArrayParameterized() 
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public List<Long>[] list;");
@@ -80,7 +80,7 @@ public class FieldTypeTest
    }
 
    @Test
-   public void testGetReturnTypeObjectUnparameterized() throws Exception
+   public void testGetReturnTypeObjectUnparameterized() 
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public List list;");
@@ -90,7 +90,7 @@ public class FieldTypeTest
    }
 
    @Test
-   public void testGetReturnTypeObjectParameterized() throws Exception
+   public void testGetReturnTypeObjectParameterized() 
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public List<Long> list;");
@@ -107,7 +107,7 @@ public class FieldTypeTest
    }
 
    @Test
-   public void testGetReturnTypeObjectWildcard() throws Exception
+   public void testGetReturnTypeObjectWildcard() 
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public List<?> list;");
@@ -124,7 +124,7 @@ public class FieldTypeTest
    }
 
    @Test
-   public void testGetReturnTypeObjectParameterizedMultiple() throws Exception
+   public void testGetReturnTypeObjectParameterizedMultiple() 
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public Map<String, Long> map;");
@@ -144,7 +144,7 @@ public class FieldTypeTest
    }
 
    @Test
-   public void testGetReturnTypeObjectParameterizedNested() throws Exception
+   public void testGetReturnTypeObjectParameterizedNested() 
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public List<List<Long>> map;");
@@ -165,7 +165,7 @@ public class FieldTypeTest
    }
 
    @Test
-   public void testGetReturnTypeObjectParameterizedMultipleNested() throws Exception
+   public void testGetReturnTypeObjectParameterizedMultipleNested() 
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public Map<String, List<Long>> map;");
@@ -186,7 +186,7 @@ public class FieldTypeTest
    }
 
    @Test
-   public void testGetReturnTypeObjectParameterizedArrayMultipleNested() throws Exception
+   public void testGetReturnTypeObjectParameterizedArrayMultipleNested() 
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public Map<String, List<Long>>[] maps;");
@@ -279,7 +279,7 @@ public class FieldTypeTest
    }
 
    @Test
-   public void testGenericFieldType() throws Exception
+   public void testGenericFieldType() 
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       FieldSource<JavaClassSource> field = javaClass.addField();
@@ -291,7 +291,7 @@ public class FieldTypeTest
    }
 
    @Test
-   public void testComplexFieldType() throws Exception
+   public void testComplexFieldType() 
    {
       JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("MyClass<T>");
       String type = "java.util.Map<org.foo.MyEnum<T>,java.lang.Object>";
@@ -300,7 +300,7 @@ public class FieldTypeTest
    }
 
    @Test
-   public void testComplexFieldTypeArray() throws Exception
+   public void testComplexFieldTypeArray() 
    {
       JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("MyClass<T>");
       String type = "java.util.Map<org.Foo.MyEnum<T>,java.lang.Object>[][]";
@@ -313,7 +313,7 @@ public class FieldTypeTest
    {
       JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("MyClass");
       String type = "org.foo.Code<org.foo.Condition>";
-      FieldSource<JavaClassSource> field = clazz.addField().setName("param").setType(type);
+      clazz.addField().setName("param").setType(type);
       Assert.assertEquals(2, clazz.getImports().size());
    }
 

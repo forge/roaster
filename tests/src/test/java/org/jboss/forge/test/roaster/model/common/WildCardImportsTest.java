@@ -20,7 +20,7 @@ public class WildCardImportsTest
 {
 
    @Test
-   public void testImportWithWildCard() throws ClassNotFoundException
+   public void testImportWithWildCard()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");
@@ -29,7 +29,7 @@ public class WildCardImportsTest
       assertTrue(javaClass.getImport("org.junit.Assert") != null);
       assertTrue(javaClass.getImport("org.junit.Assert").isWildcard());
    }
-   
+
    @Test
    public void testImportWithGenerics()
    {
@@ -39,7 +39,7 @@ public class WildCardImportsTest
    }
 
    @Test
-   public void testImportStaticAndWithWildCard() throws ClassNotFoundException
+   public void testImportStaticAndWithWildCard()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.setPackage("it.coopservice.test");

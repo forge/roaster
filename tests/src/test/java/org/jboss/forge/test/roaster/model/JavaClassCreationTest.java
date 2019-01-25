@@ -24,20 +24,20 @@ public class JavaClassCreationTest
    private static JavaClassSource jc;
 
    @BeforeClass
-   public static void testCreateClass() throws Exception
+   public static void testCreateClass() 
    {
       jc = Roaster.create(JavaClassSource.class);
    }
 
    @Test
-   public void testClassCreatesStub() throws Exception
+   public void testClassCreatesStub() 
    {
       assertEquals("JavaClass", jc.getName());
       assertTrue(jc.isPublic());
    }
 
    @Test
-   public void testImportStatementHasEmptyLineBeforeClassDeclaration() throws Exception
+   public void testImportStatementHasEmptyLineBeforeClassDeclaration() 
    {
       String lineSeparator = System.getProperty("line.separator");
       String expected = "package org.foo;" + lineSeparator +
