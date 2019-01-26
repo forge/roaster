@@ -68,7 +68,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @SuppressWarnings("unchecked")
    public FieldSource<O> addField()
    {
-      FieldSource<O> field = new FieldImpl<O>((O) this);
+      FieldSource<O> field = new FieldImpl<>((O) this);
       addField(field);
       return field;
    }
@@ -84,7 +84,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
       for (FieldSource<JavaClassSource> stubField : fields)
       {
          Object variableDeclaration = stubField.getInternal();
-         FieldSource<O> field = new FieldImpl<O>((O) this, variableDeclaration, true);
+         FieldSource<O> field = new FieldImpl<>((O) this, variableDeclaration, true);
          addField(field);
          if (result == null)
          {
@@ -97,7 +97,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @SuppressWarnings("unchecked")
    private void addField(Field<O> field)
    {
-      List<Object> bodyDeclarations = getBodyDeclaration().bodyDeclarations();
+      List<Object> bodyDeclarations = getDeclaration().bodyDeclarations();
       int idx = 0;
       for (Object object : bodyDeclarations)
       {
@@ -113,7 +113,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @Override
    public List<MemberSource<O, ?>> getMembers()
    {
-      List<MemberSource<O, ?>> result = new ArrayList<MemberSource<O, ?>>();
+      List<MemberSource<O, ?>> result = new ArrayList<>();
 
       result.addAll(getFields());
       result.addAll(getMethods());
@@ -125,9 +125,9 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @SuppressWarnings("unchecked")
    public List<FieldSource<O>> getFields()
    {
-      List<FieldSource<O>> result = new ArrayList<FieldSource<O>>();
+      List<FieldSource<O>> result = new ArrayList<>();
 
-      List<BodyDeclaration> bodyDeclarations = getBodyDeclaration().bodyDeclarations();
+      List<BodyDeclaration> bodyDeclarations = getDeclaration().bodyDeclarations();
       for (BodyDeclaration bodyDeclaration : bodyDeclarations)
       {
          if (bodyDeclaration instanceof FieldDeclaration)
@@ -136,7 +136,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
             List<VariableDeclarationFragment> fragments = fieldDeclaration.fragments();
             for (VariableDeclarationFragment fragment : fragments)
             {
-               result.add(new FieldImpl<O>((O) this, fragment));
+               result.add(new FieldImpl<>((O) this, fragment));
             }
          }
       }
@@ -181,7 +181,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    public O removeField(final Field<O> field)
    {
       VariableDeclarationFragment fragment = (VariableDeclarationFragment) field.getInternal();
-      Iterator<Object> declarationsIterator = getBodyDeclaration().bodyDeclarations().iterator();
+      Iterator<Object> declarationsIterator = getDeclaration().bodyDeclarations().iterator();
       while (declarationsIterator.hasNext())
       {
          Object next = declarationsIterator.next();
@@ -332,7 +332,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @SuppressWarnings("unchecked")
    public O removeMethod(final Method<O, ?> method)
    {
-      getBodyDeclaration().bodyDeclarations().remove(method.getInternal());
+      getDeclaration().bodyDeclarations().remove(method.getInternal());
       return (O) this;
    }
 
@@ -340,8 +340,8 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @SuppressWarnings("unchecked")
    public MethodSource<O> addMethod()
    {
-      MethodSource<O> m = new MethodImpl<O>((O) this);
-      getBodyDeclaration().bodyDeclarations().add(m.getInternal());
+      MethodSource<O> m = new MethodImpl<>((O) this);
+      getDeclaration().bodyDeclarations().add(m.getInternal());
       return m;
    }
 
@@ -349,8 +349,8 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @SuppressWarnings("unchecked")
    public MethodSource<O> addMethod(final String method)
    {
-      MethodSource<O> m = new MethodImpl<O>((O) this, method);
-      getBodyDeclaration().bodyDeclarations().add(m.getInternal());
+      MethodSource<O> m = new MethodImpl<>((O) this, method);
+      getDeclaration().bodyDeclarations().add(m.getInternal());
       return m;
    }
 
@@ -358,8 +358,8 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @SuppressWarnings("unchecked")
    public MethodSource<O> addMethod(java.lang.reflect.Method method)
    {
-      MethodSource<O> m = new MethodImpl<O>((O) this, method);
-      getBodyDeclaration().bodyDeclarations().add(m.getInternal());
+      MethodSource<O> m = new MethodImpl<>((O) this, method);
+      getDeclaration().bodyDeclarations().add(m.getInternal());
       return m;
    }
 
@@ -367,8 +367,8 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @SuppressWarnings("unchecked")
    public MethodSource<O> addMethod(Method<?, ?> method)
    {
-      MethodSource<O> m = new MethodImpl<O>((O) this, method.toString());
-      getBodyDeclaration().bodyDeclarations().add(m.getInternal());
+      MethodSource<O> m = new MethodImpl<>((O) this, method.toString());
+      getDeclaration().bodyDeclarations().add(m.getInternal());
       return m;
    }
 
@@ -376,7 +376,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @SuppressWarnings("unchecked")
    public List<MethodSource<O>> getMethods()
    {
-      List<MethodSource<O>> result = new ArrayList<MethodSource<O>>();
+      List<MethodSource<O>> result = new ArrayList<>();
 
       MethodFinderVisitor methodFinderVisitor = new MethodFinderVisitor();
       body.accept(methodFinderVisitor);
@@ -384,7 +384,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
       List<MethodDeclaration> methods = methodFinderVisitor.getMethods();
       for (MethodDeclaration methodDeclaration : methods)
       {
-         result.add(new MethodImpl<O>((O) this, methodDeclaration));
+         result.add(new MethodImpl<>((O) this, methodDeclaration));
       }
       return Collections.unmodifiableList(result);
    }
@@ -392,8 +392,8 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @Override
    public List<String> getInterfaces()
    {
-      List<String> result = new ArrayList<String>();
-      List<Type> superTypes = JDTHelper.getInterfaces(getBodyDeclaration());
+      List<String> result = new ArrayList<>();
+      List<Type> superTypes = JDTHelper.getInterfaces(getDeclaration());
       for (Type type : superTypes)
       {
          String name = JDTHelper.getTypeName(type);
@@ -431,13 +431,13 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
          Type interfaceType = JDTHelper.getInterfaces(
                   Roaster.parse(JavaInterfaceImpl.class,
                            "public interface Mock extends " + simpleName + " {}")
-                           .getBodyDeclaration())
+                           .getDeclaration())
                   .get(0);
 
          if (this.hasInterface(simpleName) || this.hasImport(simpleName))
          {
             interfaceType = JDTHelper.getInterfaces(Roaster.parse(JavaInterfaceImpl.class,
-                     "public interface Mock extends " + type + " {}").getBodyDeclaration()).get(0);
+                     "public interface Mock extends " + type + " {}").getDeclaration()).get(0);
          }
 
          if (!this.hasImport(simpleName))
@@ -446,7 +446,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
          }
 
          ASTNode node = ASTNode.copySubtree(unit.getAST(), interfaceType);
-         JDTHelper.getInterfaces(getBodyDeclaration()).add((Type) node);
+         JDTHelper.getInterfaces(getDeclaration()).add((Type) node);
       }
       return (O) this;
    }
@@ -475,7 +475,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
 
       if (type instanceof JavaInterfaceSource)
       {
-         Set<Import> usedImports = new HashSet<Import>();
+         Set<Import> usedImports = new HashSet<>();
 
          JavaInterfaceSource interfaceSource = (JavaInterfaceSource) type;
          for (MethodSource<JavaInterfaceSource> method : interfaceSource.getMethods())
@@ -548,7 +548,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @Override
    public O removeInterface(final String type)
    {
-      List<Type> interfaces = JDTHelper.getInterfaces(getBodyDeclaration());
+      List<Type> interfaces = JDTHelper.getInterfaces(getDeclaration());
       for (Type i : interfaces)
       {
          if (Types.areEquivalent(i.toString(), type))
@@ -601,7 +601,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
             origin.addImport(genericType);
          }
       }
-      final org.jboss.forge.roaster.model.Type<O> typeObject = new TypeImpl<O>(getOrigin(), null,
+      final org.jboss.forge.roaster.model.Type<O> typeObject = new TypeImpl<>(getOrigin(), null,
                Types.toSimpleName(type));
       final PropertySource<O> result = new PropertyImpl<O>(name, getOrigin())
       {
@@ -649,14 +649,14 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    public final PropertySource<O> getProperty(String name)
    {
       Assert.notNull(name, "name is null");
-      final PropertyImpl<O> result = new PropertyImpl<O>(name, getOrigin());
+      final PropertyImpl<O> result = new PropertyImpl<>(name, getOrigin());
       return result.isValid() ? result : null;
    }
 
    @Override
    public final List<PropertySource<O>> getProperties()
    {
-      final Set<String> propertyNames = new LinkedHashSet<String>();
+      final Set<String> propertyNames = new LinkedHashSet<>();
       for (MethodSource<O> method : getMethods())
       {
          if (isAccessor(method) || isMutator(method))
@@ -671,10 +671,10 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
             propertyNames.add(field.getName());
          }
       }
-      final List<PropertySource<O>> result = new ArrayList<PropertySource<O>>(propertyNames.size());
+      final List<PropertySource<O>> result = new ArrayList<>(propertyNames.size());
       for (String name : propertyNames)
       {
-         result.add(new PropertyImpl<O>(name, getOrigin()));
+         result.add(new PropertyImpl<>(name, getOrigin()));
       }
       return result;
    }
@@ -682,7 +682,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @Override
    public List<PropertySource<O>> getProperties(Class<?> type)
    {
-      final Set<String> propertyNames = new LinkedHashSet<String>();
+      final Set<String> propertyNames = new LinkedHashSet<>();
       for (MethodSource<O> method : getMethods())
       {
          if ((isAccessor(method) || isMutator(method))
@@ -698,10 +698,10 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
             propertyNames.add(field.getName());
          }
       }
-      final List<PropertySource<O>> result = new ArrayList<PropertySource<O>>(propertyNames.size());
+      final List<PropertySource<O>> result = new ArrayList<>(propertyNames.size());
       for (String name : propertyNames)
       {
-         result.add(new PropertyImpl<O>(name, getOrigin()));
+         result.add(new PropertyImpl<>(name, getOrigin()));
       }
       return result;
    }

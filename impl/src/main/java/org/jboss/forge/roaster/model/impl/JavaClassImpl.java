@@ -59,7 +59,7 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
    @Override
    public boolean isAbstract()
    {
-      return modifiers.hasModifier(getBodyDeclaration(), ModifierKeyword.ABSTRACT_KEYWORD);
+      return modifiers.hasModifier(getDeclaration(), ModifierKeyword.ABSTRACT_KEYWORD);
    }
 
    @Override
@@ -67,11 +67,11 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
    {
       if (abstrct)
       {
-         modifiers.addModifier(getBodyDeclaration(), ModifierKeyword.ABSTRACT_KEYWORD);
+         modifiers.addModifier(getDeclaration(), ModifierKeyword.ABSTRACT_KEYWORD);
       }
       else
       {
-         modifiers.removeModifier(getBodyDeclaration(), ModifierKeyword.ABSTRACT_KEYWORD);
+         modifiers.removeModifier(getDeclaration(), ModifierKeyword.ABSTRACT_KEYWORD);
       }
       return this;
    }
@@ -79,23 +79,23 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
    @Override
    public boolean isFinal()
    {
-      return modifiers.hasModifier(getBodyDeclaration(), ModifierKeyword.FINAL_KEYWORD);
+      return modifiers.hasModifier(getDeclaration(), ModifierKeyword.FINAL_KEYWORD);
    }
 
    @Override
    public JavaClassSource setFinal(boolean finl)
    {
       if (finl)
-         modifiers.addModifier(getBodyDeclaration(), ModifierKeyword.FINAL_KEYWORD);
+         modifiers.addModifier(getDeclaration(), ModifierKeyword.FINAL_KEYWORD);
       else
-         modifiers.removeModifier(getBodyDeclaration(), ModifierKeyword.FINAL_KEYWORD);
+         modifiers.removeModifier(getDeclaration(), ModifierKeyword.FINAL_KEYWORD);
       return this;
    }
 
    @Override
    public boolean isLocalClass()
    {
-      return JDTHelper.isLocalClass(getBodyDeclaration());
+      return JDTHelper.isLocalClass(getDeclaration());
    }
 
    @Override
@@ -117,7 +117,7 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
    @Override
    public String getSuperType()
    {
-      Object superType = getBodyDeclaration().getStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY);
+      Object superType = getDeclaration().getStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY);
       if (superType == null)
          superType = Object.class.getName();
       return resolveType(superType.toString()) + Types.getGenerics(superType.toString());
@@ -193,7 +193,7 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
             pt.typeArguments().add(t);
          }
 
-         getBodyDeclaration().setStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY, pt);
+         getDeclaration().setStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY, pt);
       }
       else
       {
@@ -213,7 +213,7 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
             superType = body.getAST().newSimpleType(simpleName);
          }
 
-         getBodyDeclaration().setStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY, superType);
+         getDeclaration().setStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY, superType);
       }
 
       return this;
@@ -232,7 +232,7 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
    {
       if (type == null)
       {
-         getBodyDeclaration().setStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY, null);
+         getDeclaration().setStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY, null);
          return true;
       }
       return false;

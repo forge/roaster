@@ -35,9 +35,9 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnumSource>
    @Override
    public List<EnumConstantSource> getEnumConstants()
    {
-      List<EnumConstantSource> result = new ArrayList<EnumConstantSource>();
+      List<EnumConstantSource> result = new ArrayList<>();
 
-      for (Object o : ((EnumDeclaration) getBodyDeclaration()).enumConstants())
+      for (Object o : ((EnumDeclaration) getDeclaration()).enumConstants())
       {
          EnumConstantDeclaration constant = (EnumConstantDeclaration) o;
          result.add(new EnumConstantImpl(this, constant));
@@ -51,7 +51,7 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnumSource>
    public EnumConstantSource addEnumConstant()
    {
       EnumConstantImpl enumConst = new EnumConstantImpl(this);
-      EnumDeclaration enumDeclaration = (EnumDeclaration) getBodyDeclaration();
+      EnumDeclaration enumDeclaration = (EnumDeclaration) getDeclaration();
       List<EnumConstantDeclaration> constants = enumDeclaration.enumConstants();
       constants.add((EnumConstantDeclaration) enumConst.getInternal());
 
@@ -64,7 +64,7 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnumSource>
    {
       EnumConstantImpl enumConst = new EnumConstantImpl(this, declaration);
 
-      EnumDeclaration enumDeclaration = (EnumDeclaration) getBodyDeclaration();
+      EnumDeclaration enumDeclaration = (EnumDeclaration) getDeclaration();
       List<EnumConstantDeclaration> constants = enumDeclaration.enumConstants();
       constants.add((EnumConstantDeclaration) enumConst.getInternal());
 

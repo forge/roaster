@@ -55,7 +55,7 @@ public class JavaAnnotationImpl extends AbstractJavaSource<JavaAnnotationSource>
    private AnnotationElementSource add(AnnotationElementSource annotationElement)
    {
       @SuppressWarnings("unchecked")
-      final ListIterator<BodyDeclaration> members = getBodyDeclaration().bodyDeclarations().listIterator();
+      final ListIterator<BodyDeclaration> members = getDeclaration().bodyDeclarations().listIterator();
 
       // skip any members before annotation elements, i.e. nested types
       while (members.hasNext())
@@ -115,9 +115,9 @@ public class JavaAnnotationImpl extends AbstractJavaSource<JavaAnnotationSource>
    @Override
    public List<AnnotationElementSource> getAnnotationElements()
    {
-      List<AnnotationElementSource> result = new ArrayList<AnnotationElementSource>();
+      List<AnnotationElementSource> result = new ArrayList<>();
       @SuppressWarnings("unchecked")
-      List<BodyDeclaration> bodyDeclarations = getBodyDeclaration().bodyDeclarations();
+      List<BodyDeclaration> bodyDeclarations = getDeclaration().bodyDeclarations();
       for (BodyDeclaration bodyDeclaration : bodyDeclarations)
       {
          if (bodyDeclaration instanceof AnnotationTypeMemberDeclaration)
@@ -132,7 +132,7 @@ public class JavaAnnotationImpl extends AbstractJavaSource<JavaAnnotationSource>
    @Override
    public JavaAnnotationSource removeAnnotationElement(AnnotationElement<?> annotationElement)
    {
-      getBodyDeclaration().bodyDeclarations().remove(annotationElement.getInternal());
+      getDeclaration().bodyDeclarations().remove(annotationElement.getInternal());
       return this;
    }
 
