@@ -94,7 +94,7 @@ public class JavaPackageInfoImpl extends JavaSourceImpl<JavaPackageInfoSource>
    @Override
    protected JavaPackageInfoSource updateTypeNames(String name)
    {
-      throw new ParserException();
+      throw new UnsupportedOperationException("A package-info doesn't contain any types which can be updated");
    }
 
    @Override
