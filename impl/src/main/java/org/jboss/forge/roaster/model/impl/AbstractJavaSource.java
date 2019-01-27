@@ -266,27 +266,14 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> extends JavaSo
    }
 
    @Override
-   public JavaDocSource<O> getJavaDoc()
+   protected Javadoc getJDTJavaDoc()
    {
-      Javadoc javadoc = body.getJavadoc();
-      if (javadoc == null)
-      {
-         javadoc = body.getAST().newJavadoc();
-         body.setJavadoc(javadoc);
-      }
-      return new JavaDocImpl<>((O) this, javadoc);
+      return body.getJavadoc();
    }
 
    @Override
-   public O removeJavaDoc()
+   protected void setJDTJavaDoc(Javadoc javaDoc)
    {
-      body.setJavadoc(null);
-      return (O) this;
-   }
-
-   @Override
-   public boolean hasJavaDoc()
-   {
-      return body.getJavadoc() != null;
+      body.setJavadoc(javaDoc);
    }
 }
