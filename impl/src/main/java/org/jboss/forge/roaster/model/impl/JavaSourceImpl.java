@@ -14,17 +14,16 @@ import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
+import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
-import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 import org.jboss.forge.roaster.ParserException;
@@ -37,8 +36,10 @@ import org.jboss.forge.roaster.model.ast.AnnotationAccessor;
 import org.jboss.forge.roaster.model.ast.ModifierAccessor;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.Import;
+import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.util.Formatter;
+import org.jboss.forge.roaster.model.util.JDTOptions;
 import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.model.util.Types;
 import org.jboss.forge.roaster.spi.WildcardImportResolver;
@@ -64,6 +65,41 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
       this.document = document;
       this.unit = unit;
    }
+
+   // ================================================================================
+   // JavaDoc
+   // ================================================================================
+
+   @Override
+   public boolean hasJavaDoc()
+   {
+      return getJDTJavaDoc() != null;
+   }
+
+   @SuppressWarnings("unchecked")
+   @Override
+   public JavaDocSource<O> getJavaDoc()
+   {
+      Javadoc javadoc = getJDTJavaDoc();
+      if (javadoc == null)
+      {
+         javadoc = getDeclaration().getAST().newJavadoc();
+         setJDTJavaDoc(javadoc);
+      }
+      return new JavaDocImpl<>((O) this, javadoc);
+   }
+
+   @SuppressWarnings("unchecked")
+   @Override
+   public O removeJavaDoc()
+   {
+      setJDTJavaDoc(null);
+      return (O) this;
+   }
+
+   protected abstract Javadoc getJDTJavaDoc();
+
+   protected abstract void setJDTJavaDoc(Javadoc javaDoc);
 
    // ================================================================================
    // Annotation
@@ -576,9 +612,7 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
 
       try
       {
-         Map<String, String> options = JavaCore.getOptions();
-         options.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_7);
-         options.put(CompilerOptions.OPTION_Encoding, "UTF-8");
+         Map<String, String> options = JDTOptions.getJDTOptions();
          TextEdit edit = unit.rewrite(documentLocal, options);
          edit.apply(documentLocal);
       }

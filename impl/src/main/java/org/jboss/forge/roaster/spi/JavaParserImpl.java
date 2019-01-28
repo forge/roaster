@@ -7,11 +7,8 @@
 
 package org.jboss.forge.roaster.spi;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -43,6 +40,7 @@ import org.jboss.forge.roaster.model.source.JavaEnumSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.JavaPackageInfoSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
+import org.jboss.forge.roaster.model.util.JDTOptions;
 
 /**
  * The default implementation of a {@link JavaParser}.
@@ -59,7 +57,7 @@ public class JavaParserImpl implements JavaParser
       ASTParser parser = ASTParser.newParser(AST.JLS8);
 
       parser.setSource(document.get().toCharArray());
-      parser.setCompilerOptions(getParserOptions());
+      parser.setCompilerOptions(JDTOptions.getJDTOptions());
 
       parser.setResolveBindings(true);
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
@@ -164,7 +162,7 @@ public class JavaParserImpl implements JavaParser
    {
       CodeSnippetParsingUtil codeSnippetParsingUtil = new CodeSnippetParsingUtil(false);
       ConstructorDeclaration constructorDeclaration = codeSnippetParsingUtil.parseStatements(snippet.toCharArray(), 0,
-               snippet.length(), getParserOptions(), true, false);
+               snippet.length(), JDTOptions.getJDTOptions(), true, false);
       CompilationResult compilationResult = constructorDeclaration.compilationResult();
       List<Problem> problems = new ArrayList<>();
       if (compilationResult.hasErrors())
@@ -179,13 +177,5 @@ public class JavaParserImpl implements JavaParser
          }
       }
       return problems;
-   }
-
-   private Hashtable<String, String> getParserOptions()
-   {
-      Hashtable<String, String> options = JavaCore.getOptions();
-      options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
-      options.put(JavaCore.CORE_ENCODING, StandardCharsets.UTF_8.name());
-      return options;
    }
 }

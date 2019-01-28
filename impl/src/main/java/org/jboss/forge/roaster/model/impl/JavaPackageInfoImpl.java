@@ -12,11 +12,11 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 import org.jboss.forge.roaster.ParserException;
 import org.jboss.forge.roaster.model.JavaType;
-import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.source.JavaPackageInfoSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.util.Formatter;
@@ -26,6 +26,7 @@ public class JavaPackageInfoImpl extends JavaSourceImpl<JavaPackageInfoSource>
 {
 
    private PackageDeclaration pkg;
+
    public JavaPackageInfoImpl(JavaSource<?> enclosingType, Document document,
             CompilationUnit unit, PackageDeclaration pkg)
    {
@@ -58,32 +59,6 @@ public class JavaPackageInfoImpl extends JavaSourceImpl<JavaPackageInfoSource>
    /*
     * Non-manipulation methods.
     */
-   /**
-    * Return this {@link JavaType} file as a String
-    */
-   @Override
-   public String toString()
-   {
-      return Formatter.format(toUnformattedString());
-   }
-
-   @Override
-   public String toUnformattedString()
-   {
-      Document documentLocal = new Document(this.document.get());
-
-      try
-      {
-         TextEdit edit = unit.rewrite(documentLocal, null);
-         edit.apply(documentLocal);
-      }
-      catch (Exception e)
-      {
-         throw new ParserException("Could not modify source: " + unit.toString(), e);
-      }
-
-      return documentLocal.get();
-   }
 
    @Override
    public int hashCode()
@@ -117,33 +92,20 @@ public class JavaPackageInfoImpl extends JavaSourceImpl<JavaPackageInfoSource>
    }
 
    @Override
-   public JavaDocSource<JavaPackageInfoSource> getJavaDoc()
-   {
-      Javadoc javadoc = pkg.getJavadoc();
-      if (javadoc == null)
-      {
-         javadoc = pkg.getAST().newJavadoc();
-         pkg.setJavadoc(javadoc);
-      }
-      return new JavaDocImpl<>(this, javadoc);
-   }
-
-   @Override
-   public JavaPackageInfoSource removeJavaDoc()
-   {
-      pkg.setJavadoc(null);
-      return this;
-   }
-
-   @Override
-   public boolean hasJavaDoc()
-   {
-      return pkg.getJavadoc() != null;
-   }
-
-   @Override
    protected JavaPackageInfoSource updateTypeNames(String name)
    {
-     throw new ParserException();
+      throw new UnsupportedOperationException("A package-info doesn't contain any types which can be updated");
+   }
+
+   @Override
+   protected Javadoc getJDTJavaDoc()
+   {
+      return pkg.getJavadoc();
+   }
+
+   @Override
+   protected void setJDTJavaDoc(Javadoc javaDoc)
+   {
+      pkg.setJavadoc(javaDoc);
    }
 }
