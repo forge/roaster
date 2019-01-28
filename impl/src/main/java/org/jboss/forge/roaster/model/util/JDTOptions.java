@@ -1,7 +1,9 @@
 package org.jboss.forge.roaster.model.util;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
@@ -20,7 +22,7 @@ import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
  */
 public class JDTOptions
 {
-   private static Hashtable<String, String> OPTIONS = JavaCore.getOptions();
+   private static final Hashtable<String, String> OPTIONS = JavaCore.getOptions();
 
    static
    {
@@ -35,11 +37,23 @@ public class JDTOptions
       // Util class
    }
 
-   public static Hashtable<String, String> getJDTOptions()
+   /**
+    * Get all globally defined JDT options.
+    * 
+    * @return a map of all globally defined options as a unmodifiable map
+    * @see Collections#unmodifiableMap
+    */
+   public static Map<String, String> getJDTOptions()
    {
-      return OPTIONS;
+      return Collections.unmodifiableMap(OPTIONS);
    }
 
+   /**
+    * Get a certain JDT option.
+    * 
+    * @param option the option
+    * @return the value of the option or {@code null} if the option is not defined
+    */
    public static String getOption(String option)
    {
       return OPTIONS.get(option);
