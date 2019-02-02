@@ -5,40 +5,32 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.jboss.forge.roaster.model.util;
+package org.jboss.forge.test.roaster.model.util;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 
 import java.awt.List;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.Map;
 
+import javax.swing.UIManager;
+
+import org.jboss.forge.roaster.model.util.Methods;
 import org.junit.Test;
 
 /**
- *
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
  */
 public class MethodsTest
 {
 
    @Test
-   public void testParamNameSingleUpperCase()
+   public void testGenerateParametersNamesWithDifferentCases()
    {
-      assertEquals("facesContext", Methods.toParamName("FacesContext"));
-   }
-
-   @Test
-   public void testParamNameMultipleUpperCase()
-   {
-      assertEquals("uiComponent", Methods.toParamName("UIComponent"));
-   }
-
-   @Test
-   public void testParamNameAllLowerCase()
-   {
-      assertEquals("myclass", Methods.toParamName("myclass"));
+      String[] paramNames = Methods
+               .generateParameterNames(new Class[] { InputStream.class, UIManager.class, myclass.class });
+      assertArrayEquals(new String[] { "inputStream", "uiManager", "myclass" }, paramNames);
    }
 
    @Test
@@ -61,5 +53,10 @@ public class MethodsTest
       String[] paramNames = Methods
                .generateParameterNames(new Class[] { String.class, Date.class, Object.class, List.class });
       assertArrayEquals(new String[] { "s", "date", "o", "list" }, paramNames);
+   }
+
+   private static class myclass
+   {
+      // empty test class
    }
 }
