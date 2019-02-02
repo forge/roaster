@@ -5,19 +5,17 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.jboss.forge.roaster.model.util;
+package org.jboss.forge.test.roaster.model.util;
 
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
+import org.jboss.forge.roaster.model.util.Types;
 import org.junit.Test;
 
 /**
@@ -40,7 +38,7 @@ public class TypesTest
    }
 
    @Test
-   public void testAreEquivalent() throws Exception
+   public void testAreEquivalent()
    {
       assertTrue(Types.areEquivalent("com.example.Domain", "com.example.Domain"));
       assertTrue(Types.areEquivalent("Domain", "com.example.Domain"));
@@ -52,21 +50,21 @@ public class TypesTest
    }
 
    @Test
-   public void testIsQualified() throws Exception
+   public void testIsQualified()
    {
       assertTrue(Types.isQualified("org.jboss.forge.roaster.JavaParser"));
       assertFalse(Types.isQualified("JavaParser"));
    }
 
    @Test
-   public void testGetPackage() throws Exception
+   public void testGetPackage()
    {
       assertEquals("com.example", Types.getPackage("com.example.Domain"));
       assertEquals("", Types.getPackage("Domain"));
    }
 
    @Test
-   public void testIsSimpleName() throws Exception
+   public void testIsSimpleName()
    {
       assertTrue(Types.isSimpleName("Domain$"));
       assertFalse(Types.isSimpleName("9Domain$"));
@@ -120,7 +118,6 @@ public class TypesTest
       assertEquals(1, Types.getArrayDimension(int[].class.getName()));
       assertEquals(2, Types.getArrayDimension(int[][].class.getName()));
       assertEquals(3, Types.getArrayDimension(int[][][].class.getName()));
-
    }
 
    @Test
@@ -162,7 +159,7 @@ public class TypesTest
    }
 
    @Test
-   public void testAssertToSimpleName() throws Exception
+   public void testAssertToSimpleName()
    {
       assertEquals("List<String>", Types.toSimpleName("java.util.List<java.lang.String>"));
       assertEquals("List<String>", Types.toSimpleName("java.util.List<String>"));
@@ -207,7 +204,8 @@ public class TypesTest
    @Test
    public void testSplitGenerics()
    {
+      assertArrayEquals(new String[] {}, Types.splitGenerics("Foo"));
       assertArrayEquals(new String[] { "String", "Integer" }, Types.splitGenerics("Foo<String,Integer>"));
-      assertArrayEquals(new String[] { "Bar<A>", "Bar<B>"}, Types.splitGenerics("Foo<Bar<A>, Bar<B>>"));
+      assertArrayEquals(new String[] { "Bar<A>", "Bar<B>" }, Types.splitGenerics("Foo<Bar<A>, Bar<B>>"));
    }
 }
