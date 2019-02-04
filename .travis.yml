@@ -1,11 +1,9 @@
 language: java
-sudo: false
 jdk:
   - oraclejdk8
   - openjdk11
 cache:
   directories:
-  - .autoconf
   - $HOME/.m2
 notifications:
   irc: chat.freenode.net#forge
