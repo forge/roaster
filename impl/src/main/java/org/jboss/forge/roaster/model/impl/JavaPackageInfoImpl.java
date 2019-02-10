@@ -12,14 +12,10 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
-import org.eclipse.text.edits.TextEdit;
 import org.jboss.forge.roaster.ParserException;
-import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.source.JavaPackageInfoSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
-import org.jboss.forge.roaster.model.util.Formatter;
 
 public class JavaPackageInfoImpl extends JavaSourceImpl<JavaPackageInfoSource>
          implements JavaPackageInfoSource

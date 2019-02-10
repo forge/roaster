@@ -7,15 +7,12 @@
 
 package org.jboss.forge.roaster.model;
 
-import org.jboss.forge.roaster.Internal;
-import org.jboss.forge.roaster.Origin;
-
 /**
  * A {@link Property} is a convenience construct depicting a simple Java bean property.
  *
  * @param <O>
  */
-public interface Property<O extends JavaType<O>> extends Internal, Origin<O>, Named, AnnotationTarget<O>
+public interface Property<O extends JavaType<O>> extends Named, AnnotationTarget<O>
 {
    /**
     * Get this property's {@link Type}.

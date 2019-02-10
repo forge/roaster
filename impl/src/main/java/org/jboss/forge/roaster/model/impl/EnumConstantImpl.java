@@ -27,7 +27,7 @@ import org.jboss.forge.roaster.model.util.Strings;
 
 public class EnumConstantImpl implements EnumConstantSource
 {
-   private final AnnotationAccessor<JavaEnumSource, EnumConstantSource> annotations = new AnnotationAccessor<JavaEnumSource, EnumConstantSource>();
+   private final AnnotationAccessor<JavaEnumSource, EnumConstantSource> annotations = new AnnotationAccessor<>();
    private JavaEnumSource parent;
    private AST ast;
    private final EnumConstantDeclaration enumConstant;
@@ -91,7 +91,7 @@ public class EnumConstantImpl implements EnumConstantSource
    @Override
    public List<String> getConstructorArguments()
    {
-      final List<String> result = new ArrayList<String>();
+      final List<String> result = new ArrayList<>();
       for (Object o : enumConstant.arguments())
       {
          result.add(o.toString());
@@ -210,7 +210,7 @@ public class EnumConstantImpl implements EnumConstantSource
          javadoc = enumConstant.getAST().newJavadoc();
          enumConstant.setJavadoc(javadoc);
       }
-      return new JavaDocImpl<EnumConstantSource>(this, javadoc);
+      return new JavaDocImpl<>(this, javadoc);
    }
 
    @Override

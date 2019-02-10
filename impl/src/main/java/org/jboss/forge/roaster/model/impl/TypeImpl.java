@@ -93,11 +93,11 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
 
       if (typeLocal instanceof ParameterizedType)
       {
-         List<Type<O>> result = new ArrayList<Type<O>>();
+         List<Type<O>> result = new ArrayList<>();
          List<org.eclipse.jdt.core.dom.Type> arguments = ((ParameterizedType) typeLocal).typeArguments();
          for (org.eclipse.jdt.core.dom.Type t : arguments)
          {
-            result.add(new TypeImpl<O>(origin, this, t));
+            result.add(new TypeImpl<>(origin, this, t));
          }
          return Collections.unmodifiableList(result);
       }
@@ -223,7 +223,7 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    public boolean isType(final Class<?> type)
    {
       final String simpleName = type.getSimpleName();
-      if(!getName().contains(simpleName))
+      if (!getName().contains(simpleName))
       {
          return false;
       }

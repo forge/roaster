@@ -7,8 +7,6 @@
 
 package org.jboss.forge.roaster.model;
 
-import org.jboss.forge.roaster.Origin;
-
 /**
  * Represents a {@link JavaType} member. (I.e.: a {@link Field} or {@link Method})
  * 
@@ -16,6 +14,6 @@ import org.jboss.forge.roaster.Origin;
  * 
  */
 public interface Member<O extends JavaType<O>> extends VisibilityScoped, AnnotationTarget<O>,
-         Origin<O>, Named, FinalCapable, StaticCapable
+         Named, FinalCapable, StaticCapable
 {
 }

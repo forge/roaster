@@ -39,7 +39,7 @@ public class Methods
    public static List<MethodSource<?>> implementAbstractMethods(final MethodHolder<?> source,
             final MethodHolderSource<?> target)
    {
-      List<MethodSource<?>> methods = new ArrayList<MethodSource<?>>();
+      List<MethodSource<?>> methods = new ArrayList<>();
       for (Method method : source.getMethods())
       {
          if (method.isAbstract() && !target.hasMethod(method))
@@ -72,7 +72,7 @@ public class Methods
    public static List<MethodSource<?>> implementAbstractMethods(final Class<?> source,
             final MethodHolderSource<?> target)
    {
-      List<MethodSource<?>> methods = new ArrayList<MethodSource<?>>();
+      List<MethodSource<?>> methods = new ArrayList<>();
       for (java.lang.reflect.Method m : source.getMethods())
       {
          if (m.getDeclaringClass() == Object.class)
@@ -124,7 +124,7 @@ public class Methods
     */
    public static String[] generateParameterNames(Class<?>[] parameterTypes)
    {
-      List<String> parameterNames = new ArrayList<String>();
+      List<String> parameterNames = new ArrayList<>();
       for (Class<?> paramType : parameterTypes)
       {
          // Check if we haven't already used it.

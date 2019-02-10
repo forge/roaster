@@ -18,8 +18,6 @@ import org.jboss.forge.roaster.model.JavaInterface;
  */
 public interface JavaInterfaceSource extends JavaInterface<JavaInterfaceSource>,
          JavaSource<JavaInterfaceSource>,
-         FieldHolderSource<JavaInterfaceSource>,
-         MethodHolderSource<JavaInterfaceSource>,
          GenericCapableSource<JavaInterfaceSource, JavaInterfaceSource>,
          InterfaceCapableSource<JavaInterfaceSource>,
          PropertyHolderSource<JavaInterfaceSource>,

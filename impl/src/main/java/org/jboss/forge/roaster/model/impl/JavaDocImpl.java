@@ -110,7 +110,7 @@ public class JavaDocImpl<O> implements JavaDocSource<O>
    @Override
    public Set<String> getTagNames()
    {
-      Set<String> tagNames = new LinkedHashSet<String>();
+      Set<String> tagNames = new LinkedHashSet<>();
       List<TagElement> tagList = javadoc.tags();
       for (TagElement tagElement : tagList)
       {
@@ -124,7 +124,7 @@ public class JavaDocImpl<O> implements JavaDocSource<O>
    @Override
    public List<JavaDocTag> getTags()
    {
-      List<JavaDocTag> tags = new ArrayList<JavaDocTag>();
+      List<JavaDocTag> tags = new ArrayList<>();
       List<TagElement> tagElements = javadoc.tags();
       for (TagElement tagElement : tagElements)
       {
@@ -138,7 +138,7 @@ public class JavaDocImpl<O> implements JavaDocSource<O>
    public List<JavaDocTag> getTags(String tagName)
    {
       Assert.notNull(tagName, TAG_NAME_CANNOT_BE_NULL);
-      List<JavaDocTag> tags = new ArrayList<JavaDocTag>();
+      List<JavaDocTag> tags = new ArrayList<>();
       List<TagElement> tagElements = javadoc.tags();
       for (TagElement tagElement : tagElements)
       {

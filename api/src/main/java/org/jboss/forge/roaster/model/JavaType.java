@@ -9,8 +9,6 @@ package org.jboss.forge.roaster.model;
 
 import java.util.List;
 
-import org.jboss.forge.roaster.Origin;
-
 /**
  * Represents a Java type.
  *
@@ -22,7 +20,6 @@ public interface JavaType<T extends JavaType<T>> extends
          Named,
          VisibilityScoped,
          AnnotationTarget<T>,
-         Origin<T>,
          JavaDocCapable<T>
 {
    /**
