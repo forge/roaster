@@ -7,8 +7,6 @@
 
 package org.jboss.forge.roaster.model;
 
-import org.jboss.forge.roaster.Origin;
-
 /**
  * Represents an element definition of a {@link JavaAnnotation}.
  * 
@@ -16,7 +14,7 @@ import org.jboss.forge.roaster.Origin;
  * @author Matt Benson
  */
 public interface AnnotationElement<O extends JavaAnnotation<O>> extends AnnotationTarget<O>,
-         Origin<O>, Named
+         Named
 {
    /**
     * Represents the default value of a given {@link AnnotationElement}.

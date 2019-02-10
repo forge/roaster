@@ -13,7 +13,6 @@ package org.jboss.forge.roaster.model;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface Abstractable<T>
-{
+public interface Abstractable {
    boolean isAbstract();
 }

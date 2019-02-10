@@ -17,10 +17,8 @@ import org.jboss.forge.roaster.Origin;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface Method<O extends JavaType<O>, T extends Method<O, T>> extends Abstractable<T>,
-         Member<O>,
-         GenericCapable<O>,
-         Origin<O>
+public interface Method<O extends JavaType<O>, T extends Method<O, T>> extends Abstractable,
+         Member<O>
 {
    /**
     * @return <code>true</code> if this method is synchronized

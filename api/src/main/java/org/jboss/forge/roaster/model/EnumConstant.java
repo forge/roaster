@@ -8,15 +8,12 @@ package org.jboss.forge.roaster.model;
 
 import java.util.List;
 
-import org.jboss.forge.roaster.Internal;
-import org.jboss.forge.roaster.Origin;
 import org.jboss.forge.roaster.model.source.EnumConstantSource.Body;
 
 /**
  * Represents one of the constant members of a {@link JavaEnum}.
  */
-public interface EnumConstant<O extends JavaEnum<O>> extends Internal, Origin<O>,
-         AnnotationTarget<O>, Named
+public interface EnumConstant<O extends JavaEnum<O>> extends AnnotationTarget<O>, Named
 {
    /**
     * Represents the anonymous subclass "body" of a {@link EnumConstant}.

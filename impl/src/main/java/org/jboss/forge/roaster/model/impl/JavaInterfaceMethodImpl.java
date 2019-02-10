@@ -17,10 +17,7 @@ import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
  */
 public class JavaInterfaceMethodImpl extends MethodImpl<JavaInterfaceSource>
 {
-   /**
-    * @param parent
-    * @param internal
-    */
+
    public JavaInterfaceMethodImpl(JavaInterfaceSource parent, Object internal)
    {
       super(parent, internal);

@@ -39,7 +39,7 @@ import org.jboss.forge.roaster.model.util.Types;
  */
 public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
 {
-   private final AnnotationAccessor<O, FieldSource<O>> annotations = new AnnotationAccessor<O, FieldSource<O>>();
+   private final AnnotationAccessor<O, FieldSource<O>> annotations = new AnnotationAccessor<>();
    private final ModifierAccessor modifiers = new ModifierAccessor();
 
    private final O parent;
@@ -315,7 +315,7 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    @Override
    public Type<O> getType()
    {
-      return new TypeImpl<O>(parent, field.getStructuralProperty(FieldDeclaration.TYPE_PROPERTY));
+      return new TypeImpl<>(parent, field.getStructuralProperty(FieldDeclaration.TYPE_PROPERTY));
    }
 
    @Override
@@ -338,11 +338,12 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    public FieldSource<O> setType(String typeName)
    {
       O origin = getOrigin();
-      Type<O> innerType = new TypeImpl<O>(origin, null, typeName);
+      Type<O> innerType = new TypeImpl<>(origin, null, typeName);
       Import imprt = getOrigin().addImport(innerType);
       String resolvedType = (imprt != null) ? Types.rebuildGenericNameWithArrays(imprt.getSimpleName(), innerType)
                : typeName;
-      if (Types.isJavaLang(resolvedType)) {
+      if (Types.isJavaLang(resolvedType))
+      {
          resolvedType = Types.toSimpleName(typeName);
       }
       org.eclipse.jdt.core.dom.Type fieldType = TypeImpl.fromString(resolvedType, this.ast);
@@ -472,7 +473,7 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
          javadoc = field.getAST().newJavadoc();
          field.setJavadoc(javadoc);
       }
-      return new JavaDocImpl<FieldSource<O>>(this, javadoc);
+      return new JavaDocImpl<>(this, javadoc);
    }
 
    @Override

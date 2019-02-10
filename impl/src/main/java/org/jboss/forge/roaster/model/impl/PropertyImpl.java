@@ -566,7 +566,7 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
    @Override
    public List<? extends Annotation<O>> getAnnotations()
    {
-      List<Annotation<O>> annotations = new ArrayList<Annotation<O>>();
+      List<Annotation<O>> annotations = new ArrayList<>();
       FieldSource<O> field = getField();
       if (field != null)
       {

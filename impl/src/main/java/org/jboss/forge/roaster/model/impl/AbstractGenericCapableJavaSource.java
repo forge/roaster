@@ -45,10 +45,10 @@ public abstract class AbstractGenericCapableJavaSource<O extends JavaSource<O> &
    {
       TypeDeclaration type = (TypeDeclaration) body;
       List<TypeParameter> typeParameters = type.typeParameters();
-      List<TypeVariableSource<O>> result = new ArrayList<TypeVariableSource<O>>();
+      List<TypeVariableSource<O>> result = new ArrayList<>();
       for (TypeParameter typeParameter : typeParameters)
       {
-         result.add(new TypeVariableImpl<O>((O) this, typeParameter));
+         result.add(new TypeVariableImpl<>((O) this, typeParameter));
       }
       return Collections.unmodifiableList(result);
    }
@@ -62,7 +62,7 @@ public abstract class AbstractGenericCapableJavaSource<O extends JavaSource<O> &
       {
          if (Strings.areEqual(name, typeParameter.getName().getIdentifier()))
          {
-            return new TypeVariableImpl<O>((O) this, typeParameter);
+            return new TypeVariableImpl<>((O) this, typeParameter);
          }
       }
       return null;
@@ -89,7 +89,7 @@ public abstract class AbstractGenericCapableJavaSource<O extends JavaSource<O> &
       TypeDeclaration type = (TypeDeclaration) body;
       TypeParameter tp2 = unit.getAST().newTypeParameter();
       type.typeParameters().add(tp2);
-      return new TypeVariableImpl<O>((O) this, tp2);
+      return new TypeVariableImpl<>((O) this, tp2);
    }
 
    @Override

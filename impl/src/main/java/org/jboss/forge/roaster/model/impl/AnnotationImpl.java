@@ -148,10 +148,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          {
             return resolveTypeLiteralName((TypeLiteral) value);
          }
-         else
-         {
-            return value.toString();
-         }
+         return value.toString();
       }
       if (isNormal())
       {
@@ -189,10 +186,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
                   {
                      return resolveTypeLiteralName((TypeLiteral) value);
                   }
-                  else
-                  {
-                     return value.toString();
-                  }
+                  return value.toString();
                }
             }
          }
@@ -203,7 +197,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public List<ValuePair> getValues()
    {
-      List<ValuePair> result = new ArrayList<ValuePair>();
+      List<ValuePair> result = new ArrayList<>();
       if (isNormal())
       {
          for (Object v : ((NormalAnnotation) annotation).values())
@@ -268,7 +262,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       {
          NormalAnnotation na = (NormalAnnotation) annotation;
 
-         List<MemberValuePair> toBeRemoved = new ArrayList<MemberValuePair>();
+         List<MemberValuePair> toBeRemoved = new ArrayList<>();
          for (Object v : na.values())
          {
             if (v instanceof MemberValuePair)
@@ -465,7 +459,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    {
       Assert.notNull(values, NULL_ARRAY_NOT_ACCEPTED);
 
-      final List<String> literals = new ArrayList<String>();
+      final List<String> literals = new ArrayList<>();
 
       for (Enum<?> value : values)
       {
@@ -529,7 +523,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
                && type != AnnotationType.NORMAL)
       {
          String value = this.getLiteralValue();
-         AnnotationImpl<O, T> na = new AnnotationImpl<O, T>(parent, type);
+         AnnotationImpl<O, T> na = new AnnotationImpl<>(parent, type);
          na.setName(getName());
          replace(annotation, na.annotation);
          annotation = na.annotation;
@@ -795,7 +789,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       }
       if (isNormal())
       {
-         final Set<String> identifiers = new HashSet<String>();
+         final Set<String> identifiers = new HashSet<>();
          for (@SuppressWarnings("unchecked")
          Iterator<Object> values = ((NormalAnnotation) annotation).values().iterator(); values.hasNext();)
          {
@@ -924,7 +918,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       final Expression expr = getElementValueExpression(name);
       if (expr instanceof ArrayInitializer)
       {
-         final List<AnnotationSource<O>> results = new ArrayList<AnnotationSource<O>>();
+         final List<AnnotationSource<O>> results = new ArrayList<>();
          @SuppressWarnings("unchecked")
          final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
          for (Expression arrayElement : arrayElements)
@@ -958,7 +952,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       final Expression expr = getElementValueExpression(name);
       if (expr instanceof ArrayInitializer)
       {
-         final List<E> results = new ArrayList<E>();
+         final List<E> results = new ArrayList<>();
          @SuppressWarnings("unchecked")
          final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
          for (Expression arrayElement : arrayElements)
@@ -1009,7 +1003,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       final Expression expr = getElementValueExpression(name);
       if (expr instanceof ArrayInitializer)
       {
-         final List<Class<?>> result = new ArrayList<Class<?>>();
+         final List<Class<?>> result = new ArrayList<>();
          @SuppressWarnings("unchecked")
          final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
          for (Expression expression : arrayElements)
@@ -1035,7 +1029,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public String[] getStringArrayValue(String name)
    {
-      final List<String> result = new ArrayList<String>();
+      final List<String> result = new ArrayList<>();
       String literalValue = getLiteralValue(name);
       // Remove {}
       if (literalValue.startsWith("{") && literalValue.endsWith("}"))
@@ -1087,7 +1081,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    {
       Assert.notNull(values, NULL_ARRAY_NOT_ACCEPTED);
 
-      final List<String> literals = new ArrayList<String>();
+      final List<String> literals = new ArrayList<>();
 
       for (String value : values)
       {
@@ -1103,7 +1097,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    {
       Assert.notNull(values, NULL_ARRAY_NOT_ACCEPTED);
 
-      final List<String> literals = new ArrayList<String>();
+      final List<String> literals = new ArrayList<>();
 
       for (Class<?> value : values)
       {
@@ -1148,7 +1142,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
 
    private String resolveTypeLiteralName(TypeLiteral typeLiteral)
    {
-      final Type<O> type = new TypeImpl<O>(getOrigin(), typeLiteral.getType());
+      final Type<O> type = new TypeImpl<>(getOrigin(), typeLiteral.getType());
       if (type.isPrimitive())
       {
          final Class<?>[] primitiveTypes = { boolean.class, byte.class, short.class, int.class, long.class,
@@ -1169,7 +1163,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
 
    private Class<?> resolveTypeLiteral(TypeLiteral typeLiteral)
    {
-      final Type<O> type = new TypeImpl<O>(getOrigin(), typeLiteral.getType());
+      final Type<O> type = new TypeImpl<>(getOrigin(), typeLiteral.getType());
       if (type.isPrimitive())
       {
          final Class<?>[] primitiveTypes = { boolean.class, byte.class, short.class, int.class, long.class,

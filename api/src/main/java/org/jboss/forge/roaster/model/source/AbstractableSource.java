@@ -15,7 +15,7 @@ import org.jboss.forge.roaster.model.Abstractable;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public interface AbstractableSource<T> extends Abstractable<T>
+public interface AbstractableSource<T> extends Abstractable
 {
    T setAbstract(boolean abstrct);
 }
