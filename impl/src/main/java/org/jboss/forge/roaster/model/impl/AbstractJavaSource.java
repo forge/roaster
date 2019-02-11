@@ -9,6 +9,7 @@ package org.jboss.forge.roaster.model.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
@@ -24,7 +25,6 @@ import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.ast.ModifierAccessor;
 import org.jboss.forge.roaster.model.ast.TypeDeclarationFinderVisitor;
-import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.StaticCapableSource;
 import org.jboss.forge.roaster.model.source.TypeHolderSource;
