@@ -146,7 +146,7 @@ public class Types
 
    private Types()
    {
-      // Util class
+      throw new IllegalAccessError("Utility class");
    }
 
    /**
