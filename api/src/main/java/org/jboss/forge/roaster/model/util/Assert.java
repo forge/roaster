@@ -12,7 +12,10 @@ package org.jboss.forge.roaster.model.util;
  */
 public class Assert
 {
-   private Assert() {}
+   private Assert()
+   {
+      // Util class
+   }
 
    public static void isTrue(boolean condition, String message)
    {
@@ -30,11 +33,20 @@ public class Assert
       }
    }
 
-   public static void notNull(Object object, String message) throws IllegalStateException
+   public static void notNull(Object object, String message)
    {
       if (object == null)
       {
-         throw new IllegalStateException(message);
+         throw new NullPointerException(message);
       }
+   }
+
+   public static <T> T notNull(T object)
+   {
+      if (object == null)
+      {
+         throw new NullPointerException("Unexpected null");
+      }
+      return object;
    }
 }
