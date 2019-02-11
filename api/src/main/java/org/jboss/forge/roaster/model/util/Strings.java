@@ -7,9 +7,11 @@
 
 package org.jboss.forge.roaster.model.util;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.StringJoiner;
 
 /**
  * String utilities.
@@ -21,10 +23,13 @@ public class Strings
 {
    /**
     * Capitalize the given String: "input" -> "Input"
+    * 
+    * @param input the string to capitalize
+    * @return the capitalize string
     */
    public static String capitalize(final String input)
    {
-      if ((input == null) || (input.length() == 0))
+      if (requireNonNull(input).length() == 0)
       {
          return input;
       }
@@ -53,17 +58,9 @@ public class Strings
 
    public static String join(final Collection<?> collection, final String delimiter)
    {
-      StringBuilder buffer = new StringBuilder();
-      Iterator<?> iter = collection.iterator();
-      while (iter.hasNext())
-      {
-         buffer.append(iter.next());
-         if (iter.hasNext())
-         {
-            buffer.append(delimiter);
-         }
-      }
-      return buffer.toString();
+      StringJoiner joiner = new StringJoiner(delimiter);
+      collection.forEach(value -> joiner.add(value.toString()));
+      return joiner.toString();
    }
 
    public static boolean isNullOrEmpty(final String string)
@@ -109,7 +106,7 @@ public class Strings
                || (value.startsWith("\"") && value.endsWith("\"")))
                && (value.length() > 2))
       {
-         value = value.substring(1, value.length() - 2);
+         return value.substring(1, value.length() - 2);
       }
       return value;
    }
@@ -159,92 +156,86 @@ public class Strings
     * StringUtils.getLevenshteinDistance("hello", "hallo")    = 1
     * </pre>
     *
-    * @param s the first String, must not be null
-    * @param t the second String, must not be null
+    * @param firstText the first String, must not be null
+    * @param secondText the second String, must not be null
     * @return result distance
     * @throws IllegalArgumentException if either String input {@code null}
     */
-   public static int getLevenshteinDistance(CharSequence s, CharSequence t)
+   public static int getLevenshteinDistance(CharSequence firstText, CharSequence secondText)
    {
-      if (s == null || t == null)
-      {
-         throw new IllegalArgumentException("Strings must not be null");
-      }
-
       /*
        * The difference between this impl. and the previous is that, rather than creating and retaining a matrix of size
-       * s.length() + 1 by t.length() + 1, we maintain two single-dimensional arrays of length s.length() + 1. The
-       * first, d, is the 'current working' distance array that maintains the newest distance cost counts as we iterate
-       * through the characters of String s. Each time we increment the index of String t we are comparing, d is copied
-       * to p, the second int[]. Doing so allows us to retain the previous cost counts as required by the algorithm
-       * (taking the minimum of the cost count to the left, up one, and diagonally up and to the left of the current
-       * cost count being calculated). (Note that the arrays aren't really copied anymore, just switched...this is
-       * clearly much better than cloning an array or doing a System.arraycopy() each time through the outer loop.)
+       * first.length() + 1 by second.length() + 1, we maintain two single-dimensional arrays of length first.length() +
+       * 1. The first, d, is the 'current working' distance array that maintains the newest distance cost counts as we
+       * iterate through the characters of String s. Each time we increment the index of String t we are comparing, d is
+       * copied to p, the second int[]. Doing so allows us to retain the previous cost counts as required by the
+       * algorithm (taking the minimum of the cost count to the left, up one, and diagonally up and to the left of the
+       * current cost count being calculated). (Note that the arrays aren't really copied anymore, just switched...this
+       * is clearly much better than cloning an array or doing a System.arraycopy() each time through the outer loop.)
        * 
        * Effectively, the difference between the two implementations is this one does not cause an out of memory
        * condition when calculating the LD over two very large strings.
        */
 
-      int n = s.length(); // length of s
-      int m = t.length(); // length of t
+      int firstLength = requireNonNull(firstText).length();
+      int secondLength = requireNonNull(secondText).length();
 
-      if (n == 0)
+      if (firstLength == 0)
       {
-         return m;
+         return secondLength;
       }
-      else if (m == 0)
+      else if (secondLength == 0)
       {
-         return n;
+         return firstLength;
       }
 
-      if (n > m)
+      CharSequence first = firstText;
+      CharSequence second = secondText;
+
+      if (firstLength > secondLength)
       {
          // swap the input strings to consume less memory
-         CharSequence tmp = s;
-         s = t;
-         t = tmp;
-         n = m;
-         m = t.length();
+         CharSequence tmp = first;
+         first = second;
+         second = tmp;
+         firstLength = secondLength;
+         secondLength = second.length();
       }
 
-      int[] p = new int[n + 1]; // 'previous' cost array, horizontally
-      int[] d = new int[n + 1]; // cost array, horizontally
-      int[] _d; // placeholder to assist in swapping p and d
+      int[] placeholder;
+      int[] currentCosts = new int[firstLength + 1];
+      int[] newCosts = new int[firstLength + 1];
 
-      // indexes into strings s and t
-      int i; // iterates through s
-      int j; // iterates through t
+      int cost;
+      int firstIndex;
+      int secondIndex;
+      char currentCharOfSecond;
 
-      char t_j; // jth character of t
-
-      int cost; // cost
-
-      for (i = 0; i <= n; i++)
+      for (firstIndex = 0; firstIndex <= firstLength; firstIndex++)
       {
-         p[i] = i;
+         currentCosts[firstIndex] = firstIndex;
       }
 
-      for (j = 1; j <= m; j++)
+      for (secondIndex = 1; secondIndex <= secondLength; secondIndex++)
       {
-         t_j = t.charAt(j - 1);
-         d[0] = j;
+         currentCharOfSecond = second.charAt(secondIndex - 1);
+         newCosts[0] = secondIndex;
 
-         for (i = 1; i <= n; i++)
+         for (firstIndex = 1; firstIndex <= firstLength; firstIndex++)
          {
-            cost = s.charAt(i - 1) == t_j ? 0 : 1;
+            cost = first.charAt(firstIndex - 1) == currentCharOfSecond ? 0 : 1;
             // minimum of cell to the left+1, to the top+1, diagonally left and up +cost
-            d[i] = Math.min(Math.min(d[i - 1] + 1, p[i] + 1), p[i - 1] + cost);
+            newCosts[firstIndex] = Math.min(Math.min(newCosts[firstIndex - 1] + 1, currentCosts[firstIndex] + 1),
+                     currentCosts[firstIndex - 1] + cost);
          }
 
          // copy current distance counts to 'previous row' distance counts
-         _d = p;
-         p = d;
-         d = _d;
+         placeholder = currentCosts;
+         currentCosts = newCosts;
+         newCosts = placeholder;
       }
 
-      // our last action in the above loop was to switch d and p, so p now
-      // actually has the most recent cost counts
-      return p[n];
+      return currentCosts[firstLength];
    }
 
    /**
@@ -277,22 +268,21 @@ public class Strings
     * StringUtils.getLevenshteinDistance("hippo", "elephant", 6) = -1
     * </pre>
     *
-    * @param s the first String, must not be null
-    * @param t the second String, must not be null
+    * @param firstText the first String, must not be null
+    * @param secondText the second String, must not be null
     * @param threshold the target threshold, must not be negative
     * @return result distance, or {@code -1} if the distance would be greater than the threshold
     * @throws IllegalArgumentException if either String input {@code null} or negative threshold
     */
-   public static int getLevenshteinDistance(CharSequence s, CharSequence t, int threshold)
+   public static int getLevenshteinDistance(CharSequence firstText, CharSequence secondText, int threshold)
    {
-      if (s == null || t == null)
-      {
-         throw new IllegalArgumentException("Strings must not be null");
-      }
       if (threshold < 0)
       {
          throw new IllegalArgumentException("Threshold must not be negative");
       }
+
+      CharSequence first = requireNonNull(firstText);
+      CharSequence second = requireNonNull(secondText);
 
       /*
        * This implementation only computes the distance if it's less than or equal to the threshold value, returning -1
@@ -324,55 +314,54 @@ public class Strings
        * See Algorithms on Strings, Trees and Sequences by Dan Gusfield for some discussion.
        */
 
-      int n = s.length(); // length of s
-      int m = t.length(); // length of t
+      int firstLength = first.length();
+      int secondLength = second.length();
 
       // if one string is empty, the edit distance is necessarily the length of the other
-      if (n == 0)
+      if (firstLength == 0)
       {
-         return m <= threshold ? m : -1;
+         return secondLength <= threshold ? secondLength : -1;
       }
-      else if (m == 0)
+      else if (secondLength == 0)
       {
-         return n <= threshold ? n : -1;
+         return firstLength <= threshold ? firstLength : -1;
       }
 
-      if (n > m)
+      if (firstLength > secondLength)
       {
          // swap the two strings to consume less memory
-         CharSequence tmp = s;
-         s = t;
-         t = tmp;
-         n = m;
-         m = t.length();
+         CharSequence tmp = first;
+         first = second;
+         second = tmp;
+         firstLength = secondLength;
+         secondLength = second.length();
       }
 
-      int[] p = new int[n + 1]; // 'previous' cost array, horizontally
-      int[] d = new int[n + 1]; // cost array, horizontally
-      int[] _d; // placeholder to assist in swapping p and d
+      int[] currentCosts = new int[firstLength + 1];
+      int[] newCosts = new int[firstLength + 1];
+      int[] placeholder;
 
       // fill in starting table values
-      int boundary = Math.min(n, threshold) + 1;
+      int boundary = Math.min(firstLength, threshold) + 1;
       for (int i = 0; i < boundary; i++)
       {
-         p[i] = i;
+         currentCosts[i] = i;
       }
       // these fills ensure that the value above the rightmost entry of our
       // stripe will be ignored in following loop iterations
-      Arrays.fill(p, boundary, p.length, Integer.MAX_VALUE);
-      Arrays.fill(d, Integer.MAX_VALUE);
+      Arrays.fill(currentCosts, boundary, currentCosts.length, Integer.MAX_VALUE);
+      Arrays.fill(newCosts, Integer.MAX_VALUE);
 
-      // iterates through t
-      for (int j = 1; j <= m; j++)
+      for (int secondIndex = 1; secondIndex <= secondLength; secondIndex++)
       {
-         char t_j = t.charAt(j - 1); // jth character of t
-         d[0] = j;
+         char currentSecondChar = second.charAt(secondIndex - 1);
+         newCosts[0] = secondIndex;
 
          // compute stripe indices, constrain to array size
-         int min = Math.max(1, j - threshold);
-         int max = Math.min(n, j + threshold);
+         int min = Math.max(1, secondIndex - threshold);
+         int max = Math.min(firstLength, secondIndex + threshold);
 
-         // the stripe may lead off of the table if s and t are of different sizes
+         // the stripe may lead off of the table if first and second are of different sizes
          if (min > max)
          {
             return -1;
@@ -381,40 +370,38 @@ public class Strings
          // ignore entry left of leftmost
          if (min > 1)
          {
-            d[min - 1] = Integer.MAX_VALUE;
+            newCosts[min - 1] = Integer.MAX_VALUE;
          }
 
-         // iterates through [min, max] in s
-         for (int i = min; i <= max; i++)
+         for (int firstIndex = min; firstIndex <= max; firstIndex++)
          {
-            if (s.charAt(i - 1) == t_j)
+            if (first.charAt(firstIndex - 1) == currentSecondChar)
             {
                // diagonally left and up
-               d[i] = p[i - 1];
+               newCosts[firstIndex] = currentCosts[firstIndex - 1];
             }
             else
             {
                // 1 + minimum of cell to the left, to the top, diagonally left and up
-               d[i] = 1 + Math.min(Math.min(d[i - 1], p[i]), p[i - 1]);
+               newCosts[firstIndex] = 1
+                        + Math.min(Math.min(newCosts[firstIndex - 1], currentCosts[firstIndex]),
+                                 currentCosts[firstIndex - 1]);
             }
          }
 
          // copy current distance counts to 'previous row' distance counts
-         _d = p;
-         p = d;
-         d = _d;
+         placeholder = currentCosts;
+         currentCosts = newCosts;
+         newCosts = placeholder;
       }
 
-      // if p[n] is greater than the threshold, there's no guarantee on it being the correct
+      // if currentCosts[n] is greater than the threshold, there's no guarantee on it being the correct
       // distance
-      if (p[n] <= threshold)
+      if (currentCosts[firstLength] <= threshold)
       {
-         return p[n];
+         return currentCosts[firstLength];
       }
-      else
-      {
-         return -1;
-      }
+      return -1;
    }
 
    @Deprecated
@@ -426,17 +413,17 @@ public class Strings
    public static int countNumberOfOccurrences(String text, String toMatch)
    {
       int count = 0;
-      if (toMatch == null || toMatch.length() < 1)
+      if (requireNonNull(toMatch).length() < 1)
       {
          return count;
       }
 
       String wholeText = text;
-      int idx = 0;
-      while ((idx = wholeText.indexOf(toMatch, idx)) != -1)
+      int index = 0;
+      while ((index = wholeText.indexOf(toMatch, index)) != -1)
       {
          count++;
-         idx = idx + toMatch.length();
+         index = index + toMatch.length();
       }
       return count;
    }
