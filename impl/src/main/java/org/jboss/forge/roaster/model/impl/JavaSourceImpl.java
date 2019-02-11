@@ -67,6 +67,35 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
    }
 
    // ================================================================================
+   // Location
+   // ================================================================================
+
+   @Override
+   public int getColumnNumber()
+   {
+      return unit.getColumnNumber(getStartPosition());
+   }
+
+   @Override
+   public int getLineNumber()
+   {
+      return unit.getLineNumber(getStartPosition());
+   }
+
+   @Override
+   public int getEndPosition()
+   {
+      int startPosition = getStartPosition();
+      return (startPosition == -1) ? -1 : startPosition + getDeclaration().getLength();
+   }
+
+   @Override
+   public int getStartPosition()
+   {
+      return getDeclaration().getStartPosition();
+   }
+
+   // ================================================================================
    // JavaDoc
    // ================================================================================
 

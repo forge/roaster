@@ -65,6 +65,30 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    }
 
    @Override
+   public int getStartPosition()
+   {
+      return getBody().getStartPosition();
+   }
+
+   @Override
+   public int getColumnNumber()
+   {
+      return ((JavaEnumImpl) javaEnum).unit.getColumnNumber(getStartPosition());
+   }
+
+   @Override
+   public int getLineNumber()
+   {
+      return ((JavaEnumImpl) javaEnum).unit.getLineNumber(getStartPosition());
+   }
+
+   @Override
+   public int getEndPosition()
+   {
+      return (getStartPosition() == -1) ? -1 : getStartPosition() + getBody().getLength();
+   }
+
+   @Override
    public String getCanonicalName()
    {
       return javaEnum.getCanonicalName() + "." + enumConstant.getName();

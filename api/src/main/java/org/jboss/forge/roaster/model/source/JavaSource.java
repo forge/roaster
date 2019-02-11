@@ -20,7 +20,8 @@ public interface JavaSource<T extends JavaSource<T>> extends JavaType<T>,
          NamedSource<T>,
          VisibilityScopedSource<T>,
          AnnotationTargetSource<T, T>,
-         JavaDocCapableSource<T>
+         JavaDocCapableSource<T>,
+         LocationCapable
 {
    /**
     * Returns the {@link JavaSource} enclosing this type

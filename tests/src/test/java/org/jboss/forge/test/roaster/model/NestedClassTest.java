@@ -6,6 +6,8 @@
  */
 package org.jboss.forge.test.roaster.model;
 
+import static org.hamcrest.core.Is.is;
+
 import java.util.List;
 
 import org.hamcrest.CoreMatchers;
@@ -35,13 +37,14 @@ public class NestedClassTest
    @Test
    public void testGetNestedClasses()
    {
+      String pckage = "package org.example;";
+      String outerClass = "public class OuterClass{";
+      String innerClass1 = "public class InnerClass1{";
+      String innerClass3 = "public class InnerClass3{}";
+      String innerClass2 = "public class InnerClass2{}";
+
       JavaClassSource javaClass = Roaster
-               .parse(JavaClassSource.class, "package org.example; public class OuterClass { " +
-                        "  public class InnerClass1{ " +
-                        "    public class InnerClass3{}" +
-                        "  } " +
-                        "  public class InnerClass2{} " +
-                        "}");
+               .parse(JavaClassSource.class, pckage + outerClass + innerClass1 + innerClass3 + "}" + innerClass2 + "}");
 
       Assert.assertEquals("org.example.OuterClass", javaClass.getCanonicalName());
       List<JavaSource<?>> nestedClasses = javaClass.getNestedTypes();
@@ -57,6 +60,31 @@ public class NestedClassTest
       Assert.assertEquals("org.example.OuterClass$InnerClass2", inner2.getQualifiedName());
       Assert.assertEquals("InnerClass2", inner2.getName());
       Assert.assertEquals(2, nestedClasses.size());
+
+      Assert.assertThat(javaClass.getStartPosition(), is(pckage.length()));
+      Assert.assertThat(inner1.getStartPosition(), is(javaClass.getStartPosition() + outerClass.length()));
+      Assert.assertThat(inner2.getStartPosition(),
+               is(inner1.getStartPosition() + innerClass1.length() + innerClass3.length() + 1));
+      Assert.assertThat(inner3.getStartPosition(), is(inner1.getStartPosition() + innerClass1.length()));
+
+      Assert.assertThat(javaClass.getColumnNumber(), is(pckage.length()));
+      Assert.assertThat(inner1.getColumnNumber(), is(javaClass.getColumnNumber() + outerClass.length()));
+      Assert.assertThat(inner2.getColumnNumber(),
+               is(inner1.getColumnNumber() + innerClass1.length() + innerClass3.length() + 1));
+      Assert.assertThat(inner3.getColumnNumber(), is(inner1.getColumnNumber() + innerClass1.length()));
+
+      Assert.assertThat(javaClass.getEndPosition(), is(pckage.length() + outerClass.length() + innerClass1.length()
+               + innerClass2.length() + innerClass3.length() + 2));
+      Assert.assertThat(inner1.getEndPosition(), is(pckage.length() + outerClass.length() + innerClass1.length() + innerClass3.length() + 1));
+      Assert.assertThat(inner2.getEndPosition(),
+               is(javaClass.getEndPosition()-1));
+      Assert.assertThat(inner3.getEndPosition(), is(inner1.getEndPosition() - 1));
+      
+      //no line separators -> so line number 1
+      Assert.assertThat(javaClass.getLineNumber(), is(1));
+      Assert.assertThat(inner1.getLineNumber(), is(1));
+      Assert.assertThat(inner2.getLineNumber(), is(1));
+               Assert.assertThat(inner3.getLineNumber(), is(1));
 
       Assert.assertEquals("org.example.OuterClass$InnerClass1$InnerClass3", inner3.getQualifiedName());
       Assert.assertEquals("org.example.OuterClass.InnerClass1.InnerClass3", inner3.getCanonicalName());
@@ -210,7 +238,7 @@ public class NestedClassTest
    }
 
    @Test
-   public void testRenamedOuterClass() 
+   public void testRenamedOuterClass()
    {
       JavaClassSource source = Roaster
                .parse(JavaClassSource.class,
@@ -243,6 +271,6 @@ public class NestedClassTest
 
    public class NestedClass
    {
-      //empty for testing
+      // empty for testing
    }
 }
