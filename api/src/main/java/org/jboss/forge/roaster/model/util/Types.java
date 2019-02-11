@@ -7,6 +7,8 @@
 
 package org.jboss.forge.roaster.model.util;
 
+import static org.jboss.forge.roaster.model.util.Assert.notNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,13 +33,13 @@ public class Types
             "Long", "Short", "String");
    // [B=byte, [F=float, [Z=boolean, [C=char, [D=double, [I=int, [J=long, [S=short,
    private static final Pattern CLASS_ARRAY_PATTERN = Pattern.compile("\\[+(B|F|C|D|I|J|S|Z|L)([0-9a-zA-Z\\.\\$]*);?");
-   private static final Pattern JAVA_SEPERATOR_PATTERN = Pattern.compile("\\.");
+   //pattern to split java identifiers
+   private static final Pattern JAVA_SEPARATOR_PATTERN = Pattern.compile("\\.");
    private static final Pattern SIMPLE_ARRAY_PATTERN = Pattern.compile("^((.)+)(\\[\\])+$");
    private static final Pattern IDENTIFIER_PATTERN = Pattern
             .compile("(\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*\\.)*\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*");
    private static final Pattern WILDCARD_AWARE_TYPE_PATTERN = Pattern
             .compile("\\?|^\\s*(\\?\\s+(?:extends|super)\\s+)?([A-Za-z$_]\\S*)\\s*$");
-   private static final String BOOLEAN = "boolean";
    private static final List<String> LANG_TYPES = Arrays.asList(
             // Interfaces
             "Appendable",
@@ -166,14 +168,11 @@ public class Types
     * @param left the first type (maybe {@code null})
     * @param right the second type (maybe {@code null})
     * @return {@code true} if the above conditions are fulfilled, {@code false} otherwise
+    * @throws NullPointerException if one of the arguments is{@code null}
     */
    public static boolean areEquivalent(String left, String right)
    {
-      if ((left == null) && (right == null))
-         return true;
-      if ((left == null) || (right == null))
-         return false;
-      if (left.equals(right))
+      if (left.equals(notNull(right)))
          return true;
 
       String leftName = stripGenerics(toSimpleName(left));
@@ -204,8 +203,7 @@ public class Types
     */
    public static String toSimpleName(final String type)
    {
-      Assert.notNull(type, "The type musn't be null");
-      String result = type;
+      String result = notNull(type);
 
       if (isGeneric(stripArray(type)))
       {
@@ -267,16 +265,12 @@ public class Types
     * Splits the given class name into is parts which are separated by a '.'.
     * 
     * @param className the class name to tokenize
-    * @return a string array with the parts or an empty array, if the class name was {@code null}
+    * @return a string array with the parts
+    * @throws NullPointerException if the class name is {@code null}
     */
    public static String[] tokenizeClassName(final String className)
    {
-      String[] result = new String[0];
-      if (className != null)
-      {
-         result = JAVA_SEPERATOR_PATTERN.split(className);
-      }
-      return result;
+      return JAVA_SEPARATOR_PATTERN.split(notNull(className));
    }
 
    /**
@@ -284,7 +278,7 @@ public class Types
     * 
     * @param typeName the type name to check
     * @return {@code true}, if the type is qualified, {@code false} otherwise
-    * @throws NullPointerException if the type name is null
+    * @throws NullPointerException if the type name is {@code null}
     */
    public static boolean isQualified(final String typeName)
    {
@@ -297,7 +291,7 @@ public class Types
     * 
     * @param typeName the type name to extract the package from
     * @return the package part or an empty string, if no package coudn't be extracted
-    * @throws NullPointerException if the type name is null
+    * @throws NullPointerException if the type name is {@code null}
     */
    public static String getPackage(final String typeName)
    {
@@ -314,10 +308,11 @@ public class Types
     * 
     * @param name the name to check
     * @return {@code true}, if the name is simple, {@code false} otherwise or if the name is no valid java identifier
+    * @throws NullPointerException if the name is {@code null}
     */
    public static boolean isSimpleName(final String name)
    {
-      return (name != null) && SIMPLE_NAME_PATTERN.matcher(name).matches();
+      return SIMPLE_NAME_PATTERN.matcher(notNull(name)).matches();
    }
 
    /**
@@ -330,12 +325,11 @@ public class Types
     * 
     * @param type the type to check
     * @return {@code true}, if the simple name of the type is part of {@code java.lang}, {@code false} otherwise
-    * @throws NullPointerException if the type name is null
+    * @throws NullPointerException if the type name is {@code null}
     */
    public static boolean isJavaLang(final String type)
    {
-      Assert.notNull(type, "The type musn't be null");
-      return LANG_TYPES.contains(toSimpleName(type));
+      return LANG_TYPES.contains(toSimpleName(notNull(type)));
    }
 
    /**
@@ -343,12 +337,11 @@ public class Types
     * 
     * @param type the type to check
     * @return {@code true} if this type is basic, {@code false} otherwise
-    * @throws NullPointerException if the type name is null
+    * @throws NullPointerException if the type name is {@code null}
     */
    public static boolean isBasicType(String type)
    {
-      Assert.notNull(type, "The type musn't be null");
-      return isPrimitive(type) || PRIMITIVE_TYPES.contains(type);
+      return isPrimitive(type) || PRIMITIVE_TYPES.contains(notNull(type));
    }
 
    /**
@@ -360,7 +353,6 @@ public class Types
     */
    public static boolean isGeneric(String type)
    {
-      Assert.notNull(type, "The type musn't be null");
       // in java '<' is a illegal character in names and is only used in identifiers for generics
       return type.contains("<");
    }
@@ -374,8 +366,6 @@ public class Types
     */
    public static boolean validateGenerics(String type)
    {
-      Assert.notNull(type, "The type musn't be null");
-
       int genericStart = type.indexOf('<');
       if (genericStart < 0)
       {
@@ -426,11 +416,12 @@ public class Types
     * last occurrence if '>' is removed.
     * 
     * @param type the type where the generics should be removed
+    * @throws NullPointerException if the given type is {@code null}
     * @return the type without generics
     */
    public static String stripGenerics(String type)
    {
-      String typeToString = type;
+      String typeToString = notNull(type);
       if (isClassArray(typeToString))
       {
          typeToString = fixClassArray(typeToString);
@@ -448,6 +439,7 @@ public class Types
     * 
     * @param type the type to get the generics from
     * @return the generics from the given type, or an empty string, if the type has not generics
+    * @throws NullPointerException if the given type is {@code null}
     */
    public static String getGenerics(final String type)
    {
@@ -472,14 +464,11 @@ public class Types
     * 
     * @param type the type to check
     * @return {@code true}, if the type is an array, {@code false} otherwise
+    * @throws NullPointerException if the given type is {@code null}
     */
    public static boolean isArray(final String type)
    {
-      if (type == null)
-      {
-         return false;
-      }
-      if (type.charAt(0) == '[' && CLASS_ARRAY_PATTERN.matcher(type).matches())
+      if (type.charAt(0) == '[' && CLASS_ARRAY_PATTERN.matcher(notNull(type)).matches())
       {
          return true;
       }
@@ -501,10 +490,11 @@ public class Types
     * 
     * @param type the type to remove the array from
     * @return the type without an array
+    * @throws NullPointerException if the given type is {@code null}
     */
    public static String stripArray(final String type)
    {
-      String result = type;
+      String result = notNull(type);
       if (isClassArray(type))
       {
          result = fixClassArray(type);
@@ -572,7 +562,7 @@ public class Types
             result = "short";
             break;
          case 'Z':
-            result = BOOLEAN;
+            result = "boolean";
             break;
          case 'L':
             result = matcher.group(2);
@@ -593,18 +583,17 @@ public class Types
     * 
     * @param type the type to check
     * @return {@code true} if this type is primitive, {@code false} otherwise
+    * @throws NullPointerException if the given type is {@code null}
     */
    public static boolean isPrimitive(final String type)
    {
-      return Arrays.asList("byte", "short", "int", "long", "float", "double", BOOLEAN, "char").contains(type);
+      return Arrays.asList("byte", "short", "int", "long", "float", "double", "boolean", "char").contains(notNull(type));
    }
 
    private static int getArrayDimension(String name, boolean isBasic)
    {
-      Assert.notNull(name, "The name musn't be null");
       int count = 0;
-
-      String rawName = isBasic ? name : stripGenerics(name);
+      String rawName = isBasic ? notNull(name) : stripGenerics(name);
 
       for (char c : rawName.toCharArray())
       {
@@ -613,7 +602,6 @@ public class Types
             count++;
          }
       }
-
       return count;
    }
 
@@ -624,6 +612,7 @@ public class Types
     *
     * @param name an array type, e.g.: byte[] or [Ljava.lang.Boolean;
     * @return the array dimension. 0 if the type is not a valid array
+    * @throws NullPointerException if the given name is {@code null}
     */
    public static int getArrayDimension(String name)
    {
@@ -646,6 +635,7 @@ public class Types
     * 
     * @param clazz the class of the type
     * @return the default value
+    * @throws NullPointerException if the given class is {@code null}
     */
    public static String getDefaultValue(Class<?> clazz)
    {
@@ -657,6 +647,7 @@ public class Types
     * 
     * @param type the type
     * @return the default value
+    * @throws NullPointerException if the given type is {@code null}
     */
    public static String getDefaultValue(String type)
    {
@@ -685,6 +676,7 @@ public class Types
     * 
     * @param typeName the generic type to split
     * @return an array with the generic parts (maybe empty but never {@code null})
+    * @throws NullPointerException if the given type is {@code null}
     */
    public static String[] splitGenerics(String typeName)
    {
