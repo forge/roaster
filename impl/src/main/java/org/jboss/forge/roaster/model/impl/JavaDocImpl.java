@@ -7,6 +7,8 @@
 
 package org.jboss.forge.roaster.model.impl;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -19,7 +21,6 @@ import org.eclipse.jdt.core.dom.TagElement;
 import org.eclipse.jdt.core.dom.TextElement;
 import org.jboss.forge.roaster.model.JavaDocTag;
 import org.jboss.forge.roaster.model.source.JavaDocSource;
-import org.jboss.forge.roaster.model.util.Assert;
 
 /**
  * A {@link JavaDocSource} implementation
@@ -37,7 +38,7 @@ public class JavaDocImpl<O> implements JavaDocSource<O>
 
    public JavaDocImpl(O origin, Javadoc javadoc)
    {
-      Assert.notNull(javadoc, "Javadoc cannot be null");
+      requireNonNull(javadoc, "Javadoc cannot be null");
       this.origin = origin;
       this.javadoc = javadoc;
    }
@@ -137,7 +138,7 @@ public class JavaDocImpl<O> implements JavaDocSource<O>
    @Override
    public List<JavaDocTag> getTags(String tagName)
    {
-      Assert.notNull(tagName, TAG_NAME_CANNOT_BE_NULL);
+      requireNonNull(tagName, TAG_NAME_CANNOT_BE_NULL);
       List<JavaDocTag> tags = new ArrayList<>();
       List<TagElement> tagElements = javadoc.tags();
       for (TagElement tagElement : tagElements)
@@ -186,7 +187,7 @@ public class JavaDocImpl<O> implements JavaDocSource<O>
    @Override
    public JavaDocSource<O> addTagValue(String tagName, String tagValue)
    {
-      Assert.notNull(tagName, TAG_NAME_CANNOT_BE_NULL);
+      requireNonNull(tagName, TAG_NAME_CANNOT_BE_NULL);
       TagElement tagElement = javadoc.getAST().newTagElement();
       TextElement textElement = javadoc.getAST().newTextElement();
 
@@ -209,7 +210,7 @@ public class JavaDocImpl<O> implements JavaDocSource<O>
    @Override
    public JavaDocSource<O> removeTags(String tagName)
    {
-      Assert.notNull(tagName, TAG_NAME_CANNOT_BE_NULL);
+      requireNonNull(tagName, TAG_NAME_CANNOT_BE_NULL);
       List<TagElement> tags = javadoc.tags();
       Iterator<TagElement> iterator = tags.iterator();
       while (iterator.hasNext())

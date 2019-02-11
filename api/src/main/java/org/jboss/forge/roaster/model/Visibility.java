@@ -8,9 +8,11 @@
 package org.jboss.forge.roaster.model;
 
 import org.jboss.forge.roaster.model.source.VisibilityScopedSource;
-import org.jboss.forge.roaster.model.util.Assert;
+
+import static java.util.Objects.requireNonNull;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -37,23 +39,28 @@ public enum Visibility
 
    public static Visibility getFrom(VisibilityScoped target)
    {
-      Assert.notNull(target, "VisibilityScoped<T> target must not be null.");
+      requireNonNull(target, "VisibilityScoped<T> target must not be null.");
 
       if (target.isPackagePrivate())
-         return PACKAGE_PRIVATE;
-      if (target.isPrivate())
-         return PRIVATE;
-      if (target.isPublic())
-         return PUBLIC;
-      if (target.isProtected())
-         return PROTECTED;
-
-      else
       {
-         throw new IllegalStateException(VisibilityScoped.class.getSimpleName()
-                  + " target does not comply with visibility scoping. Must be one of " + Arrays.toString(Visibility.values()) + "[ "
-                  + target + "]");
+         return PACKAGE_PRIVATE;
       }
+      if (target.isPrivate())
+      {
+         return PRIVATE;
+      }
+      if (target.isPublic())
+      {
+         return PUBLIC;
+      }
+      if (target.isProtected())
+      {
+         return PROTECTED;
+      }
+      throw new IllegalStateException(VisibilityScoped.class.getSimpleName()
+               + " target does not comply with visibility scoping. Must be one of "
+               + Arrays.toString(Visibility.values()) + "[ "
+               + target + "]");
    }
 
    @Override
@@ -64,8 +71,8 @@ public enum Visibility
 
    public static <T extends VisibilityScopedSource<?>> T set(T target, Visibility scope)
    {
-      Assert.notNull(target, "VisibilityScoped<T> target must not be null.");
-      Assert.notNull(scope, "Visibility scope must not be null");
+      requireNonNull(target, "VisibilityScoped<T> target must not be null.");
+      requireNonNull(scope, "Visibility scope must not be null");
 
       switch (scope)
       {

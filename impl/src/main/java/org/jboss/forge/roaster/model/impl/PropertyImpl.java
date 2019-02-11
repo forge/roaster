@@ -28,7 +28,6 @@ import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
 import org.jboss.forge.roaster.model.source.PropertyHolderSource;
 import org.jboss.forge.roaster.model.source.PropertySource;
-import org.jboss.forge.roaster.model.util.Assert;
 import org.jboss.forge.roaster.model.util.Strings;
 
 /**
@@ -165,7 +164,10 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
    @Override
    public MethodSource<O> createAccessor()
    {
-      Assert.isTrue(getAccessor() == null, "Accessor method already exists");
+      if (getAccessor() != null)
+      {
+         throw new IllegalStateException("Accessor method already exists");
+      }
 
       final Type<O> type = getType();
       final String accessorName = methodName(type.isType(boolean.class) ? "is" : "get", name);
@@ -187,7 +189,10 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
    @Override
    public MethodSource<O> createMutator()
    {
-      Assert.isTrue(getMutator() == null, "Mutator method already exists");
+      if (getMutator() != null)
+      {
+         throw new IllegalStateException("Mutator method already exists");
+      }
 
       final String mutatorName = methodName("set", name);
       final String parameters = String.format("%s %s", typeName(), getName());
@@ -210,8 +215,14 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
    @Override
    public FieldSource<O> createField()
    {
-      Assert.isFalse(getOrigin().isInterface(), "An interface cannot declare a nonstatic field");
-      Assert.isTrue(getField() == null, "Field already exists");
+      if (getOrigin().isInterface())
+      {
+         throw new IllegalStateException("An interface cannot declare a nonstatic field");
+      }
+      if (getField() != null)
+      {
+         throw new IllegalStateException("Field already exists");
+      }
       final FieldSource<O> result = getOrigin().addField().setVisibility(Visibility.PRIVATE).setType(typeName())
                .setName(name);
       if (getOrigin().isEnum())
@@ -234,7 +245,10 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
    @Override
    public PropertySource<O> setName(final String name)
    {
-      Assert.isFalse(Strings.isBlank(name), "Property name cannot be null/empty/blank");
+      if (Strings.isBlank(name))
+      {
+         throw new IllegalStateException("Property name cannot be null/empty/blank");
+      }
 
       if (hasField())
       {

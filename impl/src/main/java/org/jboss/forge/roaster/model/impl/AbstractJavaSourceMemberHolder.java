@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -42,7 +43,6 @@ import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
 import org.jboss.forge.roaster.model.source.PropertyHolderSource;
 import org.jboss.forge.roaster.model.source.PropertySource;
-import org.jboss.forge.roaster.model.util.Assert;
 import org.jboss.forge.roaster.model.util.Methods;
 import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.model.util.Types;
@@ -587,8 +587,10 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @Override
    public final PropertySource<O> addProperty(String type, String name)
    {
-      Assert.isFalse(hasProperty(name), "Cannot create existing property " + name);
-
+      if(hasProperty(name)) {
+         throw new IllegalStateException("Cannot create existing property " + name);
+      }
+      
       O origin = getOrigin();
       if (origin.requiresImport(type))
       {
@@ -648,7 +650,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @Override
    public final PropertySource<O> getProperty(String name)
    {
-      Assert.notNull(name, "name is null");
+      Objects.requireNonNull(name, "name is null");
       final PropertyImpl<O> result = new PropertyImpl<>(name, getOrigin());
       return result.isValid() ? result : null;
    }
