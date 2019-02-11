@@ -26,10 +26,10 @@ public class JDTOptions
 
    static
    {
-      OPTIONS.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
+      OPTIONS.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_11);
       OPTIONS.put(JavaCore.CORE_ENCODING, StandardCharsets.UTF_8.name());
-      OPTIONS.put(JavaCore.COMPILER_COMPLIANCE, CompilerOptions.VERSION_1_8);
-      OPTIONS.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, CompilerOptions.VERSION_1_8);
+      OPTIONS.put(JavaCore.COMPILER_COMPLIANCE, CompilerOptions.VERSION_11);
+      OPTIONS.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, CompilerOptions.VERSION_11);
    }
 
    private JDTOptions()
