@@ -1,5 +1,6 @@
-package org.jboss.forge.roaster.model.util;
+package org.jboss.forge.test.roaster.model.util;
 
+import org.jboss.forge.roaster.model.util.Strings;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,10 +30,14 @@ public class StringsTest {
         Assert.assertEquals(true, Strings.areEqualTrimmed("mro9", "mro9"));
         Assert.assertEquals(true, Strings.areEqualTrimmed("   mro9 ", "mro9    "));
     }
+    
+    @Test(expected = NullPointerException.class)
+    public void testCapitalizeFailsIfStringIsNull() {
+       Strings.capitalize(null);
+    }
 
     @Test
     public void testCapitalize() {
-        Assert.assertNull(Strings.capitalize(null));
         Assert.assertEquals("Capitalization", Strings.capitalize("capitalization"));
         Assert.assertEquals("Capitalization", Strings.capitalize("Capitalization"));
         Assert.assertEquals("CapitaliZation", Strings.capitalize("CapitaliZation"));
