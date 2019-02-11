@@ -6,6 +6,7 @@
  */
 package org.jboss.forge.test.roaster.model;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
@@ -32,6 +33,16 @@ public class JavaPackageInfoTest
       packageInfo.setPackage("org.jboss.forge.roaster");
       Assert.assertEquals("org.jboss.forge.roaster", packageInfo.getPackage());
       Assert.assertEquals("package-info", packageInfo.getName());
+   }
+   @Test
+   public void testLocation() {
+      JavaPackageInfoSource packageInfo = Roaster.create(JavaPackageInfoSource.class);
+      packageInfo.setPackage("abc");
+      Assert.assertThat(packageInfo.getStartPosition(), is(0));
+      System.out.println(packageInfo);
+      Assert.assertThat(packageInfo.getEndPosition(), is(20)); //TODO check this
+      Assert.assertThat(packageInfo.getColumnNumber(), is(0));
+      Assert.assertThat(packageInfo.getLineNumber(), is(1));
    }
 
    @Test(expected = UnsupportedOperationException.class)
