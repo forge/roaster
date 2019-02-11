@@ -6,6 +6,8 @@
  */
 package org.jboss.forge.roaster.model.impl;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +20,6 @@ import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.TypeVariableSource;
-import org.jboss.forge.roaster.model.util.Assert;
 
 /**
  * 
@@ -33,9 +34,9 @@ public class TypeVariableImpl<O extends JavaSource<O>> implements TypeVariableSo
    public TypeVariableImpl(O origin, TypeParameter internal)
    {
       super();
-      Assert.notNull(origin, "null origin");
+      requireNonNull(origin, "null origin");
       this.origin = origin;
-      Assert.notNull(internal, "null internal representation");
+      requireNonNull(internal, "null internal representation");
       this.internal = internal;
    }
 
