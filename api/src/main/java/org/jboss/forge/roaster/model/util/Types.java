@@ -7,7 +7,7 @@
 
 package org.jboss.forge.roaster.model.util;
 
-import static org.jboss.forge.roaster.model.util.Assert.notNull;
+import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -172,7 +172,7 @@ public class Types
     */
    public static boolean areEquivalent(String left, String right)
    {
-      if (left.equals(notNull(right)))
+      if (left.equals(requireNonNull(right)))
          return true;
 
       String leftName = stripGenerics(toSimpleName(left));
@@ -203,7 +203,7 @@ public class Types
     */
    public static String toSimpleName(final String type)
    {
-      String result = notNull(type);
+      String result = requireNonNull(type);
 
       if (isGeneric(stripArray(type)))
       {
@@ -270,7 +270,7 @@ public class Types
     */
    public static String[] tokenizeClassName(final String className)
    {
-      return JAVA_SEPARATOR_PATTERN.split(notNull(className));
+      return JAVA_SEPARATOR_PATTERN.split(requireNonNull(className));
    }
 
    /**
@@ -312,7 +312,7 @@ public class Types
     */
    public static boolean isSimpleName(final String name)
    {
-      return SIMPLE_NAME_PATTERN.matcher(notNull(name)).matches();
+      return SIMPLE_NAME_PATTERN.matcher(requireNonNull(name)).matches();
    }
 
    /**
@@ -329,7 +329,7 @@ public class Types
     */
    public static boolean isJavaLang(final String type)
    {
-      return LANG_TYPES.contains(toSimpleName(notNull(type)));
+      return LANG_TYPES.contains(toSimpleName(requireNonNull(type)));
    }
 
    /**
@@ -341,7 +341,7 @@ public class Types
     */
    public static boolean isBasicType(String type)
    {
-      return isPrimitive(type) || PRIMITIVE_TYPES.contains(notNull(type));
+      return isPrimitive(type) || PRIMITIVE_TYPES.contains(requireNonNull(type));
    }
 
    /**
@@ -421,7 +421,7 @@ public class Types
     */
    public static String stripGenerics(String type)
    {
-      String typeToString = notNull(type);
+      String typeToString = requireNonNull(type);
       if (isClassArray(typeToString))
       {
          typeToString = fixClassArray(typeToString);
@@ -468,7 +468,7 @@ public class Types
     */
    public static boolean isArray(final String type)
    {
-      if (type.charAt(0) == '[' && CLASS_ARRAY_PATTERN.matcher(notNull(type)).matches())
+      if (type.charAt(0) == '[' && CLASS_ARRAY_PATTERN.matcher(requireNonNull(type)).matches())
       {
          return true;
       }
@@ -494,7 +494,7 @@ public class Types
     */
    public static String stripArray(final String type)
    {
-      String result = notNull(type);
+      String result = requireNonNull(type);
       if (isClassArray(type))
       {
          result = fixClassArray(type);
@@ -587,13 +587,13 @@ public class Types
     */
    public static boolean isPrimitive(final String type)
    {
-      return Arrays.asList("byte", "short", "int", "long", "float", "double", "boolean", "char").contains(notNull(type));
+      return Arrays.asList("byte", "short", "int", "long", "float", "double", "boolean", "char").contains(requireNonNull(type));
    }
 
    private static int getArrayDimension(String name, boolean isBasic)
    {
       int count = 0;
-      String rawName = isBasic ? notNull(name) : stripGenerics(name);
+      String rawName = isBasic ? requireNonNull(name) : stripGenerics(name);
 
       for (char c : rawName.toCharArray())
       {

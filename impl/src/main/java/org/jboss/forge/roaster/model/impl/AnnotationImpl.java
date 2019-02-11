@@ -6,6 +6,8 @@
  */
 package org.jboss.forge.roaster.model.impl;
 
+import static java.util.Objects.requireNonNull;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +15,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.jdt.core.dom.AST;
@@ -34,7 +37,6 @@ import org.jboss.forge.roaster.model.ValuePair;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.AnnotationTargetSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
-import org.jboss.forge.roaster.model.util.Assert;
 import org.jboss.forge.roaster.model.util.Strings;
 
 /**
@@ -100,7 +102,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    {
       this.parent = parent;
       ast = ((ASTNode) parent.getInternal()).getAST();
-      Assert.notNull(internal, "internal representation must not be null");
+      requireNonNull(internal, "internal representation must not be null");
       annotation = (org.eclipse.jdt.core.dom.Annotation) internal;
    }
 
@@ -303,7 +305,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public AnnotationSource<O> setLiteralValue(final String value)
    {
-      Assert.notNull(value, NULL_NOT_ACCEPTED);
+      requireNonNull(value, NULL_NOT_ACCEPTED);
 
       if (isMarker())
       {
@@ -352,7 +354,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @SuppressWarnings("unchecked")
    public AnnotationSource<O> setLiteralValue(final String name, final String value)
    {
-      Assert.notNull(value, NULL_NOT_ACCEPTED);
+      requireNonNull(value, NULL_NOT_ACCEPTED);
 
       if (!isNormal() && !DEFAULT_VALUE.equals(name))
       {
@@ -457,13 +459,13 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public AnnotationSource<O> setEnumArrayValue(String name, final Enum<?>... values)
    {
-      Assert.notNull(values, NULL_ARRAY_NOT_ACCEPTED);
+      requireNonNull(values, NULL_ARRAY_NOT_ACCEPTED);
 
       final List<String> literals = new ArrayList<>();
 
       for (Enum<?> value : values)
       {
-         Assert.notNull(value, NULL_VALUE_NOT_ACCEPTED);
+         requireNonNull(value, NULL_VALUE_NOT_ACCEPTED);
          getOrigin().addImport(value.getDeclaringClass());
          literals.add(value.getDeclaringClass().getSimpleName() + "." + value.name());
       }
@@ -749,7 +751,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public AnnotationSource<O> removeAnnotationValue(Annotation<O> element)
    {
-      Assert.notNull(element, "Cannot remove null element");
+      requireNonNull(element, "Cannot remove null element");
 
       if (isSingleValue())
       {
@@ -781,7 +783,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public AnnotationSource<O> removeAnnotationValue(String name, Annotation<O> element)
    {
-      Assert.notNull(element, "Cannot remove null element");
+      requireNonNull(element, "Cannot remove null element");
 
       if (isSingleValue() && Strings.areEqual(name, DEFAULT_VALUE))
       {
@@ -1049,7 +1051,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public AnnotationSource<O> setClassValue(String name, Class<?> value)
    {
-      Assert.notNull(value, NULL_NOT_ACCEPTED);
+      requireNonNull(value, NULL_NOT_ACCEPTED);
 
       if (!value.isPrimitive())
       {
@@ -1079,13 +1081,13 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public AnnotationSource<O> setStringArrayValue(String name, String[] values)
    {
-      Assert.notNull(values, NULL_ARRAY_NOT_ACCEPTED);
+      requireNonNull(values, NULL_ARRAY_NOT_ACCEPTED);
 
       final List<String> literals = new ArrayList<>();
 
       for (String value : values)
       {
-         Assert.notNull(value, NULL_VALUE_NOT_ACCEPTED);
+         requireNonNull(value, NULL_VALUE_NOT_ACCEPTED);
          literals.add(Strings.enquote(value));
       }
       return setLiteralValue(name,
@@ -1095,13 +1097,13 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public AnnotationSource<O> setClassArrayValue(String name, Class<?>... values)
    {
-      Assert.notNull(values, NULL_ARRAY_NOT_ACCEPTED);
+      requireNonNull(values, NULL_ARRAY_NOT_ACCEPTED);
 
       final List<String> literals = new ArrayList<>();
 
       for (Class<?> value : values)
       {
-         Assert.notNull(value, NULL_VALUE_NOT_ACCEPTED);
+         requireNonNull(value, NULL_VALUE_NOT_ACCEPTED);
 
          if (!value.isPrimitive())
          {

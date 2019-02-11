@@ -7,12 +7,13 @@
 
 package org.jboss.forge.roaster.model.impl;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Collections;
 import java.util.List;
 
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.JavaUnit;
-import org.jboss.forge.roaster.model.util.Assert;
 
 /**
  * A builder for {@link JavaUnit} objects
@@ -26,7 +27,10 @@ public class JavaUnitImpl implements JavaUnit
 
    public JavaUnitImpl(List<JavaType<?>> declaredTypes)
    {
-      Assert.isTrue(declaredTypes != null && !declaredTypes.isEmpty(), "Declared types should not be null nor empty");
+      if (requireNonNull(declaredTypes).isEmpty())
+      {
+         throw new IllegalStateException("Declared types should not be empty");
+      }
       this.declaredTypes = Collections.unmodifiableList(declaredTypes);
    }
 
