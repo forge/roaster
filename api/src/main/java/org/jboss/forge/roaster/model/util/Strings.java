@@ -21,6 +21,11 @@ import java.util.StringJoiner;
  */
 public class Strings
 {
+   private Strings()
+   {
+      throw new IllegalAccessError("Utility class");
+   }
+
    /**
     * Capitalize the given String: "input" -> "Input"
     * 
