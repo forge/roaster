@@ -80,7 +80,7 @@ public class NestedClassTest
                is(javaClass.getEndPosition()-1));
       Assert.assertThat(inner3.getEndPosition(), is(inner1.getEndPosition() - 1));
       
-      //no line separators -> so line numer 1
+      //no line separators -> so line number 1
       Assert.assertThat(javaClass.getLineNumber(), is(1));
       Assert.assertThat(inner1.getLineNumber(), is(1));
       Assert.assertThat(inner2.getLineNumber(), is(1));
