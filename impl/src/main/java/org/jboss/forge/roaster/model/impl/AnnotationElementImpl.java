@@ -128,7 +128,7 @@ public class AnnotationElementImpl implements AnnotationElementSource
       {
          Assert.notNull(values, "null array not accepted");
 
-         final List<String> literals = new ArrayList<String>();
+         final List<String> literals = new ArrayList<>();
 
          for (Enum<?> value : values)
          {
@@ -155,7 +155,7 @@ public class AnnotationElementImpl implements AnnotationElementSource
          Expression expr = member.getDefault();
          if (expr instanceof ArrayInitializer)
          {
-            final List<E> results = new ArrayList<E>();
+            final List<E> results = new ArrayList<>();
             @SuppressWarnings("unchecked")
             final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
             for (Expression arrayElement : arrayElements)
@@ -191,7 +191,7 @@ public class AnnotationElementImpl implements AnnotationElementSource
       {
          Assert.notNull(values, "null array not accepted");
 
-         final List<String> literals = new ArrayList<String>();
+         final List<String> literals = new ArrayList<>();
          for (Class<?> value : values)
          {
             Assert.notNull(value, "null value not accepted");
@@ -241,7 +241,7 @@ public class AnnotationElementImpl implements AnnotationElementSource
          final Expression expr = member.getDefault();
          if (expr instanceof ArrayInitializer)
          {
-            final List<Class<?>> result = new ArrayList<Class<?>>();
+            final List<Class<?>> result = new ArrayList<>();
             @SuppressWarnings("unchecked")
             final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
             for (Expression arrayElement : arrayElements)
@@ -259,7 +259,7 @@ public class AnnotationElementImpl implements AnnotationElementSource
 
       private Class<?> resolveTypeLiteral(TypeLiteral typeLiteral)
       {
-         final Type<JavaAnnotationSource> type = new TypeImpl<JavaAnnotationSource>(getOrigin(), typeLiteral.getType());
+         final Type<JavaAnnotationSource> type = new TypeImpl<>(getOrigin(), typeLiteral.getType());
          if (type.isPrimitive())
          {
             final Class<?>[] primitiveTypes = { boolean.class, byte.class, short.class, int.class, long.class,
@@ -287,7 +287,7 @@ public class AnnotationElementImpl implements AnnotationElementSource
       }
    }
 
-   private final AnnotationAccessor<JavaAnnotationSource, AnnotationElementSource> annotations = new AnnotationAccessor<JavaAnnotationSource, AnnotationElementSource>();
+   private final AnnotationAccessor<JavaAnnotationSource, AnnotationElementSource> annotations = new AnnotationAccessor<>();
 
    private final JavaAnnotationSource parent;
    private final AST ast;
@@ -397,7 +397,7 @@ public class AnnotationElementImpl implements AnnotationElementSource
    {
       return annotations.removeAnnotation(this, member, annotation);
    }
-   
+
    @Override
    public void removeAllAnnotations()
    {
@@ -430,7 +430,7 @@ public class AnnotationElementImpl implements AnnotationElementSource
    @Override
    public Type<JavaAnnotationSource> getType()
    {
-      return new TypeImpl<JavaAnnotationSource>(parent,
+      return new TypeImpl<>(parent,
                member.getStructuralProperty(AnnotationTypeMemberDeclaration.TYPE_PROPERTY));
    }
 

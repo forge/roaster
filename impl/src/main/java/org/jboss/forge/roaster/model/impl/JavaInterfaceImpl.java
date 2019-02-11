@@ -42,7 +42,7 @@ public class JavaInterfaceImpl extends AbstractGenericCapableJavaSource<JavaInte
    @Override
    public List<MethodSource<JavaInterfaceSource>> getMethods()
    {
-      List<MethodSource<JavaInterfaceSource>> result = new ArrayList<MethodSource<JavaInterfaceSource>>();
+      List<MethodSource<JavaInterfaceSource>> result = new ArrayList<>();
 
       MethodFinderVisitor methodFinderVisitor = new MethodFinderVisitor();
       body.accept(methodFinderVisitor);

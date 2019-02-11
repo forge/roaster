@@ -19,8 +19,6 @@ import org.jboss.forge.roaster.model.JavaClass;
 public interface JavaClassSource extends JavaClass<JavaClassSource>,
          JavaSource<JavaClassSource>,
          InterfaceCapableSource<JavaClassSource>,
-         FieldHolderSource<JavaClassSource>,
-         MethodHolderSource<JavaClassSource>,
          GenericCapableSource<JavaClassSource, JavaClassSource>,
          ExtendableSource<JavaClassSource>,
          AbstractableSource<JavaClassSource>,

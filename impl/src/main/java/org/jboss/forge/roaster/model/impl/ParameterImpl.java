@@ -25,7 +25,7 @@ import org.jboss.forge.roaster.model.source.ParameterSource;
  */
 public class ParameterImpl<O extends JavaSource<O>> implements ParameterSource<O>
 {
-   private final AnnotationAccessor<O, ParameterSource<O>> annotations = new AnnotationAccessor<O, ParameterSource<O>>();
+   private final AnnotationAccessor<O, ParameterSource<O>> annotations = new AnnotationAccessor<>();
    private final O parent;
    private final SingleVariableDeclaration param;
    private final ModifierAccessor modifiers = new ModifierAccessor();
@@ -117,11 +117,11 @@ public class ParameterImpl<O extends JavaSource<O>> implements ParameterSource<O
    {
       return annotations.removeAnnotation(this, param, annotation);
    }
-   
+
    @Override
    public void removeAllAnnotations()
    {
-     annotations.removeAllAnnotations(param);
+      annotations.removeAllAnnotations(param);
    }
 
    @Override

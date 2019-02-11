@@ -52,7 +52,7 @@ import org.jboss.forge.roaster.model.util.Types;
  */
 public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
 {
-   private final AnnotationAccessor<O, MethodSource<O>> annotations = new AnnotationAccessor<O, MethodSource<O>>();
+   private final AnnotationAccessor<O, MethodSource<O>> annotations = new AnnotationAccessor<>();
    private final ModifierAccessor modifiers = new ModifierAccessor();
 
    private O parent = null;
@@ -141,8 +141,9 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    public String toSignature()
    {
       StringBuilder signature = new StringBuilder();
-      signature.append(Visibility.PACKAGE_PRIVATE.equals(this.getVisibility().scope()) ? "" : this.getVisibility()
-               .scope());
+      signature.append(Visibility.PACKAGE_PRIVATE.equals(this.getVisibility().scope()) ? ""
+               : this.getVisibility()
+                        .scope());
       signature.append(" ");
       signature.append(this.getName()).append("(");
       List<ParameterSource<O>> parameters = this.getParameters();
@@ -246,11 +247,8 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
          }
          return result.toString().trim();
       }
-      else
-      {
-         // No body found, probably because it's a native or an abstract method
-         return null;
-      }
+      // No body found, probably because it's a native or an abstract method
+      return null;
    }
 
    @Override
@@ -301,7 +299,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       {
          return null;
       }
-      return new TypeImpl<O>(parent, method.getReturnType2());
+      return new TypeImpl<>(parent, method.getReturnType2());
    }
 
    @Override
@@ -522,12 +520,12 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public List<ParameterSource<O>> getParameters()
    {
-      List<ParameterSource<O>> results = new ArrayList<ParameterSource<O>>();
+      List<ParameterSource<O>> results = new ArrayList<>();
       @SuppressWarnings("unchecked")
       List<SingleVariableDeclaration> parameters = method.parameters();
       for (SingleVariableDeclaration param : parameters)
       {
-         results.add(new ParameterImpl<O>(parent, param));
+         results.add(new ParameterImpl<>(parent, param));
       }
       return Collections.unmodifiableList(results);
    }
@@ -689,7 +687,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public List<String> getThrownExceptions()
    {
-      ArrayList<String> result = new ArrayList<String>();
+      ArrayList<String> result = new ArrayList<>();
       List<?> list = (List<?>) method.getStructuralProperty(MethodDeclaration.THROWN_EXCEPTION_TYPES_PROPERTY);
 
       for (Object object : list)
@@ -746,13 +744,13 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @SuppressWarnings("unchecked")
    public List<TypeVariableSource<O>> getTypeVariables()
    {
-      List<TypeVariableSource<O>> result = new ArrayList<TypeVariableSource<O>>();
+      List<TypeVariableSource<O>> result = new ArrayList<>();
       List<TypeParameter> typeParameters = method.typeParameters();
       if (typeParameters != null)
       {
          for (TypeParameter typeParameter : typeParameters)
          {
-            result.add(new TypeVariableImpl<O>(parent, typeParameter));
+            result.add(new TypeVariableImpl<>(parent, typeParameter));
          }
       }
       return Collections.unmodifiableList(result);
@@ -767,7 +765,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       {
          if (Strings.areEqual(name, typeParameter.getName().getIdentifier()))
          {
-            return new TypeVariableImpl<O>(parent, typeParameter);
+            return new TypeVariableImpl<>(parent, typeParameter);
          }
       }
       return null;
@@ -794,7 +792,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    {
       TypeParameter tp2 = method.getAST().newTypeParameter();
       method.typeParameters().add(tp2);
-      return new TypeVariableImpl<O>(parent, tp2);
+      return new TypeVariableImpl<>(parent, tp2);
    }
 
    @Override
@@ -844,7 +842,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       String resolvedType = type;
       if (!hasTypeVariable(type) && getOrigin().requiresImport(type))
       {
-         Type<?> innerType = new TypeImpl<O>(getOrigin(), null, type);
+         Type<?> innerType = new TypeImpl<>(getOrigin(), null, type);
          Import imprt = getOrigin().addImport(innerType);
          resolvedType = imprt != null ? Types.rebuildGenericNameWithArrays(imprt.getSimpleName(), innerType)
                   : Types.toSimpleName(type);
@@ -860,7 +858,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       {
          VariableDeclaration copy = (VariableDeclaration) ASTNode.copySubtree(method.getAST(), declaration);
          method.parameters().add(copy);
-         param = new ParameterImpl<O>(parent, copy);
+         param = new ParameterImpl<>(parent, copy);
       }
       return param;
    }
@@ -951,7 +949,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
          javadoc = method.getAST().newJavadoc();
          method.setJavadoc(javadoc);
       }
-      return new JavaDocImpl<MethodSource<O>>(this, javadoc);
+      return new JavaDocImpl<>(this, javadoc);
    }
 
    @Override
