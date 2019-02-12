@@ -68,7 +68,6 @@
             <configuration>
               <minimizeJar>true</minimizeJar>
               <createSourcesJar>true</createSourcesJar>
-              <shadeSourcesContent>true</shadeSourcesContent>
               <artifactSet>
                 <excludes>
                   <exclude>org.jboss.forge.roaster:roaster-api</exclude>
@@ -112,8 +111,8 @@
                   <shadedPattern>org.jboss.forge.roaster._shade.org.osgi</shadedPattern>
                 </relocation>
                 <relocation>
-                  <pattern>org.apache.commons</pattern>
-                  <shadedPattern>org.jboss.forge.roaster._shade.org.apache.commons</shadedPattern>
+                  <pattern>org.apache</pattern>
+                  <shadedPattern>org.jboss.forge.roaster._shade.org.apache</shadedPattern>
                 </relocation>
               </relocations>
               <transformers>
