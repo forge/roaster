@@ -14,12 +14,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.util.Refactory;
-import org.jboss.forge.roaster.model.util.Strings;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -603,12 +603,12 @@ public class RefactoryTest
       assertEquals(0, hashcode.getParameters().size());
       assertEquals("int", hashcode.getReturnType().getName());
       assertThat(hashcode.getBody(), containsString("long temp;"));
-      assertEquals(1, Strings.countNumberOfOccurrences(hashcode.getBody(), "long temp;"));
+      assertEquals(1, StringUtils.countMatches(hashcode.getBody(), "long temp;"));
       assertThat(hashcode.getBody(), containsString("temp=Double.doubleToLongBits(firstDouble);"));
       assertThat(hashcode.getBody(), containsString("temp=Double.doubleToLongBits(secondDouble);"));
       assertThat(hashcode.getBody(), containsString("prime * result + (int)(temp ^ (temp >>> 32));"));
       assertEquals(2,
-               Strings.countNumberOfOccurrences(hashcode.getBody(), "prime * result + (int)(temp ^ (temp >>> 32));"));
+               StringUtils.countMatches(hashcode.getBody(), "prime * result + (int)(temp ^ (temp >>> 32));"));
    }
 
    private void assertEqualsForMultipleLongFields(MethodSource<JavaClassSource> equals)

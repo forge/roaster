@@ -8,13 +8,11 @@
 package org.jboss.forge.roaster.model.impl;
 
 import org.jboss.forge.roaster.model.ValuePair;
-import org.jboss.forge.roaster.model.util.Strings;
 
 /**
  * Represents an annotation value pair
- * 
+ *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
- * 
  */
 public class ValuePairImpl implements ValuePair
 {

@@ -19,8 +19,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.FieldSource;
@@ -32,7 +34,6 @@ import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
 import org.jboss.forge.roaster.model.source.PropertyHolderSource;
 import org.jboss.forge.roaster.model.source.PropertySource;
-import org.jboss.forge.roaster.model.util.Strings;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,7 +59,7 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
          @Override
          String format(Class<?> type, String s)
          {
-            return (boolean.class.equals(type) ? "is" : "get") + Strings.capitalize(s);
+            return (boolean.class.equals(type) ? "is" : "get") + StringUtils.capitalize(s);
          }
       },
       MUTATOR
@@ -66,7 +67,7 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
          @Override
          String format(Class<?> type, String s)
          {
-            return "set" + Strings.capitalize(s);
+            return "set" + StringUtils.capitalize(s);
          }
       };
 
@@ -428,13 +429,12 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       property.setType(source);
       assertEquals(source.getQualifiedName(), property.getType().getQualifiedName());
       assertTrue(!existingItems.contains(PropertyComponent.FIELD)
-               || Strings.areEqual(source.getQualifiedName(), property.getField().getType().getQualifiedName()));
+               || Objects.equals(source.getQualifiedName(), property.getField().getType().getQualifiedName()));
       assertTrue(!existingItems.contains(PropertyComponent.ACCESSOR)
-               || Strings
-                        .areEqual(source.getQualifiedName(),
+               || Objects.equals(source.getQualifiedName(),
                                  property.getAccessor().getReturnType().getQualifiedName()));
       assertTrue(!existingItems.contains(PropertyComponent.MUTATOR)
-               || Strings.areEqual(source.getQualifiedName(), property.getMutator().getParameters().get(0).getType()
+               || Objects.equals(source.getQualifiedName(), property.getMutator().getParameters().get(0).getType()
                         .getQualifiedName()));
    }
 

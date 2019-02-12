@@ -12,6 +12,7 @@ import static java.util.Objects.requireNonNull;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -30,7 +31,6 @@ import org.jboss.forge.roaster.model.ast.AnnotationAccessor;
 import org.jboss.forge.roaster.model.source.AnnotationElementSource;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.JavaAnnotationSource;
-import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.model.util.Types;
 
 /**
@@ -139,7 +139,7 @@ public class AnnotationElementImpl implements AnnotationElementSource
             literals.add(value.getDeclaringClass().getSimpleName() + "." + value.name());
          }
 
-         return setLiteral(literals.size() == 1 ? literals.get(0) : String.format("{%s}", Strings.join(literals, ",")));
+         return setLiteral(literals.size() == 1 ? literals.get(0) : String.format("{%s}", String.join(",",literals)));
       }
 
       @Override
@@ -203,7 +203,7 @@ public class AnnotationElementImpl implements AnnotationElementSource
             }
             literals.add(value.getSimpleName() + ".class");
          }
-         return setLiteral(literals.size() == 1 ? literals.get(0) : String.format("{%s}", Strings.join(literals, ",")));
+         return setLiteral(literals.size() == 1 ? literals.get(0) : String.format("{%s}", String.join(",",literals)));
       }
 
       private <E extends Enum<E>> E convertLiteralToEnum(final Class<E> type, String literalValue)
@@ -457,7 +457,7 @@ public class AnnotationElementImpl implements AnnotationElementSource
       String simpleName = Types.toSimpleName(typeName);
 
       JavaAnnotationSource origin = getOrigin();
-      if (!Strings.areEqual(typeName, simpleName) && origin.requiresImport(typeName))
+      if (!Objects.equals(typeName, simpleName) && origin.requiresImport(typeName))
       {
          origin.addImport(typeName);
       }

@@ -9,6 +9,7 @@ package org.jboss.forge.roaster.model.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -26,7 +27,6 @@ import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.Importer;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
-import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.model.util.Types;
 
 /**
@@ -235,12 +235,12 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
 
       final String qualifiedName = getQualifiedName();
 
-      if (Strings.areEqual(type.getName(), qualifiedName))
+      if (Objects.equals(type.getName(), qualifiedName))
       {
          return true;
       }
 
-      if (getOrigin() instanceof Importer<?> && Strings.areEqual(simpleName, qualifiedName))
+      if (getOrigin() instanceof Importer<?> && Objects.equals(simpleName, qualifiedName))
       {
          return !((Importer<?>) getOrigin()).requiresImport(type);
       }
@@ -250,7 +250,7 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    @Override
    public boolean isType(final String name)
    {
-      if (Strings.areEqual(name, getQualifiedName()))
+      if (Objects.equals(name, getQualifiedName()))
       {
          return true;
       }

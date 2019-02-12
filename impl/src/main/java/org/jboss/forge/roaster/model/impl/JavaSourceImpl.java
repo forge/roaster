@@ -14,6 +14,7 @@ import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
@@ -40,7 +41,6 @@ import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.util.Formatter;
 import org.jboss.forge.roaster.model.util.JDTOptions;
-import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.model.util.Types;
 import org.jboss.forge.roaster.spi.WildcardImportResolver;
 
@@ -376,7 +376,7 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
       requiresImport |= !(!validImport(resultType)
                || hasImport(resultType)
                || Types.isJavaLang(resultType)
-               || Strings.areEqual(getPackage(), Types.getPackage(resultType)));
+               || Objects.equals(getPackage(), Types.getPackage(resultType)));
       return requiresImport;
    }
 
@@ -494,7 +494,7 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
             return false;
          }
       }
-      return !Strings.isNullOrEmpty(type) && !Types.isPrimitive(type) && !Strings.isNullOrEmpty(Types.getPackage(type));
+      return !StringUtils.isEmpty(type) && !Types.isPrimitive(type) && !StringUtils.isEmpty(Types.getPackage(type));
    }
 
    @SuppressWarnings("unchecked")
@@ -552,7 +552,7 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
          result = enclosingTypeLocal.getName() + "." + result;
       }
 
-      if (!Strings.isNullOrEmpty(getPackage()))
+      if (!StringUtils.isEmpty(getPackage()))
          result = getPackage() + "." + result;
 
       return result;
@@ -575,7 +575,7 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
          result = enclosingTypeLocal.getName() + "$" + result;
       }
 
-      if (!Strings.isNullOrEmpty(getPackage()))
+      if (!StringUtils.isEmpty(getPackage()))
          result = getPackage() + "." + result;
 
       return result;

@@ -28,7 +28,9 @@ import org.jboss.forge.roaster.model.source.PropertySource;
  */
 public class DesignPatterns
 {
-   private DesignPatterns() {}
+   private DesignPatterns() {
+      throw new IllegalAccessError("Utility class");
+   }
 
    /**
     * Creates a class based on the Builder Design pattern.
@@ -72,7 +74,7 @@ public class DesignPatterns
    /**
     * Creates a class based on the Decorator design pattern.
     * 
-    * @param javaClass the {@link JavaClassSource} for which the decorator will be created
+    * @param javaSource the {@link JavaClassSource} for which the decorator will be created
     * @return the Decorator class.
     */
    @SuppressWarnings({ "unchecked", "rawtypes" })

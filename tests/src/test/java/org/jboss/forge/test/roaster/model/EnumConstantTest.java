@@ -12,6 +12,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.jboss.forge.roaster.Roaster;
@@ -19,7 +20,6 @@ import org.jboss.forge.roaster.model.source.EnumConstantSource;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaEnumSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
-import org.jboss.forge.roaster.model.util.Strings;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -91,14 +91,14 @@ public class EnumConstantTest
    {
       EnumConstantSource foo = javaEnum.getEnumConstant("FOO");
       EnumConstantSource.Body body = foo.getBody();
-      assertFalse(body.hasImport(Strings.class));
-      assertFalse(javaEnum.hasImport(Strings.class));
-      body.addImport(Strings.class);
-      assertTrue(body.hasImport(Strings.class));
-      assertTrue(javaEnum.hasImport(Strings.class));
-      body.removeImport(Strings.class);
-      assertFalse(body.hasImport(Strings.class));
-      assertFalse(javaEnum.hasImport(Strings.class));
+      assertFalse(body.hasImport(Map.class));
+      assertFalse(javaEnum.hasImport(Map.class));
+      body.addImport(Map.class);
+      assertTrue(body.hasImport(Map.class));
+      assertTrue(javaEnum.hasImport(Map.class));
+      body.removeImport(Map.class);
+      assertFalse(body.hasImport(Map.class));
+      assertFalse(javaEnum.hasImport(Map.class));
    }
 
    @Test

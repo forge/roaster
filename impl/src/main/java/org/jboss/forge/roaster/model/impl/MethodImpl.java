@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -44,7 +45,6 @@ import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
 import org.jboss.forge.roaster.model.source.TypeVariableSource;
 import org.jboss.forge.roaster.model.util.Methods;
-import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.model.util.Types;
 
 /**
@@ -332,7 +332,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       String simpleName = Types.toSimpleName(typeName);
 
       O origin = getOrigin();
-      if (!hasTypeVariable(typeName) && !Strings.areEqual(typeName, simpleName)
+      if (!hasTypeVariable(typeName) && !Objects.equals(typeName, simpleName)
                && origin.requiresImport(typeName))
       {
          origin.addImport(typeName);
@@ -671,7 +671,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       String simpleTypeName = Types.toSimpleName(type);
 
       O origin = getOrigin();
-      if (!Strings.areEqual(type, simpleTypeName) && origin.requiresImport(type))
+      if (!Objects.equals(type, simpleTypeName) && origin.requiresImport(type))
       {
          origin.addImport(type);
       }
@@ -763,7 +763,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       List<TypeParameter> typeParameters = method.typeParameters();
       for (TypeParameter typeParameter : typeParameters)
       {
-         if (Strings.areEqual(name, typeParameter.getName().getIdentifier()))
+         if (Objects.equals(name, typeParameter.getName().getIdentifier()))
          {
             return new TypeVariableImpl<>(parent, typeParameter);
          }
@@ -778,7 +778,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       List<TypeParameter> typeParameters = method.typeParameters();
       for (TypeParameter typeParameter : typeParameters)
       {
-         if (Strings.areEqual(name, typeParameter.getName().getIdentifier()))
+         if (Objects.equals(name, typeParameter.getName().getIdentifier()))
          {
             return true;
          }
@@ -808,7 +808,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       List<TypeParameter> typeParameters = method.typeParameters();
       for (Iterator<TypeParameter> iter = typeParameters.iterator(); iter.hasNext();)
       {
-         if (Strings.areEqual(name, iter.next().getName().getIdentifier()))
+         if (Objects.equals(name, iter.next().getName().getIdentifier()))
          {
             iter.remove();
             break;

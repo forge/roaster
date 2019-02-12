@@ -11,7 +11,9 @@ import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SimpleName;
@@ -28,15 +30,13 @@ import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
 import org.jboss.forge.roaster.model.source.PropertyHolderSource;
 import org.jboss.forge.roaster.model.source.PropertySource;
-import org.jboss.forge.roaster.model.util.Strings;
 
 /**
  * Implementation of PropertySource.
  *
+ * @param <O>
  * @author mbenson
  * @author <a href="ggastald@redhat.com">George Gastaldi</a>
- *
- * @param <O>
  */
 class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements PropertySource<O>
 {
@@ -151,8 +151,8 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
          if (isMutator(method))
          {
             if (type == null
-                     || Strings.areEqual(type.getQualifiedName(), method.getParameters().get(0).getType()
-                              .getQualifiedName()))
+                     || Objects.equals(type.getQualifiedName(), method.getParameters().get(0).getType()
+                     .getQualifiedName()))
             {
                return method;
             }
@@ -245,7 +245,7 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
    @Override
    public PropertySource<O> setName(final String name)
    {
-      if (Strings.isBlank(name))
+      if (StringUtils.isBlank(name))
       {
          throw new IllegalStateException("Property name cannot be null/empty/blank");
       }
@@ -263,7 +263,7 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
          @Override
          public boolean visit(SimpleName node)
          {
-            if (Strings.areEqual(oldName, node.getIdentifier()))
+            if (Objects.equals(oldName, node.getIdentifier()))
             {
                node.setIdentifier(name);
             }
@@ -291,7 +291,7 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
                {
                   final int next = index + matchLength;
 
-                  if (next <= textLength && Strings.areEqual(oldName, text.substring(index, next)))
+                  if (next <= textLength && Objects.equals(oldName, text.substring(index, next)))
                   {
                      buf.append(name);
                      pos.setIndex(next);
@@ -461,7 +461,7 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
          return false;
       }
       final PropertyImpl<?> other = (PropertyImpl<?>) obj;
-      return getOrigin() == other.getOrigin() && Strings.areEqual(getName(), other.getName());
+      return getOrigin() == other.getOrigin() && Objects.equals(getName(), other.getName());
    }
 
    @Override
@@ -497,11 +497,11 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
       }
       if (method.getParameters().isEmpty())
       {
-         if (method.getReturnType().isType(boolean.class) && Strings.areEqual(method.getName(), methodName("is", name)))
+         if (method.getReturnType().isType(boolean.class) && Objects.equals(method.getName(), methodName("is", name)))
          {
             return true;
          }
-         return Strings.areEqual(method.getName(), methodName("get", name));
+         return Objects.equals(method.getName(), methodName("get", name));
       }
       return false;
    }
@@ -513,12 +513,12 @@ class PropertyImpl<O extends JavaSource<O> & PropertyHolderSource<O>> implements
          return false;
       }
       return method.isReturnTypeVoid() && method.getParameters().size() == 1
-               && Strings.areEqual(method.getName(), methodName("set", name));
+               && Objects.equals(method.getName(), methodName("set", name));
    }
 
    private static String methodName(String prefix, String property)
    {
-      return prefix + Strings.capitalize(property);
+      return prefix + StringUtils.capitalize(property);
    }
 
    @Override

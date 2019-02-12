@@ -6,8 +6,6 @@
  */
 package org.jboss.forge.roaster.model.impl;
 
-import static java.util.Objects.requireNonNull;
-
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +16,8 @@ import java.util.ListIterator;
 import java.util.Objects;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ArrayInitializer;
@@ -37,7 +37,8 @@ import org.jboss.forge.roaster.model.ValuePair;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.AnnotationTargetSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
-import org.jboss.forge.roaster.model.util.Strings;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -73,8 +74,8 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          }
          else if (oldNode.getParent() instanceof ArrayInitializer)
          {
-            @SuppressWarnings("unchecked")
-            final List<org.eclipse.jdt.core.dom.Annotation> expressions = ((ArrayInitializer) oldNode.getParent())
+            @SuppressWarnings("unchecked") final List<org.eclipse.jdt.core.dom.Annotation> expressions = ((ArrayInitializer) oldNode
+                     .getParent())
                      .expressions();
             expressions.set(expressions.indexOf(oldNode), newNode);
          }
@@ -470,7 +471,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          literals.add(value.getDeclaringClass().getSimpleName() + "." + value.name());
       }
       return setLiteralValue(name,
-               literals.size() == 1 ? literals.get(0) : String.format("{%s}", Strings.join(literals, ",")));
+               literals.size() == 1 ? literals.get(0) : String.format("{%s}", String.join(",", literals)));
    }
 
    /*
@@ -688,7 +689,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       for (Object value : ((NormalAnnotation) annotation).values())
       {
          if (value instanceof MemberValuePair
-                  && Strings.areEqual(name, ((MemberValuePair) value).getName().getIdentifier()))
+                  && Objects.equals(name, ((MemberValuePair) value).getName().getIdentifier()))
          {
             memberValuePair = (MemberValuePair) value;
             break;
@@ -785,7 +786,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    {
       requireNonNull(element, "Cannot remove null element");
 
-      if (isSingleValue() && Strings.areEqual(name, DEFAULT_VALUE))
+      if (isSingleValue() && Objects.equals(name, DEFAULT_VALUE))
       {
          return removeAnnotationValue(element);
       }
@@ -793,14 +794,14 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       {
          final Set<String> identifiers = new HashSet<>();
          for (@SuppressWarnings("unchecked")
-         Iterator<Object> values = ((NormalAnnotation) annotation).values().iterator(); values.hasNext();)
+              Iterator<Object> values = ((NormalAnnotation) annotation).values().iterator(); values.hasNext(); )
          {
             final Object value = values.next();
             if (value instanceof MemberValuePair)
             {
                final String identifier = ((MemberValuePair) value).getName().getIdentifier();
                identifiers.add(identifier);
-               if (Strings.areEqual(name, identifier))
+               if (Objects.equals(name, identifier))
                {
                   Expression expr = ((MemberValuePair) value).getValue();
                   if (element.getInternal().equals(expr))
@@ -883,7 +884,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          List<MemberValuePair> values = normal.values();
          for (MemberValuePair memberValuePair : values)
          {
-            if (Strings.areEqual(name, memberValuePair.getName().getIdentifier()))
+            if (Objects.equals(name, memberValuePair.getName().getIdentifier()))
             {
                Expression value = memberValuePair.getValue();
                if (value instanceof org.eclipse.jdt.core.dom.Annotation)
@@ -921,22 +922,19 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       if (expr instanceof ArrayInitializer)
       {
          final List<AnnotationSource<O>> results = new ArrayList<>();
-         @SuppressWarnings("unchecked")
-         final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
+         @SuppressWarnings("unchecked") final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
          for (Expression arrayElement : arrayElements)
          {
             final AnnotationSource<O> instance = new Nested(this, arrayElement);
             results.add(instance);
          }
-         @SuppressWarnings("unchecked")
-         final AnnotationSource<O>[] result = new AnnotationSource[results.size()];
+         @SuppressWarnings("unchecked") final AnnotationSource<O>[] result = new AnnotationSource[results.size()];
          return results.toArray(result);
       }
       final AnnotationSource<O> annotationValue = getAnnotationValue(name);
       if (annotationValue != null)
       {
-         @SuppressWarnings("unchecked")
-         final AnnotationSource<O>[] result = new AnnotationSource[] { annotationValue };
+         @SuppressWarnings("unchecked") final AnnotationSource<O>[] result = new AnnotationSource[] { annotationValue };
          return result;
       }
       return null;
@@ -955,15 +953,13 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       if (expr instanceof ArrayInitializer)
       {
          final List<E> results = new ArrayList<>();
-         @SuppressWarnings("unchecked")
-         final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
+         @SuppressWarnings("unchecked") final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
          for (Expression arrayElement : arrayElements)
          {
             final E instance = convertLiteralToEnum(type, arrayElement.toString());
             results.add(instance);
          }
-         @SuppressWarnings("unchecked")
-         final E[] result = (E[]) Array.newInstance(type, results.size());
+         @SuppressWarnings("unchecked") final E[] result = (E[]) Array.newInstance(type, results.size());
          return results.toArray(result);
       }
       else if (expr != null)
@@ -971,8 +967,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          final E instance = convertLiteralToEnum(type, expr.toString());
          if (type.isInstance(instance))
          {
-            @SuppressWarnings("unchecked")
-            final E[] result = (E[]) Array.newInstance(type, 1);
+            @SuppressWarnings("unchecked") final E[] result = (E[]) Array.newInstance(type, 1);
             result[0] = instance;
             return result;
          }
@@ -1006,8 +1001,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       if (expr instanceof ArrayInitializer)
       {
          final List<Class<?>> result = new ArrayList<>();
-         @SuppressWarnings("unchecked")
-         final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
+         @SuppressWarnings("unchecked") final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
          for (Expression expression : arrayElements)
          {
             final Class<?> type = resolveTypeLiteral((TypeLiteral) expression);
@@ -1038,7 +1032,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       {
          literalValue = literalValue.substring(1, literalValue.length() - 1);
       }
-      if (!Strings.isNullOrEmpty(literalValue))
+      if (!StringUtils.isEmpty(literalValue))
       {
          for (String value : literalValue.split(","))
          {
@@ -1091,7 +1085,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          literals.add(Strings.enquote(value));
       }
       return setLiteralValue(name,
-               literals.size() == 1 ? literals.get(0) : String.format("{%s}", Strings.join(literals, ",")));
+               literals.size() == 1 ? literals.get(0) : String.format("{%s}", String.join(",", literals)));
    }
 
    @Override
@@ -1112,15 +1106,14 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          literals.add(value.getSimpleName() + ".class");
       }
       return setLiteralValue(name,
-               literals.size() == 1 ? literals.get(0) : String.format("{%s}", Strings.join(literals, ",")));
+               literals.size() == 1 ? literals.get(0) : String.format("{%s}", String.join(",", literals)));
    }
 
    private <E extends Expression> E getElementValueExpression(String name)
    {
       if (isSingleValue() && DEFAULT_VALUE.equals(name))
       {
-         @SuppressWarnings("unchecked")
-         final E result = (E) ((SingleMemberAnnotation) annotation).getValue();
+         @SuppressWarnings("unchecked") final E result = (E) ((SingleMemberAnnotation) annotation).getValue();
          return result;
       }
       if (isNormal())
@@ -1132,8 +1125,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
                MemberValuePair pair = (MemberValuePair) v;
                if (pair.getName().getFullyQualifiedName().equals(name))
                {
-                  @SuppressWarnings("unchecked")
-                  final E result = (E) pair.getValue();
+                  @SuppressWarnings("unchecked") final E result = (E) pair.getValue();
                   return result;
                }
             }
