@@ -81,7 +81,7 @@ public interface Importer<O extends JavaSource<O>>
     * The resolving processing order is as followed:
     * <ol>
     * <li>If the type is primitive or full qualified, the type is returned as it</li>
-    * <li>Find the type in the imports</li>
+    * <li>Find the type in the imports with the simple name</li>
     * <li>If only one wildcard import is used, use this import for resolving</li>
     * <li>Use the available {@link WildcardImportResolver}. The first qualified name is used</li>
     * <li>The current package if defined is used for resolving</li>

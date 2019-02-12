@@ -11,6 +11,7 @@ import java.util.Objects;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
+import org.eclipse.jdt.core.dom.QualifiedName;
 import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.util.Types;
@@ -48,12 +49,21 @@ public class ImportImpl implements Import
       {
          return WILDCARD;
       }
-      return Types.toSimpleName(imprt.getName().getFullyQualifiedName());
+      // if the name is simple it must be a wildcard import, handled one above
+      if (imprt.getName().isSimpleName())
+      {
+         throw new IllegalStateException("Unexpected simple name for an import");
+      }
+      return ((QualifiedName) imprt.getName()).getName().getFullyQualifiedName();
    }
 
    @Override
    public String getQualifiedName()
    {
+      if (isWildcard())
+      {
+         return imprt.getName().getFullyQualifiedName() + "." + WILDCARD;
+      }
       return imprt.getName().getFullyQualifiedName();
    }
 

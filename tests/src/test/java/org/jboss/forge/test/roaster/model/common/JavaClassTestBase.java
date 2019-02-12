@@ -449,7 +449,7 @@ public abstract class JavaClassTestBase
       myClass.setSuperType("java.awt.List");
 
       assertEquals("Class should only contain one import.", 1, myClass.getImports().size());
-      assertEquals("Wrong import detected.", utilListImport, myClass.getImport("List"));
+      assertEquals("Wrong import detected.", utilListImport, myClass.getImport(myClass.resolveType("List")));
       assertEquals("Wrong super type set.", "java.awt.List", myClass.getSuperType());
    }
 

@@ -255,7 +255,12 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
    {
       for (Import imprt : getImports())
       {
-         if (imprt.getQualifiedName().equals(className) || imprt.getSimpleName().equals(className))
+         String qualifiedName = imprt.getQualifiedName();
+         if(imprt.isWildcard()) {
+            qualifiedName = qualifiedName.substring(0, qualifiedName.length() -2); //remove .*
+         }
+
+         if (qualifiedName.equals(className))
          {
             return imprt;
          }
@@ -414,14 +419,16 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
          return "java.lang." + result;
       }
 
-      // Check for an existing direct import
-      Import directImport = getImport(result);
-      if (directImport != null)
-      {
-         return directImport.getQualifiedName();
-      }
-
       List<Import> imports = getImports(); // fetch imports only once
+      
+      //no need to check for a import with getImport becuase than a fqn name is needed
+      //search for an existing import with the same simple name
+      for(Import imprt : imports) {
+         if (imprt.getSimpleName().equals(result))
+         {
+            return imprt.getQualifiedName();
+         }
+      }
 
       // if we have no imports and no fqn name the following doesn't need to be executed
       if (!imports.isEmpty())
@@ -489,7 +496,7 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
       for (final Import imprt : getImports())
       {
          String importClassName = imprt.getSimpleName();
-         if (importClassName.equals(className))
+         if (!imprt.isWildcard() && importClassName.equals(className))
          {
             return false;
          }
