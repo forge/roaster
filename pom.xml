@@ -51,6 +51,8 @@
       <maven.compiler.target>1.8</maven.compiler.target>
       <maven.compiler.source>1.8</maven.compiler.source>
       <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+
+      <version.commons-text>1.6</version.commons-text>
    </properties>
 
    <modules>
@@ -71,6 +73,11 @@
             <groupId>org.jboss.forge.roaster</groupId>
             <artifactId>roaster-jdt</artifactId>
             <version>${project.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>${version.commons-text}</version>
          </dependency>
       </dependencies>
    </dependencyManagement>

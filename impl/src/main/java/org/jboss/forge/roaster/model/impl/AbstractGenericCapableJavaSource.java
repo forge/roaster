@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -21,7 +22,6 @@ import org.jboss.forge.roaster.model.source.GenericCapableSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.PropertyHolderSource;
 import org.jboss.forge.roaster.model.source.TypeVariableSource;
-import org.jboss.forge.roaster.model.util.Strings;
 
 /**
  *
@@ -60,7 +60,7 @@ public abstract class AbstractGenericCapableJavaSource<O extends JavaSource<O> &
       List<TypeParameter> typeParameters = type.typeParameters();
       for (TypeParameter typeParameter : typeParameters)
       {
-         if (Strings.areEqual(name, typeParameter.getName().getIdentifier()))
+         if (Objects.equals(name, typeParameter.getName().getIdentifier()))
          {
             return new TypeVariableImpl<>((O) this, typeParameter);
          }
@@ -75,7 +75,7 @@ public abstract class AbstractGenericCapableJavaSource<O extends JavaSource<O> &
       List<TypeParameter> typeParameters = type.typeParameters();
       for (TypeParameter typeParameter : typeParameters)
       {
-         if (Strings.areEqual(name, typeParameter.getName().getIdentifier()))
+         if (Objects.equals(name, typeParameter.getName().getIdentifier()))
          {
             return true;
          }
@@ -105,7 +105,7 @@ public abstract class AbstractGenericCapableJavaSource<O extends JavaSource<O> &
       List<TypeParameter> typeParameters = type.typeParameters();
       for (Iterator<TypeParameter> iter = typeParameters.iterator(); iter.hasNext();)
       {
-         if (Strings.areEqual(name, iter.next().getName().getIdentifier()))
+         if (Objects.equals(name, iter.next().getName().getIdentifier()))
          {
             iter.remove();
             break;

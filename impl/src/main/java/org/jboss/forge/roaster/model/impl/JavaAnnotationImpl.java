@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 
 import org.eclipse.jdt.core.dom.AnnotationTypeMemberDeclaration;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
@@ -19,7 +20,6 @@ import org.jboss.forge.roaster.model.AnnotationElement;
 import org.jboss.forge.roaster.model.source.AnnotationElementSource;
 import org.jboss.forge.roaster.model.source.JavaAnnotationSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
-import org.jboss.forge.roaster.model.util.Strings;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -85,7 +85,7 @@ public class JavaAnnotationImpl extends AbstractJavaSource<JavaAnnotationSource>
    {
       for (AnnotationElementSource annotationElement : getAnnotationElements())
       {
-         if (Strings.areEqual(name, annotationElement.getName()))
+         if (Objects.equals(name, annotationElement.getName()))
          {
             return true;
          }
@@ -104,7 +104,7 @@ public class JavaAnnotationImpl extends AbstractJavaSource<JavaAnnotationSource>
    {
       for (AnnotationElementSource annotationElement : getAnnotationElements())
       {
-         if (Strings.areEqual(name, annotationElement.getName()))
+         if (Objects.equals(name, annotationElement.getName()))
          {
             return annotationElement;
          }

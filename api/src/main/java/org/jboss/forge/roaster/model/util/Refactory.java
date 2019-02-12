@@ -25,9 +25,12 @@ public class Refactory
 {
    private static final String RETURN_FALSE = " return false;";
 
-   private Refactory() {}
+   private Refactory()
+   {
+      throw new IllegalAccessError("Utility class");
+   }
 
-    /**
+   /**
     * Generates a getXXX and setXXX method for the supplied field
     *
     * @param clazz
@@ -43,7 +46,7 @@ public class Refactory
       clazz.getMethods();
 
       String fieldName = field.getName();
-      String methodNameSuffix = Strings.capitalize(fieldName);
+      String methodNameSuffix = capitalize(fieldName);
       clazz.addMethod().setReturnType(field.getType().toString()).setName("get" + methodNameSuffix)
                .setPublic()
                .setBody("return this." + fieldName + ";");
@@ -60,7 +63,7 @@ public class Refactory
     * Create a <i>hashCode</i> and <i>equals</i> implementation for the given class and fields
     *
     * @deprecated Use {@link Refactory#createHashCodeAndEquals(JavaClass, Field<O>...)} instead, since this method
-    *             relies on the existence of the id field
+    * relies on the existence of the id field
     */
    @Deprecated
    public static void createHashCodeAndEquals(final JavaClassSource clazz)
@@ -92,7 +95,7 @@ public class Refactory
     * to be used in these cases. Although transient fields could also be ignored, they are not since there is no
     * mechanism to convey warnings (not errors) in this case.
     *
-    * @param clazz class to be changed
+    * @param clazz  class to be changed
     * @param fields fields to be used in the equals/hashCode methods
     */
    public static void createHashCodeAndEquals(final JavaClassSource clazz, final FieldSource<?>... fields)
@@ -110,7 +113,7 @@ public class Refactory
     * these cases. Although transient fields could also be ignored, they are not since there is no mechanism to convey
     * warnings (not errors) in this case.
     *
-    * @param clazz class to be changed
+    * @param clazz  class to be changed
     * @param fields fields to be used in the equals/hashCode methods
     */
    public static void createEquals(final JavaClassSource clazz, final FieldSource<?>... fields)
@@ -220,7 +223,7 @@ public class Refactory
     * these cases. Although transient fields could also be ignored, they are not since there is no mechanism to convey
     * warnings (not errors) in this case.
     *
-    * @param clazz class to be changed
+    * @param clazz  class to be changed
     * @param fields fields to be used in the equals/hashCode methods
     */
    public static void createHashCode(final JavaClassSource clazz, final FieldSource<?>... fields)
@@ -387,8 +390,20 @@ public class Refactory
       }
 
       String body = "String result = getClass().getSimpleName()+\" \";\n" +
-               Strings.join(list, delimeter) + "\n" +
+               String.join(delimeter, list) + "\n" +
                "return result;";
       method.setBody(body);
    }
+   /**
+    * Capitalize the given String: "input" -> "Input"
+    */
+   private static String capitalize(final String input)
+   {
+      if ((input == null) || (input.length() == 0))
+      {
+         return input;
+      }
+      return input.substring(0, 1).toUpperCase() + input.substring(1);
+   }
+
 }

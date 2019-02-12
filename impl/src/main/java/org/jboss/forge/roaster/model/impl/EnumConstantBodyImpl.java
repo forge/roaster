@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -46,7 +47,6 @@ import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MemberSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
-import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.model.util.Types;
 import org.jboss.forge.roaster.spi.JavaParserImpl;
 
@@ -702,7 +702,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
             for (Parameter<? extends JavaType<?>> methodParam : method.getParameters())
             {
                if (localParams.hasNext()
-                        && Strings.areEqual(localParams.next().getType().getName(), methodParam.getType().getName()))
+                        && Objects.equals(localParams.next().getType().getName(), methodParam.getType().getName()))
                {
                   continue;
                }
@@ -837,8 +837,8 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
       }
       for (JavaSource<?> nested : getNestedTypes())
       {
-         if (Strings.areEqual(nested.getQualifiedName(), type.getQualifiedName())
-                  || Strings.areEqual(nested.getName(), type.getName()))
+         if (Objects.equals(nested.getQualifiedName(), type.getQualifiedName())
+                  || Objects.equals(nested.getName(), type.getName()))
          {
             return true;
          }
@@ -851,7 +851,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    {
       for (JavaSource<?> nested : getNestedTypes())
       {
-         if (Strings.areEqual(nested.getName(), name) || Strings.areEqual(nested.getQualifiedName(), name))
+         if (Objects.equals(nested.getName(), name) || Objects.equals(nested.getQualifiedName(), name))
          {
             return nested;
          }
@@ -864,8 +864,8 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    {
       for (JavaSource<?> nested : getNestedTypes())
       {
-         if (Strings.areEqual(nested.getName(), type.getSimpleName())
-                  || Strings.areEqual(nested.getQualifiedName(), type.getName()))
+         if (Objects.equals(nested.getName(), type.getSimpleName())
+                  || Objects.equals(nested.getQualifiedName(), type.getName()))
          {
             return true;
          }

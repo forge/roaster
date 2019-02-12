@@ -7,8 +7,6 @@
 
 package org.jboss.forge.roaster.model.util;
 
-import static java.util.Objects.requireNonNull;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +16,8 @@ import java.util.regex.Pattern;
 
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.Type;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Util classes for java types.
@@ -164,8 +164,8 @@ public class Types
     * {@code true}</li>
     * </ul>
     * </ul>
-    * 
-    * @param left the first type (maybe {@code null})
+    *
+    * @param left  the first type (maybe {@code null})
     * @param right the second type (maybe {@code null})
     * @return {@code true} if the above conditions are fulfilled, {@code false} otherwise
     * @throws NullPointerException if one of the arguments is{@code null}
@@ -195,10 +195,10 @@ public class Types
 
    /**
     * Calculates the simple name of the given type including all generics.
-    * 
+    *
     * @param type the type to convert
     * @return the simple name
-    * @throws NullPointerException if the type is {@code null}
+    * @throws NullPointerException     if the type is {@code null}
     * @throws IllegalArgumentException if the generic part couldn't be parsed
     */
    public static String toSimpleName(final String type)
@@ -248,7 +248,7 @@ public class Types
             }
             simpleParameters.add(simpleType);
          }
-         final String generics = new StringBuilder("<>").insert(1, Strings.join(simpleParameters, ",")).toString();
+         final String generics = new StringBuilder("<>").insert(1, String.join(",", simpleParameters)).toString();
          if (isArray(result))
          {
             result = new StringBuilder(result).insert(result.indexOf("["), generics).toString();
@@ -263,7 +263,7 @@ public class Types
 
    /**
     * Splits the given class name into is parts which are separated by a '.'.
-    * 
+    *
     * @param className the class name to tokenize
     * @return a string array with the parts
     * @throws NullPointerException if the class name is {@code null}
@@ -275,7 +275,7 @@ public class Types
 
    /**
     * Checks if the given type name is qualified, that means that it contains at least one '.'.
-    * 
+    *
     * @param typeName the type name to check
     * @return {@code true}, if the type is qualified, {@code false} otherwise
     * @throws NullPointerException if the type name is {@code null}
@@ -288,7 +288,7 @@ public class Types
    /**
     * Extracts the package part of a given type name. The package is the part which is the substring before the last
     * occurrence of '.'.
-    * 
+    *
     * @param typeName the type name to extract the package from
     * @return the package part or an empty string, if no package coudn't be extracted
     * @throws NullPointerException if the type name is {@code null}
@@ -305,7 +305,7 @@ public class Types
    /**
     * Checks if the given name is a simple name, so not full qualified. In the case the name is no valid java
     * identifier, {@code false} is returned.
-    * 
+    *
     * @param name the name to check
     * @return {@code true}, if the name is simple, {@code false} otherwise or if the name is no valid java identifier
     * @throws NullPointerException if the name is {@code null}
@@ -322,7 +322,7 @@ public class Types
     * The consequence is that the following will return {@code true}: {@code isJavaLang("test.String")}, because
     * {@code String} is part of {@code java.lang}.
     * </p>
-    * 
+    *
     * @param type the type to check
     * @return {@code true}, if the simple name of the type is part of {@code java.lang}, {@code false} otherwise
     * @throws NullPointerException if the type name is {@code null}
@@ -334,7 +334,7 @@ public class Types
 
    /**
     * Checks if the give type is a basic type, so it's either primitive or one of the primitive wrapper classes.
-    * 
+    *
     * @param type the type to check
     * @return {@code true} if this type is basic, {@code false} otherwise
     * @throws NullPointerException if the type name is {@code null}
@@ -346,7 +346,7 @@ public class Types
 
    /**
     * Checks if the given type is generic.
-    * 
+    *
     * @param type the type to check
     * @return {@code true} if this type is generic, {@code false} otherwise
     * @throws NullPointerException if the given type is {@code null}
@@ -359,7 +359,7 @@ public class Types
 
    /**
     * Checks if the generics are valid of this given type.
-    * 
+    *
     * @param type the type to check
     * @return {@code true}, if the generics are valid, {@code false} otherwise
     * @throws NullPointerException if the given type is {@code null}
@@ -414,10 +414,10 @@ public class Types
    /**
     * Removes the generics part of a given type. More specific, the content between the first occurrence of '<' and the
     * last occurrence if '>' is removed.
-    * 
+    *
     * @param type the type where the generics should be removed
-    * @throws NullPointerException if the given type is {@code null}
     * @return the type without generics
+    * @throws NullPointerException if the given type is {@code null}
     */
    public static String stripGenerics(String type)
    {
@@ -436,7 +436,7 @@ public class Types
 
    /**
     * Returns the generic part of a given type. For example {@code getGenerics("A<B>")} returns {@code "<B>"}.
-    * 
+    *
     * @param type the type to get the generics from
     * @return the generics from the given type, or an empty string, if the type has not generics
     * @throws NullPointerException if the given type is {@code null}
@@ -461,7 +461,7 @@ public class Types
 
    /**
     * Checks if the given type is an array.
-    * 
+    *
     * @param type the type to check
     * @return {@code true}, if the type is an array, {@code false} otherwise
     * @throws NullPointerException if the given type is {@code null}
@@ -487,7 +487,7 @@ public class Types
 
    /**
     * Strips the array from a given type.
-    * 
+    *
     * @param type the type to remove the array from
     * @return the type without an array
     * @throws NullPointerException if the given type is {@code null}
@@ -580,14 +580,15 @@ public class Types
 
    /**
     * Checks if the given type is primitive according to the Java Language Specification.
-    * 
+    *
     * @param type the type to check
     * @return {@code true} if this type is primitive, {@code false} otherwise
     * @throws NullPointerException if the given type is {@code null}
     */
    public static boolean isPrimitive(final String type)
    {
-      return Arrays.asList("byte", "short", "int", "long", "float", "double", "boolean", "char").contains(requireNonNull(type));
+      return Arrays.asList("byte", "short", "int", "long", "float", "double", "boolean", "char")
+               .contains(requireNonNull(type));
    }
 
    private static int getArrayDimension(String name, boolean isBasic)
@@ -632,7 +633,7 @@ public class Types
 
    /**
     * Returns the default value for a given class according to the Java Language Specification.
-    * 
+    *
     * @param clazz the class of the type
     * @return the default value
     * @throws NullPointerException if the given class is {@code null}
@@ -644,7 +645,7 @@ public class Types
 
    /**
     * Returns the default value for a given type according to the Java Language Specification.
-    * 
+    *
     * @param type the type
     * @return the default value
     * @throws NullPointerException if the given type is {@code null}
@@ -670,10 +671,9 @@ public class Types
    }
 
    /**
-    * 
     * Returns the available generics as a String array. Only the first level is split. For example
     * {@code splitGenerics("Foo<Bar<A>, Bar<B>>")} returns an array with {@code Bar<A>} and {@code Bar<B>}.
-    * 
+    *
     * @param typeName the generic type to split
     * @return an array with the generic parts (maybe empty but never {@code null})
     * @throws NullPointerException if the given type is {@code null}

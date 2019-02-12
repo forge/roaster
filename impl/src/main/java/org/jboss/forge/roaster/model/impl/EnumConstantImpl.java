@@ -7,7 +7,6 @@
 package org.jboss.forge.roaster.model.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,7 +22,6 @@ import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.EnumConstantSource;
 import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.source.JavaEnumSource;
-import org.jboss.forge.roaster.model.util.Strings;
 
 public class EnumConstantImpl implements EnumConstantSource
 {
@@ -106,7 +104,7 @@ public class EnumConstantImpl implements EnumConstantSource
       enumConstant.arguments().clear();
       if (literalArguments != null && literalArguments.length > 0)
       {
-         final String stub = "public enum Stub { FOO(" + Strings.join(Arrays.asList(literalArguments), ", ") + "); }";
+         final String stub = "public enum Stub { FOO(" + String.join(", ", literalArguments) + "); }";
          final JavaEnumSource temp = Roaster.parse(JavaEnumSource.class, stub);
          final List<EnumConstantSource> constants = temp.getEnumConstants();
          final EnumConstantDeclaration newConstant = (EnumConstantDeclaration) constants.get(0).getInternal();

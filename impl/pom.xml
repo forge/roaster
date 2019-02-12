@@ -10,7 +10,7 @@
   <artifactId>roaster-jdt</artifactId>
   <name>Forge Roaster - JDT Implementation</name>
   <properties>
-    <jdt.version>3.12.3</jdt.version>
+    <version.jdt>3.12.3</version.jdt>
   </properties>
   <dependencies>
     <dependency>
@@ -20,7 +20,7 @@
     <dependency>
       <groupId>org.eclipse.jdt</groupId>
       <artifactId>org.eclipse.jdt.core</artifactId>
-      <version>${jdt.version}</version>
+      <version>${version.jdt}</version>
       <exclusions>
         <exclusion>
           <groupId>org.eclipse.platform</groupId>
@@ -48,6 +48,10 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-text</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
@@ -62,16 +66,13 @@
               <goal>shade</goal>
             </goals>
             <configuration>
-
               <minimizeJar>true</minimizeJar>
               <createSourcesJar>true</createSourcesJar>
-
               <artifactSet>
                 <excludes>
                   <exclude>org.jboss.forge.roaster:roaster-api</exclude>
                 </excludes>
               </artifactSet>
-
               <filters>
                 <filter>
                   <artifact>*:*</artifact>
@@ -82,7 +83,6 @@
                   </excludes>
                 </filter>
               </filters>
-
               <relocations>
                 <relocation>
                   <pattern>org.eclipse</pattern>
@@ -94,6 +94,10 @@
                 <relocation>
                   <pattern>org.osgi</pattern>
                   <shadedPattern>org.jboss.forge.roaster._shade.org.osgi</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.apache.commons</pattern>
+                  <shadedPattern>org.jboss.forge.roaster._shade.org.apache.commons</shadedPattern>
                 </relocation>
               </relocations>
               <transformers>

@@ -28,7 +28,6 @@ import org.jboss.forge.roaster.model.ast.TypeDeclarationFinderVisitor;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.StaticCapableSource;
 import org.jboss.forge.roaster.model.source.TypeHolderSource;
-import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.spi.JavaParserImpl;
 
 /**
@@ -73,8 +72,8 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> extends JavaSo
    {
       for (JavaSource<?> nested : getNestedTypes())
       {
-         if (Strings.areEqual(nested.getQualifiedName(), type.getQualifiedName())
-                  || Strings.areEqual(nested.getName(), type.getName()))
+         if (Objects.equals(nested.getQualifiedName(), type.getQualifiedName())
+                  || Objects.equals(nested.getName(), type.getName()))
          {
             return true;
          }
@@ -87,7 +86,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> extends JavaSo
    {
       for (JavaSource<?> nested : getNestedTypes())
       {
-         if (Strings.areEqual(nested.getName(), name) || Strings.areEqual(nested.getQualifiedName(), name))
+         if (Objects.equals(nested.getName(), name) || Objects.equals(nested.getQualifiedName(), name))
          {
             return true;
          }
@@ -100,8 +99,8 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> extends JavaSo
    {
       for (JavaSource<?> nested : getNestedTypes())
       {
-         if (Strings.areEqual(nested.getName(), type.getSimpleName())
-                  || Strings.areEqual(nested.getQualifiedName(), type.getName()))
+         if (Objects.equals(nested.getName(), type.getSimpleName())
+                  || Objects.equals(nested.getQualifiedName(), type.getName()))
          {
             return true;
          }
@@ -114,7 +113,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> extends JavaSo
    {
       for (JavaSource<?> nested : getNestedTypes())
       {
-         if (Strings.areEqual(nested.getName(), name) || Strings.areEqual(nested.getQualifiedName(), name))
+         if (Objects.equals(nested.getName(), name) || Objects.equals(nested.getQualifiedName(), name))
          {
             return nested;
          }

@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -44,7 +45,6 @@ import org.jboss.forge.roaster.model.source.ParameterSource;
 import org.jboss.forge.roaster.model.source.PropertyHolderSource;
 import org.jboss.forge.roaster.model.source.PropertySource;
 import org.jboss.forge.roaster.model.util.Methods;
-import org.jboss.forge.roaster.model.util.Strings;
 import org.jboss.forge.roaster.model.util.Types;
 
 /**
@@ -316,7 +316,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
             for (Parameter<? extends JavaType<?>> methodParam : method.getParameters())
             {
                if (localParams.hasNext()
-                        && Strings.areEqual(localParams.next().getType().getName(), methodParam.getType().getName()))
+                        && Objects.equals(localParams.next().getType().getName(), methodParam.getType().getName()))
                {
                   continue;
                }
@@ -410,7 +410,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
             {
                pkg = this.getPackage();
             }
-            if (!Strings.isNullOrEmpty(pkg))
+            if (!StringUtils.isEmpty(pkg))
             {
                name = pkg + "." + name;
             }
@@ -722,7 +722,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    {
       if (GET_SET_PATTERN.matcher(method.getName()).matches())
       {
-         return Strings.uncapitalize(method.getName().substring(3));
+         return StringUtils.uncapitalize(method.getName().substring(3));
       }
       return null;
    }
