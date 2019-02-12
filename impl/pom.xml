@@ -68,12 +68,28 @@
             <configuration>
               <minimizeJar>true</minimizeJar>
               <createSourcesJar>true</createSourcesJar>
+              <shadeSourcesContent>true</shadeSourcesContent>
               <artifactSet>
                 <excludes>
                   <exclude>org.jboss.forge.roaster:roaster-api</exclude>
                 </excludes>
               </artifactSet>
               <filters>
+                <filter>
+                  <artifact>org.apache.commons:commons-text</artifact>
+                  <includes>
+                    <include>org/apache/commons/text/StringEscapeUtils**</include>
+                    <include>org/apache/commons/text/translate/**</include>
+                  </includes>
+                </filter>
+                <filter>
+                  <artifact>org.apache.commons:commons-lang3</artifact>
+                  <includes>
+                    <include>org/apache/commons/lang3/StringUtils**</include>
+                    <include>org/apache/commons/lang3/Range**</include>
+                    <include>org/apache/commons/lang3/Validate**</include>
+                  </includes>
+                </filter>
                 <filter>
                   <artifact>*:*</artifact>
                   <excludes>
