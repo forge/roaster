@@ -7,6 +7,11 @@
 
 package org.jboss.forge.roaster.model.util;
 
+import static java.lang.Character.isLowerCase;
+import static java.lang.Character.isUpperCase;
+import static java.lang.Character.toLowerCase;
+import static java.lang.Character.toUpperCase;
+
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +31,11 @@ public class Methods
 {
    private Methods()
    {
+      throw new IllegalAccessError("Utility class");
    }
 
    /**
-    * Implement the abstract methods present in a {@link MethodHolder} to the specified {@link MethodHolderSource}
+    * Implement the abstract methods present in a {@link MethodHolder} to the specified {@link MethodHolderSource}.
     * 
     * @param source the {@link MethodHolder} where the methods will be imported from
     * @param target the {@link MethodHolderSource} where the methods will be exported to
@@ -63,7 +69,7 @@ public class Methods
    }
 
    /**
-    * Implement the abstract methods present in a {@link Class} to the specified {@link MethodHolderSource}
+    * Implement the abstract methods present in a {@link Class} to the specified {@link MethodHolderSource}.
     * 
     * @param source the {@link Class} where the methods will be imported from
     * @param target the {@link MethodHolderSource} where the methods will be exported to
@@ -91,9 +97,10 @@ public class Methods
 
    /**
     * Adds a default method implementation to the given {@link MethodSource}. This method will call
-    * {@link MethodSource#setAbstract(false)} before setting the body if the origin is not an interface
+    * {@link MethodSource#setAbstract(boolean)} with {@code false} before setting the body if the origin is not an
+    * interface.
     * 
-    * @param source
+    * @param source the method where the implementation should be added
     */
    public static void implementMethod(MethodSource<?> source)
    {
@@ -120,6 +127,9 @@ public class Methods
    }
 
    /**
+    * Generate the parameter names for given parameter types
+    * 
+    * @param parameterTypes the parameter types to use
     * @return the parameter names of a given {@link Method}
     */
    public static String[] generateParameterNames(Class<?>[] parameterTypes)
@@ -130,39 +140,44 @@ public class Methods
          // Check if we haven't already used it.
          String name = toParamName(paramType.getSimpleName());
          String paramName = name;
-         int idx = 1;
+         int index = 1;
          while (parameterNames.contains(paramName))
          {
-            paramName = name + idx++;
+            paramName = name + index++;
          }
          parameterNames.add(paramName);
       }
       return parameterNames.toArray(new String[parameterNames.size()]);
    }
 
-   static String toParamName(String type)
+   private static String toParamName(String type)
    {
       // Special case for java.lang types
       if (Types.isBasicType(type) || Types.isJavaLang(type))
       {
          return String.valueOf(type.charAt(0)).toLowerCase();
       }
-      StringBuilder name = new StringBuilder(type);
-      int i;
-      for (i = 0; i < name.length(); i++)
+
+      StringBuilder finalName = new StringBuilder(type.length());
+
+      for (int i = 0; i < type.length(); i++)
       {
-         if (!Character.isUpperCase(name.charAt(i)))
+         char c = type.charAt(i);
+
+         if (isUpperCase(c))
          {
-            // Go back one index
-            i--;
+            finalName.append(toLowerCase(c));
+         }
+         else if (isLowerCase(c))
+         {
+            if (i > 1)
+            {
+               finalName.setCharAt(i - 1, toUpperCase(finalName.charAt(i - 1)));
+            }
+            finalName.append(type.substring(i));
             break;
          }
       }
-      if (i == 0)
-         name.setCharAt(0, Character.toLowerCase(name.charAt(0)));
-      else if (i > 0)
-         name.replace(0, i, name.substring(0, i).toLowerCase());
-      return name.toString();
+      return finalName.toString();
    }
-
 }

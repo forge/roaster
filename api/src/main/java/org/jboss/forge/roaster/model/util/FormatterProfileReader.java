@@ -35,41 +35,41 @@ public class FormatterProfileReader
    private final Map<String, Properties> profiles = new LinkedHashMap<>();
 
    /**
-    * Creates a new {@link FormatterProfileReader} instance
+    * Creates a new {@link FormatterProfileReader} instance.
     *
     * @param inputStream a XML with the Eclipse Formatter format
-    * @return
-    * @throws IOException
+    * @return a new generated FormatterProfileReader
+    * @throws IOException if the reading fails because of an IO event
+    * @throws IllegalStateException if the reading fails because of an internal error
     */
    public static FormatterProfileReader fromEclipseXml(InputStream inputStream) throws IOException
    {
       return new FormatterProfileReader(inputStream);
    }
 
-   /**
-    * Private constructor. Use the static methods to create instances of this object
-    */
-   private FormatterProfileReader(InputStream is) throws IOException
+   private FormatterProfileReader(InputStream inputStream) throws IOException
    {
       final EclipseFormatterProfileHandler handler = new EclipseFormatterProfileHandler();
       final SAXParserFactory factory = SAXParserFactory.newInstance();
-      SAXParser parser;
+
       try
       {
-         parser = factory.newSAXParser();
-         parser.parse(new InputSource(is), handler);
+         SAXParser parser = factory.newSAXParser();
+         parser.parse(new InputSource(inputStream), handler);
       }
       catch (ParserConfigurationException e)
       {
-         throw new IOException("Error while parsing formatter XML", e);
+         throw new IllegalStateException("Error while creating the parser", e);
       }
       catch (SAXException e)
       {
-         throw new IOException(e);
+         throw new IOException("Error while parsing formatter XML", e);
       }
    }
 
    /**
+    * Get the default settings.
+    * 
     * @return the default settings for {@link FormatterProfileReader}
     */
    public Properties getDefaultProperties()
@@ -78,7 +78,10 @@ public class FormatterProfileReader
    }
 
    /**
-    * Returns the {@link Properties} related to the formatter name
+    * Returns the {@link Properties} related to the formatter name.
+    * 
+    * @param formatterName the formatter name
+    * @return the properties related to the given formatter name
     */
    public Properties getPropertiesFor(String formatterName)
    {
@@ -86,7 +89,9 @@ public class FormatterProfileReader
    }
 
    /**
-    * Returns the profile names in this {@link FormatterProfileReader}
+    * Returns the profile names in this {@link FormatterProfileReader}.
+    * 
+    * @return the profiler names
     */
    public Set<String> getProfileNames()
    {
@@ -95,12 +100,12 @@ public class FormatterProfileReader
 
    private class EclipseFormatterProfileHandler extends DefaultHandler
    {
-      private static final String XML_NODE_PROFILE = "profile"; //$NON-NLS-1$
-      private static final String XML_NODE_SETTING = "setting"; //$NON-NLS-1$
+      private static final String XML_NODE_PROFILE = "profile";
+      private static final String XML_NODE_SETTING = "setting";
 
-      private static final String XML_ATTRIBUTE_ID = "id"; //$NON-NLS-1$
-      private static final String XML_ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
-      private static final String XML_ATTRIBUTE_VALUE = "value"; //$NON-NLS-1$
+      private static final String XML_ATTRIBUTE_ID = "id";
+      private static final String XML_ATTRIBUTE_NAME = "name";
+      private static final String XML_ATTRIBUTE_VALUE = "value";
 
       private String currentProfileName;
       private Properties currentProperties;
@@ -110,7 +115,6 @@ public class FormatterProfileReader
       {
          if (XML_NODE_PROFILE.equals(qName))
          {
-            // Start Profile
             currentProfileName = attributes.getValue(XML_ATTRIBUTE_NAME);
             currentProperties = new Properties();
          }
@@ -127,12 +131,10 @@ public class FormatterProfileReader
       {
          if (XML_NODE_PROFILE.equals(qName))
          {
-            // End Profile
             profiles.put(currentProfileName, currentProperties);
             currentProfileName = null;
             currentProperties = null;
          }
       }
    }
-
 }
