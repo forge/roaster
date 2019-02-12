@@ -33,8 +33,8 @@ public class Refactory
    /**
     * Generates a getXXX and setXXX method for the supplied field
     *
-    * @param clazz
-    * @param field
+    * @param clazz the java source class where to generated the methods
+    * @param field the fields for which the methods should be generated
     */
    public static void createGetterAndSetter(final JavaClassSource clazz, final FieldSource<JavaClassSource> field)
    {
@@ -61,9 +61,11 @@ public class Refactory
 
    /**
     * Create a <i>hashCode</i> and <i>equals</i> implementation for the given class and fields
+    * 
+    * @param clazz the class where to generate the methods
     *
-    * @deprecated Use {@link Refactory#createHashCodeAndEquals(JavaClass, Field<O>...)} instead, since this method
-    * relies on the existence of the id field
+    * @deprecated Use {@link Refactory#createHashCodeAndEquals(JavaClassSource, FieldSource...)} instead, since this
+    *             method relies on the existence of the id field
     */
    @Deprecated
    public static void createHashCodeAndEquals(final JavaClassSource clazz)
@@ -95,7 +97,7 @@ public class Refactory
     * to be used in these cases. Although transient fields could also be ignored, they are not since there is no
     * mechanism to convey warnings (not errors) in this case.
     *
-    * @param clazz  class to be changed
+    * @param clazz class to be changed
     * @param fields fields to be used in the equals/hashCode methods
     */
    public static void createHashCodeAndEquals(final JavaClassSource clazz, final FieldSource<?>... fields)
@@ -113,7 +115,7 @@ public class Refactory
     * these cases. Although transient fields could also be ignored, they are not since there is no mechanism to convey
     * warnings (not errors) in this case.
     *
-    * @param clazz  class to be changed
+    * @param clazz class to be changed
     * @param fields fields to be used in the equals/hashCode methods
     */
    public static void createEquals(final JavaClassSource clazz, final FieldSource<?>... fields)
@@ -223,7 +225,7 @@ public class Refactory
     * these cases. Although transient fields could also be ignored, they are not since there is no mechanism to convey
     * warnings (not errors) in this case.
     *
-    * @param clazz  class to be changed
+    * @param clazz class to be changed
     * @param fields fields to be used in the equals/hashCode methods
     */
    public static void createHashCode(final JavaClassSource clazz, final FieldSource<?>... fields)
@@ -327,7 +329,7 @@ public class Refactory
    /**
     * Create a <i>toString</i> implementation using all the fields in this class
     *
-    * @param clazz
+    * @param clazz the class where the method should be generated
     */
    public static void createToStringFromFields(final JavaClassSource clazz)
    {
@@ -338,9 +340,10 @@ public class Refactory
    /**
     * Create a <i>toString</i> implementation using the supplied fields
     *
-    * @param clazz
-    * @param fields
+    * @param clazz the class where the method should be generated
+    * @param fields the fields which are used for this method
     */
+   @SuppressWarnings("unchecked")
    public static void createToStringFromFields(final JavaClassSource clazz,
             final FieldSource<JavaClassSource>... fields)
    {
@@ -350,8 +353,8 @@ public class Refactory
    /**
     * Create a <i>toString</i> implementation using the supplied fields
     *
-    * @param clazz
-    * @param fields
+    * @param clazz the class where the method should be generated
+    * @param fields the fields which are used for this method
     */
    public static void createToStringFromFields(final JavaClassSource clazz,
             final List<FieldSource<JavaClassSource>> fields)
@@ -360,7 +363,7 @@ public class Refactory
                .setPublic();
       method.addAnnotation(Override.class);
 
-      List<String> list = new ArrayList<String>();
+      List<String> list = new ArrayList<>();
 
       String delimeter = "\n";
       for (FieldSource<JavaClassSource> field : fields)
@@ -394,6 +397,7 @@ public class Refactory
                "return result;";
       method.setBody(body);
    }
+
    /**
     * Capitalize the given String: "input" -> "Input"
     */
@@ -405,5 +409,4 @@ public class Refactory
       }
       return input.substring(0, 1).toUpperCase() + input.substring(1);
    }
-
 }

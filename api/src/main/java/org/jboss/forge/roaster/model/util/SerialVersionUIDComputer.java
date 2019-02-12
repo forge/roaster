@@ -28,12 +28,15 @@ public class SerialVersionUIDComputer
 
    private SerialVersionUIDComputer()
    {
+      throw new IllegalAccessError("Utility class");
    }
 
    /**
     * This is not the official algorithm as defined in the JLS spec, but it is close
     * 
-    * @see {@link java.io.ObjectStreamClass#getSerialVersionUID()}
+    * @param source the source of which the UUID is base
+    * 
+    * @see java.io.ObjectStreamClass#getSerialVersionUID()
     * @return the computed serialVersionUID value
     */
    public static long compute(JavaClassSource source)
