@@ -36,9 +36,9 @@ public interface Import extends Internal, StaticCapableSource<Import>
 
    /**
     * Returns the qualified name, so it's the same as '{@code getPackage() + "." + getSimpleName()}'. In the case this
-    * is a wildcard import, the package part is returned.
+    * is a wildcard import, the whole import including a '*' at the end is returned.
     * 
-    * @return the qualified name or the packge if this is a wildcar import
+    * @return the qualified name or the full name if this is a wildcard import
     */
    String getQualifiedName();
 

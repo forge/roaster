@@ -401,9 +401,13 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
          if (Types.isSimpleName(rawName))
          {
             String pkg;
-            if (this.hasImport(rawName))
+            Import imprt = getImport(rawName);
+            if (imprt == null)
             {
-               Import imprt = this.getImport(rawName);
+               imprt = getImport(resolveType(rawName));
+            }
+            if (imprt != null)
+            {
                pkg = imprt.getPackage();
             }
             else
@@ -587,10 +591,11 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @Override
    public final PropertySource<O> addProperty(String type, String name)
    {
-      if(hasProperty(name)) {
+      if (hasProperty(name))
+      {
          throw new IllegalStateException("Cannot create existing property " + name);
       }
-      
+
       O origin = getOrigin();
       if (origin.requiresImport(type))
       {
