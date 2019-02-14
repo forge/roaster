@@ -17,7 +17,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.StringEscapeUtils;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ArrayInitializer;
@@ -25,6 +24,7 @@ import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.IExtendedModifier;
 import org.eclipse.jdt.core.dom.MemberValuePair;
+import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
@@ -37,6 +37,7 @@ import org.jboss.forge.roaster.model.ValuePair;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.AnnotationTargetSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
+import org.jboss.forge.roaster.model.util.Types;
 
 import static java.util.Objects.requireNonNull;
 
@@ -45,9 +46,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSource<O>
 {
-   private static final String NULL_VALUE_NOT_ACCEPTED = "null value not accepted";
-   private static final String NULL_ARRAY_NOT_ACCEPTED = "null array not accepted";
-   private static final String NULL_NOT_ACCEPTED = "null not accepted";
+   private static final String MISSING = "MISSING";
+   private static final String DEFAULT_VALUE = "value";
 
    private class Nested extends AnnotationImpl<O, T>
    {
@@ -74,16 +74,15 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          }
          else if (oldNode.getParent() instanceof ArrayInitializer)
          {
-            @SuppressWarnings("unchecked") final List<org.eclipse.jdt.core.dom.Annotation> expressions = ((ArrayInitializer) oldNode
+            @SuppressWarnings("unchecked")
+            final List<org.eclipse.jdt.core.dom.Annotation> expressions = ((ArrayInitializer) oldNode
                      .getParent())
-                     .expressions();
+                              .expressions();
             expressions.set(expressions.indexOf(oldNode), newNode);
          }
       }
 
    }
-
-   private static final String DEFAULT_VALUE = "value";
 
    private AnnotationTargetSource<O, T> parent = null;
    private AST ast = null;
@@ -132,13 +131,31 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public String getName()
    {
-      return annotation.getTypeName().getFullyQualifiedName();
+      Name name = annotation.getTypeName();
+      if (name.getFullyQualifiedName().equals(MISSING))
+      {
+         return MISSING;
+      }
+      if (name.isSimpleName())
+      {
+         return name.getFullyQualifiedName();
+      }
+      return Types.toSimpleName(name.getFullyQualifiedName());
    }
 
    @Override
    public String getQualifiedName()
    {
-      return parent.getOrigin().resolveType(getName());
+      Name name = annotation.getTypeName();
+      if (name.getFullyQualifiedName().equals(MISSING))
+      {
+         return MISSING;
+      }
+      if (name.isSimpleName())
+      {
+         return parent.getOrigin().resolveType(name.getFullyQualifiedName());
+      }
+      return name.getFullyQualifiedName();
    }
 
    @Override
@@ -306,7 +323,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public AnnotationSource<O> setLiteralValue(final String value)
    {
-      requireNonNull(value, NULL_NOT_ACCEPTED);
+      requireNonNull(value);
 
       if (isMarker())
       {
@@ -355,7 +372,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @SuppressWarnings("unchecked")
    public AnnotationSource<O> setLiteralValue(final String name, final String value)
    {
-      requireNonNull(value, NULL_NOT_ACCEPTED);
+      requireNonNull(value);
 
       if (!isNormal() && !DEFAULT_VALUE.equals(name))
       {
@@ -460,14 +477,11 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public AnnotationSource<O> setEnumArrayValue(String name, final Enum<?>... values)
    {
-      requireNonNull(values, NULL_ARRAY_NOT_ACCEPTED);
-
       final List<String> literals = new ArrayList<>();
 
-      for (Enum<?> value : values)
+      for (Enum<?> value : requireNonNull(values))
       {
-         requireNonNull(value, NULL_VALUE_NOT_ACCEPTED);
-         getOrigin().addImport(value.getDeclaringClass());
+         getOrigin().addImport(requireNonNull(value).getDeclaringClass());
          literals.add(value.getDeclaringClass().getSimpleName() + "." + value.name());
       }
       return setLiteralValue(name,
@@ -526,10 +540,17 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
                && type != AnnotationType.NORMAL)
       {
          String value = this.getLiteralValue();
-         AnnotationImpl<O, T> na = new AnnotationImpl<>(parent, type);
-         na.setName(getName());
-         replace(annotation, na.annotation);
-         annotation = na.annotation;
+         AnnotationImpl<O, T> newAnnotation = new AnnotationImpl<>(parent, type);
+         if (getOrigin().getImport(getQualifiedName()) != null)
+         {
+            newAnnotation.setName(getName());
+         }
+         else
+         {
+            newAnnotation.setName(getQualifiedName());
+         }
+         replace(annotation, newAnnotation.annotation);
+         annotation = newAnnotation.annotation;
 
          if (AnnotationType.MARKER != type && (value != null))
          {
@@ -794,7 +815,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       {
          final Set<String> identifiers = new HashSet<>();
          for (@SuppressWarnings("unchecked")
-              Iterator<Object> values = ((NormalAnnotation) annotation).values().iterator(); values.hasNext(); )
+         Iterator<Object> values = ((NormalAnnotation) annotation).values().iterator(); values.hasNext();)
          {
             final Object value = values.next();
             if (value instanceof MemberValuePair)
@@ -922,19 +943,22 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       if (expr instanceof ArrayInitializer)
       {
          final List<AnnotationSource<O>> results = new ArrayList<>();
-         @SuppressWarnings("unchecked") final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
+         @SuppressWarnings("unchecked")
+         final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
          for (Expression arrayElement : arrayElements)
          {
             final AnnotationSource<O> instance = new Nested(this, arrayElement);
             results.add(instance);
          }
-         @SuppressWarnings("unchecked") final AnnotationSource<O>[] result = new AnnotationSource[results.size()];
+         @SuppressWarnings("unchecked")
+         final AnnotationSource<O>[] result = new AnnotationSource[results.size()];
          return results.toArray(result);
       }
       final AnnotationSource<O> annotationValue = getAnnotationValue(name);
       if (annotationValue != null)
       {
-         @SuppressWarnings("unchecked") final AnnotationSource<O>[] result = new AnnotationSource[] { annotationValue };
+         @SuppressWarnings("unchecked")
+         final AnnotationSource<O>[] result = new AnnotationSource[] { annotationValue };
          return result;
       }
       return null;
@@ -953,13 +977,15 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       if (expr instanceof ArrayInitializer)
       {
          final List<E> results = new ArrayList<>();
-         @SuppressWarnings("unchecked") final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
+         @SuppressWarnings("unchecked")
+         final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
          for (Expression arrayElement : arrayElements)
          {
             final E instance = convertLiteralToEnum(type, arrayElement.toString());
             results.add(instance);
          }
-         @SuppressWarnings("unchecked") final E[] result = (E[]) Array.newInstance(type, results.size());
+         @SuppressWarnings("unchecked")
+         final E[] result = (E[]) Array.newInstance(type, results.size());
          return results.toArray(result);
       }
       else if (expr != null)
@@ -967,7 +993,8 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          final E instance = convertLiteralToEnum(type, expr.toString());
          if (type.isInstance(instance))
          {
-            @SuppressWarnings("unchecked") final E[] result = (E[]) Array.newInstance(type, 1);
+            @SuppressWarnings("unchecked")
+            final E[] result = (E[]) Array.newInstance(type, 1);
             result[0] = instance;
             return result;
          }
@@ -1001,7 +1028,8 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       if (expr instanceof ArrayInitializer)
       {
          final List<Class<?>> result = new ArrayList<>();
-         @SuppressWarnings("unchecked") final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
+         @SuppressWarnings("unchecked")
+         final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
          for (Expression expression : arrayElements)
          {
             final Class<?> type = resolveTypeLiteral((TypeLiteral) expression);
@@ -1045,9 +1073,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public AnnotationSource<O> setClassValue(String name, Class<?> value)
    {
-      requireNonNull(value, NULL_NOT_ACCEPTED);
-
-      if (!value.isPrimitive())
+      if (!requireNonNull(value).isPrimitive())
       {
          getOrigin().addImport(value);
       }
@@ -1075,14 +1101,11 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public AnnotationSource<O> setStringArrayValue(String name, String[] values)
    {
-      requireNonNull(values, NULL_ARRAY_NOT_ACCEPTED);
-
       final List<String> literals = new ArrayList<>();
 
-      for (String value : values)
+      for (String value : requireNonNull(values))
       {
-         requireNonNull(value, NULL_VALUE_NOT_ACCEPTED);
-         literals.add(Strings.enquote(value));
+         literals.add(Strings.enquote(requireNonNull(value)));
       }
       return setLiteralValue(name,
                literals.size() == 1 ? literals.get(0) : String.format("{%s}", String.join(",", literals)));
@@ -1091,14 +1114,11 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public AnnotationSource<O> setClassArrayValue(String name, Class<?>... values)
    {
-      requireNonNull(values, NULL_ARRAY_NOT_ACCEPTED);
-
       final List<String> literals = new ArrayList<>();
 
-      for (Class<?> value : values)
+      for (Class<?> value : requireNonNull(values))
       {
-         requireNonNull(value, NULL_VALUE_NOT_ACCEPTED);
-
+         requireNonNull(value);
          if (!value.isPrimitive())
          {
             getOrigin().addImport(value);
@@ -1113,7 +1133,8 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    {
       if (isSingleValue() && DEFAULT_VALUE.equals(name))
       {
-         @SuppressWarnings("unchecked") final E result = (E) ((SingleMemberAnnotation) annotation).getValue();
+         @SuppressWarnings("unchecked")
+         final E result = (E) ((SingleMemberAnnotation) annotation).getValue();
          return result;
       }
       if (isNormal())
@@ -1125,7 +1146,8 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
                MemberValuePair pair = (MemberValuePair) v;
                if (pair.getName().getFullyQualifiedName().equals(name))
                {
-                  @SuppressWarnings("unchecked") final E result = (E) pair.getValue();
+                  @SuppressWarnings("unchecked")
+                  final E result = (E) pair.getValue();
                   return result;
                }
             }

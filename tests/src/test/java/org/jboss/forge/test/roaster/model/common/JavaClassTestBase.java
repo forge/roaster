@@ -47,7 +47,7 @@ public abstract class JavaClassTestBase
    protected abstract JavaClassSource getSource() throws IOException;
 
    @Test
-   public void testApplyChangesNotRequiredForModification() 
+   public void testApplyChangesNotRequiredForModification()
    {
       assertEquals("MockClass", source.getName());
       source.setName("Telephone");
@@ -59,7 +59,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testFormattingIsNotChanged() 
+   public void testFormattingIsNotChanged()
    {
       assertEquals("MockClass", source.getName());
       source.setName("Telephone");
@@ -72,7 +72,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testParse() 
+   public void testParse()
    {
       assertEquals(URL.class.getName(), source.getImports().get(0).getQualifiedName());
       assertEquals(1, source.getMethods().size());
@@ -82,7 +82,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testSetName() 
+   public void testSetName()
    {
       assertEquals("MockClass", source.getName());
       source.setName("Telephone");
@@ -90,7 +90,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testSetNameUpdatesConstructorNames() 
+   public void testSetNameUpdatesConstructorNames()
    {
       MethodSource<JavaClassSource> constructor = source.addMethod().setConstructor(true).setPublic();
       assertEquals("MockClass", source.getName());
@@ -101,7 +101,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testSetPackage() 
+   public void testSetPackage()
    {
       source.setPackage("org.lincoln");
       assertEquals("org.lincoln", source.getPackage());
@@ -109,14 +109,14 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testSetAbstract() 
+   public void testSetAbstract()
    {
       source.setAbstract(true);
       assertTrue(source.isAbstract());
    }
 
    @Test
-   public void testSetPackageDefault() 
+   public void testSetPackageDefault()
    {
       source.setDefaultPackage();
       assertNull(source.getPackage());
@@ -130,7 +130,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testAddImport() 
+   public void testAddImport()
    {
       source.addImport(List.class.getName());
       assertEquals(2, source.getImports().size());
@@ -139,13 +139,13 @@ public abstract class JavaClassTestBase
    }
 
    @Test()
-   public void testCannotAddSimpleClassImport() 
+   public void testCannotAddSimpleClassImport()
    {
       assertNull(source.addImport("List"));
    }
 
    @Test
-   public void testAddImportClasses() 
+   public void testAddImportClasses()
    {
       assertEquals(1, source.getImports().size());
 
@@ -157,7 +157,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testAddImportStatic() 
+   public void testAddImportStatic()
    {
       assertEquals(1, source.getImports().size());
       source.addImport(List.class).setStatic(true);
@@ -166,7 +166,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testHasImport() 
+   public void testHasImport()
    {
       assertEquals(1, source.getImports().size());
       assertFalse(source.hasImport(List.class));
@@ -176,7 +176,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testCannotAddDuplicateImport() 
+   public void testCannotAddDuplicateImport()
    {
       assertEquals(1, source.getImports().size());
       assertFalse(source.hasImport(List.class));
@@ -187,7 +187,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testRemoveImportByClass() 
+   public void testRemoveImportByClass()
    {
       List<Import> imports = source.getImports();
       assertEquals(1, imports.size());
@@ -199,7 +199,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testRemoveImportByName() 
+   public void testRemoveImportByName()
    {
       assertEquals(1, source.getImports().size());
       assertEquals(URL.class.getName(), source.getImports().get(0).getQualifiedName());
@@ -209,7 +209,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testRemoveImportByReference() 
+   public void testRemoveImportByReference()
    {
       assertEquals(1, source.getImports().size());
       assertEquals(URL.class.getName(), source.getImports().get(0).getQualifiedName());
@@ -219,7 +219,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testRequiresImport() 
+   public void testRequiresImport()
    {
       assertFalse(source.hasImport(JavaClassTestBase.class));
       assertTrue(source.requiresImport(JavaClassTestBase.class));
@@ -274,17 +274,17 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testAddImportAcceptsJavaLangPackage() 
+   public void testAddImportAcceptsJavaLangPackage()
    {
       assertFalse(source.hasImport(String.class));
       assertFalse(source.requiresImport(String.class));
       source.addImport(String.class);
-      assertTrue(source.hasImport(String.class));
+      assertFalse(source.hasImport(String.class));
       assertFalse(source.requiresImport(String.class));
    }
 
    @Test
-   public void testAddMethod() 
+   public void testAddMethod()
    {
       int size = source.getMethods().size();
       MethodSource<JavaClassSource> method = source.addMethod().setName("testMethod").setReturnTypeVoid().setBody("");
@@ -294,7 +294,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testAddMethodFromString() 
+   public void testAddMethodFromString()
    {
       int size = source.getMethods().size();
       MethodSource<JavaClassSource> method = source.addMethod(
@@ -310,7 +310,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testRemoveMethod() 
+   public void testRemoveMethod()
    {
       int size = source.getMethods().size();
       List<MethodSource<JavaClassSource>> methods = source.getMethods();
@@ -320,7 +320,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testAddConstructor() 
+   public void testAddConstructor()
    {
       int size = source.getMethods().size();
       MethodSource<JavaClassSource> method = source.addMethod().setName("testMethod").setConstructor(true)
@@ -337,7 +337,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testAddConstructorIgnoresReturnTypeAndName() 
+   public void testAddConstructorIgnoresReturnTypeAndName()
    {
       int size = source.getMethods().size();
       MethodSource<JavaClassSource> method = source.addMethod().setName("testMethod").setConstructor(true).setPrivate()
@@ -353,7 +353,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testSuperType() 
+   public void testSuperType()
    {
       JavaClassSource source = Roaster.parse(JavaClassSource.class, "public class Base extends Super {}");
       assertEquals("Super", source.getSuperType());
@@ -405,7 +405,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testSuperTypeJavaLang() 
+   public void testSuperTypeJavaLang()
    {
       JavaClassSource source = Roaster.parse(JavaClassSource.class, "public class Base extends Integer {}");
       assertEquals("java.lang.Integer", source.getSuperType());
@@ -415,7 +415,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testSuperTypeImport() 
+   public void testSuperTypeImport()
    {
       JavaClassSource source = Roaster.parse(JavaClassSource.class, "public class Base extends Super {}");
       assertEquals("Super", source.getSuperType());
@@ -433,11 +433,11 @@ public abstract class JavaClassTestBase
       myClass.setPackage("test");
       myClass.setPublic()
                .setName("MyClass")
-               .setSuperType("test.MyClassParent<java.util.String, java.util.Object>");
-      Assert.assertTrue(myClass.hasImport("java.util.String"));
-      Assert.assertTrue(myClass.hasImport("java.util.Object"));
+               .setSuperType("test.MyClassParent<java.util.Foo, java.util.Bar>");
+      Assert.assertTrue(myClass.hasImport("java.util.Foo"));
+      Assert.assertTrue(myClass.hasImport("java.util.Bar"));
       Assert.assertTrue(myClass.hasImport("test.MyClassParent"));
-      Assert.assertThat(myClass.getSuperType(), equalTo("test.MyClassParent<String,Object>"));
+      Assert.assertThat(myClass.getSuperType(), equalTo("test.MyClassParent<Foo,Bar>"));
    }
 
    @Test
@@ -454,7 +454,7 @@ public abstract class JavaClassTestBase
    }
 
    @Test
-   public void testFinal() 
+   public void testFinal()
    {
       source.setFinal(false);
       assertFalse(source.isFinal());
