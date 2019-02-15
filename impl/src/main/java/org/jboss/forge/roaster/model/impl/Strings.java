@@ -8,7 +8,7 @@ import org.apache.commons.text.StringEscapeUtils;
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  *
  */
-public class Strings
+class Strings
 {
    static String unquote(final String value)
    {
