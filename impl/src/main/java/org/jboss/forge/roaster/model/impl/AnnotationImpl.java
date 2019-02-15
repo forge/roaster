@@ -36,6 +36,7 @@ import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.ValuePair;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.AnnotationTargetSource;
+import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.util.Types;
 
@@ -481,8 +482,15 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
 
       for (Enum<?> value : requireNonNull(values))
       {
-         getOrigin().addImport(requireNonNull(value).getDeclaringClass());
-         literals.add(value.getDeclaringClass().getSimpleName() + "." + value.name());
+         Import imprt = getOrigin().addImport(requireNonNull(value).getDeclaringClass());
+         if (imprt == null)
+         {
+            literals.add(value.getDeclaringClass().getCanonicalName() + "." + value.name());
+         }
+         else
+         {
+            literals.add(value.getDeclaringClass().getSimpleName() + "." + value.name());
+         }
       }
       return setLiteralValue(name,
                literals.size() == 1 ? literals.get(0) : String.format("{%s}", String.join(",", literals)));
@@ -562,10 +570,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public int hashCode()
    {
-      final int prime = 31;
-      int result = 1;
-      result = (prime * result) + ((annotation == null) ? 0 : annotation.hashCode());
-      return result;
+      return Objects.hashCode(annotation);
    }
 
    @Override
@@ -753,21 +758,15 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public AnnotationSource<O> addAnnotationValue(Class<? extends java.lang.annotation.Annotation> type)
    {
-      if (!getOrigin().hasImport(type))
-      {
-         getOrigin().addImport(type);
-      }
-      return addAnnotationValue().setName(type.getSimpleName());
+      String typeToUse = getOrigin().addImport(type) != null ? type.getCanonicalName() : type.getSimpleName();
+      return addAnnotationValue().setName(typeToUse);
    }
 
    @Override
    public AnnotationSource<O> addAnnotationValue(String name, Class<? extends java.lang.annotation.Annotation> type)
    {
-      if (!getOrigin().hasImport(type))
-      {
-         getOrigin().addImport(type);
-      }
-      return addAnnotationValue(name).setName(type.getSimpleName());
+      String typeToUse = getOrigin().addImport(type) != null ? type.getCanonicalName() : type.getSimpleName();
+      return addAnnotationValue(name).setName(typeToUse);
    }
 
    @Override
@@ -1073,11 +1072,9 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public AnnotationSource<O> setClassValue(String name, Class<?> value)
    {
-      if (!requireNonNull(value).isPrimitive())
-      {
-         getOrigin().addImport(value);
-      }
-      return setLiteralValue(name, value.getSimpleName() + ".class");
+      requireNonNull(value);
+      String valueToUse = getOrigin().addImport(value) != null ? value.getSimpleName() : value.getCanonicalName();
+      return setLiteralValue(name, valueToUse + ".class");
    }
 
    @Override
@@ -1119,11 +1116,8 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       for (Class<?> value : requireNonNull(values))
       {
          requireNonNull(value);
-         if (!value.isPrimitive())
-         {
-            getOrigin().addImport(value);
-         }
-         literals.add(value.getSimpleName() + ".class");
+         String valueToUse = getOrigin().addImport(value) != null ? value.getSimpleName() : value.getCanonicalName();
+         literals.add(valueToUse + ".class");
       }
       return setLiteralValue(name,
                literals.size() == 1 ? literals.get(0) : String.format("{%s}", String.join(",", literals)));
