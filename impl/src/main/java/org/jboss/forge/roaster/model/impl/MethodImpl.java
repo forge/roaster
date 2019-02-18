@@ -21,7 +21,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
-import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeParameter;
@@ -329,22 +329,10 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public MethodSource<O> setReturnType(final String typeName)
    {
-      String simpleName = Types.toSimpleName(typeName);
+      getOrigin().addImport(typeName);
+      String typeToUse = Types.toResolvedType(typeName, getOrigin());
 
-      O origin = getOrigin();
-      if (!hasTypeVariable(typeName) && !Objects.equals(typeName, simpleName)
-               && origin.requiresImport(typeName))
-      {
-         origin.addImport(typeName);
-      }
-      for (String genericType : Types.splitGenerics(typeName))
-      {
-         if (!hasTypeVariable(genericType) && origin.requiresImport(genericType))
-         {
-            origin.addImport(genericType);
-         }
-      }
-      String stub = "public class Stub { public " + simpleName + " method() {} }";
+      String stub = "public class Stub { public " + typeToUse + " method() {} }";
       JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
       List<MethodSource<JavaClassSource>> methods = temp.getMethods();
       org.eclipse.jdt.core.dom.Type returnType = ((MethodDeclaration) methods.get(0).getInternal()).getReturnType2();
@@ -668,18 +656,12 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @SuppressWarnings({ "unchecked", "rawtypes" })
    public MethodSource<O> addThrows(final String type)
    {
-      String simpleTypeName = Types.toSimpleName(type);
-
-      O origin = getOrigin();
-      if (!Objects.equals(type, simpleTypeName) && origin.requiresImport(type))
-      {
-         origin.addImport(type);
-      }
-
-      SimpleName simpleName = method.getAST().newSimpleName(simpleTypeName);
+      Import imprt = getOrigin().addImport(type);
+      String typeToUse = imprt != null ? imprt.getSimpleName() : type;
+      Name name = method.getAST().newName(typeToUse);
 
       List list = (List) method.getStructuralProperty(MethodDeclaration.THROWN_EXCEPTION_TYPES_PROPERTY);
-      list.add(method.getAST().newSimpleType(simpleName));
+      list.add(method.getAST().newSimpleType(name));
 
       return this;
    }

@@ -10,12 +10,15 @@ package org.jboss.forge.roaster.model.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.Type;
+import org.jboss.forge.roaster.model.source.Import;
+import org.jboss.forge.roaster.model.source.Importer;
 
 import static java.util.Objects.requireNonNull;
 
@@ -33,7 +36,7 @@ public class Types
             "Long", "Short", "String");
    // [B=byte, [F=float, [Z=boolean, [C=char, [D=double, [I=int, [J=long, [S=short,
    private static final Pattern CLASS_ARRAY_PATTERN = Pattern.compile("\\[+(B|F|C|D|I|J|S|Z|L)([0-9a-zA-Z\\.\\$]*);?");
-   //pattern to split java identifiers
+   // pattern to split java identifiers
    private static final Pattern JAVA_SEPARATOR_PATTERN = Pattern.compile("\\.");
    private static final Pattern SIMPLE_ARRAY_PATTERN = Pattern.compile("^((.)+)(\\[\\])+$");
    private static final Pattern IDENTIFIER_PATTERN = Pattern
@@ -165,7 +168,7 @@ public class Types
     * </ul>
     * </ul>
     *
-    * @param left  the first type (maybe {@code null})
+    * @param left the first type (maybe {@code null})
     * @param right the second type (maybe {@code null})
     * @return {@code true} if the above conditions are fulfilled, {@code false} otherwise
     * @throws NullPointerException if one of the arguments is{@code null}
@@ -198,7 +201,7 @@ public class Types
     *
     * @param type the type to convert
     * @return the simple name
-    * @throws NullPointerException     if the type is {@code null}
+    * @throws NullPointerException if the type is {@code null}
     * @throws IllegalArgumentException if the generic part couldn't be parsed
     */
    public static String toSimpleName(final String type)
@@ -259,6 +262,56 @@ public class Types
          }
       }
       return result;
+   }
+
+   /**
+    * Resolves the given type including generics. For each type it's checked if a import exists. If yes, the simple name
+    * is used, else the provided name.
+    * <p>
+    * <b>NOTE:</b> This method won't import anything.
+    * </p>
+    * 
+    * @param type the type to resolve
+    * @param importer the importer to use to check for existing imports
+    * @return the resolved type
+    * @throws NullPointerException if the type and/or the importer are {@code null}
+    */
+   public static String toResolvedType(String type, Importer<?> importer)
+   {
+      requireNonNull(type);
+      requireNonNull(importer);
+
+      if (Types.isPrimitive(type))
+      {
+         return type;
+      }
+
+      String typeToUse;
+      String strippedType = stripGenerics(stripArray(type));
+      StringBuilder builder = new StringBuilder();
+
+      if (isJavaLang(type))
+      {
+         typeToUse = toSimpleName(strippedType);
+      }
+      else
+      {
+         Import imprt = importer.getImport(type);
+         typeToUse = imprt != null ? imprt.getSimpleName() : strippedType;
+      }
+      builder.append(typeToUse);
+
+      if (Types.isGeneric(type))
+      {
+         StringJoiner genericJoiner = new StringJoiner(",");
+         for (String genericPart : splitGenerics(type))
+         {
+            genericJoiner.add(toResolvedType(genericPart, importer));
+         }
+         builder.append("<").append(genericJoiner.toString()).append(">");
+      }
+
+      return builder.append(getArraySuffix(type)).toString();
    }
 
    /**
@@ -329,7 +382,10 @@ public class Types
     */
    public static boolean isJavaLang(final String type)
    {
-      return LANG_TYPES.contains(toSimpleName(requireNonNull(type)));
+      String simpleType = stripArray(requireNonNull(type));
+      simpleType = stripGenerics(simpleType);
+      simpleType = toSimpleName(simpleType);
+      return LANG_TYPES.contains(simpleType);
    }
 
    /**
@@ -618,6 +674,22 @@ public class Types
    public static int getArrayDimension(String name)
    {
       return getArrayDimension(name, false);
+   }
+
+   /**
+    * Get the array suffix. For example {@code getArraySuffix("String[][]")} will return {@code [][]}.
+    * 
+    * @param type the type to get the array suffix from
+    * @return the array suffix or an empty string if the type is not generic
+    */
+   public static String getArraySuffix(String type)
+   {
+      StringBuilder builder = new StringBuilder();
+      for (int i = 0; i < getArrayDimension(type); i++)
+      {
+         builder.append("[]");
+      }
+      return builder.toString();
    }
 
    public static <O extends JavaType<O>> String rebuildGenericNameWithArrays(String resolvedTypeName, Type<O> type)

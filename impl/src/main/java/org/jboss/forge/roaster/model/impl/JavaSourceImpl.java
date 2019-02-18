@@ -222,18 +222,20 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
    @Override
    public Import addImport(final String className)
    {
-      String strippedClassName = Types.stripGenerics(Types.stripArray(className));
+      String strippedClassName = Types.stripArray(className);
 
       if (Types.isGeneric(className))
       {
          for (String genericPart : Types.splitGenerics(className))
          {
-            if (Types.isQualified(genericPart))
+         // a type variable is not qualified, so it won't be imported by accident
+            if (Types.isQualified(genericPart)) 
                addImport(genericPart);
          }
       }
-
+      
       // test this after generics are imported
+      strippedClassName = Types.stripGenerics(strippedClassName);
       if (!Types.isQualified(strippedClassName) || Types.isJavaLang(strippedClassName))
       {
          return null;
@@ -257,6 +259,8 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
    @Override
    public Import getImport(final String className)
    {
+      String strippedClassName = Types.stripArray(Types.stripGenerics(className));
+      
       for (Import imprt : getImports())
       {
          String qualifiedName = imprt.getQualifiedName();
@@ -265,7 +269,7 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
             qualifiedName = qualifiedName.substring(0, qualifiedName.length() - 2); // remove .*
          }
 
-         if (qualifiedName.equals(className))
+         if (qualifiedName.equals(strippedClassName))
          {
             return imprt;
          }

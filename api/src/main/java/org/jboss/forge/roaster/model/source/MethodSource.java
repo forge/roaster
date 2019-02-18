@@ -48,22 +48,38 @@ public interface MethodSource<O extends JavaSource<O>> extends Method<O, MethodS
    MethodSource<O> setNative(boolean value);
 
    /**
-    * Set this {@link Method} to return the given type.
+    * Set this {@link Method} to return the given type. The type is properly imported if possible.
+    * 
+    * @param type the return type
+    * @return this
+    * @see Importer#addImport(String)
     */
    MethodSource<O> setReturnType(final Class<?> type);
 
    /**
-    * Set this {@link Method} to return the given type.
+    * Set this {@link Method} to return the given type. The type is properly imported if possible.
+    * 
+    * @param type the return type
+    * @return this
+    * @see Importer#addImport(String)
     */
    MethodSource<O> setReturnType(final String type);
 
    /**
-    * Set this {@link Method} to return the given {@link JavaType} type.
+    * Set this {@link Method} to return the given type. The type is properly imported if possible.
+    * 
+    * @param type the return type
+    * @return this
+    * @see Importer#addImport(String)
     */
    MethodSource<O> setReturnType(JavaType<?> type);
 
    /**
-    * Set this {@link Method} to return the given {@link Type}
+    * Set this {@link Method} to return the given type. The type is properly imported if possible.
+    * 
+    * @param type the return type
+    * @return this
+    * @see Importer#addImport(String)
     */
    MethodSource<O> setReturnType(Type<?> type);
 
