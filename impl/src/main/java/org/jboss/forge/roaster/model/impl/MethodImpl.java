@@ -656,8 +656,8 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @SuppressWarnings({ "unchecked", "rawtypes" })
    public MethodSource<O> addThrows(final String type)
    {
-      Import imprt = getOrigin().addImport(type);
-      String typeToUse = imprt != null ? imprt.getSimpleName() : type;
+      getOrigin().addImport(type);
+      String typeToUse = Types.toResolvedType(type, getOrigin());
       Name name = method.getAST().newName(typeToUse);
 
       List list = (List) method.getStructuralProperty(MethodDeclaration.THROWN_EXCEPTION_TYPES_PROPERTY);
