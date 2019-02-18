@@ -22,6 +22,7 @@ import org.jboss.forge.roaster.model.Annotation;
 import org.jboss.forge.roaster.model.impl.AnnotationImpl;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.AnnotationTargetSource;
+import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.util.Types;
 
@@ -46,8 +47,9 @@ public class AnnotationAccessor<O extends JavaSource<O>, T>
    {
       @SuppressWarnings("unchecked")
       ListIterator<IExtendedModifier> iter = (ListIterator<IExtendedModifier>) modifiers.listIterator();
-      while (iter.hasNext() && iter.next().isAnnotation()) {
-         //ignore these nodes
+      while (iter.hasNext() && iter.next().isAnnotation())
+      {
+         // ignore these nodes
       }
 
       // the effect of this is to back up only if the last encountered modifier is _not_ an annotation:
@@ -89,12 +91,17 @@ public class AnnotationAccessor<O extends JavaSource<O>, T>
    private AnnotationSource<O> addAnnotation(final AnnotationTargetSource<O, T> target, final List<?> modifiers,
             final String className)
    {
-      if (target.getOrigin().requiresImport(className) && !target.getOrigin().hasImport(className)
-               && Types.isQualified(className))
+      String classNameToUse = className;
+      Import imprt = target.getOrigin().addImport(className);
+      if (imprt != null)
       {
-         target.getOrigin().addImport(className);
+         classNameToUse = imprt.getSimpleName();
       }
-      return addAnnotation(target, modifiers).setName(Types.toSimpleName(className));
+      else if (Types.isJavaLang(className))
+      {
+         classNameToUse = Types.toSimpleName(className);
+      }
+      return addAnnotation(target, modifiers).setName(classNameToUse);
    }
 
    public List<AnnotationSource<O>> getAnnotations(final AnnotationTargetSource<O, T> target, final ASTNode body)
@@ -235,10 +242,16 @@ public class AnnotationAccessor<O extends JavaSource<O>, T>
    private AnnotationSource<O> getAnnotation(final AnnotationTargetSource<O, T> target, final List<?> modifiers,
             final String type)
    {
+      String annotationName = type;
+      if (Types.isSimpleName(annotationName))
+      {
+         annotationName = target.getOrigin().resolveType(annotationName);
+      }
+
       List<AnnotationSource<O>> annotations = getAnnotations(target, modifiers);
       for (AnnotationSource<O> annotation : annotations)
       {
-         if (Types.areEquivalent(type, annotation.getName()))
+         if (Types.areEquivalent(annotationName, annotation.getQualifiedName()))
          {
             return annotation;
          }

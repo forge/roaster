@@ -17,9 +17,11 @@ import org.eclipse.jdt.core.dom.TypeParameter;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.Type;
+import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.TypeVariableSource;
+import org.jboss.forge.roaster.model.util.Types;
 
 /**
  * 
@@ -117,7 +119,22 @@ public class TypeVariableImpl<O extends JavaSource<O>> implements TypeVariableSo
          int i = 0;
          for (Class<?> cls : bounds)
          {
-            names[i++] = origin.addImport(cls).getSimpleName();
+            if (Types.isJavaLang(cls.getName()))
+            {
+               names[i++] = cls.getSimpleName();
+               continue;
+            }
+
+            Import imprt = origin.addImport(cls);
+            if (imprt != null)
+            {
+               names[i++] = imprt.getSimpleName();
+            }
+            else
+            {
+               names[i++] = cls.getName();
+
+            }
          }
       }
       return setBounds(names);

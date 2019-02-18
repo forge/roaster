@@ -233,21 +233,25 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
          }
       }
 
-      Import imprt;
+      // test this after generics are imported
+      if (!Types.isQualified(strippedClassName) || Types.isJavaLang(strippedClassName))
+      {
+         return null;
+      }
+
       if (!hasImport(strippedClassName) && validImport(strippedClassName))
       {
-         imprt = new ImportImpl(this).setName(strippedClassName);
+         Import imprt = new ImportImpl(this).setName(strippedClassName);
          unit.imports().add(imprt.getInternal());
+         return imprt;
       }
-      else if (hasImport(strippedClassName))
+
+      if (hasImport(strippedClassName))
       {
-         imprt = getImport(strippedClassName);
+         return getImport(strippedClassName);
       }
-      else
-      {
-         imprt = null;
-      }
-      return imprt;
+
+      return null;
    }
 
    @Override
@@ -256,8 +260,9 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
       for (Import imprt : getImports())
       {
          String qualifiedName = imprt.getQualifiedName();
-         if(imprt.isWildcard()) {
-            qualifiedName = qualifiedName.substring(0, qualifiedName.length() -2); //remove .*
+         if (imprt.isWildcard())
+         {
+            qualifiedName = qualifiedName.substring(0, qualifiedName.length() - 2); // remove .*
          }
 
          if (qualifiedName.equals(className))
@@ -420,10 +425,11 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
       }
 
       List<Import> imports = getImports(); // fetch imports only once
-      
-      //no need to check for a import with getImport becuase than a fqn name is needed
-      //search for an existing import with the same simple name
-      for(Import imprt : imports) {
+
+      // no need to check for a import with getImport becuase than a fqn name is needed
+      // search for an existing import with the same simple name
+      for (Import imprt : imports)
+      {
          if (imprt.getSimpleName().equals(result))
          {
             return imprt.getQualifiedName();
