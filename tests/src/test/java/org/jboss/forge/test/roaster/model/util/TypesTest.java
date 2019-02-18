@@ -7,9 +7,11 @@
 
 package org.jboss.forge.test.roaster.model.util;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -27,6 +29,27 @@ import org.junit.Test;
  */
 public class TypesTest
 {
+   @Test
+   public void testGetArraySuffix()
+   {
+      assertThat(Types.getArraySuffix(""), is(""));
+      assertThat(Types.getArraySuffix("String"), is(""));
+      assertThat(Types.getArraySuffix("String[]"), is("[]"));
+      assertThat(Types.getArraySuffix("String[][]"), is("[][]"));
+   }
+
+   @Test
+   public void testToResolvedType()
+   {
+      JavaClassSource classSource = Roaster.create(JavaClassSource.class);
+      classSource.addImport("c1.OuterClass");
+      classSource.addImport("g2.SecondGeneric");
+
+      String toResolved = "c1.OuterClass<g1.FirstGeneric,g2.SecondGeneric<java.lang.String>>[][]";
+      String expected = "OuterClass<g1.FirstGeneric,SecondGeneric<String>>[][]";
+      assertThat(Types.toResolvedType(toResolved, classSource), is(expected));
+   }
+
    @Test
    public void testIsBasicType()
    {
