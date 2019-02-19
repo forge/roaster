@@ -30,7 +30,7 @@ import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeLiteral;
 import org.jboss.forge.roaster.Roaster;
-import org.jboss.forge.roaster.model.Annotation;
+import org.eclipse.jdt.core.dom.Annotation;
 import org.jboss.forge.roaster.model.JavaClass;
 import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.ValuePair;
@@ -50,6 +50,10 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    private static final String MISSING = "MISSING";
    private static final String DEFAULT_VALUE = "value";
 
+   private AST ast;
+   private Annotation annotation;
+   private AnnotationTargetSource<O, T> parent;
+
    private class Nested extends AnnotationImpl<O, T>
    {
       Nested(AnnotationImpl<O, T> owner)
@@ -63,7 +67,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       }
 
       @Override
-      protected void replace(org.eclipse.jdt.core.dom.Annotation oldNode, org.eclipse.jdt.core.dom.Annotation newNode)
+      protected void replace(Annotation oldNode, Annotation newNode)
       {
          if (oldNode.getParent() instanceof SingleMemberAnnotation)
          {
@@ -76,20 +80,14 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          else if (oldNode.getParent() instanceof ArrayInitializer)
          {
             @SuppressWarnings("unchecked")
-            final List<org.eclipse.jdt.core.dom.Annotation> expressions = ((ArrayInitializer) oldNode
-                     .getParent())
-                              .expressions();
+            final List<Annotation> expressions = ((ArrayInitializer) oldNode
+                     .getParent()).expressions();
             expressions.set(expressions.indexOf(oldNode), newNode);
          }
       }
-
    }
 
-   private AnnotationTargetSource<O, T> parent = null;
-   private AST ast = null;
-   private org.eclipse.jdt.core.dom.Annotation annotation;
-
-   public enum AnnotationType
+   private static enum AnnotationType
    {
       MARKER, SINGLE, NORMAL
    }
@@ -102,9 +100,8 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    public AnnotationImpl(final AnnotationTargetSource<O, T> parent, final Object internal)
    {
       this.parent = parent;
-      ast = ((ASTNode) parent.getInternal()).getAST();
-      requireNonNull(internal, "internal representation must not be null");
-      annotation = (org.eclipse.jdt.core.dom.Annotation) internal;
+      this.ast = ((ASTNode) parent.getInternal()).getAST();
+      this.annotation = (Annotation) requireNonNull(internal);
    }
 
    public AnnotationImpl(final AnnotationTargetSource<O, T> parent, final AnnotationType type)
@@ -112,7 +109,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       this(parent, createAnnotation(parent, type));
    }
 
-   private static org.eclipse.jdt.core.dom.Annotation createAnnotation(final AnnotationTargetSource<?, ?> parent,
+   private static Annotation createAnnotation(final AnnotationTargetSource<?, ?> parent,
             final AnnotationType type)
    {
       AST ast = ((ASTNode) parent.getInternal()).getAST();
@@ -160,7 +157,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    }
 
    @Override
-   public String getLiteralValue() throws IllegalStateException
+   public String getLiteralValue()
    {
       if (isSingleValue())
       {
@@ -173,11 +170,9 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       }
       if (isNormal())
       {
-         List<ValuePair> values = getValues();
-         for (ValuePair pair : values)
+         for (ValuePair pair : getValues())
          {
-            String name = pair.getName();
-            if (DEFAULT_VALUE.equals(name))
+            if (DEFAULT_VALUE.equals(pair.getName()))
             {
                return pair.getLiteralValue();
             }
@@ -281,21 +276,21 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    {
       if (annotation.isNormalAnnotation())
       {
-         NormalAnnotation na = (NormalAnnotation) annotation;
+         NormalAnnotation normalAnnotation = (NormalAnnotation) annotation;
 
-         List<MemberValuePair> toBeRemoved = new ArrayList<>();
-         for (Object v : na.values())
+         List<MemberValuePair> toRemove = new ArrayList<>();
+         for (Object annotationValue : normalAnnotation.values())
          {
-            if (v instanceof MemberValuePair)
+            if (annotationValue instanceof MemberValuePair)
             {
-               MemberValuePair pair = (MemberValuePair) v;
+               MemberValuePair pair = (MemberValuePair) annotationValue;
                if (pair.getName().toString().equals(name))
                {
-                  toBeRemoved.add(pair);
+                  toRemove.add(pair);
                }
             }
          }
-         na.values().removeAll(toBeRemoved);
+         normalAnnotation.values().removeAll(toRemove);
 
          if ((getLiteralValue() != null) && (getValues().size() == 1))
          {
@@ -333,26 +328,25 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
 
       if (isSingleValue())
       {
-
          String stub = "@" + getName() + "(" + value + ") public class Stub { }";
          JavaClass<?> temp = Roaster.parse(JavaClass.class, stub);
 
          Object internal = temp.getAnnotations().get(0).getInternal();
          if (internal instanceof SingleMemberAnnotation)
          {
-            SingleMemberAnnotation sa = (SingleMemberAnnotation) annotation;
+            SingleMemberAnnotation singleMemberAnnotation = (SingleMemberAnnotation) annotation;
             Expression expression = ((SingleMemberAnnotation) internal).getValue();
-            sa.setValue((Expression) ASTNode.copySubtree(ast, expression));
+            singleMemberAnnotation.setValue((Expression) ASTNode.copySubtree(ast, expression));
          }
          else if (internal instanceof NormalAnnotation)
          {
-            NormalAnnotation anno = (NormalAnnotation) internal;
+            NormalAnnotation internalNormalAnnotation = (NormalAnnotation) internal;
             convertTo(AnnotationType.NORMAL);
-            NormalAnnotation na = (NormalAnnotation) annotation;
+            NormalAnnotation normalAnnotation = (NormalAnnotation) annotation;
 
-            for (MemberValuePair mvp : (List<MemberValuePair>) anno.values())
+            for (MemberValuePair pair : (List<MemberValuePair>) internalNormalAnnotation.values())
             {
-               na.values().add(ASTNode.copySubtree(annotation.getAST(), mvp));
+               normalAnnotation.values().add(ASTNode.copySubtree(annotation.getAST(), pair));
             }
          }
          else
@@ -388,15 +382,15 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          return setLiteralValue(value);
       }
 
-      NormalAnnotation na = (NormalAnnotation) annotation;
+      NormalAnnotation normalAnnotation = (NormalAnnotation) annotation;
 
       String stub = "@" + getName() + "(" + name + "=" + value + " ) public class Stub { }";
       JavaClass<?> temp = Roaster.parse(JavaClass.class, stub);
 
       NormalAnnotation anno = (NormalAnnotation) temp.getAnnotations().get(0).getInternal();
-      MemberValuePair mvp = (MemberValuePair) anno.values().get(0);
+      MemberValuePair pair = (MemberValuePair) anno.values().get(0);
 
-      List<MemberValuePair> values = na.values();
+      List<MemberValuePair> values = normalAnnotation.values();
       ListIterator<MemberValuePair> iter = values.listIterator();
       while (iter.hasNext())
       {
@@ -406,7 +400,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
             break;
          }
       }
-      iter.add((MemberValuePair) ASTNode.copySubtree(annotation.getAST(), mvp));
+      iter.add((MemberValuePair) ASTNode.copySubtree(annotation.getAST(), pair));
 
       return this;
    }
@@ -492,8 +486,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
             literals.add(value.getDeclaringClass().getSimpleName() + "." + value.name());
          }
       }
-      return setLiteralValue(name,
-               literals.size() == 1 ? literals.get(0) : String.format("{%s}", String.join(",", literals)));
+      return setArrayLiteralValue(name, literals);
    }
 
    /*
@@ -518,7 +511,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    }
 
    @SuppressWarnings("unchecked")
-   protected void replace(org.eclipse.jdt.core.dom.Annotation oldNode, org.eclipse.jdt.core.dom.Annotation newNode)
+   protected void replace(Annotation oldNode, Annotation newNode)
    {
       List<IExtendedModifier> modifiers;
       ASTNode parentNode = oldNode.getParent();
@@ -535,10 +528,10 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          throw new IllegalStateException("Cannot handle annotations attached to " + parentNode);
       }
 
-      int pos = modifiers.indexOf(annotation);
-      if (pos >= 0)
+      int annotationIndex = modifiers.indexOf(annotation);
+      if (annotationIndex >= 0)
       {
-         modifiers.set(pos, newNode);
+         modifiers.set(annotationIndex, newNode);
       }
    }
 
@@ -576,31 +569,13 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public boolean equals(final Object obj)
    {
-      if (this == obj)
-      {
-         return true;
-      }
-      if (obj == null)
+      if (!(obj instanceof AnnotationImpl<?, ?>))
       {
          return false;
       }
-      if (getClass() != obj.getClass())
-      {
-         return false;
-      }
+
       AnnotationImpl<?, ?> other = (AnnotationImpl<?, ?>) obj;
-      if (annotation == null)
-      {
-         if (other.annotation != null)
-         {
-            return false;
-         }
-      }
-      else if (!annotation.equals(other.annotation))
-      {
-         return false;
-      }
-      return true;
+      return annotation.equals(other.annotation);
    }
 
    @Override
@@ -637,7 +612,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       JavaClass<?> temp = Roaster.parse(JavaClass.class, stub);
 
       NormalAnnotation anno = (NormalAnnotation) temp.getAnnotations().get(0).getInternal();
-      MemberValuePair mvp = (MemberValuePair) anno.values().get(0);
+      MemberValuePair pair = (MemberValuePair) anno.values().get(0);
 
       @SuppressWarnings("unchecked")
       List<MemberValuePair> values = ((NormalAnnotation) annotation).values();
@@ -650,7 +625,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
             break;
          }
       }
-      MemberValuePair mvpCopy = (MemberValuePair) ASTNode.copySubtree(annotation.getAST(), mvp);
+      MemberValuePair mvpCopy = (MemberValuePair) ASTNode.copySubtree(annotation.getAST(), pair);
       mvpCopy.setValue((Expression) result.getInternal());
       iter.add(mvpCopy);
 
@@ -669,7 +644,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          convertTo(AnnotationType.SINGLE);
       }
       Expression expr = ((SingleMemberAnnotation) annotation).getValue();
-      if (expr instanceof org.eclipse.jdt.core.dom.Annotation)
+      if (expr instanceof Annotation)
       {
          // wrap a single annotation value:
          ArrayInitializer arrayInit = ast.newArrayInitializer();
@@ -683,7 +658,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       if (expr instanceof ArrayInitializer)
       {
          // append to an annotation array:
-         final org.eclipse.jdt.core.dom.Annotation arrayElement = createAnnotation(parent, AnnotationType.MARKER);
+         final Annotation arrayElement = createAnnotation(parent, AnnotationType.MARKER);
          if (((ArrayInitializer) expr).expressions().isEmpty())
          {
             ((SingleMemberAnnotation) annotation).setValue(arrayElement);
@@ -724,7 +699,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       if (memberValuePair != null)
       {
          Expression expr = memberValuePair.getValue();
-         if (expr instanceof org.eclipse.jdt.core.dom.Annotation)
+         if (expr instanceof Annotation)
          {
             // wrap a single annotation value:
             ArrayInitializer arrayInit = ast.newArrayInitializer();
@@ -738,7 +713,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
          if (expr instanceof ArrayInitializer)
          {
             // append to an annotation array:
-            final org.eclipse.jdt.core.dom.Annotation arrayElement = createAnnotation(parent, AnnotationType.MARKER);
+            final Annotation arrayElement = createAnnotation(parent, AnnotationType.MARKER);
             if (((ArrayInitializer) expr).expressions().isEmpty())
             {
                memberValuePair.setValue(arrayElement);
@@ -770,7 +745,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    }
 
    @Override
-   public AnnotationSource<O> removeAnnotationValue(Annotation<O> element)
+   public AnnotationSource<O> removeAnnotationValue(org.jboss.forge.roaster.model.Annotation<O> element)
    {
       requireNonNull(element, "Cannot remove null element");
 
@@ -802,7 +777,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    }
 
    @Override
-   public AnnotationSource<O> removeAnnotationValue(String name, Annotation<O> element)
+   public AnnotationSource<O> removeAnnotationValue(String name, org.jboss.forge.roaster.model.Annotation<O> element)
    {
       requireNonNull(element, "Cannot remove null element");
 
@@ -874,14 +849,14 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       {
          SingleMemberAnnotation single = (SingleMemberAnnotation) annotation;
          Expression value = single.getValue();
-         if (value instanceof org.eclipse.jdt.core.dom.Annotation)
+         if (value instanceof Annotation)
          {
             return new Nested(this, value);
          }
          if (value instanceof ArrayInitializer && ((ArrayInitializer) value).expressions().size() == 1)
          {
             value = (Expression) ((ArrayInitializer) value).expressions().get(0);
-            if (value instanceof org.eclipse.jdt.core.dom.Annotation)
+            if (value instanceof Annotation)
             {
                return new Nested(this, value);
             }
@@ -907,14 +882,14 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
             if (Objects.equals(name, memberValuePair.getName().getIdentifier()))
             {
                Expression value = memberValuePair.getValue();
-               if (value instanceof org.eclipse.jdt.core.dom.Annotation)
+               if (value instanceof Annotation)
                {
                   return new Nested(this, value);
                }
                if (value instanceof ArrayInitializer && ((ArrayInitializer) value).expressions().size() == 1)
                {
                   value = (Expression) ((ArrayInitializer) value).expressions().get(0);
-                  if (value instanceof org.eclipse.jdt.core.dom.Annotation)
+                  if (value instanceof Annotation)
                   {
                      return new Nested(this, value);
                   }
@@ -936,29 +911,24 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    }
 
    @Override
+   @SuppressWarnings("unchecked")
    public AnnotationSource<O>[] getAnnotationArrayValue(String name)
    {
       final Expression expr = getElementValueExpression(name);
       if (expr instanceof ArrayInitializer)
       {
          final List<AnnotationSource<O>> results = new ArrayList<>();
-         @SuppressWarnings("unchecked")
          final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
          for (Expression arrayElement : arrayElements)
          {
-            final AnnotationSource<O> instance = new Nested(this, arrayElement);
-            results.add(instance);
+            results.add(new Nested(this, arrayElement));
          }
-         @SuppressWarnings("unchecked")
-         final AnnotationSource<O>[] result = new AnnotationSource[results.size()];
-         return results.toArray(result);
+         return results.toArray(new AnnotationSource[results.size()]);
       }
       final AnnotationSource<O> annotationValue = getAnnotationValue(name);
       if (annotationValue != null)
       {
-         @SuppressWarnings("unchecked")
-         final AnnotationSource<O>[] result = new AnnotationSource[] { annotationValue };
-         return result;
+         return new AnnotationSource[] { annotationValue };
       }
       return null;
    }
@@ -970,29 +940,25 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    }
 
    @Override
+   @SuppressWarnings("unchecked")
    public <E extends Enum<E>> E[] getEnumArrayValue(Class<E> type, String name)
    {
       final Expression expr = getElementValueExpression(name);
       if (expr instanceof ArrayInitializer)
       {
          final List<E> results = new ArrayList<>();
-         @SuppressWarnings("unchecked")
          final List<Expression> arrayElements = ((ArrayInitializer) expr).expressions();
          for (Expression arrayElement : arrayElements)
          {
-            final E instance = convertLiteralToEnum(type, arrayElement.toString());
-            results.add(instance);
+            results.add(convertLiteralToEnum(type, arrayElement.toString()));
          }
-         @SuppressWarnings("unchecked")
-         final E[] result = (E[]) Array.newInstance(type, results.size());
-         return results.toArray(result);
+         return results.toArray((E[]) Array.newInstance(type, results.size()));
       }
       else if (expr != null)
       {
          final E instance = convertLiteralToEnum(type, expr.toString());
          if (type.isInstance(instance))
          {
-            @SuppressWarnings("unchecked")
             final E[] result = (E[]) Array.newInstance(type, 1);
             result[0] = instance;
             return result;
@@ -1054,7 +1020,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    {
       final List<String> result = new ArrayList<>();
       String literalValue = getLiteralValue(name);
-      // Remove {}
+
       if (literalValue.startsWith("{") && literalValue.endsWith("}"))
       {
          literalValue = literalValue.substring(1, literalValue.length() - 1);
@@ -1072,9 +1038,8 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public AnnotationSource<O> setClassValue(String name, Class<?> value)
    {
-      requireNonNull(value);
-      String valueToUse = getOrigin().addImport(value) != null ? value.getSimpleName() : value.getCanonicalName();
-      return setLiteralValue(name, valueToUse + ".class");
+      getOrigin().addImport(value);
+      return setLiteralValue(name, Types.toResolvedType(value.getCanonicalName(), getOrigin()) + ".class");
    }
 
    @Override
@@ -1104,8 +1069,7 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
       {
          literals.add(Strings.enquote(requireNonNull(value)));
       }
-      return setLiteralValue(name,
-               literals.size() == 1 ? literals.get(0) : String.format("{%s}", String.join(",", literals)));
+      return setArrayLiteralValue(name, literals);
    }
 
    @Override
@@ -1115,34 +1079,35 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
 
       for (Class<?> value : requireNonNull(values))
       {
-         requireNonNull(value);
-         String valueToUse = getOrigin().addImport(value) != null ? value.getSimpleName() : value.getCanonicalName();
-         literals.add(valueToUse + ".class");
+         getOrigin().addImport(value);
+         literals.add(Types.toResolvedType(value.getCanonicalName(), getOrigin()) + ".class");
       }
-      return setLiteralValue(name,
-               literals.size() == 1 ? literals.get(0) : String.format("{%s}", String.join(",", literals)));
+      return setArrayLiteralValue(name, literals);
    }
 
+   private AnnotationSource<O> setArrayLiteralValue(String name, final List<String> literals)
+   {
+      String value = literals.size() == 1 ? literals.get(0) : String.format("{%s}", String.join(",", literals));
+      return setLiteralValue(name, value);
+   }
+
+   @SuppressWarnings("unchecked")
    private <E extends Expression> E getElementValueExpression(String name)
    {
       if (isSingleValue() && DEFAULT_VALUE.equals(name))
       {
-         @SuppressWarnings("unchecked")
-         final E result = (E) ((SingleMemberAnnotation) annotation).getValue();
-         return result;
+         return (E) ((SingleMemberAnnotation) annotation).getValue();
       }
       if (isNormal())
       {
-         for (Object v : ((NormalAnnotation) annotation).values())
+         for (Object annotationValue : ((NormalAnnotation) annotation).values())
          {
-            if (v instanceof MemberValuePair)
+            if (annotationValue instanceof MemberValuePair)
             {
-               MemberValuePair pair = (MemberValuePair) v;
+               MemberValuePair pair = (MemberValuePair) annotationValue;
                if (pair.getName().getFullyQualifiedName().equals(name))
                {
-                  @SuppressWarnings("unchecked")
-                  final E result = (E) pair.getValue();
-                  return result;
+                  return (E) pair.getValue();
                }
             }
          }
@@ -1153,46 +1118,24 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    private String resolveTypeLiteralName(TypeLiteral typeLiteral)
    {
       final Type<O> type = new TypeImpl<>(getOrigin(), typeLiteral.getType());
-      if (type.isPrimitive())
+      if (Types.isPrimitive(type.getName()))
       {
-         final Class<?>[] primitiveTypes = { boolean.class, byte.class, short.class, int.class, long.class,
-                  float.class, double.class };
-         for (Class<?> c : primitiveTypes)
-         {
-            if (c.getSimpleName().equals(type.getName()))
-            {
-               return c.getName();
-            }
-         }
-         return null;
+         return type.getName();
       }
-
-      final String classname = type.getQualifiedName();
-      return getOrigin().resolveType(classname);
+      return type.getQualifiedName();
    }
 
    private Class<?> resolveTypeLiteral(TypeLiteral typeLiteral)
    {
       final Type<O> type = new TypeImpl<>(getOrigin(), typeLiteral.getType());
-      if (type.isPrimitive())
+      if (Types.isPrimitive(type.getName()))
       {
-         final Class<?>[] primitiveTypes = { boolean.class, byte.class, short.class, int.class, long.class,
-                  float.class, double.class };
-         for (Class<?> c : primitiveTypes)
-         {
-            if (c.getSimpleName().equals(type.getName()))
-            {
-               return c;
-            }
-         }
-         return null;
+         return Types.toPrimitive(type.getName());
       }
-
-      final String classname = type.getQualifiedName();
 
       try
       {
-         return Class.forName(getOrigin().resolveType(classname));
+         return Class.forName(type.getQualifiedName());
       }
       catch (ClassNotFoundException e)
       {
@@ -1203,14 +1146,6 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public boolean isTypeElementDefined(String name)
    {
-      List<ValuePair> values = getValues();
-      for (ValuePair pair : values)
-      {
-         if (pair.getName().equals(name))
-         {
-            return true;
-         }
-      }
-      return false;
+      return getValues().stream().filter(pair -> pair.getName().equals(name)).findAny().isPresent();
    }
 }

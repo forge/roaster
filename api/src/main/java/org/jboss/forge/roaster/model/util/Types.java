@@ -32,6 +32,10 @@ public class Types
 {
 
    private static final Pattern SIMPLE_NAME_PATTERN = Pattern.compile("(?i)(?![0-9])[a-z0-9$_]+");
+   private static final List<Class<?>> PRIMITIVE_CLASSES = Arrays.asList(boolean.class, byte.class, short.class,
+            int.class, long.class, float.class, double.class);
+   private static final List<String> PRIMITIVE_CLASS_NAMES = Arrays.asList("byte", "short", "int", "long", "float",
+            "double", "boolean", "char");
    private static final List<String> PRIMITIVE_TYPES = Arrays.asList("Boolean", "Byte", "Double", "Float", "Integer",
             "Long", "Short", "String");
    // [B=byte, [F=float, [Z=boolean, [C=char, [D=double, [I=int, [J=long, [S=short,
@@ -643,8 +647,19 @@ public class Types
     */
    public static boolean isPrimitive(final String type)
    {
-      return Arrays.asList("byte", "short", "int", "long", "float", "double", "boolean", "char")
-               .contains(requireNonNull(type));
+      return PRIMITIVE_CLASS_NAMES.contains(requireNonNull(type));
+   }
+
+   public static Class<?> toPrimitive(String type)
+   {
+      for (Class<?> c : PRIMITIVE_CLASSES)
+      {
+         if (c.getSimpleName().equals(type))
+         {
+            return c;
+         }
+      }
+      return null;
    }
 
    private static int getArrayDimension(String name, boolean isBasic)
