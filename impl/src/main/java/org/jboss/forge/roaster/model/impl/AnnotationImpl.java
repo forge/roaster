@@ -41,6 +41,7 @@ import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.util.Types;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.function.Predicate.isEqual;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -1146,6 +1147,6 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public boolean isTypeElementDefined(String name)
    {
-      return getValues().stream().anyMatch(pair -> pair.getName().equals(name));
+      return getValues().stream().map(ValuePair::getName).anyMatch(isEqual(name));
    }
 }
