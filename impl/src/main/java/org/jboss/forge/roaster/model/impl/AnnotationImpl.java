@@ -1146,6 +1146,6 @@ public class AnnotationImpl<O extends JavaSource<O>, T> implements AnnotationSou
    @Override
    public boolean isTypeElementDefined(String name)
    {
-      return getValues().stream().filter(pair -> pair.getName().equals(name)).findAny().isPresent();
+      return getValues().stream().anyMatch(pair -> pair.getName().equals(name));
    }
 }
