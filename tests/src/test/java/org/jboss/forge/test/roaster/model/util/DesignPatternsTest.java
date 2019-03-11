@@ -14,18 +14,19 @@ import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.util.DesignPatterns;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- *
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
  */
-public class DesignPatternsTest
+class DesignPatternsTest
 {
 
    @Test
-   public void testCreateDecorator()
+   void testCreateDecorator()
    {
       JavaInterfaceSource interfaceClass = Roaster
                .create(JavaInterfaceSource.class).setPackage("org.test.demo")
@@ -40,12 +41,12 @@ public class DesignPatternsTest
       uncoolMethod.addParameter(String.class, "name");
       uncoolMethod.addParameter(Integer.class, "age");
       JavaClassSource decorator = DesignPatterns.createDecorator(interfaceClass);
-      Assert.assertNotNull(decorator);
-      Assert.assertEquals("CoolOMeterDecorator", decorator.getName());
+      assertNotNull(decorator);
+      assertEquals("CoolOMeterDecorator", decorator.getName());
    }
 
    @Test
-   public void testCreateBuilder()
+   void testCreateBuilder()
    {
       JavaClassSource javaClass = Roaster
                .create(JavaClassSource.class).setPackage("org.test.demo")
@@ -54,7 +55,7 @@ public class DesignPatternsTest
       javaClass.addProperty(String.class, "name");
       javaClass.addProperty(Date.class, "birthDate");
       JavaClassSource builder = DesignPatterns.createBuilder(javaClass);
-      Assert.assertNotNull(builder);
-      Assert.assertEquals("CustomerBuilder", builder.getName());
+      assertNotNull(builder);
+      assertEquals("CustomerBuilder", builder.getName());
    }
 }

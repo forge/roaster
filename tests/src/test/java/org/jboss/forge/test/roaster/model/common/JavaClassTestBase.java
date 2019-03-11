@@ -6,14 +6,6 @@
  */
 package org.jboss.forge.test.roaster.model.common;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.URL;
@@ -27,9 +19,14 @@ import org.jboss.forge.roaster.model.JavaClass;
 import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -38,7 +35,7 @@ public abstract class JavaClassTestBase
 {
    private JavaClassSource source;
 
-   @Before
+   @BeforeEach
    public void reset() throws IOException
    {
       this.source = getSource();
@@ -238,28 +235,28 @@ public abstract class JavaClassTestBase
       String type = "ClassA";
 
       // if the type is qualified or primitive, return the type as it
-      assertThat(source.resolveType(boolean.class.getName()), is(boolean.class.getName()));
-      assertThat(source.resolveType("package1.Class1"), is("package1.Class1"));
+      assertThat(source.resolveType(boolean.class.getName())).isEqualTo(boolean.class.getName());
+      assertThat(source.resolveType("package1.Class1")).isEqualTo("package1.Class1");
 
       // if the source has no imports & no package, return the type as it
-      assertThat(source.resolveType(type), is(type));
+      assertThat(source.resolveType(type)).isEqualTo(type);
 
       // if the source has a package, use it
       String pckage = "myPackage";
       source.setPackage(pckage);
-      assertThat(source.resolveType(type), is(pckage + "." + type));
+      assertEquals(pckage + "." + type, source.resolveType(type));
 
       // TODO add tests for wildcard resolver
 
       // test for single wildcard
       String wildcarPacke = "wildcard.pckage";
       source.addImport(wildcarPacke + ".*");
-      assertThat(source.resolveType(type), is(wildcarPacke + "." + type));
+      assertThat(source.resolveType(type)).isEqualTo(wildcarPacke + "." + type);
 
       // test direct import resolving
       String directImport = "direct.imprt." + type;
       source.addImport(directImport);
-      assertThat(source.resolveType(type), is(directImport));
+      assertThat(source.resolveType(type)).isEqualTo(directImport);
    }
 
    @Test
@@ -269,7 +266,7 @@ public abstract class JavaClassTestBase
       assertTrue(source.requiresImport("package1.Class1<package2.Class2>"));
 
       source.addImport("package1.Class1<?>");
-      assertTrue(source.getImports().size() == 1);
+      assertEquals(1, source.getImports().size());
       assertTrue(source.requiresImport("package1.Class1<package2.Class2>"));
    }
 
@@ -377,31 +374,31 @@ public abstract class JavaClassTestBase
    {
       JavaClassSource source = Roaster.parse(JavaClassSource.class, "public class Base{}");
       String objectClass = Object.class.getName();
-      assertThat(source.getSuperType(), is(objectClass));
+      assertThat(source.getSuperType()).isEqualTo(objectClass);
 
       // set super type per Class
       source.setSuperType("Super");
-      assertThat(source.getSuperType(), is("Super"));
+      assertThat(source.getSuperType()).isEqualTo("Super");
       source.setSuperType((Class<?>) null);
-      assertThat(source.getSuperType(), is(objectClass));
+      assertThat(source.getSuperType()).isEqualTo(objectClass);
 
       // set super type per JavaClass
       source.setSuperType("Super");
-      assertThat(source.getSuperType(), is("Super"));
+      assertThat(source.getSuperType()).isEqualTo("Super");
       source.setSuperType((JavaClass<?>) null);
-      assertThat(source.getSuperType(), is(objectClass));
+      assertThat(source.getSuperType()).isEqualTo(objectClass);
 
       // set super type per String (null)
       source.setSuperType("Super");
-      assertThat(source.getSuperType(), is("Super"));
+      assertThat(source.getSuperType()).isEqualTo("Super");
       source.setSuperType((String) null);
-      assertThat(source.getSuperType(), is(objectClass));
+      assertThat(source.getSuperType()).isEqualTo(objectClass);
 
       // set super type per String (empty)
       source.setSuperType("Super");
-      assertThat(source.getSuperType(), is("Super"));
+      assertThat(source.getSuperType()).isEqualTo("Super");
       source.setSuperType("  ");
-      assertThat(source.getSuperType(), is(objectClass));
+      assertThat(source.getSuperType()).isEqualTo(objectClass);
    }
 
    @Test
@@ -434,10 +431,10 @@ public abstract class JavaClassTestBase
       myClass.setPublic()
                .setName("MyClass")
                .setSuperType("test.MyClassParent<java.util.Foo, java.util.Bar>");
-      Assert.assertTrue(myClass.hasImport("java.util.Foo"));
-      Assert.assertTrue(myClass.hasImport("java.util.Bar"));
-      Assert.assertTrue(myClass.hasImport("test.MyClassParent"));
-      Assert.assertThat(myClass.getSuperType(), equalTo("test.MyClassParent<Foo,Bar>"));
+      assertTrue(myClass.hasImport("java.util.Foo"));
+      assertTrue(myClass.hasImport("java.util.Bar"));
+      assertTrue(myClass.hasImport("test.MyClassParent"));
+      assertThat(myClass.getSuperType()).isEqualTo("test.MyClassParent<Foo,Bar>");
    }
 
    @Test
@@ -448,9 +445,9 @@ public abstract class JavaClassTestBase
       final Import utilListImport = myClass.addImport(List.class);
       myClass.setSuperType("java.awt.List");
 
-      assertEquals("Class should only contain one import.", 1, myClass.getImports().size());
-      assertEquals("Wrong import detected.", utilListImport, myClass.getImport(myClass.resolveType("List")));
-      assertEquals("Wrong super type set.", "java.awt.List", myClass.getSuperType());
+      assertEquals(1, myClass.getImports().size(), "Class should only contain one import.");
+      assertEquals(utilListImport, myClass.getImport(myClass.resolveType("List")), "Wrong import detected.");
+      assertEquals("java.awt.List", myClass.getSuperType(), "Wrong super type set.");
    }
 
    @Test
@@ -478,8 +475,8 @@ public abstract class JavaClassTestBase
       javaClass.setPackage("testPackage").setName("testClass");
       javaClass.addField().setName("field1").setType("package1.Type");
       javaClass.addField().setName("field2").setType("package2.Type");
-      assertThat(javaClass.getImports().size(), is(1));
-      assertThat(javaClass.getImports().get(0).getQualifiedName(), is("package1.Type"));
+      assertEquals(1, javaClass.getImports().size());
+      assertEquals("package1.Type", javaClass.getImports().get(0).getQualifiedName());
    }
 
    @Test
@@ -488,6 +485,6 @@ public abstract class JavaClassTestBase
       final JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.setPackage("testPackage").setName("testClass");
       javaClass.addField().setName("field1").setType("package1.testClass");
-      assertThat(javaClass.getImports().size(), is(0));
+      assertEquals(0, javaClass.getImports().size());
    }
 }

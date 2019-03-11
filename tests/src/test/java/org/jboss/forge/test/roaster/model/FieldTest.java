@@ -6,11 +6,6 @@
  */
 package org.jboss.forge.test.roaster.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -18,9 +13,13 @@ import java.util.HashMap;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -30,7 +29,7 @@ public class FieldTest
    private JavaClassSource javaClass;
    private FieldSource<JavaClassSource> field;
 
-   @Before
+   @BeforeEach
    public void reset() throws IOException
    {
       String fileName = "/org/jboss/forge/grammar/java/MockAnnotatedField.java";
@@ -302,8 +301,8 @@ public class FieldTest
                .setType("HashMap<Class<?>,Object>")
                .setLiteralInitializer("new HashMap<>();");
       FieldSource<JavaClassSource> mapField = javaClass.getField("AS_MAP");
-      Assert.assertNotNull(mapField);
-      Assert.assertEquals("HashMap<Class<?>,Object>", mapField.getType().toString());
+      assertNotNull(mapField);
+      assertEquals("HashMap<Class<?>,Object>", mapField.getType().toString());
    }
 
 }

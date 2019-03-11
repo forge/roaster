@@ -11,11 +11,11 @@ import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- *
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
  */
 public class LocationCapableTest
@@ -26,8 +26,8 @@ public class LocationCapableTest
       JavaClassSource clazz = Roaster.parse(JavaClassSource.class,
                "public class Foo { public String bar; private int age;}");
       FieldSource<JavaClassSource> field = clazz.getField("bar");
-      Assert.assertEquals(19, field.getStartPosition());
-      Assert.assertEquals(37, field.getEndPosition());
+      assertEquals(19, field.getStartPosition());
+      assertEquals(37, field.getEndPosition());
    }
 
    @Test
@@ -36,8 +36,8 @@ public class LocationCapableTest
       JavaClassSource clazz = Roaster.parse(JavaClassSource.class,
                "public class Foo { public String bar(){return null;}}");
       MethodSource<JavaClassSource> method = clazz.getMethod("bar");
-      Assert.assertEquals(19, method.getStartPosition());
-      Assert.assertEquals(52, method.getEndPosition());
+      assertEquals(19, method.getStartPosition());
+      assertEquals(52, method.getEndPosition());
    }
 
    @Test
@@ -46,8 +46,8 @@ public class LocationCapableTest
       JavaClassSource clazz = Roaster.parse(JavaClassSource.class,
                "public class Foo {\n public String bar;\n}");
       FieldSource<JavaClassSource> field = clazz.getField("bar");
-      Assert.assertEquals(2, field.getLineNumber());
-      Assert.assertEquals(1, field.getColumnNumber());
+      assertEquals(2, field.getLineNumber());
+      assertEquals(1, field.getColumnNumber());
    }
 
    @Test
@@ -64,7 +64,7 @@ public class LocationCapableTest
                         + " }\n"
                         + "}");
       MethodSource<JavaClassSource> method = clazz.getMethod("bar");
-      Assert.assertEquals(6, method.getLineNumber());
-      Assert.assertEquals(1, method.getColumnNumber());
+      assertEquals(6, method.getLineNumber());
+      assertEquals(1, method.getColumnNumber());
    }
 }

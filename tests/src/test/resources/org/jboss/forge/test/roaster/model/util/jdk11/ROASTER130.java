@@ -26,7 +26,7 @@ import javax.tools.JavaFileObject;
 
 import org.assertj.core.util.Lists;
 import org.hamcrest.core.Is;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.moditect.deptective.plugintest.PluginTestBase;
 import org.moditect.deptective.plugintest.basic.barctorcall.BarCtorCall;
 import org.moditect.deptective.plugintest.basic.barfield.BarField;

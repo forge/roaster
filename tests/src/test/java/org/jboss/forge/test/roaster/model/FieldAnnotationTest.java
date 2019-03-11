@@ -6,8 +6,6 @@
  */
 package org.jboss.forge.test.roaster.model;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -18,7 +16,9 @@ import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.test.roaster.model.common.AnnotationTest;
 import org.jboss.forge.test.roaster.model.common.MockEnumType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>

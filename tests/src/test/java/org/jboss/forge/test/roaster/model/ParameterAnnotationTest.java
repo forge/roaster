@@ -6,8 +6,6 @@
  */
 package org.jboss.forge.test.roaster.model;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -16,7 +14,9 @@ import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
 import org.jboss.forge.test.roaster.model.common.AnnotationTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -24,7 +24,7 @@ import org.junit.Test;
 public class ParameterAnnotationTest extends AnnotationTest<JavaClassSource, ParameterSource<JavaClassSource>>
 {
    @Override
-   public void resetTests() throws IOException
+   protected void resetTests() throws IOException
    {
       String fileName = "/org/jboss/forge/grammar/java/MockAnnotatedParameter.java";
       try (InputStream stream = ParameterAnnotationTest.class.getResourceAsStream(fileName))

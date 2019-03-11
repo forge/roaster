@@ -2,8 +2,10 @@ package org.jboss.forge.test.roaster.model;
 
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NonAsciiCharactersTest
 {
@@ -18,8 +20,8 @@ public class NonAsciiCharactersTest
    public void testNonAsciiCharacters()
    {
       JavaClassSource javaClass = Roaster.parse(JavaClassSource.class, nonAsciiCharactersClass);
-      Assert.assertTrue(!javaClass.hasSyntaxErrors());
-      Assert.assertEquals("punctuations_example_áéíóú", javaClass.getFields().get(0).getName());
+      assertTrue(!javaClass.hasSyntaxErrors());
+      assertEquals("punctuations_example_áéíóú", javaClass.getFields().get(0).getName());
    }
 
 }

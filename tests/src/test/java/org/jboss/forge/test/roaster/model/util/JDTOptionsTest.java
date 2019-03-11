@@ -1,22 +1,23 @@
 package org.jboss.forge.test.roaster.model.util;
 
-import static org.junit.Assert.assertNotNull;
-
 import org.jboss.forge.roaster.model.util.JDTOptions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class JDTOptionsTest
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+class JDTOptionsTest
 {
 
    @Test
-   public void testGetJDTOptionsDoesNotReturnNull()
+   void testGetJDTOptionsDoesNotReturnNull()
    {
       assertNotNull(JDTOptions.getJDTOptions());
    }
 
-   @Test(expected = UnsupportedOperationException.class)
-   public void testGetJDTOptionsDoesReturnUnmodifiableMap()
+   @Test
+   void testGetJDTOptionsDoesReturnUnmodifiableMap()
    {
-      JDTOptions.getJDTOptions().put("key", "value");
+      assertThrows(UnsupportedOperationException.class, () -> JDTOptions.getJDTOptions().put("key", "value"));
    }
 }

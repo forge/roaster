@@ -3,11 +3,11 @@ package org.jboss.forge.test.roaster.model;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ImportTest
 {
@@ -28,10 +28,10 @@ public class ImportTest
       final JavaClassSource javaClassSource = Roaster.create(JavaClassSource.class);
       String pckage = "packageOne.packageTwo";
       final Import imprt = javaClassSource.addImport(pckage + ".*");
-      assertThat(imprt.isWildcard(), is(true));
-      assertThat(imprt.getPackage(), is(pckage));
-      assertThat(imprt.getSimpleName(), is(Import.WILDCARD));
-      assertThat(imprt.getQualifiedName(), is(pckage + ".*"));
+      assertTrue(imprt.isWildcard());
+      assertEquals(pckage, imprt.getPackage());
+      assertEquals(Import.WILDCARD, imprt.getSimpleName());
+      assertEquals(pckage + ".*", imprt.getQualifiedName());
    }
 
    @Test
@@ -39,10 +39,10 @@ public class ImportTest
    {
       final JavaClassSource javaClassSource = Roaster.create(JavaClassSource.class);
 
-      assertThat(javaClassSource.addImport("p1.Class2").getSimpleName(), is("Class2"));
-      assertThat(javaClassSource.addImport("p2.p3.Class3").getSimpleName(), is("Class3"));
-      assertThat(javaClassSource.addImport("p4.*").getSimpleName(), is(Import.WILDCARD));
-      assertThat(javaClassSource.addImport("p5.p6.*").getSimpleName(), is(Import.WILDCARD));
+      assertEquals("Class2", javaClassSource.addImport("p1.Class2").getSimpleName());
+      assertEquals("Class3", javaClassSource.addImport("p2.p3.Class3").getSimpleName());
+      assertEquals(Import.WILDCARD, javaClassSource.addImport("p4.*").getSimpleName());
+      assertEquals(Import.WILDCARD, javaClassSource.addImport("p5.p6.*").getSimpleName());
    }
 
    @Test
@@ -50,10 +50,10 @@ public class ImportTest
    {
       final JavaClassSource javaClassSource = Roaster.create(JavaClassSource.class);
 
-      assertThat(javaClassSource.addImport("p1.Class2").getPackage(), is("p1"));
-      assertThat(javaClassSource.addImport("p2.p3.Class3").getPackage(), is("p2.p3"));
-      assertThat(javaClassSource.addImport("p4.*").getPackage(), is("p4"));
-      assertThat(javaClassSource.addImport("p5.p6.*").getPackage(), is("p5.p6"));
+      assertEquals("p1", javaClassSource.addImport("p1.Class2").getPackage());
+      assertEquals("p2.p3", javaClassSource.addImport("p2.p3.Class3").getPackage());
+      assertEquals("p4", javaClassSource.addImport("p4.*").getPackage());
+      assertEquals("p5.p6", javaClassSource.addImport("p5.p6.*").getPackage());
    }
 
    @Test
@@ -61,9 +61,9 @@ public class ImportTest
    {
       final JavaClassSource javaClassSource = Roaster.create(JavaClassSource.class);
 
-      assertThat(javaClassSource.addImport("p1.Class2").getQualifiedName(), is("p1.Class2"));
-      assertThat(javaClassSource.addImport("p2.p3.Class3").getQualifiedName(), is("p2.p3.Class3"));
-      assertThat(javaClassSource.addImport("p4.*").getQualifiedName(), is("p4.*"));
-      assertThat(javaClassSource.addImport("p5.p6.*").getQualifiedName(), is("p5.p6.*"));
+      assertEquals("p1.Class2", javaClassSource.addImport("p1.Class2").getQualifiedName());
+      assertEquals("p2.p3.Class3", javaClassSource.addImport("p2.p3.Class3").getQualifiedName());
+      assertEquals("p4.*", javaClassSource.addImport("p4.*").getQualifiedName());
+      assertEquals("p5.p6.*", javaClassSource.addImport("p5.p6.*").getQualifiedName());
    }
 }

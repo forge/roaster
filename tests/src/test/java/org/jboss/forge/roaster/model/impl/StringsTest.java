@@ -1,24 +1,27 @@
 package org.jboss.forge.roaster.model.impl;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.jboss.forge.roaster.model.impl.Strings.enquote;
+import static org.jboss.forge.roaster.model.impl.Strings.unquote;
 
-public class StringsTest
+class StringsTest
 {
    @Test
-   public void should_quote()
+   void should_quote()
    {
-      assertEquals("\"a$nfq5ei1\"", Strings.enquote("a$nfq5ei1"));
-      assertEquals("\"\'\'\"", Strings.enquote("\'\'"));
-      assertEquals("\"&uel;\"", Strings.enquote("&uel;"));
+      assertThat(enquote("a$nfq5ei1")).isEqualTo("\"a$nfq5ei1\"");
+      assertThat(enquote("\'\'")).isEqualTo("\"\'\'\"");
+      assertThat(enquote("&uel;")).isEqualTo("\"&uel;\"");
    }
 
    @Test
-   public void should_unquote()
+   void should_unquote()
    {
-      assertEquals("a$nfq5ei1", Strings.unquote("\"a$nfq5ei1\""));
-      assertEquals("\'\'", Strings.unquote("\'\'"));
-      assertEquals("&uel;", Strings.unquote("&uel;"));
+      assertThat(unquote("\"a$nfq5ei1\"")).isEqualTo("a$nfq5ei1");
+      assertThat(unquote("\"\'\'\"")).isEqualTo("\'\'");
+      assertThat(unquote("\'\'")).isEqualTo("\'\'");
+      assertThat(unquote("&uel;")).isEqualTo("&uel;");
    }
 }

@@ -6,14 +6,14 @@
  */
 package org.jboss.forge.test.roaster.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.impl.ImportImpl;
 import org.jboss.forge.roaster.model.source.Import;
 import org.jboss.forge.roaster.model.source.JavaSource;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class ImportEqualityTest
 {
@@ -23,7 +23,7 @@ public class ImportEqualityTest
    private static final String DEFAULT_IMPORT = DEFAULT_IMPORT_PACKAGE + "." + DEFAULT_IMPORT_CLASS;
 
    @Test
-   public void testImportEqualsAnotherInstance() 
+   public void testImportEqualsAnotherInstance()
    {
       Import firstImport = buildImport(DEFAULT_IMPORT);
       Import secondImport = buildImport(DEFAULT_IMPORT);
@@ -32,7 +32,7 @@ public class ImportEqualityTest
    }
 
    @Test
-   public void testEqualsReturnsFalseForDifferentImport() 
+   public void testEqualsReturnsFalseForDifferentImport()
    {
       Import classImport = buildImport(DEFAULT_IMPORT);
       Import interfaceImport = buildImport("org.jboss.forge.roaster.model.impl.ImportImpl");
@@ -40,14 +40,14 @@ public class ImportEqualityTest
    }
 
    @Test
-   public void testEqualsIsReflexive() 
+   public void testEqualsIsReflexive()
    {
       Import reflexiveImport = buildImport(DEFAULT_IMPORT);
       assertEquals(reflexiveImport, reflexiveImport);
    }
 
    @Test
-   public void testEqualsIsTransitive() 
+   public void testEqualsIsTransitive()
    {
       Import firstImport = buildImport(DEFAULT_IMPORT);
       Import secondImport = buildImport(DEFAULT_IMPORT);
@@ -58,21 +58,21 @@ public class ImportEqualityTest
    }
 
    @Test
-   public void testNotEqualToNull() 
+   public void testNotEqualToNull()
    {
       assertFalse(buildImport(DEFAULT_IMPORT).equals(null));
    }
 
    @Test
    @SuppressWarnings("unlikely-arg-type")
-   public void testNotEqualsToDifferentClass() 
+   public void testNotEqualsToDifferentClass()
    {
       Import myImport = buildImport(DEFAULT_IMPORT);
       assertFalse(myImport.equals(DEFAULT_IMPORT));
    }
 
    @Test
-   public void testEqualsToDifferentImportImplementation() 
+   public void testEqualsToDifferentImportImplementation()
    {
       Import myImport = buildImport(DEFAULT_IMPORT);
       Import mockImport = new MockImportImpl(DEFAULT_IMPORT_PACKAGE, DEFAULT_IMPORT_CLASS);

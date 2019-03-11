@@ -13,10 +13,12 @@ import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -24,186 +26,186 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class FieldTypeTest
 {
    @Test
-   public void testGetReturnTypeReturnsFullTypeForJavaLang() 
+   public void testGetReturnTypeReturnsFullTypeForJavaLang()
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class).addField("public Long l;");
-      Assert.assertEquals("java.lang.Long", field.getType().getQualifiedName());
-      Assert.assertEquals("Long", field.getType().getName());
+      assertEquals("java.lang.Long", field.getType().getQualifiedName());
+      assertEquals("Long", field.getType().getName());
    }
 
    @Test
-   public void testGetReturnTypeReturnsFullTypeForJavaLangGeneric() 
+   public void testGetReturnTypeReturnsFullTypeForJavaLangGeneric()
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public List<Long> list;");
       field.getOrigin().addImport(List.class);
-      Assert.assertEquals("java.util.List", field.getType().getQualifiedName());
-      Assert.assertEquals("List", field.getType().getName());
+      assertEquals("java.util.List", field.getType().getQualifiedName());
+      assertEquals("List", field.getType().getName());
    }
 
    @Test
-   public void testGetReturnTypeObjectArray() 
+   public void testGetReturnTypeObjectArray()
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public List[] field;");
       field.getOrigin().addImport(List.class);
       Type<JavaClassSource> type = field.getType();
-      Assert.assertEquals("java.util.List", type.getQualifiedName());
-      Assert.assertFalse(type.isParameterized());
-      Assert.assertFalse(type.isWildcard());
-      Assert.assertFalse(type.isPrimitive());
-      Assert.assertFalse(type.isQualified());
-      Assert.assertTrue(type.isArray());
+      assertEquals("java.util.List", type.getQualifiedName());
+      assertFalse(type.isParameterized());
+      assertFalse(type.isWildcard());
+      assertFalse(type.isPrimitive());
+      assertFalse(type.isQualified());
+      assertTrue(type.isArray());
 
       List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
-      Assert.assertEquals(0, arguments.size());
+      assertEquals(0, arguments.size());
    }
 
    @Test
-   public void testGetReturnTypeObjectArrayParameterized() 
+   public void testGetReturnTypeObjectArrayParameterized()
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public List<Long>[] list;");
       field.getOrigin().addImport(List.class);
       Type<JavaClassSource> type = field.getType();
-      Assert.assertEquals("java.util.List", type.getQualifiedName());
-      Assert.assertTrue(type.isParameterized());
-      Assert.assertFalse(type.isWildcard());
-      Assert.assertFalse(type.isPrimitive());
-      Assert.assertFalse(type.isQualified());
-      Assert.assertTrue(type.isArray());
+      assertEquals("java.util.List", type.getQualifiedName());
+      assertTrue(type.isParameterized());
+      assertFalse(type.isWildcard());
+      assertFalse(type.isPrimitive());
+      assertFalse(type.isQualified());
+      assertTrue(type.isArray());
 
       List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
-      Assert.assertEquals(1, arguments.size());
+      assertEquals(1, arguments.size());
    }
 
    @Test
-   public void testGetReturnTypeObjectUnparameterized() 
+   public void testGetReturnTypeObjectUnparameterized()
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public List list;");
       field.getOrigin().addImport(List.class);
-      Assert.assertEquals("java.util.List", field.getType().getQualifiedName());
-      Assert.assertFalse(field.getType().isParameterized());
+      assertEquals("java.util.List", field.getType().getQualifiedName());
+      assertFalse(field.getType().isParameterized());
    }
 
    @Test
-   public void testGetReturnTypeObjectParameterized() 
+   public void testGetReturnTypeObjectParameterized()
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public List<Long> list;");
       field.getOrigin().addImport(List.class);
       Type<JavaClassSource> type = field.getType();
-      Assert.assertEquals("java.util.List", type.getQualifiedName());
-      Assert.assertTrue(type.isParameterized());
+      assertEquals("java.util.List", type.getQualifiedName());
+      assertTrue(type.isParameterized());
 
       List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
-      Assert.assertEquals(1, arguments.size());
-      Assert.assertEquals("Long", arguments.get(0).getName());
-      Assert.assertEquals("java.lang.Long", arguments.get(0).getQualifiedName());
+      assertEquals(1, arguments.size());
+      assertEquals("Long", arguments.get(0).getName());
+      assertEquals("java.lang.Long", arguments.get(0).getQualifiedName());
    }
 
    @Test
-   public void testGetReturnTypeObjectWildcard() 
+   public void testGetReturnTypeObjectWildcard()
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public List<?> list;");
       field.getOrigin().addImport(List.class);
       Type<JavaClassSource> type = field.getType();
-      Assert.assertEquals("java.util.List", type.getQualifiedName());
-      Assert.assertTrue(type.isParameterized());
+      assertEquals("java.util.List", type.getQualifiedName());
+      assertTrue(type.isParameterized());
 
       List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
-      Assert.assertEquals(1, arguments.size());
-      Assert.assertEquals("?", arguments.get(0).getName());
-      Assert.assertEquals("?", arguments.get(0).getQualifiedName());
+      assertEquals(1, arguments.size());
+      assertEquals("?", arguments.get(0).getName());
+      assertEquals("?", arguments.get(0).getQualifiedName());
    }
 
    @Test
-   public void testGetReturnTypeObjectParameterizedMultiple() 
+   public void testGetReturnTypeObjectParameterizedMultiple()
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public Map<String, Long> map;");
       field.getOrigin().addImport(Map.class);
       Type<JavaClassSource> type = field.getType();
-      Assert.assertEquals("java.util.Map", type.getQualifiedName());
-      Assert.assertTrue(type.isParameterized());
+      assertEquals("java.util.Map", type.getQualifiedName());
+      assertTrue(type.isParameterized());
 
       List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
-      Assert.assertEquals(2, arguments.size());
-      Assert.assertEquals("String", arguments.get(0).getName());
-      Assert.assertEquals("java.lang.String", arguments.get(0).getQualifiedName());
+      assertEquals(2, arguments.size());
+      assertEquals("String", arguments.get(0).getName());
+      assertEquals("java.lang.String", arguments.get(0).getQualifiedName());
 
-      Assert.assertEquals("Long", arguments.get(1).getName());
-      Assert.assertEquals("java.lang.Long", arguments.get(1).getQualifiedName());
+      assertEquals("Long", arguments.get(1).getName());
+      assertEquals("java.lang.Long", arguments.get(1).getQualifiedName());
    }
 
    @Test
-   public void testGetReturnTypeObjectParameterizedNested() 
+   public void testGetReturnTypeObjectParameterizedNested()
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public List<List<Long>> map;");
       field.getOrigin().addImport(List.class);
       Type<JavaClassSource> type = field.getType();
-      Assert.assertEquals("java.util.List", type.getQualifiedName());
-      Assert.assertTrue(type.isParameterized());
+      assertEquals("java.util.List", type.getQualifiedName());
+      assertTrue(type.isParameterized());
 
       List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
-      Assert.assertEquals(1, arguments.size());
-      Assert.assertEquals("List", arguments.get(0).getName());
-      Assert.assertEquals("java.util.List", arguments.get(0).getQualifiedName());
+      assertEquals(1, arguments.size());
+      assertEquals("List", arguments.get(0).getName());
+      assertEquals("java.util.List", arguments.get(0).getQualifiedName());
 
-      Assert.assertEquals(1, arguments.size());
-      Assert.assertEquals("Long", arguments.get(0).getTypeArguments().get(0).getName());
-      Assert.assertEquals("java.lang.Long", arguments.get(0).getTypeArguments().get(0).getQualifiedName());
+      assertEquals(1, arguments.size());
+      assertEquals("Long", arguments.get(0).getTypeArguments().get(0).getName());
+      assertEquals("java.lang.Long", arguments.get(0).getTypeArguments().get(0).getQualifiedName());
    }
 
    @Test
-   public void testGetReturnTypeObjectParameterizedMultipleNested() 
+   public void testGetReturnTypeObjectParameterizedMultipleNested()
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public Map<String, List<Long>> map;");
       field.getOrigin().addImport(List.class);
       field.getOrigin().addImport(Map.class);
       Type<JavaClassSource> type = field.getType();
-      Assert.assertEquals("java.util.Map", type.getQualifiedName());
-      Assert.assertTrue(type.isParameterized());
+      assertEquals("java.util.Map", type.getQualifiedName());
+      assertTrue(type.isParameterized());
 
       List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
-      Assert.assertEquals(2, arguments.size());
-      Assert.assertEquals("String", arguments.get(0).getName());
-      Assert.assertEquals("java.lang.String", arguments.get(0).getQualifiedName());
+      assertEquals(2, arguments.size());
+      assertEquals("String", arguments.get(0).getName());
+      assertEquals("java.lang.String", arguments.get(0).getQualifiedName());
 
-      Assert.assertEquals("List", arguments.get(1).getName());
-      Assert.assertEquals("java.util.List", arguments.get(1).getQualifiedName());
+      assertEquals("List", arguments.get(1).getName());
+      assertEquals("java.util.List", arguments.get(1).getQualifiedName());
    }
 
    @Test
-   public void testGetReturnTypeObjectParameterizedArrayMultipleNested() 
+   public void testGetReturnTypeObjectParameterizedArrayMultipleNested()
    {
       FieldSource<JavaClassSource> field = Roaster.create(JavaClassSource.class)
                .addField("public Map<String, List<Long>>[] maps;");
       field.getOrigin().addImport(List.class);
       field.getOrigin().addImport(Map.class);
       Type<JavaClassSource> type = field.getType();
-      Assert.assertEquals("java.util.Map", type.getQualifiedName());
-      Assert.assertTrue(type.isParameterized());
+      assertEquals("java.util.Map", type.getQualifiedName());
+      assertTrue(type.isParameterized());
 
       List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
-      Assert.assertEquals(2, arguments.size());
-      Assert.assertEquals("String", arguments.get(0).getName());
-      Assert.assertEquals("java.lang.String", arguments.get(0).getQualifiedName());
+      assertEquals(2, arguments.size());
+      assertEquals("String", arguments.get(0).getName());
+      assertEquals("java.lang.String", arguments.get(0).getQualifiedName());
 
-      Assert.assertEquals("List", arguments.get(1).getName());
-      Assert.assertEquals("java.util.List", arguments.get(1).getQualifiedName());
+      assertEquals("List", arguments.get(1).getName());
+      assertEquals("java.util.List", arguments.get(1).getQualifiedName());
    }
 
    @Test
@@ -213,9 +215,9 @@ public class FieldTypeTest
       final FieldSource<JavaClassSource> field = javaClass.addField();
       field.setName("content");
       field.setType(byte[].class);
-      Assert.assertEquals("byte", field.getType().getQualifiedName());
-      Assert.assertTrue(field.getType().isArray());
-      Assert.assertEquals(1, field.getType().getArrayDimensions());
+      assertEquals("byte", field.getType().getQualifiedName());
+      assertTrue(field.getType().isArray());
+      assertEquals(1, field.getType().getArrayDimensions());
    }
 
    @Test
@@ -225,10 +227,10 @@ public class FieldTypeTest
       final FieldSource<JavaClassSource> field = javaClass.addField();
       field.setName("content");
       field.setType(byte[][][].class);
-      Assert.assertEquals("byte", field.getType().getQualifiedName());
+      assertEquals("byte", field.getType().getQualifiedName());
       Type<JavaClassSource> type = field.getType();
-      Assert.assertTrue(type.isArray());
-      Assert.assertEquals(3, type.getArrayDimensions());
+      assertTrue(type.isArray());
+      assertEquals(3, type.getArrayDimensions());
    }
 
    @Test
@@ -238,11 +240,11 @@ public class FieldTypeTest
       final FieldSource<JavaClassSource> field = javaClass.addField();
       field.setName("content");
       field.setType(java.util.Vector[][][].class);
-      Assert.assertEquals("java.util.Vector", field.getType().getQualifiedName());
+      assertEquals("java.util.Vector", field.getType().getQualifiedName());
       Type<JavaClassSource> type = field.getType();
-      Assert.assertTrue(type.isArray());
-      Assert.assertEquals(3, type.getArrayDimensions());
-      Assert.assertEquals("Vector[][][]", field.getType().getName());
+      assertTrue(type.isArray());
+      assertEquals(3, type.getArrayDimensions());
+      assertEquals("Vector[][][]", field.getType().getName());
    }
 
    @Test
@@ -250,10 +252,10 @@ public class FieldTypeTest
    {
       final JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       final FieldSource<JavaClassSource> field = javaClass.addField("public byte content[];");
-      Assert.assertEquals("byte[]", field.getType().getName());
-      Assert.assertEquals("byte", field.getType().getQualifiedName());
-      Assert.assertTrue(field.getType().isArray());
-      Assert.assertEquals(1, field.getType().getArrayDimensions());
+      assertEquals("byte[]", field.getType().getName());
+      assertEquals("byte", field.getType().getQualifiedName());
+      assertTrue(field.getType().isArray());
+      assertEquals(1, field.getType().getArrayDimensions());
    }
 
    @Test
@@ -261,10 +263,10 @@ public class FieldTypeTest
    {
       final JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       final FieldSource<JavaClassSource> field = javaClass.addField("public Long content[];");
-      Assert.assertEquals("Long[]", field.getType().getName());
-      Assert.assertEquals("java.lang.Long", field.getType().getQualifiedName());
-      Assert.assertTrue(field.getType().isArray());
-      Assert.assertEquals(1, field.getType().getArrayDimensions());
+      assertEquals("Long[]", field.getType().getName());
+      assertEquals("java.lang.Long", field.getType().getQualifiedName());
+      assertTrue(field.getType().isArray());
+      assertEquals(1, field.getType().getArrayDimensions());
    }
 
    @Test
@@ -272,40 +274,40 @@ public class FieldTypeTest
    {
       final JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       final FieldSource<JavaClassSource> field = javaClass.addField("public Long[] content[];");
-      Assert.assertEquals("Long[][]", field.getType().getName());
-      Assert.assertEquals("java.lang.Long", field.getType().getQualifiedName());
-      Assert.assertTrue(field.getType().isArray());
-      Assert.assertEquals(2, field.getType().getArrayDimensions());
+      assertEquals("Long[][]", field.getType().getName());
+      assertEquals("java.lang.Long", field.getType().getQualifiedName());
+      assertTrue(field.getType().isArray());
+      assertEquals(2, field.getType().getArrayDimensions());
    }
 
    @Test
-   public void testGenericFieldType() 
+   public void testGenericFieldType()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       FieldSource<JavaClassSource> field = javaClass.addField();
       field.setPrivate().setName("email").setType("java.util.List<String>")
                .setLiteralInitializer("new java.util.ArrayList<String>()");
-      Assert.assertTrue(javaClass.hasImport(List.class));
-      Assert.assertEquals("List<String>", field.getType().toString());
-      Assert.assertEquals("new java.util.ArrayList<String>()", field.getLiteralInitializer());
+      assertTrue(javaClass.hasImport(List.class));
+      assertEquals("List<String>", field.getType().toString());
+      assertEquals("new java.util.ArrayList<String>()", field.getLiteralInitializer());
    }
 
    @Test
-   public void testComplexFieldType() 
+   public void testComplexFieldType()
    {
       JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("MyClass<T>");
       String type = "java.util.Map<org.foo.MyEnum<T>,java.lang.Object>";
       FieldSource<JavaClassSource> field = clazz.addField().setName("field").setType(type);
-      Assert.assertEquals(type, field.getType().getQualifiedNameWithGenerics());
+      assertEquals(type, field.getType().getQualifiedNameWithGenerics());
    }
 
    @Test
-   public void testComplexFieldTypeArray() 
+   public void testComplexFieldTypeArray()
    {
       JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("MyClass<T>");
       String type = "java.util.Map<org.Foo.MyEnum<T>,java.lang.Object>[][]";
       FieldSource<JavaClassSource> field = clazz.addField().setName("field").setType(type);
-      Assert.assertEquals(type, field.getType().getQualifiedNameWithGenerics());
+      assertEquals(type, field.getType().getQualifiedNameWithGenerics());
    }
 
    @Test
@@ -314,7 +316,7 @@ public class FieldTypeTest
       JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("MyClass");
       String type = "org.foo.Code<org.foo.Condition>";
       clazz.addField().setName("param").setType(type);
-      Assert.assertEquals(2, clazz.getImports().size());
+      assertEquals(2, clazz.getImports().size());
    }
 
    @Test
@@ -323,7 +325,7 @@ public class FieldTypeTest
       JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("MyClass");
       String type = "java.util.List<java.util.List<java.util.List<String>>>";
       FieldSource<JavaClassSource> field = clazz.addField().setName("param").setType(type);
-      Assert.assertEquals(type, field.getType().getQualifiedNameWithGenerics());
+      assertEquals(type, field.getType().getQualifiedNameWithGenerics());
    }
 
    @Test

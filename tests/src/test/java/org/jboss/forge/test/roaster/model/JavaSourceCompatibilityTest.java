@@ -10,8 +10,9 @@ import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class JavaSourceCompatibilityTest
 {
@@ -21,7 +22,7 @@ public class JavaSourceCompatibilityTest
    {
       JavaType<?> source = Roaster
                .parse("public class Test{public void test() {java.util.List<String> s = new java.util.ArrayList<String>(); for (String item : s){}}}");
-      Assert.assertFalse(source.hasSyntaxErrors());
+      assertFalse(source.hasSyntaxErrors());
    }
 
    @Test
@@ -29,7 +30,7 @@ public class JavaSourceCompatibilityTest
    {
       JavaType<?> source = Roaster
                .parse("public class Test{public Test() {java.util.List<String> s = new java.util.ArrayList<String>(); for (String item : s){}}}");
-      Assert.assertFalse(source.hasSyntaxErrors());
+      assertFalse(source.hasSyntaxErrors());
    }
 
    @Test
@@ -38,7 +39,7 @@ public class JavaSourceCompatibilityTest
       JavaClassSource source = Roaster.parse(JavaClassSource.class, "public class Test{}");
       source.addMethod(
                "public void test() {java.util.List<String> s = new java.util.ArrayList<String>(); for (String item : s){}}");
-      Assert.assertFalse(source.hasSyntaxErrors());
+      assertFalse(source.hasSyntaxErrors());
    }
 
    @Test
@@ -50,7 +51,7 @@ public class JavaSourceCompatibilityTest
                .setBody("java.util.List<String> s = new java.util.ArrayList<String>(); for (String item : s){}");
       // Forces a rewrite to happen via AbstractJavaSource
       source.toString();
-      Assert.assertFalse(source.hasSyntaxErrors());
+      assertFalse(source.hasSyntaxErrors());
    }
 
    @Test
@@ -62,7 +63,7 @@ public class JavaSourceCompatibilityTest
                .setBody("java.util.List<String> s = new java.util.ArrayList<String>(); for (String item : s){}");
       // Forces a rewrite to happen via AbstractJavaSource
       source.toString();
-      Assert.assertFalse(source.hasSyntaxErrors());
+      assertFalse(source.hasSyntaxErrors());
    }
 
    @Test
@@ -72,6 +73,6 @@ public class JavaSourceCompatibilityTest
                "public interface Test{ public default String blah() {return null;}}");
       // Forces a rewrite to happen via AbstractJavaSource
       source.toString();
-      Assert.assertFalse(source.hasSyntaxErrors());
+      assertFalse(source.hasSyntaxErrors());
    }
 }

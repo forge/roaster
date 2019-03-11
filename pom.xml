@@ -1,137 +1,130 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-   <modelVersion>4.0.0</modelVersion>
-   <parent>
-      <groupId>org.jboss</groupId>
-      <artifactId>jboss-parent</artifactId>
-      <version>32</version>
-   </parent>
-   <groupId>org.jboss.forge.roaster</groupId>
-   <artifactId>roaster-parent</artifactId>
-   <version>2.20.9-SNAPSHOT</version>
-   <packaging>pom</packaging>
-   <name>Forge Roaster - Parent</name>
-   <description>
-      Forge Roaster is a library for inspecting and manipulating Java types.
-   </description>
-   <licenses>
-      <license>
-         <name>Eclipse Public License version 1.0</name>
-         <url>http://www.eclipse.org/legal/epl-v10.html</url>
-      </license>
-   </licenses>
-   <developers>
-      <developer>
-         <id>lincoln</id>
-         <name>Lincoln Baxter, III</name>
-         <email>lincolnbaxter@gmail.com</email>
-      </developer>
-      <developer>
-         <id>gastaldi</id>
-         <name>George Gastaldi</name>
-         <email>gegastaldi@gmail.com</email>
-      </developer>
-      <developer>
-         <id>koen</id>
-         <name>Koen Aers</name>
-         <email>koen.aers@gmail.com</email>
-      </developer>
-      <developer>
-         <id>stale</id>
-         <name>Stale Pedersen</name>
-         <email>stalep@gmail.com</email>
-      </developer>
-      <developer>
-         <id>mbenson</id>
-         <name>Matt Benson</name>
-         <email>gudnabrsam@gmail.com</email>
-      </developer>
-   </developers>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.jboss</groupId>
+    <artifactId>jboss-parent</artifactId>
+    <version>32</version>
+  </parent>
+  <groupId>org.jboss.forge.roaster</groupId>
+  <artifactId>roaster-parent</artifactId>
+  <version>2.20.9-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Forge Roaster - Parent</name>
+  <description>
+    Forge Roaster is a library for inspecting and manipulating Java types.
+  </description>
+  <licenses>
+    <license>
+      <name>Eclipse Public License version 1.0</name>
+      <url>http://www.eclipse.org/legal/epl-v10.html</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>lincoln</id>
+      <name>Lincoln Baxter, III</name>
+      <email>lincolnbaxter@gmail.com</email>
+    </developer>
+    <developer>
+      <id>gastaldi</id>
+      <name>George Gastaldi</name>
+      <email>gegastaldi@gmail.com</email>
+    </developer>
+    <developer>
+      <id>koen</id>
+      <name>Koen Aers</name>
+      <email>koen.aers@gmail.com</email>
+    </developer>
+    <developer>
+      <id>stale</id>
+      <name>Stale Pedersen</name>
+      <email>stalep@gmail.com</email>
+    </developer>
+    <developer>
+      <id>mbenson</id>
+      <name>Matt Benson</name>
+      <email>gudnabrsam@gmail.com</email>
+    </developer>
+  </developers>
 
-   <properties>
-      <maven.compiler.target>1.8</maven.compiler.target>
-      <maven.compiler.source>1.8</maven.compiler.source>
-      <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+  <properties>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
-      <version.commons-text>1.6</version.commons-text>
-   </properties>
+    <version.commons-text>1.6</version.commons-text>
+    <version.surefire.plugin>3.0.0-M3</version.surefire.plugin>
+  </properties>
 
-   <modules>
-      <module>api</module>
-      <module>impl</module>
-      <module>bom</module>
-      <module>dist</module>
-      <module>tests</module>
-   </modules>
-   <dependencyManagement>
-      <dependencies>
-         <dependency>
-            <groupId>org.jboss.forge.roaster</groupId>
-            <artifactId>roaster-api</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.jboss.forge.roaster</groupId>
-            <artifactId>roaster-jdt</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-            <version>${version.commons-text}</version>
-         </dependency>
-      </dependencies>
-   </dependencyManagement>
-
-   <dependencies>
+  <modules>
+    <module>api</module>
+    <module>impl</module>
+    <module>bom</module>
+    <module>dist</module>
+    <module>tests</module>
+  </modules>
+  <dependencyManagement>
+    <dependencies>
       <dependency>
-         <groupId>junit</groupId>
-         <artifactId>junit</artifactId>
-         <version>4.12</version>
-         <scope>test</scope>
+        <groupId>org.jboss.forge.roaster</groupId>
+        <artifactId>roaster-api</artifactId>
+        <version>${project.version}</version>
       </dependency>
-   </dependencies>
+      <dependency>
+        <groupId>org.jboss.forge.roaster</groupId>
+        <artifactId>roaster-jdt</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-text</artifactId>
+        <version>${version.commons-text}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
-   <scm>
-      <connection>scm:git:git://github.com/forge/roaster.git</connection>
-      <developerConnection>scm:git:git@github.com:forge/roaster.git</developerConnection>
-      <url>http://github.com/forge/roaster</url>
-      <tag>HEAD</tag>
-   </scm>
+  <scm>
+    <connection>scm:git:git://github.com/forge/roaster.git</connection>
+    <developerConnection>scm:git:git@github.com:forge/roaster.git</developerConnection>
+    <url>http://github.com/forge/roaster</url>
+    <tag>HEAD</tag>
+  </scm>
 
-   <distributionManagement>
-      <snapshotRepository>
-         <id>ossrh</id>
-         <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      </snapshotRepository>
-      <repository>
-         <id>ossrh</id>
-         <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-      </repository>
-   </distributionManagement>
-   <build>
-      <plugins>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-release-plugin</artifactId>
-            <inherited>true</inherited>
-            <configuration>
-               <preparationGoals>clean install</preparationGoals>
-               <releaseProfiles>gpg-sign,jboss-release</releaseProfiles>
-               <tagNameFormat>@{project.version}</tagNameFormat>
-            </configuration>
-         </plugin>
-         <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <version>1.6.8</version>
-            <extensions>true</extensions>
-            <configuration>
-               <autoReleaseAfterClose>true</autoReleaseAfterClose>
-               <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-               <serverId>ossrh</serverId>
-            </configuration>
-         </plugin>
-      </plugins>
-   </build>
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <inherited>true</inherited>
+        <configuration>
+          <preparationGoals>clean install</preparationGoals>
+          <releaseProfiles>gpg-sign,jboss-release</releaseProfiles>
+          <tagNameFormat>@{project.version}</tagNameFormat>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.8</version>
+        <extensions>true</extensions>
+        <configuration>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <serverId>ossrh</serverId>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
 

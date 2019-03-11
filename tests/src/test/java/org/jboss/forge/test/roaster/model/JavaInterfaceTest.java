@@ -6,13 +6,6 @@
  */
 package org.jboss.forge.test.roaster.model;
 
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -23,7 +16,13 @@ import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.MemberSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -115,9 +114,9 @@ public class JavaInterfaceTest
       JavaClassSource javaImplementation = Roaster.create(JavaClassSource.class);
       javaImplementation.implementInterface(javaInterface);
 
-      assertTrue("The interface does not import java.util.List properly", javaInterface.hasImport("java.util.List"));
-      assertTrue("The implementation does not import java.util.List properly",
-               javaImplementation.hasImport("java.util.List"));
+      assertTrue(javaInterface.hasImport("java.util.List"), "The interface does not import java.util.List properly");
+      assertTrue(javaImplementation.hasImport("java.util.List"),
+               "The implementation does not import java.util.List properly");
 
    }
 
@@ -127,7 +126,7 @@ public class JavaInterfaceTest
       String data = "import com.foo.Bar;\n"
                + "public interface Foo extends Bar<String,Integer>{}";
       JavaInterfaceSource iface = Roaster.parse(JavaInterfaceSource.class, data);
-      assertThat(iface.getInterfaces(), hasItem("com.foo.Bar<String,Integer>"));
+      assertThat(iface.getInterfaces()).contains("com.foo.Bar<String,Integer>");
    }
 
    @Test
@@ -135,9 +134,9 @@ public class JavaInterfaceTest
    {
       JavaClassSource javaImplementation = Roaster.parse(JavaClassSource.class,
                "package com.foo.forge; public class MockClass implements MyInterface {}");
-      assertThat(javaImplementation.getInterfaces(), hasItem("com.foo.forge.MyInterface"));
+      assertThat(javaImplementation.getInterfaces()).contains("com.foo.forge.MyInterface");
       javaImplementation.addImport("com.foo.forge.MyInterface");
-      assertThat(javaImplementation.getInterfaces(), hasItem("com.foo.forge.MyInterface"));
+      assertThat(javaImplementation.getInterfaces()).contains("com.foo.forge.MyInterface");
    }
 
 }

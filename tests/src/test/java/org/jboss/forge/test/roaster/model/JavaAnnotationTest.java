@@ -6,17 +6,6 @@
  */
 package org.jboss.forge.test.roaster.model;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -27,8 +16,16 @@ import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.JavaAnnotationSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.test.roaster.model.common.MockEnumType;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Matt Benson
@@ -37,7 +34,7 @@ public class JavaAnnotationTest
 {
    private JavaAnnotationSource javaAnnotation;
 
-   @Before
+   @BeforeEach
    public void setup() throws IOException
    {
       String fileName = "/org/jboss/forge/grammar/java/MockJavaAnnotationType.java";
@@ -256,9 +253,9 @@ public class JavaAnnotationTest
       String data = "@Test(test = {}) public class AnnotationTest {}";
       JavaClassSource type = Roaster.parse(JavaClassSource.class, data);
       AnnotationSource<JavaClassSource> ann = type.getAnnotation("Test");
-      assertThat(ann, notNullValue());
+      assertNotNull(ann);
       String[] arrayValue = ann.getStringArrayValue("test");
-      assertThat(arrayValue.length, equalTo(0));
+      assertEquals(0, arrayValue.length);
    }
 
 }

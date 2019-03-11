@@ -10,16 +10,18 @@ package org.jboss.forge.test.roaster.model;
 import org.jboss.forge.roaster.ParserException;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.JavaClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 public class JavaParserTest
 {
-   @Test(expected = ParserException.class)
+   @Test
    public void testExceptionWhenBadFileParsed()
    {
-      Roaster.parse(JavaClass.class, "asdfa$%(*&#$%sdfdsf");
+      assertThrows(ParserException.class, () -> Roaster.parse(JavaClass.class, "asdfa$%(*&#$%sdfdsf"));
    }
 }

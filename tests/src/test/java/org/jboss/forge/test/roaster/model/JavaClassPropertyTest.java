@@ -7,8 +7,6 @@
 
 package org.jboss.forge.test.roaster.model;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
@@ -18,11 +16,13 @@ import java.util.List;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.PropertySource;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- *
  * @author <a href="ggastald@redhat.com">George Gastaldi</a>
  */
 public class JavaClassPropertyTest
@@ -35,7 +35,7 @@ public class JavaClassPropertyTest
       {
          JavaClassSource source = Roaster.parse(JavaClassSource.class, stream);
          List<PropertySource<JavaClassSource>> properties = source.getProperties();
-         Assert.assertEquals(2, properties.size());
+         assertEquals(2, properties.size());
       }
    }
 
@@ -50,11 +50,11 @@ public class JavaClassPropertyTest
       }
 
       List<PropertySource<JavaClassSource>> properties = source.getProperties();
-      Assert.assertEquals(2, properties.size());
-      Assert.assertNotNull(source.getProperty("myString").getAccessor());
-      Assert.assertNotNull(source.getProperty("myString").getMutator());
-      Assert.assertNotNull(source.getProperty("myBoolean").getAccessor());
-      Assert.assertNotNull(source.getProperty("myBoolean").getMutator());
+      assertEquals(2, properties.size());
+      assertNotNull(source.getProperty("myString").getAccessor());
+      assertNotNull(source.getProperty("myString").getMutator());
+      assertNotNull(source.getProperty("myBoolean").getAccessor());
+      assertNotNull(source.getProperty("myBoolean").getMutator());
    }
 
    @Test
@@ -68,11 +68,11 @@ public class JavaClassPropertyTest
       }
 
       List<PropertySource<JavaClassSource>> properties = source.getProperties();
-      Assert.assertEquals(2, properties.size());
-      Assert.assertNotNull(source.getProperty("myString").getAccessor());
-      Assert.assertNotNull(source.getProperty("myString").getMutator());
-      Assert.assertNotNull(source.getProperty("myBoolean").getAccessor());
-      Assert.assertNotNull(source.getProperty("myBoolean").getMutator());
+      assertEquals(2, properties.size());
+      assertNotNull(source.getProperty("myString").getAccessor());
+      assertNotNull(source.getProperty("myString").getMutator());
+      assertNotNull(source.getProperty("myBoolean").getAccessor());
+      assertNotNull(source.getProperty("myBoolean").getMutator());
    }
 
    @Test
@@ -81,9 +81,9 @@ public class JavaClassPropertyTest
       JavaClassSource source = Roaster.create(JavaClassSource.class).setName("MyClass");
       PropertySource<JavaClassSource> property = source.addProperty(Date.class, "myDate");
       property.setType(Timestamp.class);
-      Assert.assertEquals("Timestamp", source.getField("myDate").getType().getName());
-      Assert.assertEquals("Timestamp", source.getMethod("getMyDate").getReturnType().getName());
-      Assert.assertNotNull(source.getMethod("setMyDate", Timestamp.class));
+      assertEquals("Timestamp", source.getField("myDate").getType().getName());
+      assertEquals("Timestamp", source.getMethod("getMyDate").getReturnType().getName());
+      assertNotNull(source.getMethod("setMyDate", Timestamp.class));
    }
 
    @Test
@@ -114,8 +114,8 @@ public class JavaClassPropertyTest
       source.addProperty(List.class, "myList");
 
       List<PropertySource<JavaClassSource>> properties = source.getProperties(List.class);
-      Assert.assertEquals("Incorrect number of properties found.", 1, properties.size());
-      Assert.assertEquals("Wrong property returned.", List.class.getCanonicalName(),
-               properties.get(0).getType().getQualifiedName());
+      assertEquals(1, properties.size(), "Incorrect number of properties found.");
+      assertEquals(List.class.getCanonicalName(),
+               properties.get(0).getType().getQualifiedName(), "Wrong property returned.");
    }
 }

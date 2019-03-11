@@ -6,9 +6,6 @@
  */
 package org.jboss.forge.test.roaster.model;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
-
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +14,12 @@ import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -29,7 +30,7 @@ public class MethodReturnTypeTest
    public void testGetReturnTypeReturnsFullTypeForJavaLang()
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod("public Long getLong()");
-      Assert.assertEquals("java.lang.Long", method.getReturnType().getQualifiedName());
+      assertEquals("java.lang.Long", method.getReturnType().getQualifiedName());
    }
 
    @Test
@@ -38,8 +39,8 @@ public class MethodReturnTypeTest
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class)
                .addMethod("public List<Long> getLong(return null;)");
       method.getOrigin().addImport(List.class);
-      Assert.assertEquals("java.util.List", method.getReturnType().getQualifiedName());
-      Assert.assertEquals("java.util.List<Long>", method.getReturnType().getQualifiedNameWithGenerics());
+      assertEquals("java.util.List", method.getReturnType().getQualifiedName());
+      assertEquals("java.util.List<Long>", method.getReturnType().getQualifiedNameWithGenerics());
    }
 
    @Test
@@ -47,9 +48,9 @@ public class MethodReturnTypeTest
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public long[] getLongArray()");
-      Assert.assertEquals("long", method.getReturnType().getQualifiedName());
-      Assert.assertTrue(method.getReturnType().isArray());
-      Assert.assertEquals(1, method.getReturnType().getArrayDimensions());
+      assertEquals("long", method.getReturnType().getQualifiedName());
+      assertTrue(method.getReturnType().isArray());
+      assertEquals(1, method.getReturnType().getArrayDimensions());
    }
 
    @Test
@@ -57,9 +58,9 @@ public class MethodReturnTypeTest
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public Long[] getLongArray()");
-      Assert.assertEquals("java.lang.Long", method.getReturnType().getQualifiedName());
-      Assert.assertTrue(method.getReturnType().isArray());
-      Assert.assertEquals(1, method.getReturnType().getArrayDimensions());
+      assertEquals("java.lang.Long", method.getReturnType().getQualifiedName());
+      assertTrue(method.getReturnType().isArray());
+      assertEquals(1, method.getReturnType().getArrayDimensions());
    }
 
    @Test
@@ -67,9 +68,9 @@ public class MethodReturnTypeTest
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public Long[][] getLongArray()");
-      Assert.assertEquals("java.lang.Long", method.getReturnType().getQualifiedName());
-      Assert.assertTrue(method.getReturnType().isArray());
-      Assert.assertEquals(2, method.getReturnType().getArrayDimensions());
+      assertEquals("java.lang.Long", method.getReturnType().getQualifiedName());
+      assertTrue(method.getReturnType().isArray());
+      assertEquals(2, method.getReturnType().getArrayDimensions());
    }
 
    @Test
@@ -78,9 +79,9 @@ public class MethodReturnTypeTest
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public List[] getListArray()");
       method.getOrigin().addImport(List.class);
-      Assert.assertEquals("java.util.List", method.getReturnType().getQualifiedName());
-      Assert.assertTrue(method.getReturnType().isArray());
-      Assert.assertEquals(1, method.getReturnType().getArrayDimensions());
+      assertEquals("java.util.List", method.getReturnType().getQualifiedName());
+      assertTrue(method.getReturnType().isArray());
+      assertEquals(1, method.getReturnType().getArrayDimensions());
    }
 
    @Test
@@ -89,9 +90,9 @@ public class MethodReturnTypeTest
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public List<Long>[] getListArray()");
       method.getOrigin().addImport(List.class);
-      Assert.assertEquals("java.util.List", method.getReturnType().getQualifiedName());
-      Assert.assertTrue(method.getReturnType().isArray());
-      Assert.assertEquals(1, method.getReturnType().getArrayDimensions());
+      assertEquals("java.util.List", method.getReturnType().getQualifiedName());
+      assertTrue(method.getReturnType().isArray());
+      assertEquals(1, method.getReturnType().getArrayDimensions());
    }
 
    @Test
@@ -101,16 +102,16 @@ public class MethodReturnTypeTest
                .addMethod("public long[] getList(return null;)");
       method.getOrigin().addImport(List.class);
       Type<JavaClassSource> type = method.getReturnType();
-      Assert.assertEquals("long", type.getQualifiedName());
-      Assert.assertFalse(type.isParameterized());
-      Assert.assertFalse(type.isWildcard());
-      Assert.assertTrue(type.isPrimitive());
-      Assert.assertFalse(type.isQualified());
-      Assert.assertTrue(type.isArray());
+      assertEquals("long", type.getQualifiedName());
+      assertFalse(type.isParameterized());
+      assertFalse(type.isWildcard());
+      assertTrue(type.isPrimitive());
+      assertFalse(type.isQualified());
+      assertTrue(type.isArray());
 
       List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
-      Assert.assertEquals(0, arguments.size());
+      assertEquals(0, arguments.size());
    }
 
    @Test
@@ -120,16 +121,16 @@ public class MethodReturnTypeTest
                .addMethod("public Long[] getList(return null;)");
       method.getOrigin().addImport(List.class);
       Type<JavaClassSource> type = method.getReturnType();
-      Assert.assertEquals("java.lang.Long", type.getQualifiedName());
-      Assert.assertFalse(type.isParameterized());
-      Assert.assertFalse(type.isWildcard());
-      Assert.assertFalse(type.isPrimitive());
-      Assert.assertFalse(type.isQualified());
-      Assert.assertTrue(type.isArray());
+      assertEquals("java.lang.Long", type.getQualifiedName());
+      assertFalse(type.isParameterized());
+      assertFalse(type.isWildcard());
+      assertFalse(type.isPrimitive());
+      assertFalse(type.isQualified());
+      assertTrue(type.isArray());
 
       List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
-      Assert.assertEquals(0, arguments.size());
+      assertEquals(0, arguments.size());
    }
 
    @Test
@@ -139,16 +140,16 @@ public class MethodReturnTypeTest
                .addMethod("public List[] getList(return null;)");
       method.getOrigin().addImport(List.class);
       Type<JavaClassSource> type = method.getReturnType();
-      Assert.assertEquals("java.util.List", type.getQualifiedName());
-      Assert.assertFalse(type.isParameterized());
-      Assert.assertFalse(type.isWildcard());
-      Assert.assertFalse(type.isPrimitive());
-      Assert.assertFalse(type.isQualified());
-      Assert.assertTrue(type.isArray());
+      assertEquals("java.util.List", type.getQualifiedName());
+      assertFalse(type.isParameterized());
+      assertFalse(type.isWildcard());
+      assertFalse(type.isPrimitive());
+      assertFalse(type.isQualified());
+      assertTrue(type.isArray());
 
       List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
-      Assert.assertEquals(0, arguments.size());
+      assertEquals(0, arguments.size());
    }
 
    @Test
@@ -158,16 +159,16 @@ public class MethodReturnTypeTest
                .addMethod("public List<Long>[] getList(return null;)");
       method.getOrigin().addImport(List.class);
       Type<JavaClassSource> type = method.getReturnType();
-      Assert.assertEquals("java.util.List", type.getQualifiedName());
-      Assert.assertTrue(type.isParameterized());
-      Assert.assertFalse(type.isWildcard());
-      Assert.assertFalse(type.isPrimitive());
-      Assert.assertFalse(type.isQualified());
-      Assert.assertTrue(type.isArray());
+      assertEquals("java.util.List", type.getQualifiedName());
+      assertTrue(type.isParameterized());
+      assertFalse(type.isWildcard());
+      assertFalse(type.isPrimitive());
+      assertFalse(type.isQualified());
+      assertTrue(type.isArray());
 
       List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
-      Assert.assertEquals(1, arguments.size());
+      assertEquals(1, arguments.size());
    }
 
    @Test
@@ -176,8 +177,8 @@ public class MethodReturnTypeTest
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class)
                .addMethod("public List getLong(return null;)");
       method.getOrigin().addImport(List.class);
-      Assert.assertEquals("java.util.List", method.getReturnType().getQualifiedName());
-      Assert.assertFalse(method.getReturnType().isParameterized());
+      assertEquals("java.util.List", method.getReturnType().getQualifiedName());
+      assertFalse(method.getReturnType().isParameterized());
    }
 
    @Test
@@ -187,14 +188,14 @@ public class MethodReturnTypeTest
                .addMethod("public List<Long> getList(return null;)");
       method.getOrigin().addImport(List.class);
       Type<JavaClassSource> type = method.getReturnType();
-      Assert.assertEquals("java.util.List", type.getQualifiedName());
-      Assert.assertTrue(type.isParameterized());
+      assertEquals("java.util.List", type.getQualifiedName());
+      assertTrue(type.isParameterized());
 
       List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
-      Assert.assertEquals(1, arguments.size());
-      Assert.assertEquals("Long", arguments.get(0).getName());
-      Assert.assertEquals("java.lang.Long", arguments.get(0).getQualifiedName());
+      assertEquals(1, arguments.size());
+      assertEquals("Long", arguments.get(0).getName());
+      assertEquals("java.lang.Long", arguments.get(0).getQualifiedName());
    }
 
    @Test
@@ -204,14 +205,14 @@ public class MethodReturnTypeTest
                .addMethod("public List<?> getList(return null;)");
       method.getOrigin().addImport(List.class);
       Type<JavaClassSource> type = method.getReturnType();
-      Assert.assertEquals("java.util.List", type.getQualifiedName());
-      Assert.assertTrue(type.isParameterized());
+      assertEquals("java.util.List", type.getQualifiedName());
+      assertTrue(type.isParameterized());
 
       List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
-      Assert.assertEquals(1, arguments.size());
-      Assert.assertEquals("?", arguments.get(0).getName());
-      Assert.assertEquals("?", arguments.get(0).getQualifiedName());
+      assertEquals(1, arguments.size());
+      assertEquals("?", arguments.get(0).getName());
+      assertEquals("?", arguments.get(0).getQualifiedName());
    }
 
    @Test
@@ -221,17 +222,17 @@ public class MethodReturnTypeTest
                .addMethod("public Map<String, Long> getMap(return null;)");
       method.getOrigin().addImport(Map.class);
       Type<JavaClassSource> type = method.getReturnType();
-      Assert.assertEquals("java.util.Map", type.getQualifiedName());
-      Assert.assertTrue(type.isParameterized());
+      assertEquals("java.util.Map", type.getQualifiedName());
+      assertTrue(type.isParameterized());
 
       List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
-      Assert.assertEquals(2, arguments.size());
-      Assert.assertEquals("String", arguments.get(0).getName());
-      Assert.assertEquals("java.lang.String", arguments.get(0).getQualifiedName());
+      assertEquals(2, arguments.size());
+      assertEquals("String", arguments.get(0).getName());
+      assertEquals("java.lang.String", arguments.get(0).getQualifiedName());
 
-      Assert.assertEquals("Long", arguments.get(1).getName());
-      Assert.assertEquals("java.lang.Long", arguments.get(1).getQualifiedName());
+      assertEquals("Long", arguments.get(1).getName());
+      assertEquals("java.lang.Long", arguments.get(1).getQualifiedName());
    }
 
    @Test
@@ -241,18 +242,18 @@ public class MethodReturnTypeTest
                .addMethod("public List<List<Long>> getLists(return null;)");
       method.getOrigin().addImport(List.class);
       Type<JavaClassSource> type = method.getReturnType();
-      Assert.assertEquals("java.util.List", type.getQualifiedName());
-      Assert.assertTrue(type.isParameterized());
+      assertEquals("java.util.List", type.getQualifiedName());
+      assertTrue(type.isParameterized());
 
       List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
-      Assert.assertEquals(1, arguments.size());
-      Assert.assertEquals("List", arguments.get(0).getName());
-      Assert.assertEquals("java.util.List", arguments.get(0).getQualifiedName());
+      assertEquals(1, arguments.size());
+      assertEquals("List", arguments.get(0).getName());
+      assertEquals("java.util.List", arguments.get(0).getQualifiedName());
 
-      Assert.assertEquals(1, arguments.size());
-      Assert.assertEquals("Long", arguments.get(0).getTypeArguments().get(0).getName());
-      Assert.assertEquals("java.lang.Long", arguments.get(0).getTypeArguments().get(0).getQualifiedName());
+      assertEquals(1, arguments.size());
+      assertEquals("Long", arguments.get(0).getTypeArguments().get(0).getName());
+      assertEquals("java.lang.Long", arguments.get(0).getTypeArguments().get(0).getQualifiedName());
    }
 
    @Test
@@ -263,17 +264,17 @@ public class MethodReturnTypeTest
       method.getOrigin().addImport(List.class);
       method.getOrigin().addImport(Map.class);
       Type<JavaClassSource> type = method.getReturnType();
-      Assert.assertEquals("java.util.Map", type.getQualifiedName());
-      Assert.assertTrue(type.isParameterized());
+      assertEquals("java.util.Map", type.getQualifiedName());
+      assertTrue(type.isParameterized());
 
       List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
-      Assert.assertEquals(2, arguments.size());
-      Assert.assertEquals("String", arguments.get(0).getName());
-      Assert.assertEquals("java.lang.String", arguments.get(0).getQualifiedName());
+      assertEquals(2, arguments.size());
+      assertEquals("String", arguments.get(0).getName());
+      assertEquals("java.lang.String", arguments.get(0).getQualifiedName());
 
-      Assert.assertEquals("List", arguments.get(1).getName());
-      Assert.assertEquals("java.util.List", arguments.get(1).getQualifiedName());
+      assertEquals("List", arguments.get(1).getName());
+      assertEquals("java.util.List", arguments.get(1).getQualifiedName());
    }
 
    @Test
@@ -284,17 +285,17 @@ public class MethodReturnTypeTest
       method.getOrigin().addImport(List.class);
       method.getOrigin().addImport(Map.class);
       Type<JavaClassSource> type = method.getReturnType();
-      Assert.assertEquals("java.util.Map", type.getQualifiedName());
-      Assert.assertTrue(type.isParameterized());
+      assertEquals("java.util.Map", type.getQualifiedName());
+      assertTrue(type.isParameterized());
 
       List<Type<JavaClassSource>> arguments = type.getTypeArguments();
 
-      Assert.assertEquals(2, arguments.size());
-      Assert.assertEquals("String", arguments.get(0).getName());
-      Assert.assertEquals("java.lang.String", arguments.get(0).getQualifiedName());
+      assertEquals(2, arguments.size());
+      assertEquals("String", arguments.get(0).getName());
+      assertEquals("java.lang.String", arguments.get(0).getQualifiedName());
 
-      Assert.assertEquals("List", arguments.get(1).getName());
-      Assert.assertEquals("java.util.List", arguments.get(1).getQualifiedName());
+      assertEquals("List", arguments.get(1).getName());
+      assertEquals("java.util.List", arguments.get(1).getQualifiedName());
    }
 
    @Test
@@ -302,8 +303,8 @@ public class MethodReturnTypeTest
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class)
                .addMethod("public Constructor(){}").setConstructor(true);
-      Assert.assertTrue(method.isConstructor());
-      Assert.assertTrue(method.isReturnTypeVoid());
+      assertTrue(method.isConstructor());
+      assertTrue(method.isReturnTypeVoid());
    }
 
    @Test
@@ -316,8 +317,8 @@ public class MethodReturnTypeTest
       MethodSource<?> doGet = javaClassSource.addMethod().setPublic().setName("method")
                .setReturnType(List.class);
       doGet.setBody("return null;");
-      Assert.assertThat(javaClassSource.hasImport("java.util.List"), is(true));
-      Assert.assertThat(javaClassSource.hasImport(List.class), is(true));
+      assertTrue(javaClassSource.hasImport("java.util.List"));
+      assertTrue(javaClassSource.hasImport(List.class));
    }
 
    @Test
@@ -328,10 +329,10 @@ public class MethodReturnTypeTest
       MethodSource<JavaInterfaceSource> method = ifSource.addMethod()
                .setReturnType("com.google.common.collect.ListMultimap<java.lang.Integer,poc.test.Test3>")
                .setName("getMap");
-      Assert.assertTrue("com.google.common.collect.ListMultimap should have been imported",
-               ifSource.hasImport("com.google.common.collect.ListMultimap"));
-      Assert.assertTrue("Test3 should have been imported", ifSource.hasImport("poc.test.Test3"));
-      Assert.assertEquals("com.google.common.collect.ListMultimap<Integer,Test3>",
+      assertTrue(ifSource.hasImport("com.google.common.collect.ListMultimap"),
+               "com.google.common.collect.ListMultimap should have been imported");
+      assertTrue(ifSource.hasImport("poc.test.Test3"), "Test3 should have been imported");
+      assertEquals("com.google.common.collect.ListMultimap<Integer,Test3>",
                method.getReturnType().getQualifiedNameWithGenerics());
    }
 
@@ -344,9 +345,9 @@ public class MethodReturnTypeTest
                .setPublic();
       newMethod.setReturnType(
                "java.util.TreeMap<java.util.String, java.util.Object>"); // Counts space as part of the second type's
-                                                                         // name
+      // name
       newMethod.setBody("return new TreeMap<String, Object>();");
-      Assert.assertThat(classSource.toString(), containsString("public TreeMap<String, Object> tstMethod()"));
+      assertThat(classSource.toString()).contains("public TreeMap<String, Object> tstMethod()");
    }
 
    @Test
@@ -356,7 +357,7 @@ public class MethodReturnTypeTest
                .setName("Example");
       final MethodSource<JavaClassSource> method = javaClass.addMethod().setName("createMap")
                .setReturnType("java.util.Map<java.lang.String,java.util.Map<java.lang.String,java.lang.String>>");
-      Assert.assertEquals("java.util.Map<String,Map<String,String>>",
+      assertEquals("java.util.Map<String,Map<String,String>>",
                method.getReturnType().getQualifiedNameWithGenerics());
    }
 }

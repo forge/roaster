@@ -6,9 +6,6 @@
  */
 package org.jboss.forge.test.roaster.model;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -19,8 +16,13 @@ import org.jboss.forge.roaster.model.JavaInterface;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.TypeVariableSource;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JavaClassGenericsTest
 {
@@ -32,10 +34,10 @@ public class JavaClassGenericsTest
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.addTypeVariable().setName("T");
-      Assert.assertTrue(javaClass.getTypeVariables().get(0).getBounds().isEmpty());
-      Assert.assertTrue(javaClass.toString().contains("<T>"));
+      assertTrue(javaClass.getTypeVariables().get(0).getBounds().isEmpty());
+      assertTrue(javaClass.toString().contains("<T>"));
       javaClass.removeTypeVariable("T");
-      Assert.assertFalse(javaClass.toString().contains("<T>"));
+      assertFalse(javaClass.toString().contains("<T>"));
    }
 
    @Test
@@ -45,8 +47,8 @@ public class JavaClassGenericsTest
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.setSuperType("it.coopservice.test.Bar<T>");
-      Assert.assertTrue(javaClass.toString().contains("Bar<T>"));
-      Assert.assertNotNull(javaClass.getImport("it.coopservice.test.Bar"));
+      assertTrue(javaClass.toString().contains("Bar<T>"));
+      assertNotNull(javaClass.getImport("it.coopservice.test.Bar"));
    }
 
    @Test
@@ -56,9 +58,9 @@ public class JavaClassGenericsTest
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.setSuperType("it.coopservice.test.Bar<com.coopservice.test.MyConcreteSuperClass[][]>");
-      Assert.assertTrue(javaClass.toString().contains("extends Bar<MyConcreteSuperClass[][]>"));
-      Assert.assertNotNull(javaClass.getImport("it.coopservice.test.Bar"));
-      Assert.assertNotNull(javaClass.getImport("com.coopservice.test.MyConcreteSuperClass"));
+      assertTrue(javaClass.toString().contains("extends Bar<MyConcreteSuperClass[][]>"));
+      assertNotNull(javaClass.getImport("it.coopservice.test.Bar"));
+      assertNotNull(javaClass.getImport("com.coopservice.test.MyConcreteSuperClass"));
    }
 
    @Test
@@ -68,9 +70,9 @@ public class JavaClassGenericsTest
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.setSuperType("it.coopservice.test.Bar<com.coopservice.test.MyConcreteSuperClass>");
-      Assert.assertTrue(javaClass.toString().contains("extends Bar<MyConcreteSuperClass>"));
-      Assert.assertNotNull(javaClass.getImport("it.coopservice.test.Bar"));
-      Assert.assertNotNull(javaClass.getImport("com.coopservice.test.MyConcreteSuperClass"));
+      assertTrue(javaClass.toString().contains("extends Bar<MyConcreteSuperClass>"));
+      assertNotNull(javaClass.getImport("it.coopservice.test.Bar"));
+      assertNotNull(javaClass.getImport("com.coopservice.test.MyConcreteSuperClass"));
    }
 
    @Test
@@ -81,10 +83,10 @@ public class JavaClassGenericsTest
       javaClass.setName("SimpleClass");
       javaClass.setSuperType(
                "it.coopservice.test.Bar<com.coopservice.test.MyConcreteSuperClass,com.coopservice.test.MyOtherClass>");
-      Assert.assertTrue(javaClass.toString().contains("extends Bar<MyConcreteSuperClass, MyOtherClass>"));
-      Assert.assertNotNull(javaClass.getImport("it.coopservice.test.Bar"));
-      Assert.assertNotNull(javaClass.getImport("com.coopservice.test.MyConcreteSuperClass"));
-      Assert.assertNotNull(javaClass.getImport("com.coopservice.test.MyOtherClass"));
+      assertTrue(javaClass.toString().contains("extends Bar<MyConcreteSuperClass, MyOtherClass>"));
+      assertNotNull(javaClass.getImport("it.coopservice.test.Bar"));
+      assertNotNull(javaClass.getImport("com.coopservice.test.MyConcreteSuperClass"));
+      assertNotNull(javaClass.getImport("com.coopservice.test.MyOtherClass"));
    }
 
    @Test
@@ -94,8 +96,8 @@ public class JavaClassGenericsTest
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.setSuperType("Bar<T>");
-      Assert.assertTrue(javaClass.toString().contains("Bar<T>"));
-      Assert.assertNull(javaClass.getImport("it.coopservice.test.Bar"));
+      assertTrue(javaClass.toString().contains("Bar<T>"));
+      assertNull(javaClass.getImport("it.coopservice.test.Bar"));
    }
 
    @Test
@@ -106,9 +108,9 @@ public class JavaClassGenericsTest
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.setSuperType("Bar<T>");
-      Assert.assertTrue(javaClass.toString().contains("Bar<T>"));
+      assertTrue(javaClass.toString().contains("Bar<T>"));
       javaClass.setSuperType("");
-      Assert.assertTrue(!javaClass.toString().contains("Bar<T>"));
+      assertTrue(!javaClass.toString().contains("Bar<T>"));
    }
 
    @Test
@@ -119,9 +121,9 @@ public class JavaClassGenericsTest
       javaClass.setName("SimpleClass");
       javaClass.addTypeVariable().setName("I");
       javaClass.addTypeVariable().setName("O");
-      Assert.assertTrue(javaClass.toString().contains("<I, O>"));
+      assertTrue(javaClass.toString().contains("<I, O>"));
       javaClass.removeTypeVariable("I");
-      Assert.assertTrue(javaClass.toString().contains("<O>"));
+      assertTrue(javaClass.toString().contains("<O>"));
    }
 
    @Test
@@ -131,11 +133,11 @@ public class JavaClassGenericsTest
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.addTypeVariable().setName("T").setBounds(CharSequence.class);
-      Assert.assertTrue(javaClass.toString().contains("<T extends CharSequence>"));
+      assertTrue(javaClass.toString().contains("<T extends CharSequence>"));
       javaClass.getTypeVariable("T").setBounds(CharSequence.class, Serializable.class);
-      Assert.assertTrue(javaClass.toString().contains("<T extends CharSequence & Serializable>"));
+      assertTrue(javaClass.toString().contains("<T extends CharSequence & Serializable>"));
       javaClass.getTypeVariable("T").removeBounds();
-      Assert.assertTrue(javaClass.toString().contains("<T>"));
+      assertTrue(javaClass.toString().contains("<T>"));
    }
 
    @Test
@@ -146,12 +148,12 @@ public class JavaClassGenericsTest
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.addTypeVariable().setName("T").setBounds(foo);
-      Assert.assertTrue(javaClass.toString().contains("<T extends Foo>"));
+      assertTrue(javaClass.toString().contains("<T extends Foo>"));
       JavaInterface<?> bar = Roaster.create(JavaInterfaceSource.class).setPackage("it.coopservice.test").setName("Bar");
       javaClass.getTypeVariable("T").setBounds(foo, bar);
-      Assert.assertTrue(javaClass.toString().contains("<T extends Foo & Bar>"));
+      assertTrue(javaClass.toString().contains("<T extends Foo & Bar>"));
       javaClass.getTypeVariable("T").removeBounds();
-      Assert.assertTrue(javaClass.toString().contains("<T>"));
+      assertTrue(javaClass.toString().contains("<T>"));
    }
 
    @Test
@@ -161,11 +163,11 @@ public class JavaClassGenericsTest
       javaClass.setPackage("it.coopservice.test");
       javaClass.setName("SimpleClass");
       javaClass.addTypeVariable().setName("T").setBounds("com.something.Foo");
-      Assert.assertTrue(javaClass.toString().contains("<T extends com.something.Foo>"));
+      assertTrue(javaClass.toString().contains("<T extends com.something.Foo>"));
       javaClass.getTypeVariable("T").setBounds("com.something.Foo", "com.something.Bar<T>");
-      Assert.assertTrue(javaClass.toString().contains("<T extends com.something.Foo & com.something.Bar<T>>"));
+      assertTrue(javaClass.toString().contains("<T extends com.something.Foo & com.something.Bar<T>>"));
       javaClass.getTypeVariable("T").removeBounds();
-      Assert.assertTrue(javaClass.toString().contains("<T>"));
+      assertTrue(javaClass.toString().contains("<T>"));
    }
 
    @Test
@@ -177,12 +179,12 @@ public class JavaClassGenericsTest
       javaClass.addTypeVariable().setName("I");
       javaClass.addTypeVariable().setName("O");
       List<TypeVariableSource<JavaClassSource>> typeVariables = javaClass.getTypeVariables();
-      Assert.assertNotNull(typeVariables);
-      Assert.assertEquals(2, typeVariables.size());
-      Assert.assertEquals("I", typeVariables.get(0).getName());
-      Assert.assertTrue(typeVariables.get(0).getBounds().isEmpty());
-      Assert.assertEquals("O", typeVariables.get(1).getName());
-      Assert.assertTrue(typeVariables.get(1).getBounds().isEmpty());
+      assertNotNull(typeVariables);
+      assertEquals(2, typeVariables.size());
+      assertEquals("I", typeVariables.get(0).getName());
+      assertTrue(typeVariables.get(0).getBounds().isEmpty());
+      assertEquals("O", typeVariables.get(1).getName());
+      assertTrue(typeVariables.get(1).getBounds().isEmpty());
    }
 
    @Test
@@ -194,12 +196,12 @@ public class JavaClassGenericsTest
       javaClass.addTypeVariable("I");
       javaClass.addTypeVariable("O");
       List<TypeVariableSource<JavaClassSource>> typeVariables = javaClass.getTypeVariables();
-      Assert.assertNotNull(typeVariables);
-      Assert.assertEquals(2, typeVariables.size());
-      Assert.assertEquals("I", typeVariables.get(0).getName());
-      Assert.assertTrue(typeVariables.get(0).getBounds().isEmpty());
-      Assert.assertEquals("O", typeVariables.get(1).getName());
-      Assert.assertTrue(typeVariables.get(1).getBounds().isEmpty());
+      assertNotNull(typeVariables);
+      assertEquals(2, typeVariables.size());
+      assertEquals("I", typeVariables.get(0).getName());
+      assertTrue(typeVariables.get(0).getBounds().isEmpty());
+      assertEquals("O", typeVariables.get(1).getName());
+      assertTrue(typeVariables.get(1).getBounds().isEmpty());
    }
 
    @Test
@@ -207,8 +209,8 @@ public class JavaClassGenericsTest
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.setSuperType("SomeClass<java.util.Map<String,java.util.Date>>");
-      Assert.assertThat(javaClass.hasImport(Map.class), is(true));
-      Assert.assertThat(javaClass.hasImport(Date.class), is(true));
-      Assert.assertThat(javaClass.getSuperType(), equalTo("SomeClass<Map<String,Date>>"));
+      assertTrue(javaClass.hasImport(Map.class));
+      assertTrue(javaClass.hasImport(Date.class));
+      assertEquals("SomeClass<Map<String,Date>>", javaClass.getSuperType());
    }
 }

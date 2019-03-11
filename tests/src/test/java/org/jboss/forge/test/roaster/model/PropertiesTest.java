@@ -6,21 +6,13 @@
  */
 package org.jboss.forge.test.roaster.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeFalse;
-import static org.junit.Assume.assumeTrue;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.io.UncheckedIOException;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.forge.roaster.Roaster;
@@ -34,177 +26,162 @@ import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
 import org.jboss.forge.roaster.model.source.PropertyHolderSource;
 import org.jboss.forge.roaster.model.source.PropertySource;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 
-@RunWith(Parameterized.class)
-public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
+class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
 {
    public enum PropertyComponent
    {
       FIELD
-      {
-         @Override
-         String format(Class<?> type, String s)
-         {
-            return s;
-         }
-      },
+               {
+                  @Override
+                  String format(Class<?> type, String s)
+                  {
+                     return s;
+                  }
+               },
       ACCESSOR
-      {
-         @Override
-         String format(Class<?> type, String s)
-         {
-            return (boolean.class.equals(type) ? "is" : "get") + StringUtils.capitalize(s);
-         }
-      },
+               {
+                  @Override
+                  String format(Class<?> type, String s)
+                  {
+                     return (boolean.class.equals(type) ? "is" : "get") + StringUtils.capitalize(s);
+                  }
+               },
       MUTATOR
-      {
-         @Override
-         String format(Class<?> type, String s)
-         {
-            return "set" + StringUtils.capitalize(s);
-         }
-      };
+               {
+                  @Override
+                  String format(Class<?> type, String s)
+                  {
+                     return "set" + StringUtils.capitalize(s);
+                  }
+               };
 
       abstract String format(Class<?> type, String s);
    }
 
-   @Parameters(name = "{2} {1}.{3}")
-   public static List<Object[]> createParameters()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testHasProperty(TestContext<O> testContext)
    {
-      final List<Object[]> parameters = new ArrayList<>();
-      parameters.add(new Object[] { JavaClassSource.class, "MockClass", String.class, "field",
-               EnumSet.of(PropertyComponent.FIELD) });
-      parameters.add(new Object[] { JavaEnumSource.class, "MockEnum", String.class, "field",
-               EnumSet.of(PropertyComponent.FIELD) });
-      parameters.add(new Object[] { JavaInterfaceSource.class, "MockInterface", int.class, "count",
-               EnumSet.of(PropertyComponent.ACCESSOR) });
-      parameters.add(new Object[] { JavaInterfaceSource.class, "BigInterface", boolean.class, "verbose",
-               EnumSet.of(PropertyComponent.ACCESSOR, PropertyComponent.MUTATOR) });
-      return parameters;
-   }
-
-   @Parameter(0)
-   public Class<O> sourceType;
-
-   @Parameter(1)
-   public String resourceName;
-
-   @Parameter(2)
-   public Class<?> type;
-
-   @Parameter(3)
-   public String name;
-
-   @Parameter(4)
-   public Set<PropertyComponent> existingItems;
-
-   private O source;
-
-   @Before
-   public void reset() throws IOException
-   {
-      String fileName = String.format("/org/jboss/forge/grammar/java/%s.java", resourceName);
-      try (final InputStream stream = JavaClassTest.class.getResourceAsStream(fileName))
-      {
-         source = Roaster.parse(sourceType, stream);
-      }
-   }
-
-   @Test
-   public void testHasProperty()
-   {
-      assertTrue(source.hasProperty(name));
+      O source = testContext.getSource();
+      assertTrue(source.hasProperty(testContext.name));
       assertFalse(source.hasProperty("noSuchProperty"));
    }
 
-   @Test
-   public void testGetPropertyByName()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testGetPropertyByName(TestContext<O> testContext)
    {
-      PropertySource<O> property = source.getProperty(name);
-      assertEquals(name, property.getName());
-      assertTrue(property.getType().isType(type));
+      O source = testContext.getSource();
+      PropertySource<O> property = source.getProperty(testContext.name);
+      assertEquals(testContext.name, property.getName());
+      assertTrue(property.getType().isType(testContext.type));
    }
 
-   @Test
-   public void testIsAccessible()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testIsAccessible(TestContext<O> testContext)
    {
-      assertEquals(existingItems.contains(PropertyComponent.ACCESSOR), source.getProperty(name).isAccessible());
+      O source = testContext.getSource();
+      assertEquals(testContext.existingItems.contains(PropertyComponent.ACCESSOR),
+               source.getProperty(testContext.name).isAccessible());
    }
 
-   @Test
-   public void testIsMutable()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testIsMutable(TestContext<O> testContext)
    {
-      assertEquals(existingItems.contains(PropertyComponent.MUTATOR), source.getProperty(name).isMutable());
+      O source = testContext.getSource();
+      assertEquals(testContext.existingItems.contains(PropertyComponent.MUTATOR),
+               source.getProperty(testContext.name).isMutable());
    }
 
-   @Test
-   public void testHasField()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testHasField(TestContext<O> testContext)
    {
-      assertEquals(existingItems.contains(PropertyComponent.FIELD), source.getProperty(name).hasField());
+      O source = testContext.getSource();
+      assertEquals(testContext.existingItems.contains(PropertyComponent.FIELD),
+               source.getProperty(testContext.name).hasField());
    }
 
-   @Test
-   public void testGetField()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testGetField(TestContext<O> testContext)
    {
-      final FieldSource<O> field = source.getProperty(name).getField();
+      O source = testContext.getSource();
+      final FieldSource<O> field = source.getProperty(testContext.name).getField();
 
-      if (!existingItems.contains(PropertyComponent.FIELD))
+      if (!testContext.existingItems.contains(PropertyComponent.FIELD))
       {
          assertNull(field);
          return;
       }
 
       assertNotNull(field);
-      assertEquals(name, field.getName());
-      assertTrue(field.getType().isType(type));
+      assertEquals(testContext.name, field.getName());
+      assertTrue(field.getType().isType(testContext.type));
    }
 
-   @Test
-   public void testGetAccessor()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testGetAccessor(TestContext<O> testContext)
    {
-      final MethodSource<O> accessor = source.getProperty(name).getAccessor();
+      O source = testContext.getSource();
+      final MethodSource<O> accessor = source.getProperty(testContext.name).getAccessor();
 
-      if (!existingItems.contains(PropertyComponent.ACCESSOR))
+      if (!testContext.existingItems.contains(PropertyComponent.ACCESSOR))
       {
          assertNull(accessor);
          return;
       }
       assertNotNull(accessor);
 
-      assertEquals(PropertyComponent.ACCESSOR.format(type, name), accessor.getName());
-      assertTrue(accessor.getReturnType().isType(type));
+      assertEquals(PropertyComponent.ACCESSOR.format(testContext.type, testContext.name), accessor.getName());
+      assertTrue(accessor.getReturnType().isType(testContext.type));
    }
 
-   @Test
-   public void testGetMutator()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testGetMutator(TestContext<O> testContext)
    {
-      final MethodSource<O> mutator = source.getProperty(name).getMutator();
+      O source = testContext.getSource();
+      final MethodSource<O> mutator = source.getProperty(testContext.name).getMutator();
 
-      if (!existingItems.contains(PropertyComponent.MUTATOR))
+      if (!testContext.existingItems.contains(PropertyComponent.MUTATOR))
       {
          assertNull(mutator);
          return;
       }
       assertNotNull(mutator);
 
-      assertEquals(PropertyComponent.MUTATOR.format(type, name), mutator.getName());
+      assertEquals(PropertyComponent.MUTATOR.format(testContext.type, testContext.name), mutator.getName());
       assertTrue(mutator.isReturnTypeVoid());
       assertEquals(1, mutator.getParameters().size());
-      assertTrue(mutator.getParameters().get(0).getType().isType(type));
+      assertTrue(mutator.getParameters().get(0).getType().isType(testContext.type));
    }
 
-   @Test
-   public void testSetAccessibleTrue()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testSetAccessibleTrue(TestContext<O> testContext)
    {
-      assumeFalse(existingItems.contains(PropertyComponent.ACCESSOR));
-
-      final PropertySource<O> property = source.getProperty(name);
+      assumeFalse(testContext.existingItems.contains(PropertyComponent.ACCESSOR));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       property.setAccessible(true);
       assertTrue(property.isAccessible());
 
@@ -212,19 +189,20 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       assertNotNull(accessor);
       assertTrue(source.hasMethod(accessor));
       assertTrue(source.isInterface() || accessor.isPublic());
-      assertTrue(accessor.getReturnType().isType(type));
-      assertEquals(PropertyComponent.ACCESSOR.format(type, name), accessor.getName());
+      assertTrue(accessor.getReturnType().isType(testContext.type));
+      assertEquals(PropertyComponent.ACCESSOR.format(testContext.type, testContext.name), accessor.getName());
       assertTrue(accessor.getParameters().isEmpty());
-      assertTrue(!existingItems.contains(PropertyComponent.FIELD)
-               || accessor.getBody().contains(String.format("return %s;", name)));
+      assertTrue(!testContext.existingItems.contains(PropertyComponent.FIELD)
+               || accessor.getBody().contains(String.format("return %s;", testContext.name)));
    }
 
-   @Test
-   public void testSetMutableTrue()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testSetMutableTrue(TestContext<O> testContext)
    {
-      assumeFalse(existingItems.contains(PropertyComponent.MUTATOR));
-
-      final PropertySource<O> property = source.getProperty(name);
+      assumeFalse(testContext.existingItems.contains(PropertyComponent.MUTATOR));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       property.setMutable(true);
 
       final MethodSource<O> mutator = property.getMutator();
@@ -232,40 +210,42 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       assertTrue(source.hasMethod(mutator));
       assertTrue(source.isInterface() || mutator.isPublic());
       assertTrue(mutator.isReturnTypeVoid());
-      assertEquals(PropertyComponent.MUTATOR.format(type, name), mutator.getName());
+      assertEquals(PropertyComponent.MUTATOR.format(testContext.type, testContext.name), mutator.getName());
       assertEquals(1, mutator.getParameters().size());
       final ParameterSource<O> parameter = mutator.getParameters().get(0);
-      assertTrue(parameter.getType().isType(type));
-      assertEquals(name, parameter.getName());
-      assertTrue(!existingItems.contains(PropertyComponent.FIELD)
-               || mutator.getBody().contains(String.format("this.%1$s=%1$s;", name)));
+      assertTrue(parameter.getType().isType(testContext.type));
+      assertEquals(testContext.name, parameter.getName());
+      assertTrue(!testContext.existingItems.contains(PropertyComponent.FIELD)
+               || mutator.getBody().contains(String.format("this.%1$s=%1$s;", testContext.name)));
    }
 
-   @Test(expected = IllegalStateException.class)
-   public void testCreateFieldAgain()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testCreateFieldAgain(TestContext<O> testContext)
    {
-      source.getProperty(name).createField();
-      assertFalse(existingItems.contains(PropertyComponent.FIELD));
-      source.getProperty(name).createField();
+      O source = testContext.getSource();
+      assertThrows(IllegalStateException.class, () -> source.getProperty(testContext.name).createField());
    }
 
-   @Test
-   public void testRemoveField()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testRemoveField(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.FIELD));
-
-      final FieldSource<O> field = source.getProperty(name).getField();
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.FIELD));
+      O source = testContext.getSource();
+      final FieldSource<O> field = source.getProperty(testContext.name).getField();
       assertTrue(source.hasField(field));
-      source.getProperty(name).removeField();
+      source.getProperty(testContext.name).removeField();
       assertFalse(source.hasField(field));
    }
 
-   @Test
-   public void testSetAccessibleFalse()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testSetAccessibleFalse(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.ACCESSOR));
-
-      final PropertySource<O> property = source.getProperty(name);
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.ACCESSOR));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       assertTrue(property.isAccessible());
       final MethodSource<O> accessor = property.getAccessor();
       assertNotNull(accessor);
@@ -275,16 +255,18 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       assertFalse(source.hasMethod(accessor));
    }
 
-   @Test
-   public void testSetMutableFalse()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testSetMutableFalse(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.MUTATOR));
+      O source = testContext.getSource();
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.MUTATOR));
 
-      final PropertySource<O> property = source.getProperty(name);
+      final PropertySource<O> property = source.getProperty(testContext.name);
       assertTrue(property.isMutable());
       final MethodSource<O> mutator = property.getMutator();
       assertTrue(source.hasMethod(mutator));
-      if (existingItems.contains(PropertyComponent.FIELD))
+      if (testContext.existingItems.contains(PropertyComponent.FIELD))
       {
          assertTrue(property.hasField());
          assertNotNull(property.getField());
@@ -293,7 +275,7 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       property.setMutable(false);
       assertFalse(source.hasMethod(mutator));
 
-      if (existingItems.contains(PropertyComponent.FIELD))
+      if (testContext.existingItems.contains(PropertyComponent.FIELD))
       {
          assertTrue(property.hasField());
          assertNotNull(property.getField());
@@ -301,9 +283,11 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       }
    }
 
-   @Test
-   public void testAddProperty()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testAddProperty(TestContext<O> testContext)
    {
+      O source = testContext.getSource();
       final PropertySource<O> property = source.addProperty("Whatever", "blah");
       assertEquals(property, source.getProperty("blah"));
 
@@ -334,9 +318,11 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       assertTrue(source.isInterface() || mutator.isPublic());
    }
 
-   @Test
-   public void testAddPropertyThenChangeType()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testAddPropertyThenChangeType(TestContext<O> testContext)
    {
+      O source = testContext.getSource();
       final PropertySource<O> property = source.addProperty("int", "something");
       assertTrue(source.hasMethodSignature("getSomething"));
       assertTrue(source.getMethod("getSomething").getReturnType().isType(int.class));
@@ -347,18 +333,22 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       assertTrue(source.getMethod("isSomething").getReturnType().isType(boolean.class));
    }
 
-   @Test
-   public void testSetName()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testSetName(TestContext<O> testContext)
    {
-      assumeFalse("foo".equals(name));
+      O source = testContext.getSource();
+      assumeFalse("foo".equals(testContext.name));
 
-      assertEquals(existingItems.contains(PropertyComponent.FIELD), sourceHasPropertyField(name));
-      assertEquals(existingItems.contains(PropertyComponent.ACCESSOR),
-               source.getMethod(PropertyComponent.ACCESSOR.format(type, name)) != null);
-      assertEquals(existingItems.contains(PropertyComponent.MUTATOR),
-               source.getMethod(PropertyComponent.MUTATOR.format(type, name), type) != null);
+      assertEquals(testContext.existingItems.contains(PropertyComponent.FIELD),
+               sourceHasPropertyField(source, testContext.name));
+      assertEquals(testContext.existingItems.contains(PropertyComponent.ACCESSOR),
+               source.getMethod(PropertyComponent.ACCESSOR.format(testContext.type, testContext.name)) != null);
+      assertEquals(testContext.existingItems.contains(PropertyComponent.MUTATOR),
+               source.getMethod(PropertyComponent.MUTATOR.format(testContext.type, testContext.name), testContext.type)
+                        != null);
 
-      final PropertySource<O> property = source.getProperty(name);
+      final PropertySource<O> property = source.getProperty(testContext.name);
 
       if (!source.isInterface() && !property.hasField())
       {
@@ -375,15 +365,20 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       assertEquals("foo", property.getName());
 
       // make sure none of the original items remain:
-      assertFalse(existingItems.contains(PropertyComponent.FIELD) && sourceHasPropertyField(name));
-      assertFalse(existingItems.contains(PropertyComponent.ACCESSOR)
-               && source.getMethod(PropertyComponent.ACCESSOR.format(type, name)) != null);
-      assertFalse(existingItems.contains(PropertyComponent.MUTATOR)
-               && source.getMethod(PropertyComponent.MUTATOR.format(type, name), type) != null);
+      assertFalse(
+               testContext.existingItems.contains(PropertyComponent.FIELD) && sourceHasPropertyField(source, testContext.name));
+      assertFalse(testContext.existingItems.contains(PropertyComponent.ACCESSOR)
+               && source.getMethod(PropertyComponent.ACCESSOR.format(testContext.type, testContext.name)) != null);
+      assertFalse(testContext.existingItems.contains(PropertyComponent.MUTATOR)
+               &&
+               source.getMethod(PropertyComponent.MUTATOR.format(testContext.type, testContext.name), testContext.type)
+                        != null);
 
-      assertTrue(source.isInterface() || sourceHasPropertyField("foo"));
-      assertTrue(source.getMethod(PropertyComponent.ACCESSOR.format(type, "foo")) != null);
-      assertTrue(source.isEnum() || source.getMethod(PropertyComponent.MUTATOR.format(type, "foo"), type) != null);
+      assertTrue(source.isInterface() || sourceHasPropertyField(source, "foo"));
+      assertTrue(source.getMethod(PropertyComponent.ACCESSOR.format(testContext.type, "foo")) != null);
+      assertTrue(source.isEnum()
+               || source.getMethod(PropertyComponent.MUTATOR.format(testContext.type, "foo"), testContext.type)
+               != null);
 
       if (property.hasField())
       {
@@ -392,81 +387,91 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       }
    }
 
-   @Test
-   public void testSetTypeClass()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testSetTypeClass(TestContext<O> testContext)
    {
-      assumeFalse(CharSequence.class.equals(type));
-      final PropertySource<O> property = source.getProperty(name);
+      assumeFalse(CharSequence.class.equals(testContext.type));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       property.setType(CharSequence.class);
       assertTrue(property.getType().isType(CharSequence.class));
-      assertTrue(!existingItems.contains(PropertyComponent.FIELD)
+      assertTrue(!testContext.existingItems.contains(PropertyComponent.FIELD)
                || property.getField().getType().isType(CharSequence.class));
-      assertTrue(!existingItems.contains(PropertyComponent.ACCESSOR)
+      assertTrue(!testContext.existingItems.contains(PropertyComponent.ACCESSOR)
                || property.getAccessor().getReturnType().isType(CharSequence.class));
-      assertTrue(!existingItems.contains(PropertyComponent.MUTATOR)
+      assertTrue(!testContext.existingItems.contains(PropertyComponent.MUTATOR)
                || property.getMutator().getParameters().get(0).getType().isType(CharSequence.class));
    }
 
-   @Test
-   public void testSetTypeString()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testSetTypeString(TestContext<O> testContext)
    {
-      assumeFalse(CharSequence.class.equals(type));
-      final PropertySource<O> property = source.getProperty(name);
+      assumeFalse(CharSequence.class.equals(testContext.type));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       property.setType("CharSequence");
       assertEquals("CharSequence", property.getType().getName());
-      assertTrue(!existingItems.contains(PropertyComponent.FIELD)
+      assertTrue(!testContext.existingItems.contains(PropertyComponent.FIELD)
                || "CharSequence".equals(property.getField().getType().getName()));
-      assertTrue(!existingItems.contains(PropertyComponent.ACCESSOR)
+      assertTrue(!testContext.existingItems.contains(PropertyComponent.ACCESSOR)
                || "CharSequence".equals(property.getAccessor().getReturnType().getName()));
-      assertTrue(!existingItems.contains(PropertyComponent.MUTATOR)
+      assertTrue(!testContext.existingItems.contains(PropertyComponent.MUTATOR)
                || "CharSequence".equals(property.getMutator().getParameters().get(0).getType().getName()));
    }
 
-   @Test
-   public void testSetTypeJavaType()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testSetTypeJavaType(TestContext<O> testContext)
    {
-      final PropertySource<O> property = source.getProperty(name);
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       property.setType(source);
       assertEquals(source.getQualifiedName(), property.getType().getQualifiedName());
-      assertTrue(!existingItems.contains(PropertyComponent.FIELD)
+      assertTrue(!testContext.existingItems.contains(PropertyComponent.FIELD)
                || Objects.equals(source.getQualifiedName(), property.getField().getType().getQualifiedName()));
-      assertTrue(!existingItems.contains(PropertyComponent.ACCESSOR)
+      assertTrue(!testContext.existingItems.contains(PropertyComponent.ACCESSOR)
                || Objects.equals(source.getQualifiedName(),
-                                 property.getAccessor().getReturnType().getQualifiedName()));
-      assertTrue(!existingItems.contains(PropertyComponent.MUTATOR)
+               property.getAccessor().getReturnType().getQualifiedName()));
+      assertTrue(!testContext.existingItems.contains(PropertyComponent.MUTATOR)
                || Objects.equals(source.getQualifiedName(), property.getMutator().getParameters().get(0).getType()
-                        .getQualifiedName()));
+               .getQualifiedName()));
    }
 
-   @Test
-   public void testPropertySeesChangedAccessor()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testPropertySeesChangedAccessor(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.ACCESSOR));
-
-      final PropertySource<O> property = source.getProperty(name);
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.ACCESSOR));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       assertTrue(property.isAccessible());
       property.getAccessor().setName("foo");
 
       assertFalse(property.isAccessible());
    }
 
-   @Test
-   public void testPropertySeesChangedMutator()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testPropertySeesChangedMutator(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.MUTATOR));
-
-      final PropertySource<O> property = source.getProperty(name);
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.MUTATOR));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       assertTrue(property.isMutable());
       property.getMutator().setName("foo");
 
       assertFalse(property.isMutable());
    }
 
-   @Test
-   public void testPropertyHasAnnotationField()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testPropertyHasAnnotationField(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.FIELD));
-      final PropertySource<O> property = source.getProperty(name);
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.FIELD));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       assertFalse(property.hasAnnotation(Deprecated.class));
 
       AnnotationSource<O> ann = property.getField().addAnnotation(Deprecated.class);
@@ -474,11 +479,13 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       property.getField().removeAnnotation(ann);
    }
 
-   @Test
-   public void testPropertyHasAnnotationAccessor()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testPropertyHasAnnotationAccessor(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.ACCESSOR));
-      final PropertySource<O> property = source.getProperty(name);
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.ACCESSOR));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       assertFalse(property.hasAnnotation(Deprecated.class));
 
       AnnotationSource<O> ann = property.getAccessor().addAnnotation(Deprecated.class);
@@ -486,11 +493,13 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       property.getAccessor().removeAnnotation(ann);
    }
 
-   @Test
-   public void testPropertyHasAnnotationMutator()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testPropertyHasAnnotationMutator(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.MUTATOR));
-      final PropertySource<O> property = source.getProperty(name);
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.MUTATOR));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       assertFalse(property.hasAnnotation(Deprecated.class));
 
       AnnotationSource<O> ann = property.getMutator().addAnnotation(Deprecated.class);
@@ -498,11 +507,13 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       property.getMutator().removeAnnotation(ann);
    }
 
-   @Test
-   public void testPropertyHasAnnotationTypeField()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testPropertyHasAnnotationTypeField(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.FIELD));
-      final PropertySource<O> property = source.getProperty(name);
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.FIELD));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       assertFalse(property.hasAnnotation(Deprecated.class.getName()));
 
       AnnotationSource<O> ann = property.getField().addAnnotation(Deprecated.class.getName());
@@ -510,11 +521,13 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       property.getField().removeAnnotation(ann);
    }
 
-   @Test
-   public void testPropertyHasAnnotationTypeAccessor()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testPropertyHasAnnotationTypeAccessor(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.ACCESSOR));
-      final PropertySource<O> property = source.getProperty(name);
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.ACCESSOR));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       assertFalse(property.hasAnnotation(Deprecated.class.getName()));
 
       AnnotationSource<O> ann = property.getAccessor().addAnnotation(Deprecated.class.getName());
@@ -522,11 +535,13 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       property.getAccessor().removeAnnotation(ann);
    }
 
-   @Test
-   public void testPropertyHasAnnotationTypeMutator()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testPropertyHasAnnotationTypeMutator(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.MUTATOR));
-      final PropertySource<O> property = source.getProperty(name);
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.MUTATOR));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       assertFalse(property.hasAnnotation(Deprecated.class.getName()));
 
       AnnotationSource<O> ann = property.getMutator().addAnnotation(Deprecated.class.getName());
@@ -534,11 +549,13 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       property.getMutator().removeAnnotation(ann);
    }
 
-   @Test
-   public void testPropertyGetAnnotationTypeField()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testPropertyGetAnnotationTypeField(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.FIELD));
-      final PropertySource<O> property = source.getProperty(name);
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.FIELD));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       assertFalse(property.hasAnnotation(Deprecated.class.getName()));
 
       AnnotationSource<O> ann = property.getField().addAnnotation(Deprecated.class.getName());
@@ -546,11 +563,13 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       property.getField().removeAnnotation(ann);
    }
 
-   @Test
-   public void testPropertyGetAnnotationTypeAccessor()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testPropertyGetAnnotationTypeAccessor(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.ACCESSOR));
-      final PropertySource<O> property = source.getProperty(name);
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.ACCESSOR));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       assertFalse(property.hasAnnotation(Deprecated.class.getName()));
 
       AnnotationSource<O> ann = property.getAccessor().addAnnotation(Deprecated.class.getName());
@@ -558,11 +577,13 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       property.getAccessor().removeAnnotation(ann);
    }
 
-   @Test
-   public void testPropertyGetAnnotationTypeMutator()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testPropertyGetAnnotationTypeMutator(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.MUTATOR));
-      final PropertySource<O> property = source.getProperty(name);
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.MUTATOR));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       assertFalse(property.hasAnnotation(Deprecated.class.getName()));
 
       AnnotationSource<O> ann = property.getMutator().addAnnotation(Deprecated.class.getName());
@@ -570,11 +591,13 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       property.getMutator().removeAnnotation(ann);
    }
 
-   @Test
-   public void testPropertyGetAnnotationField()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testPropertyGetAnnotationField(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.FIELD));
-      final PropertySource<O> property = source.getProperty(name);
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.FIELD));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       assertFalse(property.hasAnnotation(Deprecated.class));
 
       AnnotationSource<O> ann = property.getField().addAnnotation(Deprecated.class);
@@ -582,11 +605,13 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       property.getField().removeAnnotation(ann);
    }
 
-   @Test
-   public void testPropertyGetAnnotationAccessor()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testPropertyGetAnnotationAccessor(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.ACCESSOR));
-      final PropertySource<O> property = source.getProperty(name);
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.ACCESSOR));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       assertFalse(property.hasAnnotation(Deprecated.class));
 
       AnnotationSource<O> ann = property.getAccessor().addAnnotation(Deprecated.class);
@@ -594,11 +619,13 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       property.getAccessor().removeAnnotation(ann);
    }
 
-   @Test
-   public void testPropertyGetAnnotationMutator()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testPropertyGetAnnotationMutator(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.MUTATOR));
-      final PropertySource<O> property = source.getProperty(name);
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.MUTATOR));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       assertFalse(property.hasAnnotation(Deprecated.class));
 
       AnnotationSource<O> ann = property.getMutator().addAnnotation(Deprecated.class);
@@ -606,11 +633,13 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       property.getMutator().removeAnnotation(ann);
    }
 
-   @Test
-   public void testPropertyGetAnnotationsField()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testPropertyGetAnnotationsField(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.FIELD));
-      final PropertySource<O> property = source.getProperty(name);
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.FIELD));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       assertFalse(property.hasAnnotation(Deprecated.class));
 
       AnnotationSource<O> ann = property.getField().addAnnotation(Deprecated.class);
@@ -618,11 +647,13 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       property.getField().removeAnnotation(ann);
    }
 
-   @Test
-   public void testPropertyGetAnnotationsAccessor()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testPropertyGetAnnotationsAccessor(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.ACCESSOR));
-      final PropertySource<O> property = source.getProperty(name);
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.ACCESSOR));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       assertFalse(property.hasAnnotation(Deprecated.class));
 
       AnnotationSource<O> ann = property.getAccessor().addAnnotation(Deprecated.class);
@@ -630,11 +661,13 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       property.getAccessor().removeAnnotation(ann);
    }
 
-   @Test
-   public void testPropertyGetAnnotationsMutator()
+   @ParameterizedTest
+   @ArgumentsSource(TestContextArgumentsProvider.class)
+   void testPropertyGetAnnotationsMutator(TestContext<O> testContext)
    {
-      assumeTrue(existingItems.contains(PropertyComponent.MUTATOR));
-      final PropertySource<O> property = source.getProperty(name);
+      assumeTrue(testContext.existingItems.contains(PropertyComponent.MUTATOR));
+      O source = testContext.getSource();
+      final PropertySource<O> property = source.getProperty(testContext.name);
       assertFalse(property.hasAnnotation(Deprecated.class));
 
       AnnotationSource<O> ann = property.getMutator().addAnnotation(Deprecated.class);
@@ -642,7 +675,7 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       property.getMutator().removeAnnotation(ann);
    }
 
-   private boolean sourceHasPropertyField(String fieldName)
+   private boolean sourceHasPropertyField(O source, String fieldName)
    {
       if (source.isInterface())
       {
@@ -650,5 +683,55 @@ public class PropertiesTest<O extends JavaSource<O> & PropertyHolderSource<O>>
       }
       final FieldSource<O> field = source.getField(fieldName);
       return !(field == null || field.isStatic());
+   }
+
+   public static class TestContextArgumentsProvider implements ArgumentsProvider
+   {
+      @Override
+      public Stream<? extends Arguments> provideArguments(ExtensionContext context)
+      {
+         return Stream.of(
+                  Arguments.of(new TestContext<>(JavaClassSource.class, "MockClass", String.class, "field",
+                           EnumSet.of(PropertyComponent.FIELD))),
+                  Arguments.of(new TestContext<>(JavaEnumSource.class, "MockEnum", String.class, "field",
+                           EnumSet.of(PropertyComponent.FIELD))),
+                  Arguments.of(new TestContext<>(JavaInterfaceSource.class, "MockInterface", int.class, "count",
+                           EnumSet.of(PropertyComponent.ACCESSOR))),
+                  Arguments.of(new TestContext<>(JavaInterfaceSource.class, "BigInterface", boolean.class, "verbose",
+                           EnumSet.of(PropertyComponent.ACCESSOR, PropertyComponent.MUTATOR)))
+         );
+      }
+   }
+
+   public static class TestContext<O extends JavaSource<O> & PropertyHolderSource<O>>
+   {
+      Class<O> sourceType;
+      String resourceName;
+      Class<?> type;
+      String name;
+      Set<PropertyComponent> existingItems;
+
+      TestContext(Class<O> sourceType, String resourceName, Class<?> type, String name,
+               Set<PropertyComponent> existingItems)
+      {
+         this.sourceType = sourceType;
+         this.resourceName = resourceName;
+         this.type = type;
+         this.name = name;
+         this.existingItems = existingItems;
+      }
+
+      O getSource()
+      {
+         String fileName = String.format("/org/jboss/forge/grammar/java/%s.java", resourceName);
+         try (final InputStream stream = JavaClassTest.class.getResourceAsStream(fileName))
+         {
+            return Roaster.parse(sourceType, stream);
+         }
+         catch (IOException e)
+         {
+            throw new UncheckedIOException(e);
+         }
+      }
    }
 }

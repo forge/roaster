@@ -7,11 +7,6 @@
 
 package org.jboss.forge.test.roaster.model;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-
 import java.util.Enumeration;
 
 import org.jboss.forge.roaster.ParserException;
@@ -28,8 +23,14 @@ import org.jboss.forge.test.roaster.model.common.MockAnnotatedInterface;
 import org.jboss.forge.test.roaster.model.common.MockAnnotation;
 import org.jboss.forge.test.roaster.model.common.MockInterface;
 import org.jboss.forge.test.roaster.model.common.MockSuperType;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
@@ -43,10 +44,10 @@ public class MethodImplementationTest
       JavaInterfaceSource interfaceSource = Roaster.create(JavaInterfaceSource.class).setName("Bar").setPackage("test");
       interfaceSource.addMethod().setAbstract(true).setName("doSomething").setReturnTypeVoid();
       source.implementInterface(interfaceSource);
-      Assert.assertThat(source.getMethods().size(), is(1));
-      Assert.assertNotNull(source.getMethod("doSomething"));
-      Assert.assertThat(source.getMethod("doSomething").isAbstract(), is(false));
-      Assert.assertThat(source.getMethod("doSomething").isPublic(), is(true));
+      assertEquals(1, source.getMethods().size());
+      assertNotNull(source.getMethod("doSomething"));
+      assertFalse(source.getMethod("doSomething").isAbstract());
+      assertTrue(source.getMethod("doSomething").isPublic());
    }
 
    @Test
@@ -59,10 +60,9 @@ public class MethodImplementationTest
       interfaceMethod.addAnnotation(MockAnnotation.class);
       interfaceMethod.addParameter(String.class, "parameter").addAnnotation(MockAnnotation.class);
       source.implementInterface(interfaceSource);
-      Assert.assertThat(source.getMethod("doSomething", String.class).getAnnotation(MockAnnotation.class), nullValue());
-      Assert.assertThat(
-               source.getMethod("doSomething", String.class).getParameters().get(0).getAnnotation(MockAnnotation.class),
-               nullValue());
+      assertNull(source.getMethod("doSomething", String.class).getAnnotation(MockAnnotation.class));
+      assertNull(source.getMethod("doSomething", String.class).getParameters().get(0)
+               .getAnnotation(MockAnnotation.class));
    }
 
    @Test
@@ -72,10 +72,10 @@ public class MethodImplementationTest
       JavaClassSource superType = Roaster.create(JavaClassSource.class).setName("Bar").setPackage("test");
       superType.addMethod().setAbstract(true).setName("doSomething").setReturnTypeVoid();
       source.extendSuperType(superType);
-      Assert.assertThat(source.getMethods().size(), is(1));
-      Assert.assertNotNull(source.getMethod("doSomething"));
-      Assert.assertThat(source.getMethod("doSomething").isAbstract(), is(false));
-      Assert.assertEquals("test.Bar", source.getSuperType());
+      assertEquals(1, source.getMethods().size());
+      assertNotNull(source.getMethod("doSomething"));
+      assertFalse(source.getMethod("doSomething").isAbstract());
+      assertEquals("test.Bar", source.getSuperType());
    }
 
    @Test
@@ -85,9 +85,9 @@ public class MethodImplementationTest
       JavaInterfaceSource interfaceSource = Roaster.create(JavaInterfaceSource.class).setName("Bar").setPackage("test");
       interfaceSource.addMethod().setAbstract(true).setName("doSomething").setReturnTypeVoid();
       source.implementInterface(interfaceSource);
-      Assert.assertThat(source.getMethods().size(), is(1));
-      Assert.assertNotNull(source.getMethod("doSomething"));
-      Assert.assertThat(source.getMethod("doSomething").isAbstract(), is(false));
+      assertEquals(1, source.getMethods().size());
+      assertNotNull(source.getMethod("doSomething"));
+      assertFalse(source.getMethod("doSomething").isAbstract());
    }
 
    @Test
@@ -102,10 +102,8 @@ public class MethodImplementationTest
       source.implementInterface(interfaceSource);
       MethodSource<JavaEnumSource> method = source.getMethod("doSomething", String.class);
       AnnotationSource<JavaEnumSource> annotation = method.getAnnotation(MockAnnotation.class);
-      Assert.assertThat(annotation, nullValue());
-      Assert.assertThat(
-               method.getParameters().get(0).getAnnotation(MockAnnotation.class),
-               nullValue());
+      assertNull(annotation);
+      assertNull(method.getParameters().get(0).getAnnotation(MockAnnotation.class));
    }
 
    @Test
@@ -113,12 +111,12 @@ public class MethodImplementationTest
    {
       JavaClassSource source = Roaster.create(JavaClassSource.class);
       source.extendSuperType(MockSuperType.class);
-      Assert.assertThat(source.getMethods().size(), is(2));
-      Assert.assertNotNull(source.getMethod("doSomething"));
-      Assert.assertNotNull(source.getMethod("returnSomething"));
-      Assert.assertThat(source.getMethod("doSomething").isAbstract(), is(false));
-      Assert.assertThat(source.getMethod("returnSomething").isAbstract(), is(false));
-      Assert.assertThat(source.getMethod("returnSomething").getBody(), equalTo("return null;"));
+      assertEquals(2, source.getMethods().size());
+      assertNotNull(source.getMethod("doSomething"));
+      assertNotNull(source.getMethod("returnSomething"));
+      assertFalse(source.getMethod("doSomething").isAbstract());
+      assertFalse(source.getMethod("returnSomething").isAbstract());
+      assertEquals("return null;", source.getMethod("returnSomething").getBody());
    }
 
    @Test
@@ -126,11 +124,11 @@ public class MethodImplementationTest
    {
       JavaClassSource source = Roaster.create(JavaClassSource.class);
       source.implementInterface(Enumeration.class);
-      Assert.assertThat(source.getMethods().size(), is(2));
-      Assert.assertNotNull(source.getMethod("hasMoreElements"));
-      Assert.assertNotNull(source.getMethod("nextElement"));
-      Assert.assertThat(source.getMethod("hasMoreElements").isAbstract(), is(false));
-      Assert.assertThat(source.getMethod("nextElement").isAbstract(), is(false));
+      assertEquals(2, source.getMethods().size());
+      assertNotNull(source.getMethod("hasMoreElements"));
+      assertNotNull(source.getMethod("nextElement"));
+      assertFalse(source.getMethod("hasMoreElements").isAbstract());
+      assertFalse(source.getMethod("nextElement").isAbstract());
    }
 
    @Test
@@ -138,11 +136,11 @@ public class MethodImplementationTest
    {
       JavaInterfaceSource source = Roaster.create(JavaInterfaceSource.class);
       source.implementInterface(Enumeration.class);
-      Assert.assertThat(source.getMethods().size(), is(2));
-      Assert.assertNotNull(source.getMethod("hasMoreElements"));
-      Assert.assertNotNull(source.getMethod("nextElement"));
-      Assert.assertThat(source.getMethod("hasMoreElements").isAbstract(), is(true));
-      Assert.assertThat(source.getMethod("nextElement").isAbstract(), is(true));
+      assertEquals(2, source.getMethods().size());
+      assertNotNull(source.getMethod("hasMoreElements"));
+      assertNotNull(source.getMethod("nextElement"));
+      assertTrue(source.getMethod("hasMoreElements").isAbstract());
+      assertTrue(source.getMethod("nextElement").isAbstract());
    }
 
    @Test
@@ -150,11 +148,12 @@ public class MethodImplementationTest
    {
       JavaEnumSource source = Roaster.create(JavaEnumSource.class);
       source.implementInterface(Enumeration.class);
-      Assert.assertThat(source.getMethods().size(), is(2));
-      Assert.assertNotNull(source.getMethod("hasMoreElements"));
-      Assert.assertNotNull(source.getMethod("nextElement"));
-      Assert.assertThat(source.getMethod("hasMoreElements").isAbstract(), is(false));
-      Assert.assertThat(source.getMethod("nextElement").isAbstract(), is(false));
+      assertEquals(2, source.getMethods().size());
+      ;
+      assertNotNull(source.getMethod("hasMoreElements"));
+      assertNotNull(source.getMethod("nextElement"));
+      assertFalse(source.getMethod("hasMoreElements").isAbstract());
+      assertFalse(source.getMethod("nextElement").isAbstract());
    }
 
    @Test
@@ -168,8 +167,8 @@ public class MethodImplementationTest
       JavaClassSource target = Roaster.create(JavaClassSource.class);
       target.addMethod(method);
 
-      Assert.assertThat(target.getMethods().size(), is(1));
-      Assert.assertNotNull(source.getMethod("foo", String.class));
+      assertEquals(1, target.getMethods().size());
+      assertNotNull(source.getMethod("foo", String.class));
    }
 
    @Test
@@ -177,10 +176,10 @@ public class MethodImplementationTest
    {
       JavaClassSource source = Roaster.create(JavaClassSource.class);
       source.implementInterface(MockInterface.class);
-      Assert.assertThat(source.getMethods().size(), is(3));
-      Assert.assertThat(source.getMethod("lookup", String.class, boolean.class), notNullValue());
-      Assert.assertThat(source.getMethod("lookup", int.class, boolean.class), notNullValue());
-      Assert.assertThat(source.getMethod("lookup", int.class, int.class, boolean.class), notNullValue());
+      assertEquals(3, source.getMethods().size());
+      assertNotNull(source.getMethod("lookup", String.class, boolean.class));
+      assertNotNull(source.getMethod("lookup", int.class, boolean.class));
+      assertNotNull(source.getMethod("lookup", int.class, int.class, boolean.class));
    }
 
    @Test
@@ -188,12 +187,11 @@ public class MethodImplementationTest
    {
       JavaClassSource source = Roaster.create(JavaClassSource.class);
       source.implementInterface(MockAnnotatedInterface.class);
-      Assert.assertThat(source.getMethod("lookup", String.class, boolean.class).getAnnotation(MockAnnotation.class),
-               nullValue());
-      Assert.assertThat(source.getMethod("lookup", String.class, boolean.class).getParameters().get(0)
-               .getAnnotation(MockAnnotation.class), nullValue());
-      Assert.assertThat(source.getMethod("lookup", String.class, boolean.class).getParameters().get(1)
-               .getAnnotation(MockAnnotation.class), nullValue());
+      assertNull(source.getMethod("lookup", String.class, boolean.class).getAnnotation(MockAnnotation.class));
+      assertNull(source.getMethod("lookup", String.class, boolean.class).getParameters().get(0)
+               .getAnnotation(MockAnnotation.class));
+      assertNull(source.getMethod("lookup", String.class, boolean.class).getParameters().get(1)
+               .getAnnotation(MockAnnotation.class));
    }
 
    @Test
@@ -207,7 +205,7 @@ public class MethodImplementationTest
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.implementInterface(javaInterface);
 
-      Assert.assertThat(javaClass.getMethods().size(), equalTo(1));
+      assertEquals(1, javaClass.getMethods().size());
    }
 
    @Test
@@ -217,8 +215,8 @@ public class MethodImplementationTest
       interfaceSource.addMethod().setName("foo");
       JavaClassSource implSource = Roaster.create(JavaClassSource.class);
       implSource.implementInterface(interfaceSource);
-      Assert.assertEquals(Visibility.PUBLIC, interfaceSource.getMethod("foo").getVisibility());
-      Assert.assertEquals(Visibility.PUBLIC, implSource.getMethod("foo").getVisibility());
+      assertEquals(Visibility.PUBLIC, interfaceSource.getMethod("foo").getVisibility());
+      assertEquals(Visibility.PUBLIC, implSource.getMethod("foo").getVisibility());
    }
 
    @Test
@@ -229,23 +227,23 @@ public class MethodImplementationTest
 
       JavaInterfaceSource interfaceSource = Roaster.create(JavaInterfaceSource.class).setPackage(packageName);
       interfaceSource.addMethod().setDefault(true).setName("foo").addParameter(className, "list");
-      Assert.assertEquals("Interface should contain a single import", 1, interfaceSource.getImports().size());
+      assertEquals(1, interfaceSource.getImports().size(), "Interface should contain a single import");
       final Import listImport = interfaceSource.getImport(className);
-      Assert.assertNotNull("Import of '" + className + "' not found", listImport);
+      assertNotNull(listImport, "Import of '" + className + "' not found");
 
       JavaClassSource implSource = Roaster.create(JavaClassSource.class).setPackage(packageName);
       implSource.implementInterface(interfaceSource);
 
       final Import implListImport = implSource.getImport(className);
-      Assert.assertNull("Import of '" + className + "' should not exist.", implListImport);
+      assertNull(implListImport, "Import of '" + className + "' should not exist.");
    }
 
-   @Test(expected = ParserException.class)
+   @Test
    public void testMethodBodyShouldNotBeEmptyOnInvalidCode()
    {
       JavaClassSource source = Roaster.create(JavaClassSource.class);
       MethodSource<JavaClassSource> method = source.addMethod().setName("foo");
-      method.setBody("{}{{}{dasfasdfasdfga");
+      assertThrows(ParserException.class, () -> method.setBody("{}{{}{dasfasdfasdfga"));
    }
 
    @Test
@@ -254,7 +252,7 @@ public class MethodImplementationTest
       JavaClassSource source = Roaster.create(JavaClassSource.class);
       MethodSource<JavaClassSource> method = source.addMethod().setName("foo");
       method.setBody("");
-      Assert.assertThat(method.getBody(), equalTo(""));
+      assertEquals("", method.getBody());
    }
 
    @Test
@@ -263,6 +261,6 @@ public class MethodImplementationTest
       JavaClassSource source = Roaster.create(JavaClassSource.class);
       MethodSource<JavaClassSource> method = source.addMethod().setName("foo");
       method.setBody("System.out.println(\"Hello World\");");
-      Assert.assertThat(method.getBody(), equalTo("System.out.println(\"Hello World\");"));
+      assertEquals("System.out.println(\"Hello World\");", method.getBody());
    }
 }

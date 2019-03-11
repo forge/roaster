@@ -7,24 +7,26 @@
 
 package org.jboss.forge.test.roaster.model.util;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertEquals;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.Properties;
 
 import org.jboss.forge.roaster.Roaster;
+import org.jboss.forge.roaster.Streams;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.util.Formatter;
-import org.jboss.forge.roaster.Streams;
 import org.jboss.forge.test.roaster.model.FieldAnnotationTest;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTimeout;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -37,7 +39,7 @@ public class FormatterTest
 
    private static String content;
 
-   @BeforeClass
+   @BeforeAll
    public static void resetTests() throws IOException
    {
       String fileName = "/org/jboss/forge/grammar/java/MockUnformattedClass.java";
@@ -53,7 +55,7 @@ public class FormatterTest
    {
       String result = Formatter.format(javaClass);
       String original = javaClass.toUnformattedString();
-      Assert.assertNotEquals(original, result);
+      assertNotEquals(original, result);
    }
 
    @Test
@@ -61,13 +63,13 @@ public class FormatterTest
    {
       String result = Roaster.format(javaClass.toString());
       String original = javaClass.toUnformattedString();
-      Assert.assertNotEquals(original, result);
+      assertNotEquals(original, result);
    }
 
    @Test
    public void testToUnformattedStringAsOriginalContent()
    {
-      Assert.assertEquals(content, javaClass.toUnformattedString());
+      assertEquals(content, javaClass.toUnformattedString());
    }
 
    @Test
@@ -112,21 +114,21 @@ public class FormatterTest
    }
 
    @Test
-   @Ignore("Passes on Maven, but the JDT dependencies in roaster-jdt makes it fail in the IDE")
+   @Disabled("Passes on Maven, but the JDT dependencies in roaster-jdt makes it fail in the IDE")
    public void testApplyShadedPackageName()
    {
       Properties prefs = new Properties();
       prefs.put("org.eclipse.jdt.core.formatter.comment.line_length", "123");
       Properties newPrefs = Formatter.applyShadedPackageName(prefs);
-      Assert.assertThat(newPrefs.keys().nextElement().toString(),
-               equalTo("org.jboss.forge.roaster._shade.org.eclipse.jdt.core.formatter.comment.line_length"));
+      assertThat(newPrefs.keys().nextElement().toString())
+               .isEqualTo("org.jboss.forge.roaster._shade.org.eclipse.jdt.core.formatter.comment.line_length");
    }
 
-   @Test(timeout = 3000)
-   public void testFormatShouldNotFail() throws IOException
+   @Test
+   void testFormatShouldNotFail()
    {
       File prefs = new File(getClass().getResource("jdk11/eclipse-formatter.xml").getFile());
       File source = new File(getClass().getResource("jdk11/ROASTER130.java").getFile());
-      Formatter.format(prefs, source);
+      assertTimeout(Duration.ofSeconds(3), () -> Formatter.format(prefs, source));
    }
 }
