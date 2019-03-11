@@ -6,9 +6,6 @@
  */
 package org.jboss.forge.test.roaster.model;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
-
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -16,8 +13,12 @@ import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
@@ -33,11 +34,11 @@ public class ParameterTest
       {
          method = Roaster.parse(JavaClassSource.class, stream).getMethods().get(0);
       }
-      Assert.assertThat(method.getParameters().size(), is(2));
+      assertEquals(2, method.getParameters().size());
       ParameterSource<JavaClassSource> parameterOne = method.getParameters().get(0);
-      Assert.assertThat(parameterOne.isFinal(), is(true));
+      assertTrue(parameterOne.isFinal());
       ParameterSource<JavaClassSource> parameterTwo = method.getParameters().get(1);
-      Assert.assertThat(parameterTwo.isFinal(), is(false));
+      assertFalse(parameterTwo.isFinal());
    }
 
    @Test
@@ -46,11 +47,11 @@ public class ParameterTest
       JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("TestClass");
       ParameterSource<JavaClassSource> parameter = clazz.addMethod().setReturnTypeVoid().setName("myMethod")
                .addParameter(String.class, "parameter");
-      Assert.assertThat(parameter.isFinal(), is(false));
+      assertFalse(parameter.isFinal());
       parameter.setFinal(true);
-      Assert.assertThat(parameter.isFinal(), is(true));
+      assertTrue(parameter.isFinal());
       parameter.setFinal(false);
-      Assert.assertThat(parameter.isFinal(), is(false));
+      assertFalse(parameter.isFinal());
    }
 
    @Test
@@ -59,11 +60,11 @@ public class ParameterTest
       JavaClassSource clazz = Roaster.create(JavaClassSource.class).setName("TestClass");
       ParameterSource<JavaClassSource> parameter = clazz.addMethod().setReturnTypeVoid().setName("myMethod")
                .addParameter(String.class, "parameter").setVarArgs(true);
-      Assert.assertThat(parameter.isVarArgs(), is(true));
+      assertTrue(parameter.isVarArgs());
       parameter.setVarArgs(false);
-      Assert.assertThat(parameter.isVarArgs(), is(false));
+      assertFalse(parameter.isVarArgs());
       parameter.setVarArgs(true);
-      Assert.assertThat(parameter.isVarArgs(), is(true));
+      assertTrue(parameter.isVarArgs());
    }
 
    @Test
@@ -73,7 +74,7 @@ public class ParameterTest
       MethodSource<JavaClassSource> method = clazz.addMethod().setReturnTypeVoid().setName("myMethod");
       method.addTypeVariable("T");
       method.addParameter("T", "name");
-      Assert.assertThat(method.toString(), containsString("<T>void myMethod(T name)"));
+      assertThat(method.toString()).contains("<T>void myMethod(T name)");
    }
 
    @Test
@@ -88,7 +89,7 @@ public class ParameterTest
       newMethod.setReturnType("T").setBody("String.class.as(((Class<T>) as));");
       newMethod.addParameter(int.class, "index");
       newMethod.addParameter("Class<T>", "as");
-      Assert.assertThat(clazz.toString(), containsString("public final <T> T name(int index, Class<T> as)"));
+      assertThat(clazz.toString()).contains("public final <T> T name(int index, Class<T> as)");
    }
 
    @Test
@@ -101,7 +102,7 @@ public class ParameterTest
                .setReturnTypeVoid()
                .setFinal(true);
       newMethod.addParameter("String", "name").setVarArgs(true);
-      Assert.assertThat(clazz.toString(), containsString("public final void name(String... name)"));
+      assertThat(clazz.toString()).contains("public final void name(String... name)");
    }
 
 }

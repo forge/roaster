@@ -6,12 +6,6 @@
  */
 package org.jboss.forge.test.roaster.model.util;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,9 +14,15 @@ import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.util.Refactory;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -31,7 +31,7 @@ public class RefactoryTest
 {
    JavaClassSource javaClass;
 
-   @Before
+   @BeforeEach
    public void before()
    {
       javaClass = Roaster
@@ -119,34 +119,34 @@ public class RefactoryTest
       assertFalse(javaClass.hasSyntaxErrors());
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void testCreateHashCodeAndEqualsForStatics()
    {
       JavaClassSource aClass = Roaster
                .parse(JavaClassSource.class,
                         "public class Foo { private static boolean flag;}");
       FieldSource<JavaClassSource> booleanField = aClass.getField("flag");
-      Refactory.createHashCodeAndEquals(aClass, booleanField);
+      assertThrows(IllegalArgumentException.class, () -> Refactory.createHashCodeAndEquals(aClass, booleanField));
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void testCreateHashCodeForStatics()
    {
       JavaClassSource aClass = Roaster
                .parse(JavaClassSource.class,
                         "public class Foo { private static boolean flag;}");
       FieldSource<JavaClassSource> booleanField = aClass.getField("flag");
-      Refactory.createHashCode(aClass, booleanField);
+      assertThrows(IllegalArgumentException.class, () -> Refactory.createHashCode(aClass, booleanField));
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void testCreateEqualsForStatics()
    {
       JavaClassSource aClass = Roaster
                .parse(JavaClassSource.class,
                         "public class Foo { private static boolean flag;}");
       FieldSource<JavaClassSource> booleanField = aClass.getField("flag");
-      Refactory.createEquals(aClass, booleanField);
+      assertThrows(IllegalArgumentException.class, () -> Refactory.createEquals(aClass, booleanField));
    }
 
    @Test
@@ -202,20 +202,20 @@ public class RefactoryTest
    {
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());
-      assertThat(equals.getBody(), containsString("if (aBoolean != other.aBoolean) {\n  return false;\n}"));
-      assertThat(equals.getBody(), containsString("if (aByte != other.aByte) {\n  return false;\n}"));
-      assertThat(equals.getBody(), containsString("if (aChar != other.aChar) {\n  return false;\n}"));
-      assertThat(equals.getBody(), containsString("if (aShort != other.aShort) {\n  return false;\n}"));
-      assertThat(equals.getBody(), containsString("if (anInt != other.anInt) {\n  return false;\n}"));
-      assertThat(equals.getBody(), containsString("if (aLong != other.aLong) {\n  return false;\n}"));
+      assertThat(equals.getBody()).contains("if (aBoolean != other.aBoolean) {\n  return false;\n}");
+      assertThat(equals.getBody()).contains("if (aByte != other.aByte) {\n  return false;\n}");
+      assertThat(equals.getBody()).contains("if (aChar != other.aChar) {\n  return false;\n}");
+      assertThat(equals.getBody()).contains("if (aShort != other.aShort) {\n  return false;\n}");
+      assertThat(equals.getBody()).contains("if (anInt != other.anInt) {\n  return false;\n}");
+      assertThat(equals.getBody()).contains("if (aLong != other.aLong) {\n  return false;\n}");
       assertThat(
-               equals.getBody(),
-               containsString(
-                        "if (Float.floatToIntBits(aFloat) != Float.floatToIntBits(other.aFloat)) {\n  return false;\n}"));
+               equals.getBody()).
+               contains(
+                        "if (Float.floatToIntBits(aFloat) != Float.floatToIntBits(other.aFloat)) {\n  return false;\n}");
       assertThat(
-               equals.getBody(),
-               containsString(
-                        "if (Double.doubleToLongBits(aDouble) != Double.doubleToLongBits(other.aDouble)) {\n  return false;\n}"));
+               equals.getBody()).
+               contains(
+                        "if (Double.doubleToLongBits(aDouble) != Double.doubleToLongBits(other.aDouble)) {\n  return false;\n}");
    }
 
    private void assertHashCodeForPrimitives(MethodSource<JavaClassSource> hashcode)
@@ -223,16 +223,16 @@ public class RefactoryTest
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
       assertEquals("int", hashcode.getReturnType().getName());
-      assertThat(hashcode.getBody(), containsString("result=prime * result + (aBoolean ? 1231 : 1237);"));
-      assertThat(hashcode.getBody(), containsString("result=prime * result + aByte;"));
-      assertThat(hashcode.getBody(), containsString("result=prime * result + aChar;"));
-      assertThat(hashcode.getBody(), containsString("result=prime * result + aShort;"));
-      assertThat(hashcode.getBody(), containsString("result=prime * result + anInt;"));
-      assertThat(hashcode.getBody(), containsString("result=prime * result + (int)(aLong ^ (aLong >>> 32));"));
-      assertThat(hashcode.getBody(), containsString("result=prime * result + Float.floatToIntBits(aFloat);"));
-      assertThat(hashcode.getBody(), containsString("long temp;"));
-      assertThat(hashcode.getBody(), containsString("temp=Double.doubleToLongBits(aDouble);"));
-      assertThat(hashcode.getBody(), containsString("prime * result + (int)(temp ^ (temp >>> 32));"));
+      assertThat(hashcode.getBody()).contains("result=prime * result + (aBoolean ? 1231 : 1237);");
+      assertThat(hashcode.getBody()).contains("result=prime * result + aByte;");
+      assertThat(hashcode.getBody()).contains("result=prime * result + aChar;");
+      assertThat(hashcode.getBody()).contains("result=prime * result + aShort;");
+      assertThat(hashcode.getBody()).contains("result=prime * result + anInt;");
+      assertThat(hashcode.getBody()).contains("result=prime * result + (int)(aLong ^ (aLong >>> 32));");
+      assertThat(hashcode.getBody()).contains("result=prime * result + Float.floatToIntBits(aFloat);");
+      assertThat(hashcode.getBody()).contains("long temp;");
+      assertThat(hashcode.getBody()).contains("temp=Double.doubleToLongBits(aDouble);");
+      assertThat(hashcode.getBody()).contains("prime * result + (int)(temp ^ (temp >>> 32));");
 
    }
 
@@ -282,18 +282,18 @@ public class RefactoryTest
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
       assertEquals("int", hashcode.getReturnType().getName());
-      assertThat(hashcode.getBody(), containsString("result=prime * result + java.util.Arrays.hashCode(flags);"));
-      assertThat(hashcode.getBody(), containsString("result=prime * result + java.util.Arrays.hashCode(objects);"));
+      assertThat(hashcode.getBody().contains("result=prime * result + java.util.Arrays.hashCode(flags);"));
+      assertThat(hashcode.getBody().contains("result=prime * result + java.util.Arrays.hashCode(objects);"));
    }
 
    private void assertEqualsForArrays(MethodSource<JavaClassSource> equals)
    {
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());
-      assertThat(equals.getBody(),
-               containsString("if (!java.util.Arrays.equals(flags,other.flags)) {\n  return false;\n}"));
-      assertThat(equals.getBody(),
-               containsString("if (!java.util.Arrays.equals(objects,other.objects)) {\n  return false;\n}"));
+      assertThat(equals.getBody()).
+               contains("if (!java.util.Arrays.equals(flags,other.flags)) {\n  return false;\n}");
+      assertThat(equals.getBody()).
+               contains("if (!java.util.Arrays.equals(objects,other.objects)) {\n  return false;\n}");
    }
 
    @Test
@@ -333,7 +333,7 @@ public class RefactoryTest
       assertEqualsForObjects(equals);
       assertFalse(aClass.hasSyntaxErrors());
       aClass.removeMethod(equals);
-      assertTrue(aClass.getMethods().size() == 0);
+      assertEquals(0, aClass.getMethods().size());
 
    }
 
@@ -342,9 +342,9 @@ public class RefactoryTest
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
       assertEquals("int", hashcode.getReturnType().getName());
-      assertThat(hashcode.getBody(),
-               containsString("result=prime * result + ((object == null) ? 0 : object.hashCode());"));
-      assertThat(hashcode.getBody(), containsString("result=prime * result + ((date == null) ? 0 : date.hashCode());"));
+      assertThat(hashcode.getBody()).
+               contains("result=prime * result + ((object == null) ? 0 : object.hashCode());");
+      assertThat(hashcode.getBody()).contains("result=prime * result + ((date == null) ? 0 : date.hashCode());");
 
    }
 
@@ -353,11 +353,11 @@ public class RefactoryTest
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());
       assertThat(
-               equals.getBody(),
-               containsString(
-                        "if (object != null) {\n  if (!object.equals(other.object)) {\n    return false;\n  }\n}"));
-      assertThat(equals.getBody(),
-               containsString("if (date != null) {\n  if (!date.equals(other.date)) {\n    return false;\n  }\n}"));
+               equals.getBody()).
+               contains(
+                        "if (object != null) {\n  if (!object.equals(other.object)) {\n    return false;\n  }\n}");
+      assertThat(equals.getBody()).
+               contains("if (date != null) {\n  if (!date.equals(other.date)) {\n    return false;\n  }\n}");
    }
 
    @SuppressWarnings("deprecation")
@@ -424,7 +424,7 @@ public class RefactoryTest
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
       assertEquals("int", hashcode.getReturnType().getName());
-      assertThat(hashcode.getBody(), containsString("int result=super.hashCode();"));
+      assertThat(hashcode.getBody()).contains("int result=super.hashCode();");
 
    }
 
@@ -432,7 +432,7 @@ public class RefactoryTest
    {
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());
-      assertThat(equals.getBody(), containsString("if (!super.equals(obj)) {\n  return false;\n}"));
+      assertThat(equals.getBody()).contains("if (!super.equals(obj)) {\n  return false;\n}");
    }
 
    @Test
@@ -480,7 +480,7 @@ public class RefactoryTest
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
       assertEquals("int", hashcode.getReturnType().getName());
-      assertThat(hashcode.getBody(), containsString("result=prime * result + ((bar == null) ? 0 : bar.hashCode());"));
+      assertThat(hashcode.getBody()).contains("result=prime * result + ((bar == null) ? 0 : bar.hashCode());");
 
    }
 
@@ -488,12 +488,12 @@ public class RefactoryTest
    {
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());
-      assertThat(equals.getBody(),
-               containsString("if (bar != null) {\n  if (!bar.equals(other.bar)) {\n    return false;\n  }\n}"));
+      assertThat(equals.getBody()).
+               contains("if (bar != null) {\n  if (!bar.equals(other.bar)) {\n    return false;\n  }\n}");
    }
 
    @Test
-   @Ignore
+   @Disabled
    // This is not supported for now
    public void testCreateHashCodeAndEqualsInnerClass()
    {
@@ -540,8 +540,8 @@ public class RefactoryTest
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
       assertEquals("int", hashcode.getReturnType().getName());
-      assertThat(hashcode.getBody(), containsString("result=prime * result + getOuterType().hashCode();"));
-      assertThat(hashcode.getBody(), containsString("result=prime * result + ((flag == null) ? 0 : flag.hashCode());"));
+      assertThat(hashcode.getBody()).contains("result=prime * result + getOuterType().hashCode();");
+      assertThat(hashcode.getBody()).contains("result=prime * result + ((flag == null) ? 0 : flag.hashCode());");
 
    }
 
@@ -549,10 +549,10 @@ public class RefactoryTest
    {
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());
-      assertThat(equals.getBody(),
-               containsString("if ((!getOuterType().equals(other.getOuterType()))) {\n  return false;\n}"));
-      assertThat(equals.getBody(),
-               containsString("if (flag != null) {\n  if (!flag.equals(other.flag)) {\n    return false;\n  }\n}"));
+      assertThat(equals.getBody()).
+               contains("if ((!getOuterType().equals(other.getOuterType()))) {\n  return false;\n}");
+      assertThat(equals.getBody()).
+               contains("if (flag != null) {\n  if (!flag.equals(other.flag)) {\n    return false;\n  }\n}");
 
    }
 
@@ -567,7 +567,7 @@ public class RefactoryTest
 
       Refactory.createHashCodeAndEquals(aClass, firstLongField, secondLongField);
       List<MethodSource<JavaClassSource>> methods = aClass.getMethods();
-      assertTrue(aClass.getMethods().size() == 2);
+      assertEquals(2, aClass.getMethods().size());
       MethodSource<JavaClassSource> equals = methods.get(0);
       MethodSource<JavaClassSource> hashcode = methods.get(1);
       assertHashCodeForMultipleLongFields(hashcode);
@@ -575,25 +575,25 @@ public class RefactoryTest
       assertFalse(aClass.hasSyntaxErrors());
       aClass.removeMethod(equals);
       aClass.removeMethod(hashcode);
-      assertTrue(aClass.getMethods().size() == 0);
+      assertEquals(0, aClass.getMethods().size());
 
       Refactory.createEquals(aClass, firstLongField, secondLongField);
       methods = aClass.getMethods();
-      assertTrue(aClass.getMethods().size() == 1);
+      assertEquals(1, aClass.getMethods().size());
       equals = methods.get(0);
       assertEqualsForMultipleLongFields(equals);
       assertFalse(aClass.hasSyntaxErrors());
       aClass.removeMethod(equals);
-      assertTrue(aClass.getMethods().size() == 0);
+      assertEquals(0, aClass.getMethods().size());
 
       Refactory.createHashCode(aClass, firstLongField, secondLongField);
       methods = aClass.getMethods();
-      assertTrue(aClass.getMethods().size() == 1);
+      assertEquals(1, aClass.getMethods().size());
       hashcode = methods.get(0);
       assertHashCodeForMultipleLongFields(hashcode);
       assertFalse(aClass.hasSyntaxErrors());
       aClass.removeMethod(hashcode);
-      assertTrue(aClass.getMethods().size() == 0);
+      assertEquals(0, aClass.getMethods().size());
 
    }
 
@@ -602,11 +602,11 @@ public class RefactoryTest
       assertEquals("hashCode", hashcode.getName());
       assertEquals(0, hashcode.getParameters().size());
       assertEquals("int", hashcode.getReturnType().getName());
-      assertThat(hashcode.getBody(), containsString("long temp;"));
+      assertThat(hashcode.getBody()).contains("long temp;");
       assertEquals(1, StringUtils.countMatches(hashcode.getBody(), "long temp;"));
-      assertThat(hashcode.getBody(), containsString("temp=Double.doubleToLongBits(firstDouble);"));
-      assertThat(hashcode.getBody(), containsString("temp=Double.doubleToLongBits(secondDouble);"));
-      assertThat(hashcode.getBody(), containsString("prime * result + (int)(temp ^ (temp >>> 32));"));
+      assertThat(hashcode.getBody()).contains("temp=Double.doubleToLongBits(firstDouble);");
+      assertThat(hashcode.getBody()).contains("temp=Double.doubleToLongBits(secondDouble);");
+      assertThat(hashcode.getBody()).contains("prime * result + (int)(temp ^ (temp >>> 32));");
       assertEquals(2,
                StringUtils.countMatches(hashcode.getBody(), "prime * result + (int)(temp ^ (temp >>> 32));"));
    }
@@ -616,12 +616,12 @@ public class RefactoryTest
       assertEquals("equals", equals.getName());
       assertEquals(1, equals.getParameters().size());
       assertThat(
-               equals.getBody(),
-               containsString(
-                        "if (Double.doubleToLongBits(firstDouble) != Double.doubleToLongBits(other.firstDouble)) {\n  return false;\n}"));
+               equals.getBody()).
+               contains(
+                        "if (Double.doubleToLongBits(firstDouble) != Double.doubleToLongBits(other.firstDouble)) {\n  return false;\n}");
       assertThat(
-               equals.getBody(),
-               containsString(
-                        "if (Double.doubleToLongBits(secondDouble) != Double.doubleToLongBits(other.secondDouble)) {\n  return false;\n}"));
+               equals.getBody()).
+               contains(
+                        "if (Double.doubleToLongBits(secondDouble) != Double.doubleToLongBits(other.secondDouble)) {\n  return false;\n}");
    }
 }

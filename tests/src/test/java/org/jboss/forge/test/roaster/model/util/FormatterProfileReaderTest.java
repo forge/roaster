@@ -7,19 +7,20 @@
 
 package org.jboss.forge.test.roaster.model.util;
 
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.hasItem;
-
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.jboss.forge.roaster.model.util.FormatterProfileReader;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Test class for {@link FormatterProfileReader}
- * 
+ *
  * @author <a href="ggastald@redhat.com">George Gastaldi</a>
  */
 public class FormatterProfileReaderTest
@@ -31,14 +32,14 @@ public class FormatterProfileReaderTest
       try (InputStream resource = getClass().getResourceAsStream(fileName))
       {
          FormatterProfileReader reader = FormatterProfileReader.fromEclipseXml(resource);
-         Assert.assertNotNull(reader);
-         Assert.assertNotNull(reader.getProfileNames());
-         Assert.assertEquals(2, reader.getProfileNames().size());
-         Assert.assertThat(reader.getProfileNames(), allOf(hasItem("Forge"), hasItem("Eclipse [built-in]")));
-         Assert.assertNotNull(reader.getPropertiesFor("Forge"));
-         Assert.assertNotNull(reader.getPropertiesFor("Eclipse [built-in]"));
-         Assert.assertNull(reader.getPropertiesFor("Something Else"));
-         Assert.assertNotNull(reader.getDefaultProperties());
+         assertNotNull(reader);
+         assertNotNull(reader.getProfileNames());
+         assertEquals(2, reader.getProfileNames().size());
+         assertThat(reader.getProfileNames()).contains("Forge", "Eclipse [built-in]");
+         assertNotNull(reader.getPropertiesFor("Forge"));
+         assertNotNull(reader.getPropertiesFor("Eclipse [built-in]"));
+         assertNull(reader.getPropertiesFor("Something Else"));
+         assertNotNull(reader.getDefaultProperties());
       }
    }
 
@@ -49,13 +50,13 @@ public class FormatterProfileReaderTest
       try (InputStream resource = getClass().getResourceAsStream(fileName))
       {
          FormatterProfileReader reader = FormatterProfileReader.fromEclipseXml(resource);
-         Assert.assertNotNull(reader);
-         Assert.assertNotNull(reader.getProfileNames());
-         Assert.assertEquals(1, reader.getProfileNames().size());
-         Assert.assertThat(reader.getProfileNames(), hasItem("Eclipse [built-in]"));
-         Assert.assertNotNull(reader.getPropertiesFor("Eclipse [built-in]"));
-         Assert.assertNull(reader.getPropertiesFor("Something Else"));
-         Assert.assertNotNull(reader.getDefaultProperties());
+         assertNotNull(reader);
+         assertNotNull(reader.getProfileNames());
+         assertEquals(1, reader.getProfileNames().size());
+         assertThat(reader.getProfileNames()).contains("Eclipse [built-in]");
+         assertNotNull(reader.getPropertiesFor("Eclipse [built-in]"));
+         assertNull(reader.getPropertiesFor("Something Else"));
+         assertNotNull(reader.getDefaultProperties());
       }
    }
 }

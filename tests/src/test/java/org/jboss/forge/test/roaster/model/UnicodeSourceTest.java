@@ -10,8 +10,9 @@ package org.jboss.forge.test.roaster.model;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.JavaUnit;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Unicode source test
@@ -25,8 +26,8 @@ public class UnicodeSourceTest
    {
       JavaUnit source = Roaster
                .parseUnit("public class T日本語<Kカナ>{public<T extends Kカナ> void testにほんご() {}}");
-      Assert.assertEquals("T日本語", source.getGoverningType().getName());
-      Assert.assertEquals("testにほんご", ((JavaClassSource) source.getGoverningType()).getMethods().get(0).getName());
-      Assert.assertEquals("Kカナ", ((JavaClassSource) source.getGoverningType()).getTypeVariables().get(0).getName());
+      assertEquals("T日本語", source.getGoverningType().getName());
+      assertEquals("testにほんご", ((JavaClassSource) source.getGoverningType()).getMethods().get(0).getName());
+      assertEquals("Kカナ", ((JavaClassSource) source.getGoverningType()).getTypeVariables().get(0).getName());
    }
 }

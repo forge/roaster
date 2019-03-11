@@ -11,8 +11,11 @@ import java.util.List;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FieldMultipleTest
 {
@@ -21,105 +24,105 @@ public class FieldMultipleTest
    {
       final JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       final FieldSource<JavaClassSource> field = javaClass.addField("public byte content1[], content2;");
-      Assert.assertEquals(2, javaClass.getFields().size());
-      Assert.assertEquals("content1", field.getName());
-      Assert.assertEquals("byte[]", field.getType().getName());
-      Assert.assertEquals("byte", field.getType().getQualifiedName());
-      Assert.assertTrue(field.getType().isArray());
-      Assert.assertEquals(1, field.getType().getArrayDimensions());
+      assertEquals(2, javaClass.getFields().size());
+      assertEquals("content1", field.getName());
+      assertEquals("byte[]", field.getType().getName());
+      assertEquals("byte", field.getType().getQualifiedName());
+      assertTrue(field.getType().isArray());
+      assertEquals(1, field.getType().getArrayDimensions());
    }
 
    @Test
-   public void testMultipleFieldDeclaration() 
+   public void testMultipleFieldDeclaration()
    {
       final JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.addField("public String a,b,c[];");
       List<FieldSource<JavaClassSource>> fields = javaClass.getFields();
 
-      Assert.assertEquals(3, fields.size());
+      assertEquals(3, fields.size());
 
-      Assert.assertEquals("a", fields.get(0).getName());
-      Assert.assertEquals("java.lang.String", fields.get(0).getType().getQualifiedName());
-      Assert.assertEquals("String", fields.get(0).getType().getName());
-      Assert.assertEquals(true, fields.get(0).isPublic());
-      Assert.assertFalse(fields.get(0).getType().isArray());
+      assertEquals("a", fields.get(0).getName());
+      assertEquals("java.lang.String", fields.get(0).getType().getQualifiedName());
+      assertEquals("String", fields.get(0).getType().getName());
+      assertEquals(true, fields.get(0).isPublic());
+      assertFalse(fields.get(0).getType().isArray());
 
-      Assert.assertEquals("b", fields.get(1).getName());
-      Assert.assertEquals("java.lang.String", fields.get(1).getType().getQualifiedName());
-      Assert.assertEquals("String", fields.get(1).getType().getName());
-      Assert.assertEquals(true, fields.get(1).isPublic());
-      Assert.assertFalse(fields.get(1).getType().isArray());
+      assertEquals("b", fields.get(1).getName());
+      assertEquals("java.lang.String", fields.get(1).getType().getQualifiedName());
+      assertEquals("String", fields.get(1).getType().getName());
+      assertEquals(true, fields.get(1).isPublic());
+      assertFalse(fields.get(1).getType().isArray());
 
-      Assert.assertEquals("c", fields.get(2).getName());
-      Assert.assertEquals("java.lang.String", fields.get(2).getType().getQualifiedName());
-      Assert.assertEquals("String[]", fields.get(2).getType().getName());
-      Assert.assertEquals(true, fields.get(2).isPublic());
-      Assert.assertTrue(fields.get(2).getType().isArray());
-      Assert.assertEquals(1, fields.get(2).getType().getArrayDimensions());
+      assertEquals("c", fields.get(2).getName());
+      assertEquals("java.lang.String", fields.get(2).getType().getQualifiedName());
+      assertEquals("String[]", fields.get(2).getType().getName());
+      assertEquals(true, fields.get(2).isPublic());
+      assertTrue(fields.get(2).getType().isArray());
+      assertEquals(1, fields.get(2).getType().getArrayDimensions());
    }
 
    @Test
-   public void testMultipleFieldDeclarationWithAnnotation() 
+   public void testMultipleFieldDeclarationWithAnnotation()
    {
       final JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.addField("@javax.xml.bind.annotation.XmlElement public String a,b,c[];");
       List<FieldSource<JavaClassSource>> fields = javaClass.getFields();
 
-      Assert.assertEquals(3, fields.size());
+      assertEquals(3, fields.size());
 
-      Assert.assertEquals("a", fields.get(0).getName());
-      Assert.assertEquals("java.lang.String", fields.get(0).getType().getQualifiedName());
-      Assert.assertEquals("String", fields.get(0).getType().getName());
-      Assert.assertFalse(fields.get(0).getType().isArray());
-      Assert.assertTrue(fields.get(0).hasAnnotation("javax.xml.bind.annotation.XmlElement"));
+      assertEquals("a", fields.get(0).getName());
+      assertEquals("java.lang.String", fields.get(0).getType().getQualifiedName());
+      assertEquals("String", fields.get(0).getType().getName());
+      assertFalse(fields.get(0).getType().isArray());
+      assertTrue(fields.get(0).hasAnnotation("javax.xml.bind.annotation.XmlElement"));
 
-      Assert.assertEquals("b", fields.get(1).getName());
-      Assert.assertEquals("java.lang.String", fields.get(1).getType().getQualifiedName());
-      Assert.assertEquals("String", fields.get(1).getType().getName());
-      Assert.assertFalse(fields.get(1).getType().isArray());
-      Assert.assertTrue(fields.get(1).hasAnnotation("javax.xml.bind.annotation.XmlElement"));
+      assertEquals("b", fields.get(1).getName());
+      assertEquals("java.lang.String", fields.get(1).getType().getQualifiedName());
+      assertEquals("String", fields.get(1).getType().getName());
+      assertFalse(fields.get(1).getType().isArray());
+      assertTrue(fields.get(1).hasAnnotation("javax.xml.bind.annotation.XmlElement"));
 
-      Assert.assertEquals("c", fields.get(2).getName());
-      Assert.assertEquals("java.lang.String", fields.get(2).getType().getQualifiedName());
-      Assert.assertEquals("String[]", fields.get(2).getType().getName());
-      Assert.assertTrue(fields.get(2).getType().isArray());
-      Assert.assertEquals(1, fields.get(2).getType().getArrayDimensions());
-      Assert.assertTrue(fields.get(2).hasAnnotation("javax.xml.bind.annotation.XmlElement"));
+      assertEquals("c", fields.get(2).getName());
+      assertEquals("java.lang.String", fields.get(2).getType().getQualifiedName());
+      assertEquals("String[]", fields.get(2).getType().getName());
+      assertTrue(fields.get(2).getType().isArray());
+      assertEquals(1, fields.get(2).getType().getArrayDimensions());
+      assertTrue(fields.get(2).hasAnnotation("javax.xml.bind.annotation.XmlElement"));
    }
 
    @Test
-   public void testMultipleFieldDeclarationWithInitializers() 
+   public void testMultipleFieldDeclarationWithInitializers()
    {
       final JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.addField("private static final String a = \"A\",b =\"B\",c[] = {\"C\"};");
       List<FieldSource<JavaClassSource>> fields = javaClass.getFields();
 
-      Assert.assertEquals(3, fields.size());
+      assertEquals(3, fields.size());
 
-      Assert.assertEquals("a", fields.get(0).getName());
-      Assert.assertEquals("java.lang.String", fields.get(0).getType().getQualifiedName());
-      Assert.assertEquals("String", fields.get(0).getType().getName());
-      Assert.assertEquals(true, fields.get(0).isPrivate());
-      Assert.assertEquals(true, fields.get(0).isStatic());
-      Assert.assertEquals("A", fields.get(0).getStringInitializer());
-      Assert.assertFalse(fields.get(0).getType().isArray());
+      assertEquals("a", fields.get(0).getName());
+      assertEquals("java.lang.String", fields.get(0).getType().getQualifiedName());
+      assertEquals("String", fields.get(0).getType().getName());
+      assertEquals(true, fields.get(0).isPrivate());
+      assertEquals(true, fields.get(0).isStatic());
+      assertEquals("A", fields.get(0).getStringInitializer());
+      assertFalse(fields.get(0).getType().isArray());
 
-      Assert.assertEquals("b", fields.get(1).getName());
-      Assert.assertEquals("java.lang.String", fields.get(1).getType().getQualifiedName());
-      Assert.assertEquals("String", fields.get(1).getType().getName());
-      Assert.assertEquals(true, fields.get(1).isPrivate());
-      Assert.assertEquals(true, fields.get(1).isStatic());
-      Assert.assertEquals("B", fields.get(1).getStringInitializer());
-      Assert.assertFalse(fields.get(1).getType().isArray());
+      assertEquals("b", fields.get(1).getName());
+      assertEquals("java.lang.String", fields.get(1).getType().getQualifiedName());
+      assertEquals("String", fields.get(1).getType().getName());
+      assertEquals(true, fields.get(1).isPrivate());
+      assertEquals(true, fields.get(1).isStatic());
+      assertEquals("B", fields.get(1).getStringInitializer());
+      assertFalse(fields.get(1).getType().isArray());
 
-      Assert.assertEquals("c", fields.get(2).getName());
-      Assert.assertEquals("java.lang.String", fields.get(2).getType().getQualifiedName());
-      Assert.assertEquals("String[]", fields.get(2).getType().getName());
-      Assert.assertEquals(true, fields.get(2).isPrivate());
-      Assert.assertEquals(true, fields.get(2).isStatic());
-      Assert.assertEquals("{\"C\"}", fields.get(2).getLiteralInitializer());
-      Assert.assertTrue(fields.get(2).getType().isArray());
-      Assert.assertEquals(1, fields.get(2).getType().getArrayDimensions());
+      assertEquals("c", fields.get(2).getName());
+      assertEquals("java.lang.String", fields.get(2).getType().getQualifiedName());
+      assertEquals("String[]", fields.get(2).getType().getName());
+      assertEquals(true, fields.get(2).isPrivate());
+      assertEquals(true, fields.get(2).isStatic());
+      assertEquals("{\"C\"}", fields.get(2).getLiteralInitializer());
+      assertTrue(fields.get(2).getType().isArray());
+      assertEquals(1, fields.get(2).getType().getArrayDimensions());
    }
 
 }

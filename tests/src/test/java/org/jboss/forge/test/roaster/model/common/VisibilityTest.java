@@ -6,14 +6,14 @@
  */
 package org.jboss.forge.test.roaster.model.common;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 
 import org.jboss.forge.roaster.model.source.VisibilityScopedSource;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -27,7 +27,7 @@ public abstract class VisibilityTest
       this.target = target;
    }
 
-   @Before
+   @BeforeEach
    public void reset() throws IOException
    {
       resetTests();

@@ -6,15 +6,15 @@
  */
 package org.jboss.forge.test.roaster.model.common;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WildCardImportsTest
 {
@@ -35,7 +35,7 @@ public class WildCardImportsTest
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       javaClass.addImport("package1.Class1<package2.Class2>");
-      assertThat(javaClass.getImports().size(), is(2));
+      assertThat(javaClass.getImports().size()).isEqualTo(2);
    }
 
    @Test
@@ -58,8 +58,8 @@ public class WildCardImportsTest
       javaClass.addImport("java.util.*");
       javaClass.addField().setName("field").setType("Date");
       FieldSource<JavaClassSource> field = javaClass.getField("field");
-      Assert.assertNotNull(field);
-      Assert.assertNotNull(field.getType());
-      Assert.assertEquals("java.util.Date", field.getType().getQualifiedName());
+      assertNotNull(field);
+      assertNotNull(field.getType());
+      assertEquals("java.util.Date", field.getType().getQualifiedName());
    }
 }

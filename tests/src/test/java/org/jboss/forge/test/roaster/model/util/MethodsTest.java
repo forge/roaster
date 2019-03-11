@@ -7,17 +7,17 @@
 
 package org.jboss.forge.test.roaster.model.util;
 
-import static org.junit.Assert.assertArrayEquals;
-
-import java.awt.List;
+import java.awt.*;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Map;
 
-import javax.swing.UIManager;
+import javax.swing.*;
 
 import org.jboss.forge.roaster.model.util.Methods;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 /**
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>

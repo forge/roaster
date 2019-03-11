@@ -7,20 +7,20 @@
 
 package org.jboss.forge.test.roaster.model;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-
 import java.io.InputStream;
 
 import org.jboss.forge.roaster.Roaster;
+import org.jboss.forge.roaster.Streams;
 import org.jboss.forge.roaster.model.JavaUnit;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
-import org.jboss.forge.roaster.Streams;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
- * 
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
  */
 public class JavaUnitTest
@@ -40,20 +40,20 @@ public class JavaUnitTest
    {
       String contents = Streams.toString(getFileContents());
       JavaUnit unit = Roaster.parseUnit(contents);
-      Assert.assertEquals(contents, unit.toUnformattedString());
+      assertEquals(contents, unit.toUnformattedString());
    }
 
    @Test
    public void testParseUnitStructure()
    {
       JavaUnit unit = Roaster.parseUnit(getFileContents());
-      Assert.assertNotNull(unit);
-      Assert.assertThat(unit.getGoverningType(), is(instanceOf(JavaClassSource.class)));
+      assertNotNull(unit);
+      assertThat((Object) unit.getGoverningType()).isInstanceOf(JavaClassSource.class);
       JavaClassSource governingType = unit.getGoverningType();
-      Assert.assertThat(unit.getTopLevelTypes().size(), is(2));
-      Assert.assertSame(governingType, unit.getTopLevelTypes().get(0));
-      Assert.assertThat(unit.getTopLevelTypes().get(1), is(instanceOf(JavaClassSource.class)));
-      Assert.assertEquals(MAIN_CLASS_NAME, governingType.getName());
-      Assert.assertEquals(SUB_CLASS_NAME, unit.getTopLevelTypes().get(1).getName());
+      assertEquals(2, unit.getTopLevelTypes().size());
+      assertSame(governingType, unit.getTopLevelTypes().get(0));
+      assertThat(unit.getTopLevelTypes().get(1)).isInstanceOf(JavaClassSource.class);
+      assertEquals(MAIN_CLASS_NAME, governingType.getName());
+      assertEquals(SUB_CLASS_NAME, unit.getTopLevelTypes().get(1).getName());
    }
 }

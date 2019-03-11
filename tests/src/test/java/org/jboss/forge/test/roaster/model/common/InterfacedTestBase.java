@@ -6,31 +6,30 @@
  */
 package org.jboss.forge.test.roaster.model.common;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.io.Serializable;
 
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.InterfaceCapableSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * @param <T> the type of interface to test
- *
+ * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapableSource<T>>
 {
 
    private T source;
 
-   @Before
+   @BeforeEach
    public void reset()
    {
       this.source = getSource();
@@ -75,17 +74,16 @@ public abstract class InterfacedTestBase<T extends JavaSource<T> & InterfaceCapa
       assertEquals(0, source.getInterfaces().size());
       source.addImport("java.util.List");
       source.addInterface(iface);
-      assertEquals("No imports should have been added.", 1, source.getImports().size());
+      assertEquals(1, source.getImports().size(), "No imports should have been added.");
       assertTrue(source.hasImport("java.util.List"));
       assertFalse(source.hasImport("com.foo.List"));
       assertEquals(1, source.getInterfaces().size());
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void testAddImproperInterface()
    {
-      this.source.addInterface("43 23omg.omg.omg");
-      fail();
+      assertThrows(IllegalArgumentException.class, () -> this.source.addInterface("43 23omg.omg.omg"));
    }
 
    @Test

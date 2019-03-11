@@ -6,16 +6,18 @@
  */
 package org.jboss.forge.test.roaster.model;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
-
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:salemelrahal@gmail.com">Salem Elrahal</a>
@@ -28,8 +30,8 @@ public class MethodModifierTest
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public static void test()");
       method.setStatic(true);
-      Assert.assertThat(method.toString(), not(containsString("static static")));
-      Assert.assertThat(method.toString(), containsString("static"));
+      assertThat(method.toString()).doesNotContain("static static");
+      assertThat(method.toString()).contains("static");
    }
 
    @Test
@@ -37,15 +39,15 @@ public class MethodModifierTest
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public void test(){}");
-      Assert.assertFalse(method.isNative());
+      assertFalse(method.isNative());
       method.setNative(true);
-      Assert.assertTrue(method.isNative());
-      Assert.assertThat(method.toString(), containsString("public native void test();"));
-      Assert.assertNull(method.getBody());
+      assertTrue(method.isNative());
+      assertThat(method.toString()).contains("public native void test();");
+      assertNull(method.getBody());
       String body = "int a=2;";
       method.setNative(false).setBody(body);
-      Assert.assertFalse(method.isNative());
-      Assert.assertEquals(body, method.getBody());
+      assertFalse(method.isNative());
+      assertEquals(body, method.getBody());
    }
 
    @Test
@@ -53,15 +55,15 @@ public class MethodModifierTest
    {
       MethodSource<JavaInterfaceSource> method = Roaster.create(JavaInterfaceSource.class).addMethod(
                "public void test()");
-      Assert.assertFalse(method.isDefault());
+      assertFalse(method.isDefault());
       method.setDefault(true);
-      Assert.assertTrue(method.isDefault());
-      Assert.assertThat(method.toString(), containsString("public default void test()"));
-      Assert.assertThat(method.getBody(), equalTo(""));
+      assertTrue(method.isDefault());
+      assertThat(method.toString()).contains("public default void test()");
+      assertThat(method.getBody()).isEmpty();
       String body = "int a=2;";
       method.setDefault(false).setBody(body);
-      Assert.assertFalse(method.isDefault());
-      Assert.assertEquals(body, method.getBody());
+      assertFalse(method.isDefault());
+      assertEquals(body, method.getBody());
    }
 
    @Test
@@ -69,11 +71,11 @@ public class MethodModifierTest
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public native void test();");
-      Assert.assertTrue(method.isNative());
-      Assert.assertNull(method.getBody());
+      assertTrue(method.isNative());
+      assertNull(method.getBody());
       method.setNative(false);
-      Assert.assertFalse(method.isNative());
-      Assert.assertNotNull(method.getBody());
+      assertFalse(method.isNative());
+      assertNotNull(method.getBody());
    }
 
    @Test
@@ -81,11 +83,11 @@ public class MethodModifierTest
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public abstract void test();");
-      Assert.assertTrue(method.isAbstract());
-      Assert.assertNull(method.getBody());
+      assertTrue(method.isAbstract());
+      assertNull(method.getBody());
       method.setAbstract(false);
-      Assert.assertFalse(method.isAbstract());
-      Assert.assertNotNull(method.getBody());
+      assertFalse(method.isAbstract());
+      assertNotNull(method.getBody());
    }
 
    @Test
@@ -93,10 +95,10 @@ public class MethodModifierTest
    {
       MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
                "public void test(){}");
-      Assert.assertFalse(method.isSynchronized());
+      assertFalse(method.isSynchronized());
       method.setSynchronized(true);
-      Assert.assertTrue(method.isSynchronized());
+      assertTrue(method.isSynchronized());
       method.setSynchronized(false);
-      Assert.assertFalse(method.isSynchronized());
+      assertFalse(method.isSynchronized());
    }
 }

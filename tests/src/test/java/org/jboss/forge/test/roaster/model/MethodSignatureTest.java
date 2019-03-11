@@ -6,8 +6,6 @@
  */
 package org.jboss.forge.test.roaster.model;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.List;
 
 import org.jboss.forge.roaster.Roaster;
@@ -15,8 +13,11 @@ import org.jboss.forge.roaster.model.Visibility;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -47,21 +48,23 @@ public class MethodSignatureTest
                "public void hello(String foo, int bar, char[] array, char value[])");
       List<ParameterSource<JavaClassSource>> parameters = method.getParameters();
 
-      Assert.assertEquals("String", parameters.get(0).getType().toString());
-      Assert.assertEquals("int", parameters.get(1).getType().toString());
+      assertEquals("String", parameters.get(0).getType().toString());
+      assertEquals("int", parameters.get(1).getType().toString());
 
-      Assert.assertEquals("char[]", parameters.get(2).getType().toString());
-      Assert.assertTrue(parameters.get(2).getType().isArray());
+      assertEquals("char[]", parameters.get(2).getType().toString());
+      assertTrue(parameters.get(2).getType().isArray());
 
-      Assert.assertEquals("char", parameters.get(3).getType().toString());
-      Assert.assertTrue(parameters.get(3).getType().isArray());
+      assertEquals("char", parameters.get(3).getType().toString());
+      assertTrue(parameters.get(3).getType().isArray());
    }
 
-   @Test(expected = UnsupportedOperationException.class)
+   @Test
    public void testUnmodifiableMethodParams()
    {
-      Roaster.create(JavaClassSource.class).addMethod("public void hello(String foo, int bar)").getParameters()
-               .add(null);
+      assertThrows(UnsupportedOperationException.class,
+               () -> Roaster.create(JavaClassSource.class).addMethod("public void hello(String foo, int bar)")
+                        .getParameters()
+                        .add(null));
    }
 
    @Test
@@ -115,22 +118,22 @@ public class MethodSignatureTest
       method.addParameter(Integer.TYPE, "initValue");
       method.addParameter(int.class, "intValueClass");
       method.addParameter(int[].class, "intValueClassArray");
-      Assert.assertEquals(1, javaClass.getMethods().size());
+      assertEquals(1, javaClass.getMethods().size());
       List<ParameterSource<JavaClassSource>> parameters = javaClass.getMethods().get(0).getParameters();
-      Assert.assertEquals(3, parameters.size());
-      Assert.assertTrue(parameters.get(0).getType().isPrimitive());
-      Assert.assertTrue(parameters.get(1).getType().isPrimitive());
-      Assert.assertTrue(parameters.get(2).getType().isArray());
+      assertEquals(3, parameters.size());
+      assertTrue(parameters.get(0).getType().isPrimitive());
+      assertTrue(parameters.get(1).getType().isPrimitive());
+      assertTrue(parameters.get(2).getType().isArray());
    }
 
    private void assertVisibility(Visibility visibility, MethodSource<JavaClassSource> method)
    {
-      Assert.assertEquals(visibility, method.getVisibility());
+      assertEquals(visibility, method.getVisibility());
    }
 
    private void assertVisibility(String visibility, MethodSource<JavaClassSource> method)
    {
-      Assert.assertEquals(visibility, method.getVisibility().toString());
+      assertEquals(visibility, method.getVisibility().toString());
    }
 
    public static class Inner
@@ -145,7 +148,7 @@ public class MethodSignatureTest
       MethodSource<JavaClassSource> method = javaClass.addMethod().setPublic().setName("doSomething")
                .setReturnTypeVoid();
       method.addParameter(Inner.class, "inner");
-      Assert.assertEquals(1, javaClass.getMethods().size());
+      assertEquals(1, javaClass.getMethods().size());
       assertEquals(Inner.class.getCanonicalName(), method.getParameters().get(0).getType().getQualifiedName());
       assertEquals(Inner.class.getCanonicalName(), javaClass.getImports().get(0).getQualifiedName());
    }
