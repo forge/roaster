@@ -57,36 +57,9 @@ jobs:
 
       # run tests!
       - run: mvn install
-  OpenJDK 12:
-    docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:12-jdk
-
-    working_directory: ~/repo
-
-    steps:
-      - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "pom.xml" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      - run: mvn clean install
-
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: v1-dependencies-{{ checksum "pom.xml" }}
-
-      # run tests!
-      - run: mvn install
 workflows:
   version: 2
   Build and Test:
     jobs:
       - OpenJDK 8
       - OpenJDK 11
-      - OpenJDK 12
