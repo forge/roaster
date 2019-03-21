@@ -21,7 +21,7 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: mvn clean install
+      - run: mvn -v clean install
 
       - save_cache:
           paths:
@@ -48,7 +48,7 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: mvn clean install
+      - run: mvn -v clean install -DskipTests
 
       - save_cache:
           paths:
@@ -56,7 +56,7 @@ jobs:
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
       # run tests!
-      - run: mvn install
+      - run: mvn test
 workflows:
   version: 2
   Build and Test:
