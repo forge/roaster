@@ -82,4 +82,11 @@ jobs:
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
       # run tests!
-      - run: mvn install      
+      - run: mvn install
+workflows:
+  version: 2
+  Build and Test:
+    jobs:
+      - OpenJDK 8
+      - OpenJDK 11
+      - OpenJDK 12
