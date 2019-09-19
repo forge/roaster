@@ -6,7 +6,6 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 
 /**
  * Global util class to get the current JDT parser options. The following options are guaranteed to be included:
@@ -26,10 +25,10 @@ public class JDTOptions
 
    static
    {
-      OPTIONS.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_12);
+      OPTIONS.put(JavaCore.COMPILER_SOURCE, JavaCore.latestSupportedJavaVersion());
       OPTIONS.put(JavaCore.CORE_ENCODING, StandardCharsets.UTF_8.name());
-      OPTIONS.put(JavaCore.COMPILER_COMPLIANCE, CompilerOptions.VERSION_12);
-      OPTIONS.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, CompilerOptions.VERSION_12);
+      OPTIONS.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.latestSupportedJavaVersion());
+      OPTIONS.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.latestSupportedJavaVersion());
    }
 
    private JDTOptions()
