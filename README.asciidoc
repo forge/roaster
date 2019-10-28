@@ -1,7 +1,7 @@
 Roaster - The only Java source parser library you'll ever need
 ===============================================================
 
-image:https://circleci.com/gh/forge/roaster.svg?style=svg["CircleCI", link="https://circleci.com/gh/forge/roaster"]
+image:https://github.com/forge/roaster/workflows/GitHub%20CI/badge.svg["Actions Status", link="https://github.com/forge/roaster/actions"]
 image:http://img.shields.io/:license-EPL-blue.svg["License", link="https://www.eclipse.org/legal/epl-v10.html"]
 image:https://maven-badges.herokuapp.com/maven-central/org.jboss.forge.roaster/roaster-api/badge.svg["Maven Central", link="https://maven-badges.herokuapp.com/maven-central/org.jboss.forge.roaster/roaster-api"]
 
