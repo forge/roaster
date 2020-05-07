@@ -12,6 +12,7 @@ import java.util.Vector;
 
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.Type;
+import org.jboss.forge.roaster.model.source.Importer;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.util.Types;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -372,5 +375,17 @@ public class TypesTest
    public void testToSplitGenericsFailesIfArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.splitGenerics(null));
+   }
+
+   // ROASTER-135
+   @Test
+   public void testToHandleWildardsInToResolvedType()
+   {
+      Importer<?> importer = mock(Importer.class);
+
+      when(importer.getImport("List<? extends Account>")).thenReturn(null);
+      when(importer.getImport("?extendsAccount")).thenReturn(null);
+
+      assertEquals("List<? extends Account>", Types.toResolvedType("List<? extends Account>", importer));
    }
 }

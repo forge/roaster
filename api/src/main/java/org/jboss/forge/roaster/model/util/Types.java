@@ -310,9 +310,14 @@ public class Types
          StringJoiner genericJoiner = new StringJoiner(",");
          for (String genericPart : splitGenerics(type))
          {
-            genericJoiner.add(toResolvedType(genericPart, importer));
+            String resolved = toResolvedType(genericPart, importer);
+            resolved = resolved.replace("?extends", "? extends ");
+            resolved = resolved.replace("?super", "? super ");
+            genericJoiner.add(resolved);
          }
+
          builder.append("<").append(genericJoiner.toString()).append(">");
+
       }
 
       return builder.append(getArraySuffix(type)).toString();
