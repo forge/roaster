@@ -149,6 +149,10 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       for (ParameterSource<O> p : parameters)
       {
          signature.append(p.getType().getName());
+         if (p.isVarArgs())
+         {
+            signature.append("...");
+         }
          if (parameters.indexOf(p) < (parameters.size() - 1))
          {
             signature.append(", ");
