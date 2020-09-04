@@ -185,4 +185,14 @@ public class MethodSignatureTest
                method.toString().trim());
       assertEquals(1, method.getReturnType().getTypeArguments().size());
    }
+
+   @Test
+   public void testMethodSignatureParamsWithVarArgs()
+   {
+      MethodSource<JavaClassSource> method = Roaster.create(JavaClassSource.class).addMethod(
+              "public void hello(String... foo)");
+      String signature = method.toSignature();
+      assertEquals("public hello(String...) : void", signature);
+   }
+
 }

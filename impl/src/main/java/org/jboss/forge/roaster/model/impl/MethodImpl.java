@@ -133,15 +133,14 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
       List<MethodSource<JavaClassSource>> methods = temp.getMethods();
       MethodDeclaration newMethod = (MethodDeclaration) methods.get(0).getInternal();
-      MethodDeclaration subtree = (MethodDeclaration) ASTNode.copySubtree(cu.getAST(), newMethod);
-      this.method = subtree;
+      this.method = (MethodDeclaration) ASTNode.copySubtree(cu.getAST(), newMethod);
    }
 
    @Override
    public String toSignature()
    {
       StringBuilder signature = new StringBuilder();
-      signature.append(Visibility.PACKAGE_PRIVATE.equals(this.getVisibility().scope()) ? ""
+      signature.append(Visibility.PACKAGE_PRIVATE == this.getVisibility() ? ""
                : this.getVisibility()
                         .scope());
       signature.append(" ");
@@ -150,6 +149,10 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       for (ParameterSource<O> p : parameters)
       {
          signature.append(p.getType().getName());
+         if (p.isVarArgs())
+         {
+            signature.append("...");
+         }
          if (parameters.indexOf(p) < (parameters.size() - 1))
          {
             signature.append(", ");
