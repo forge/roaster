@@ -54,7 +54,7 @@ public class JavaParserImpl implements JavaParser
    public JavaUnit parseUnit(final String data)
    {
       Document document = new Document(data);
-      ASTParser parser = ASTParser.newParser(AST.JLS13);
+      ASTParser parser = ASTParser.newParser(AST.JLS14);
 
       parser.setSource(document.get().toCharArray());
       parser.setCompilerOptions(JDTOptions.getJDTOptions());
