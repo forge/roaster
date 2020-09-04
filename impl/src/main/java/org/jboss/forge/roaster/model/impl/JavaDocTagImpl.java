@@ -38,6 +38,7 @@ public class JavaDocTagImpl implements JavaDocTag
       for (Object fragment : tagElement.fragments())
       {
          sb.append(fragment);
+         sb.append(" ");
       }
       return sb.toString().trim();
    }
