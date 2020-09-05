@@ -137,6 +137,12 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    }
 
    @Override
+   public boolean isRecord()
+   {
+      return false;
+   }
+
+   @Override
    public String getPackage()
    {
       return javaEnum.getPackage();

@@ -29,6 +29,7 @@ public class JDTOptions
       OPTIONS.put(JavaCore.CORE_ENCODING, StandardCharsets.UTF_8.name());
       OPTIONS.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.latestSupportedJavaVersion());
       OPTIONS.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.latestSupportedJavaVersion());
+      OPTIONS.put(JavaCore.COMPILER_PB_ENABLE_PREVIEW_FEATURES, JavaCore.ENABLED);
    }
 
    private JDTOptions()

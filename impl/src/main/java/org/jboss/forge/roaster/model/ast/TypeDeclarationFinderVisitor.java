@@ -12,8 +12,10 @@ import java.util.List;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
+import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
+import org.eclipse.jdt.core.dom.RecordDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 /**
@@ -50,6 +52,12 @@ public class TypeDeclarationFinderVisitor extends ASTVisitor
    public boolean visit(PackageDeclaration node)
    {
       packageDeclaration = node;
+      return super.visit(node);
+   }
+
+   @Override
+   public boolean visit(RecordDeclaration node) {
+      declarations.add(node);
       return super.visit(node);
    }
 

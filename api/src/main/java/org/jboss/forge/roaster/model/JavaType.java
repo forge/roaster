@@ -69,6 +69,11 @@ public interface JavaType<T extends JavaType<T>> extends
    boolean isAnnotation();
 
    /**
+    * Return <code>true</code> if this {@link JavaType} represents a {@link JavaRecord}
+    */
+   boolean isRecord();
+
+   /**
     * Return the enclosing {@link JavaType} type in which this class is defined. If this class is a top-level type, and
     * is not a nested type, this object will return itself.
     */

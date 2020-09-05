@@ -22,9 +22,10 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.Javadoc;
-import org.eclipse.jdt.core.dom.PackageDeclaration;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
+import org.eclipse.jdt.core.dom.PackageDeclaration;
+import org.eclipse.jdt.core.dom.RecordDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 import org.jboss.forge.roaster.ParserException;
@@ -228,12 +229,12 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
       {
          for (String genericPart : Types.splitGenerics(className))
          {
-         // a type variable is not qualified, so it won't be imported by accident
-            if (Types.isQualified(genericPart)) 
+            // a type variable is not qualified, so it won't be imported by accident
+            if (Types.isQualified(genericPart))
                addImport(genericPart);
          }
       }
-      
+
       // test this after generics are imported
       strippedClassName = Types.stripGenerics(strippedClassName);
       if (!Types.isQualified(strippedClassName) || Types.isJavaLang(strippedClassName))
@@ -260,7 +261,7 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
    public Import getImport(final String className)
    {
       String strippedClassName = Types.stripArray(Types.stripGenerics(className));
-      
+
       for (Import imprt : getImports())
       {
          String qualifiedName = imprt.getQualifiedName();
@@ -778,6 +779,12 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
    public boolean isAnnotation()
    {
       return getDeclaration() instanceof AnnotationTypeDeclaration;
+   }
+
+   @Override
+   public boolean isRecord()
+   {
+      return getDeclaration() instanceof RecordDeclaration;
    }
 
    // ================================================================================
