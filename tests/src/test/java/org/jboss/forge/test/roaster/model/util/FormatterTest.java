@@ -20,10 +20,10 @@ import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.util.Formatter;
 import org.jboss.forge.test.roaster.model.FieldAnnotationTest;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTimeout;
@@ -83,15 +83,14 @@ public class FormatterTest
 
       String result1 = Formatter.format(source);
 
-      StringBuilder sb1 = new StringBuilder();
-      sb1.append("/**" + LINE_SEPARATOR);
-      sb1.append(" * Class documentation text" + LINE_SEPARATOR);
-      sb1.append(" * " + LINE_SEPARATOR);
-      sb1.append(" * @author George Gastaldi" + LINE_SEPARATOR);
-      sb1.append(" */" + LINE_SEPARATOR);
-      sb1.append("public class SomeClass {" + LINE_SEPARATOR);
-      sb1.append("}");
-      assertEquals(sb1.toString(), result1);
+      String sb1 = "/**" + LINE_SEPARATOR +
+              " * Class documentation text" + LINE_SEPARATOR +
+              " * " + LINE_SEPARATOR +
+              " * @author George Gastaldi" + LINE_SEPARATOR +
+              " */" + LINE_SEPARATOR +
+              "public class SomeClass {" + LINE_SEPARATOR +
+              "}";
+      assertEquals(sb1, result1);
 
       Properties prefs = new Properties();
       prefs.put("org.eclipse.jdt.core.formatter.comment.line_length", "25");
@@ -102,26 +101,24 @@ public class FormatterTest
 
       String result2 = Formatter.format(prefs, source);
 
-      StringBuilder sb2 = new StringBuilder();
-      sb2.append("/** Class documentation" + LINE_SEPARATOR);
-      sb2.append(" * text" + LINE_SEPARATOR);
-      sb2.append(" * " + LINE_SEPARATOR);
-      sb2.append(" * @author George" + LINE_SEPARATOR);
-      sb2.append(" *         Gastaldi */" + LINE_SEPARATOR);
-      sb2.append("public class SomeClass {" + LINE_SEPARATOR);
-      sb2.append("}");
-      assertEquals(sb2.toString(), result2);
+      String sb2 = "/** Class documentation" + LINE_SEPARATOR +
+              " * text" + LINE_SEPARATOR +
+              " * " + LINE_SEPARATOR +
+              " * @author George" + LINE_SEPARATOR +
+              " *         Gastaldi */" + LINE_SEPARATOR +
+              "public class SomeClass {" + LINE_SEPARATOR +
+              "}";
+      assertEquals(sb2, result2);
    }
 
    @Test
-   @Disabled("Passes on Maven, but the JDT dependencies in roaster-jdt makes it fail in the IDE")
    public void testApplyShadedPackageName()
    {
       Properties prefs = new Properties();
       prefs.put("org.eclipse.jdt.core.formatter.comment.line_length", "123");
       Properties newPrefs = Formatter.applyShadedPackageName(prefs);
       assertThat(newPrefs.keys().nextElement().toString())
-               .isEqualTo("org.jboss.forge.roaster._shade.org.eclipse.jdt.core.formatter.comment.line_length");
+               .endsWith("org.eclipse.jdt.core.formatter.comment.line_length");
    }
 
    @Test
@@ -130,5 +127,13 @@ public class FormatterTest
       File prefs = new File(getClass().getResource("jdk11/eclipse-formatter.xml").getFile());
       File source = new File(getClass().getResource("jdk11/ROASTER130.java").getFile());
       assertTimeout(Duration.ofSeconds(3), () -> Formatter.format(prefs, source));
+   }
+
+   @Test
+   void testFormatterShouldNotFailWhenCustomFormatterExists() throws IOException
+   {
+      File prefs = new File(getClass().getResource("ROASTER136.properties").getFile());
+      File source = new File(getClass().getResource("jdk11/ROASTER130.java").getFile());
+      assertThatCode(() -> Formatter.format(prefs,source)).doesNotThrowAnyException();
    }
 }

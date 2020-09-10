@@ -111,6 +111,8 @@ public abstract class Formatter
     */
    public static String format(Properties prefs, String source)
    {
+      // Roaster does not allow a specific Java Formatter
+      prefs.remove(JavaCore.JAVA_FORMATTER);
       CodeFormatter codeFormatter = ToolFactory.createCodeFormatter(prefs);
       IDocument doc = new Document(source);
       try
