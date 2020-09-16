@@ -24,9 +24,9 @@ import org.jboss.forge.roaster.model.source.JavaDocSource;
 
 /**
  * A {@link JavaDocSource} implementation
- * 
+ *
  * Based on http://stackoverflow.com/questions/557007/how-to-insert-line-comments-in-code-programmatically-in-eclipse
- * 
+ *
  * @author <a href="ggastald@redhat.com">George Gastaldi</a>
  */
 @SuppressWarnings("unchecked")
@@ -67,7 +67,12 @@ public class JavaDocImpl<O> implements JavaDocSource<O>
             {
                if (fragment instanceof TextElement)
                {
-                  text.append(((TextElement) fragment).getText());
+                  String textFragment = ((TextElement) fragment).getText();
+                  if (text.length() > 0 && text.charAt(text.length() - 1) != ' ' && !textFragment.startsWith(" "))
+                  {
+                     text.append(' ');
+                  }
+                  text.append(textFragment);
                }
             }
       }
