@@ -18,6 +18,7 @@ import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
+import org.eclipse.jdt.core.dom.RecordDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.internal.compiler.CompilationResult;
 import org.eclipse.jdt.internal.compiler.ast.ConstructorDeclaration;
@@ -33,6 +34,7 @@ import org.jboss.forge.roaster.model.impl.JavaClassImpl;
 import org.jboss.forge.roaster.model.impl.JavaEnumImpl;
 import org.jboss.forge.roaster.model.impl.JavaInterfaceImpl;
 import org.jboss.forge.roaster.model.impl.JavaPackageInfoImpl;
+import org.jboss.forge.roaster.model.impl.JavaRecordImpl;
 import org.jboss.forge.roaster.model.impl.JavaUnitImpl;
 import org.jboss.forge.roaster.model.source.JavaAnnotationSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
@@ -44,7 +46,7 @@ import org.jboss.forge.roaster.model.util.JDTOptions;
 
 /**
  * The default implementation of a {@link JavaParser}.
- * 
+ *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 public class JavaParserImpl implements JavaParser
@@ -54,7 +56,7 @@ public class JavaParserImpl implements JavaParser
    public JavaUnit parseUnit(final String data)
    {
       Document document = new Document(data);
-      ASTParser parser = ASTParser.newParser(AST.JLS14);
+      ASTParser parser = ASTParser.newParser(AST.JLS_Latest);
 
       parser.setSource(document.get().toCharArray());
       parser.setCompilerOptions(JDTOptions.getJDTOptions());
@@ -94,7 +96,7 @@ public class JavaParserImpl implements JavaParser
    /**
     * Create a {@link JavaType} instance from the given {@link Document}, {@link CompilationUnit},
     * {@link TypeDeclaration}, and enclosing {@link JavaType} type.
-    * 
+    *
     * @param enclosingType the enclosing type of the new java type
     * @param document the document of the new java type
     * @param unit the compilation unit of the new java type
@@ -128,6 +130,11 @@ public class JavaParserImpl implements JavaParser
       {
          PackageDeclaration packageDeclaration = (PackageDeclaration) declaration;
          return new JavaPackageInfoImpl(enclosingType, document, unit, packageDeclaration);
+      }
+      else if (declaration instanceof RecordDeclaration)
+      {
+         RecordDeclaration recordDeclaration = (RecordDeclaration) declaration;
+         return new JavaRecordImpl(enclosingType, document, unit, recordDeclaration);
       }
       else
       {
