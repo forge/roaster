@@ -12,7 +12,7 @@ jobs:
   Build:
     strategy:
       matrix:
-        java: [ 8, 11.0.x, 15 ]
+        java: [ 8, 11.0.x, 15, 16]
 
     runs-on: ubuntu-latest
 
