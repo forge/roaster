@@ -232,7 +232,7 @@ Just run `mvn clean install` to build the sources
 Issue tracker
 =============
 
-https://issues.jboss.org/browse/ROASTER[ROASTER on JBossDeveloper]. You might need to log in, in order to view the issues.
+File an issue in our https://github.com/forge/roaster/issues[GitHub Issue Tracker]
 
 
 Get in touch
