@@ -84,6 +84,7 @@
                   <artifact>org.apache.commons:commons-lang3</artifact>
                   <includes>
                     <include>org/apache/commons/lang3/StringUtils**</include>
+                    <include>org/apache/commons/lang3/CharSequenceUtils**</include>
                     <include>org/apache/commons/lang3/ArrayUtils**</include>
                     <include>org/apache/commons/lang3/Range**</include>
                     <include>org/apache/commons/lang3/Validate**</include>
