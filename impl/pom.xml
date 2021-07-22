@@ -106,6 +106,10 @@
                   </excludes>
                 </relocation>
                 <relocation>
+                  <pattern>org.apache.commons.lang3</pattern>
+                  <shadedPattern>org.jboss.forge.roaster._shade.org.apache.commons.lang3</shadedPattern>
+                </relocation>
+                <relocation>
                   <pattern>org.osgi</pattern>
                   <shadedPattern>org.jboss.forge.roaster._shade.org.osgi</shadedPattern>
                 </relocation>
