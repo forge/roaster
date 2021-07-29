@@ -130,10 +130,25 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       init(parent);
 
       String stub = "public class Stub { " + method + " }";
+      List<MethodSource<JavaClassSource>> methods = getMethodSources(stub);
+      MethodSource<JavaClassSource> javaClassSourceMethodSource = methods.get(0);
+      MethodDeclaration newMethod = (MethodDeclaration) javaClassSourceMethodSource.getInternal();
+      this.method = (MethodDeclaration) ASTNode.copySubtree(cu.getAST(), newMethod);
+   }
+
+   private List<MethodSource<JavaClassSource>> getMethodSources(final String stub)
+   {
+      List<Problem> problems = Roaster.validateSnippet(stub);
+      if (!problems.isEmpty())
+      {
+         throw new IllegalArgumentException("Invalid method code. " + problems);
+      }
+
       JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
       List<MethodSource<JavaClassSource>> methods = temp.getMethods();
-      MethodDeclaration newMethod = (MethodDeclaration) methods.get(0).getInternal();
-      this.method = (MethodDeclaration) ASTNode.copySubtree(cu.getAST(), newMethod);
+      if (methods.isEmpty())
+         throw new IllegalArgumentException("No methods found - check your method syntax");
+      return methods;
    }
 
    @Override
@@ -142,7 +157,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       StringBuilder signature = new StringBuilder();
       signature.append(Visibility.PACKAGE_PRIVATE == this.getVisibility() ? ""
                : this.getVisibility()
-                        .scope());
+               .scope());
       signature.append(" ");
       signature.append(this.getName()).append("(");
       List<ParameterSource<O>> parameters = this.getParameters();
@@ -266,11 +281,10 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
          List<Problem> problems = Roaster.validateSnippet(body);
          if (problems.size() > 0)
          {
-            throw new ParserException(problems);
+            throw new ParserException("Parse error in:\n" + body, problems);
          }
          String stub = "public class Stub { public void method() {" + body + "} }";
-         JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
-         List<MethodSource<JavaClassSource>> methods = temp.getMethods();
+         List<MethodSource<JavaClassSource>> methods = getMethodSources(stub);
          Block block = ((MethodDeclaration) methods.get(0).getInternal()).getBody();
          block = (Block) ASTNode.copySubtree(method.getAST(), block);
          method.setBody(block);
@@ -336,8 +350,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       String typeToUse = Types.toResolvedType(typeName, getOrigin());
 
       String stub = "public class Stub { public " + typeToUse + " method() {} }";
-      JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
-      List<MethodSource<JavaClassSource>> methods = temp.getMethods();
+      List<MethodSource<JavaClassSource>> methods = getMethodSources(stub);
       org.eclipse.jdt.core.dom.Type returnType = ((MethodDeclaration) methods.get(0).getInternal()).getReturnType2();
 
       returnType = (org.eclipse.jdt.core.dom.Type) ASTNode.copySubtree(method.getAST(), returnType);
@@ -494,8 +507,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    public MethodSource<O> setParameters(final String parameters)
    {
       String stub = "public class Stub { public void method( " + parameters + " ) {} }";
-      JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
-      List<MethodSource<JavaClassSource>> methods = temp.getMethods();
+      List<MethodSource<JavaClassSource>> methods = getMethodSources(stub);
       List<VariableDeclaration> astParameters = ((MethodDeclaration) methods.get(0).getInternal()).parameters();
 
       method.parameters().clear();
@@ -791,7 +803,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    {
       @SuppressWarnings("unchecked")
       List<TypeParameter> typeParameters = method.typeParameters();
-      for (Iterator<TypeParameter> iter = typeParameters.iterator(); iter.hasNext();)
+      for (Iterator<TypeParameter> iter = typeParameters.iterator(); iter.hasNext(); )
       {
          if (Objects.equals(name, iter.next().getName().getIdentifier()))
          {
@@ -834,8 +846,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       }
 
       String stub = "public class Stub { public void method( " + resolvedType + " " + name + " ) {} }";
-      JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
-      List<MethodSource<JavaClassSource>> methods = temp.getMethods();
+      List<MethodSource<JavaClassSource>> methods = getMethodSources(stub);
       List<VariableDeclaration> astParameters = ((MethodDeclaration) methods.get(0).getInternal()).parameters();
 
       ParameterSource<O> param = null;

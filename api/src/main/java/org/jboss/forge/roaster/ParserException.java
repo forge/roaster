@@ -79,7 +79,7 @@ public class ParserException extends RuntimeException
     */
    public ParserException(String message, List<Problem> problems)
    {
-      super(message);
+      super(message + "\n" + problems.toString());
       this.problems = problems;
    }
 
