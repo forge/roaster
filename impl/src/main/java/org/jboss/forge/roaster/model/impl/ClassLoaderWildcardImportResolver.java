@@ -30,7 +30,7 @@ public class ClassLoaderWildcardImportResolver implements WildcardImportResolver
          {
             if (importDeclaration.isWildcard())
             {
-               String resolvedClass = importDeclaration.getQualifiedName() + "." + type;
+               String resolvedClass = importDeclaration.getQualifiedName().replace("*",type);
                try
                {
                   contextClassLoader.loadClass(resolvedClass);
