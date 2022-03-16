@@ -9,7 +9,7 @@
   <artifactId>roaster-jdt</artifactId>
   <name>Forge Roaster - JDT Implementation</name>
   <properties>
-    <version.jdt>3.28.0</version.jdt>
+    <version.jdt>3.29.0</version.jdt>
   </properties>
   <dependencies>
     <dependency>
