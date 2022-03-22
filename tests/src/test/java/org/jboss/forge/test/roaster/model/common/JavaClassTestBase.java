@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -486,5 +487,13 @@ public abstract class JavaClassTestBase
       javaClass.setPackage("testPackage").setName("testClass");
       javaClass.addField().setName("field1").setType("package1.testClass");
       assertEquals(0, javaClass.getImports().size());
+   }
+
+   @Test
+   public void testAddImportWithNameErrorExpectsNoErrors()
+   {
+      String importName = "foo.Error";
+      source.addImport(importName);
+      assertThat(source.getImport(importName)).isNotNull();
    }
 }

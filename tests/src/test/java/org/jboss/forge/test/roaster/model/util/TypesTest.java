@@ -10,6 +10,7 @@ package org.jboss.forge.test.roaster.model.util;
 import java.util.List;
 import java.util.Vector;
 
+import org.assertj.core.api.Assertions;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.source.Importer;
@@ -17,6 +18,7 @@ import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.util.Types;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -237,109 +239,109 @@ public class TypesTest
    }
 
    @Test
-   public void testAreEquivalentFailesIfLeftIsNull()
+   public void testAreEquivalentFailsIfLeftIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.areEquivalent(null, ""));
    }
 
    @Test
-   public void testAreEquivalentFailesIfRightIsNull()
+   public void testAreEquivalentFailsIfRightIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.areEquivalent("", null));
    }
 
    @Test
-   public void testToSimpleNameFailesIfArgumentIsNull()
+   public void testToSimpleNameFailsIfArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.toSimpleName(null));
    }
 
    @Test
-   public void testToTokenizeClassNameFailesIfArgumentIsNull()
+   public void testToTokenizeClassNameFailsIfArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.tokenizeClassName(null));
    }
 
    @Test
-   public void testToIsQualifiedFailesIfArgumentIsNull()
+   public void testToIsQualifiedFailsIfArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.isQualified(null));
    }
 
    @Test
-   public void testToGetPackageFailesIfArgumentIsNull()
+   public void testToGetPackageFailsIfArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.getPackage(null));
    }
 
    @Test
-   public void testToIsSimpleNameFailesIfArgumentIsNull()
+   public void testToIsSimpleNameFailsIfArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.isSimpleName(null));
    }
 
    @Test
-   public void testToIsJavaLangFailesIfArgumentIsNull()
+   public void testToIsJavaLangFailsIfArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.isJavaLang(null));
    }
 
    @Test
-   public void testToIsBasicTypeFailesIfArgumentIsNull()
+   public void testToIsBasicTypeFailsIfArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.isBasicType(null));
    }
 
    @Test
-   public void testToIsGenericFailesIfArgumentIsNull()
+   public void testToIsGenericFailsIfArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.isGeneric(null));
    }
 
    @Test
-   public void testToValidateGenericsFailesIfArgumentIsNull()
+   public void testToValidateGenericsFailsIfArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.validateGenerics(null));
    }
 
    @Test
-   public void testToStripGenericsFailesIfArgumentIsNull()
+   public void testToStripGenericsFailsIfArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.stripGenerics(null));
    }
 
    @Test
-   public void testToGetGenericsFailesIfArgumentIsNull()
+   public void testToGetGenericsFailsIfArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.getGenerics(null));
    }
 
    @Test
-   public void testToGetGenericsTypeParameterFailesIfArgumentIsNull()
+   public void testToGetGenericsTypeParameterFailsIfArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.getGenericsTypeParameter(null));
    }
 
    @Test
-   public void testToIsPrimitiveFailesIfArgumentIsNull()
+   public void testToIsPrimitiveFailsIfArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.isPrimitive(null));
    }
 
    @Test
-   public void testToStripArrayFailesIfArgumentIsNull()
+   public void testToStripArrayFailsIfArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.stripArray(null));
    }
 
    @Test
-   public void testToIsArrayFailesIfArgumentIsNull()
+   public void testToIsArrayFailsIfArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.isArray(null));
    }
 
    @Test
-   public void testToRebuildGenericNameWithArraysFailesIfTypeNameIsNull()
+   public void testToRebuildGenericNameWithArraysFailsIfTypeNameIsNull()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class);
       Type<?> type = javaClass.addField().setName("foo").setType("Bar").getType();
@@ -347,39 +349,39 @@ public class TypesTest
    }
 
    @Test
-   public void testToRebuildGenericNameWithArraysFailesIfTypeIsNull()
+   public void testToRebuildGenericNameWithArraysFailsIfTypeIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.rebuildGenericNameWithArrays("abc", null));
 
    }
 
    @Test
-   public void testToGetArrayDimensionFailesIfArgumentIsNull()
+   public void testToGetArrayDimensionFailsIfArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.getArrayDimension(null));
    }
 
    @Test
-   public void testToGetDefaultValueFailesIfStringArgumentIsNull()
+   public void testToGetDefaultValueFailsIfStringArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.getDefaultValue((String) null));
    }
 
    @Test
-   public void testToGetDefaultValueFailesIfClassArgumentIsNull()
+   public void testToGetDefaultValueFailsIfClassArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.getDefaultValue((Class<?>) null));
    }
 
    @Test
-   public void testToSplitGenericsFailesIfArgumentIsNull()
+   public void testToSplitGenericsFailsIfArgumentIsNull()
    {
       assertThrows(NullPointerException.class, () -> Types.splitGenerics(null));
    }
 
    // ROASTER-135
    @Test
-   public void testToHandleWildardsInToResolvedType()
+   public void testToHandleWildcardsInToResolvedType()
    {
       Importer<?> importer = mock(Importer.class);
 
@@ -388,4 +390,12 @@ public class TypesTest
 
       assertEquals("List<? extends Account>", Types.toResolvedType("List<? extends Account>", importer));
    }
+
+
+   @Test
+   public void testFQNClassDoesNotBelongToJavaLang()
+   {
+      assertThat(Types.isJavaLang("foo.Error")).isFalse();
+   }
+
 }

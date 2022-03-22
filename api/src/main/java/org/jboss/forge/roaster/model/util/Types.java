@@ -249,8 +249,7 @@ public class Types
                simpleType = toSimpleName(matcher.group(2));
                if (matcher.start(1) >= 0)
                {
-                  simpleType = new StringBuilder(matcher.group(1)).append(' ').append(simpleType).toString()
-                           .replaceAll("\\s{2,}?", " ");
+                  simpleType = (matcher.group(1) + ' ' + simpleType).replaceAll("\\s{2,}?", " ");
                }
             }
             simpleParameters.add(simpleType);
@@ -392,8 +391,13 @@ public class Types
    public static boolean isJavaLang(final String type)
    {
       String simpleType = stripArray(requireNonNull(type));
+      String packageName = getPackage(simpleType);
+      if (!packageName.isBlank() && !packageName.equals("java.lang")) {
+        return false;
+      }
       simpleType = stripGenerics(simpleType);
       simpleType = toSimpleName(simpleType);
+
       return LANG_TYPES.contains(simpleType);
    }
 
