@@ -157,18 +157,21 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
          {
             result = Types.stripArray(result);
          }
-         result = Types.stripGenerics(result);
          // restore array dimensions
+         StringBuilder resultBuilder = new StringBuilder(Types.stripGenerics(result));
          for (int i = 0, dim = getArrayDimensions(); i < dim; i++)
          {
-            result += "[]";
+            resultBuilder.append("[]");
          }
+         result = resultBuilder.toString();
          return result;
       }
+      StringBuilder resultBuilder = new StringBuilder(result);
       for (int i = 0, dim = getExtraDimensions(); i < dim; i++)
       {
-         result += "[]";
+         resultBuilder.append("[]");
       }
+      result = resultBuilder.toString();
       return result;
    }
 
