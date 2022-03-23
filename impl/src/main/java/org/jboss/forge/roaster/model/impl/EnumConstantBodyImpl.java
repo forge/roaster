@@ -6,12 +6,6 @@
  */
 package org.jboss.forge.roaster.model.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
@@ -49,6 +43,13 @@ import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
 import org.jboss.forge.roaster.model.util.Types;
 import org.jboss.forge.roaster.spi.JavaParserImpl;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unchecked")
 class EnumConstantBodyImpl implements EnumConstantSource.Body
@@ -632,12 +633,8 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    @Override
    public boolean hasMethodSignature(final String name, Class<?>... paramTypes)
    {
-      final String[] types = new String[paramTypes == null ? 0 : paramTypes.length];
-      for (int i = 0; i < types.length; i++)
-      {
-         types[i] = paramTypes[i].getName();
-      }
-
+      final String[] types = paramTypes == null ? new String[0] :
+               Arrays.stream(paramTypes).map(Class::getName).toArray(String[]::new);
       return hasMethodSignature(name, types);
    }
 
@@ -688,12 +685,8 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    @Override
    public MethodSource<Body> getMethod(final String name, Class<?>... paramTypes)
    {
-      final String[] types = new String[paramTypes == null ? 0 : paramTypes.length];
-      for (int i = 0; i < types.length; i++)
-      {
-         types[i] = paramTypes[i].getName();
-      }
-
+      final String[] types = paramTypes == null ? new String[0] :
+               Arrays.stream(paramTypes).map(Class::getName).toArray(String[]::new);
       return getMethod(name, types);
    }
 
