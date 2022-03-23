@@ -19,7 +19,7 @@ Installation
 
 ```xml
 <properties>
-  <version.roaster>2.23.0.Final</version.roaster>
+  <version.roaster>2.24.0.Final</version.roaster>
 </properties>
 
 <dependency>
