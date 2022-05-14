@@ -195,10 +195,10 @@ public class TypeImpl<O extends JavaType<O>> implements Type<O>
    @Override
    public String getQualifiedNameWithGenerics()
    {
-      String result = type.toString();
+      String result = getQualifiedName();
       if (origin instanceof Importer<?>)
       {
-         return Types.rebuildGenericNameWithArrays(((Importer<?>) origin).resolveType(result), this);
+         result = Types.rebuildGenericNameWithArrays(result, this);
       }
       return result;
    }
