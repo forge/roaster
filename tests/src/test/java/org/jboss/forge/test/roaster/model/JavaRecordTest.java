@@ -27,11 +27,11 @@ public class JavaRecordTest
 
    @Test
    void testCreateRecord() {
-      final JavaRecordSource javaRecord = Roaster.create(JavaRecordSource.class);
-      javaRecord.setName("PhoneNumber");
-      javaRecord.addMethod().setName("dial").setReturnType(boolean.class).setBody("return true;");
+      final JavaRecordSource javaRecord = Roaster.create(JavaRecordSource.class)
+               .setName("PhoneNumber")
+               .setPackage("org.example.foo");
       javaRecord.addRecordComponent(BigInteger.class, "number");
-      javaRecord.setPackage("org.example.foo");
+      javaRecord.addMethod().setName("dial").setReturnType(boolean.class).setBody("return true;");
       List<JavaRecordComponent> recordComponents = javaRecord.getRecordComponents();
       assertThat(recordComponents).hasSize(1);
       assertThat(recordComponents.get(0).getName()).isEqualTo("number");
