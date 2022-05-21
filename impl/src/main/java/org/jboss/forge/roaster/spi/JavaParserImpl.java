@@ -41,6 +41,7 @@ import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaEnumSource;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.JavaPackageInfoSource;
+import org.jboss.forge.roaster.model.source.JavaRecordSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.util.JDTOptions;
 
@@ -160,6 +161,9 @@ public class JavaParserImpl implements JavaParser
 
       if (type.isAssignableFrom(JavaPackageInfoSource.class))
          return (T) parseUnit("package org.example;").getGoverningType();
+
+      if (type.isAssignableFrom(JavaRecordSource.class))
+         return (T) parseUnit("public record JavaRecord() {}").getGoverningType();
 
       return null;
    }

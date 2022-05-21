@@ -579,7 +579,9 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
    /**
     * Call-back to allow updating of any necessary internal names with the given name.
     */
-   protected abstract O updateTypeNames(String name);
+   protected O updateTypeNames(String name) {
+      return (O) this;
+   }
 
    @Override
    public String getQualifiedName()
