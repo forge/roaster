@@ -18,6 +18,8 @@ import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.MethodRef;
+import org.eclipse.jdt.core.dom.RecordDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 /**
@@ -63,6 +65,14 @@ public class MethodFinderVisitor extends ASTVisitor
       @SuppressWarnings("unchecked")
       final List<BodyDeclaration> bodyDeclarations = node.bodyDeclarations();
       addMethods(bodyDeclarations);
+      return false;
+   }
+
+   @Override
+   public boolean visit(RecordDeclaration node)
+   {
+      parent = node;
+      addMethods(node);
       return false;
    }
 

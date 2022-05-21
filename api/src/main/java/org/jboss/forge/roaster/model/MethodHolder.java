@@ -7,7 +7,13 @@
 
 package org.jboss.forge.roaster.model;
 
+import org.jboss.forge.roaster.model.source.MethodSource;
+import org.jboss.forge.roaster.model.source.ParameterSource;
+
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a {@link JavaType} that may declare methods.
@@ -20,32 +26,70 @@ public interface MethodHolder<O extends JavaType<O>> extends MemberHolder<O>
    /**
     * Return true if this {@link O} has a method with the given name and zero parameters; otherwise return false.
     */
-   boolean hasMethod(final Method<O, ?> name);
+   default boolean hasMethod(final Method<O, ?> name) {
+      return getMethods().contains(name);
+   }
 
    /**
     * Return true if this {@link O} has a method with signature matching the given method's signature.
     */
-   boolean hasMethodSignature(final Method<?, ?> method);
+   default boolean hasMethodSignature(final Method<?, ?> method) {
+      for (var local : getMethods())
+      {
+         if (local.getName().equals(method.getName()))
+         {
+            var localParams = local.getParameters().iterator();
+            for (Parameter<? extends JavaType<?>> methodParam : method.getParameters())
+            {
+               if (localParams.hasNext()
+                        && Objects.equals(localParams.next().getType().getName(), methodParam.getType().getName()))
+               {
+                  continue;
+               }
+               return false;
+            }
+            return !localParams.hasNext();
+         }
+      }
+      return false;
+   }
 
    /**
     * Return true if this {@link O} has a method with the given name and zero parameters; otherwise return false.
     */
-   boolean hasMethodSignature(final String name);
+   default boolean hasMethodSignature(final String name) {
+      return hasMethodSignature(name, new String[] {});
+   }
 
    /**
     * Return true if this {@link O} has a method with the given name and signature types; otherwise return false.
     */
-   boolean hasMethodSignature(final String name, String... paramTypes);
+   default boolean hasMethodSignature(final String name, String... paramTypes) {
+      return getMethod(name, paramTypes) != null;
+   }
 
    /**
     * Return true if this {@link O} has a method with the given name and signature types; otherwise return false.
     */
-   boolean hasMethodSignature(final String name, Class<?>... paramTypes);
+   default boolean hasMethodSignature(final String name, Class<?>... paramTypes) {
+      final String[] types = paramTypes == null ? new String[0] :
+               Arrays.stream(paramTypes).map(Class::getName).toArray(String[]::new);
+      return hasMethodSignature(name, types);
+   }
 
    /**
     * Return the {@link Method} with the given name and zero parameters; otherwise return null.
     */
-   Method<O, ?> getMethod(final String name);
+   default Method<O, ?> getMethod(final String name) {
+      for (var method : getMethods())
+      {
+         if (method.getName().equals(name) && (method.getParameters().size() == 0))
+         {
+            return method;
+         }
+      }
+      return null;
+   }
 
    /**
     * Return the {@link Method} with the given name and signature types; otherwise return null.

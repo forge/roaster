@@ -7,11 +7,13 @@
 
 package org.jboss.forge.roaster.model.source;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.jboss.forge.roaster.model.Method;
 import org.jboss.forge.roaster.model.MethodHolder;
 import org.jboss.forge.roaster.model.util.Methods;
+import org.jboss.forge.roaster.model.util.Types;
 
 /**
  * Represents a {@link JavaSource} that may declare methods.
@@ -26,19 +28,59 @@ public interface MethodHolderSource<O extends JavaSource<O>> extends MethodHolde
     * Return the {@link MethodSource} with the given name and zero parameters; otherwise return null.
     */
    @Override
-   MethodSource<O> getMethod(final String name);
+   default MethodSource<O> getMethod(final String name) {
+      for (var method : getMethods())
+      {
+         if (method.getName().equals(name) && (method.getParameters().size() == 0))
+         {
+            return method;
+         }
+      }
+      return null;
+   }
 
    /**
     * Return the {@link MethodSource} with the given name and signature types; otherwise return null.
     */
    @Override
-   MethodSource<O> getMethod(final String name, String... paramTypes);
+   default MethodSource<O> getMethod(final String name, String... paramTypes) {
+      for (MethodSource<O> local : getMethods())
+      {
+         if (local.getName().equals(name))
+         {
+            List<ParameterSource<O>> localParams = local.getParameters();
+            if (paramTypes != null)
+            {
+               if (localParams.size() == paramTypes.length)
+               {
+                  boolean matches = true;
+                  for (int i = 0; i < localParams.size(); i++)
+                  {
+                     ParameterSource<O> localParam = localParams.get(i);
+                     String type = paramTypes[i];
+                     if (!Types.areEquivalent(localParam.getType().getName(), type))
+                     {
+                        matches = false;
+                     }
+                  }
+                  if (matches)
+                     return local;
+               }
+            }
+         }
+      }
+      return null;
+   }
 
    /**
     * Return the {@link MethodSource} with the given name and signature types; otherwise return null.
     */
    @Override
-   MethodSource<O> getMethod(final String name, Class<?>... paramTypes);
+   default MethodSource<O> getMethod(final String name, Class<?>... paramTypes) {
+      final String[] types = paramTypes == null ? new String[0] :
+               Arrays.stream(paramTypes).map(Class::getName).toArray(String[]::new);
+      return getMethod(name, types);
+   }
 
    /**
     * Get a {@link List} of all {@link MethodSource}s declared by this {@link O} instance, if any; otherwise, return an

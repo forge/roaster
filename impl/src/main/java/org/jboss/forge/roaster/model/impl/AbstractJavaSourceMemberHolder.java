@@ -95,7 +95,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    }
 
    @SuppressWarnings("unchecked")
-   private void addField(Field<O> field)
+   protected void addField(Field<O> field)
    {
       List<Object> bodyDeclarations = getDeclaration().bodyDeclarations();
       int idx = 0;
@@ -207,125 +207,6 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
          }
       }
       return (O) this;
-   }
-
-   @Override
-   public boolean hasMethod(final Method<O, ?> method)
-   {
-      return getMethods().contains(method);
-   }
-
-   @Override
-   public boolean hasMethodSignature(final String name)
-   {
-      return hasMethodSignature(name, new String[] {});
-   }
-
-   @Override
-   public boolean hasMethodSignature(final String name, final String... paramTypes)
-   {
-      return getMethod(name, paramTypes) != null;
-   }
-
-   @Override
-   public boolean hasMethodSignature(final String name, Class<?>... paramTypes)
-   {
-      if (paramTypes == null)
-      {
-         paramTypes = new Class<?>[] {};
-      }
-
-      String[] types = new String[paramTypes.length];
-      for (int i = 0; i < paramTypes.length; i++)
-      {
-         types[i] = paramTypes[i].getName();
-      }
-
-      return hasMethodSignature(name, types);
-   }
-
-   @Override
-   public MethodSource<O> getMethod(final String name)
-   {
-      for (MethodSource<O> method : getMethods())
-      {
-         if (method.getName().equals(name) && (method.getParameters().size() == 0))
-         {
-            return method;
-         }
-      }
-      return null;
-   }
-
-   @Override
-   public MethodSource<O> getMethod(final String name, final String... paramTypes)
-   {
-      for (MethodSource<O> local : getMethods())
-      {
-         if (local.getName().equals(name))
-         {
-            List<ParameterSource<O>> localParams = local.getParameters();
-            if (paramTypes != null)
-            {
-               if (localParams.size() == paramTypes.length)
-               {
-                  boolean matches = true;
-                  for (int i = 0; i < localParams.size(); i++)
-                  {
-                     ParameterSource<O> localParam = localParams.get(i);
-                     String type = paramTypes[i];
-                     if (!Types.areEquivalent(localParam.getType().getName(), type))
-                     {
-                        matches = false;
-                     }
-                  }
-                  if (matches)
-                     return local;
-               }
-            }
-         }
-      }
-      return null;
-   }
-
-   @Override
-   public MethodSource<O> getMethod(final String name, Class<?>... paramTypes)
-   {
-      if (paramTypes == null)
-      {
-         paramTypes = new Class<?>[] {};
-      }
-
-      String[] types = new String[paramTypes.length];
-      for (int i = 0; i < paramTypes.length; i++)
-      {
-         types[i] = paramTypes[i].getName();
-      }
-
-      return getMethod(name, types);
-   }
-
-   @Override
-   public boolean hasMethodSignature(final Method<?, ?> method)
-   {
-      for (MethodSource<O> local : getMethods())
-      {
-         if (local.getName().equals(method.getName()))
-         {
-            Iterator<ParameterSource<O>> localParams = local.getParameters().iterator();
-            for (Parameter<? extends JavaType<?>> methodParam : method.getParameters())
-            {
-               if (localParams.hasNext()
-                        && Objects.equals(localParams.next().getType().getName(), methodParam.getType().getName()))
-               {
-                  continue;
-               }
-               return false;
-            }
-            return !localParams.hasNext();
-         }
-      }
-      return false;
    }
 
    @Override
