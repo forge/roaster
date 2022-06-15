@@ -16,6 +16,12 @@
       <dependency>
          <groupId>org.jboss.forge.roaster</groupId>
          <artifactId>roaster-jdt</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.osgi.service</groupId>
+               <artifactId>org.osgi.service.prefs</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
    </dependencies>
 
