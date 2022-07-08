@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class JavaDocTest
 {
-   private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+   private static final String LINE_SEPARATOR = System.lineSeparator();
 
    @Test
    public void testJavaDocParsing()
@@ -204,5 +204,26 @@ public class JavaDocTest
                "Creates a new instance of CLASS" + LINE_SEPARATOR + "@param actual the actual value." + LINE_SEPARATOR
                         + "@return the modified text",
                method.getJavaDoc().getFullText());
+   }
+
+
+   @Test
+   public void testJavadocFullTextWithSeeTags() {
+      JavaClassSource src = Roaster.parse(JavaClassSource.class,
+               "package issue;\npublic class Issue { \n" +
+                        "   /**\n" +
+                        "     * Convenience entry point for {@link IdCard} assertions when being mixed with other \"assertThat\" assertion libraries.\n" +
+                        "     *\n" +
+                        "     * @see #assertThat\n" +
+                        "     */\n" +
+                        "    public static String someMethod(String actual) {\n" +
+                        "        return actual;\n" +
+                        "    }}");
+      MethodSource<JavaClassSource> method = src.getMethods().get(0);
+      assertEquals(
+               "Convenience entry point for {@link IdCard} assertions when being mixed with other \"assertThat\" assertion libraries.\n"
+                        + "@see #assertThat",
+               method.getJavaDoc().getFullText());
+
    }
 }
