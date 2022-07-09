@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jdt.core.dom.Javadoc;
-import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.TagElement;
 import org.eclipse.jdt.core.dom.TextElement;
 import org.jboss.forge.roaster.model.JavaDocTag;
@@ -93,22 +92,14 @@ public class JavaDocImpl<O> implements JavaDocSource<O>
          List<Object> fragments = tagElement.fragments();
          for (Iterator<Object> iterator = fragments.iterator(); iterator.hasNext();)
          {
-            Object fragment = iterator.next();
-            if (fragment instanceof SimpleName)
+            String fragment = iterator.next().toString();
+            if (text.length() > 0 && (!fragment.startsWith(" ") && text.charAt(text.length() - 1) != ' '))
             {
-               // Param name
-               text.append(' ').append(fragment);
+               text.append(' ');
             }
-            else
-            {
-               text.append(fragment);
-               if (iterator.hasNext())
-               {
-                  text.append(' ');
-               }
-            }
+            text.append(fragment);
          }
-         text.append(System.getProperty("line.separator"));
+         text.append(System.lineSeparator());
       }
       return text.toString().trim();
    }
