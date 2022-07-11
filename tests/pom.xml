@@ -3,7 +3,7 @@
    <parent>
       <groupId>org.jboss.forge.roaster</groupId>
       <artifactId>roaster-parent</artifactId>
-      <version>2.25.1-SNAPSHOT</version>
+      <version>2.26.0.Final</version>
    </parent>
    <artifactId>roaster-tests</artifactId>
    <name>Forge Roaster - Tests</name>
