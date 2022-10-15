@@ -17,11 +17,13 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jface.text.Document;
@@ -30,7 +32,6 @@ import org.jboss.forge.roaster.model.Field;
 import org.jboss.forge.roaster.model.JavaInterface;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.Method;
-import org.jboss.forge.roaster.model.Parameter;
 import org.jboss.forge.roaster.model.Property;
 import org.jboss.forge.roaster.model.ast.MethodFinderVisitor;
 import org.jboss.forge.roaster.model.source.FieldSource;
@@ -47,10 +48,21 @@ import org.jboss.forge.roaster.model.source.PropertySource;
 import org.jboss.forge.roaster.model.util.Methods;
 import org.jboss.forge.roaster.model.util.Types;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.regex.Pattern;
+
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & PropertyHolderSource<O>> extends AbstractJavaSource<O>
+public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & PropertyHolderSource<O>>
+         extends AbstractJavaSource<O>
          implements InterfaceCapableSource<O>, PropertyHolderSource<O>
 {
    private static final Pattern GET_SET_PATTERN = Pattern.compile("^[gs]et.+$");
@@ -295,7 +307,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
             {
                pkg = this.getPackage();
             }
-            if (!StringUtils.isEmpty(pkg))
+            if (pkg != null && !pkg.isEmpty())
             {
                name = pkg + "." + name;
             }
@@ -309,29 +321,17 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @Override
    public O addInterface(final String type)
    {
+      if (!this.hasImport(type))
+      {
+         this.addImport(type);
+      }
       if (!this.hasInterface(type))
       {
-         final String simpleName = Types.toSimpleName(type);
-
-         Type interfaceType = JDTHelper.getInterfaces(
-                  Roaster.parse(JavaInterfaceImpl.class,
-                           "public interface Mock extends " + simpleName + " {}")
-                           .getDeclaration())
-                  .get(0);
-
-         if (this.hasInterface(simpleName) || this.hasImport(simpleName))
-         {
-            interfaceType = JDTHelper.getInterfaces(Roaster.parse(JavaInterfaceImpl.class,
-                     "public interface Mock extends " + type + " {}").getDeclaration()).get(0);
-         }
-
-         if (!this.hasImport(simpleName))
-         {
-            this.addImport(type);
-         }
-
-         ASTNode node = ASTNode.copySubtree(unit.getAST(), interfaceType);
-         JDTHelper.getInterfaces(getDeclaration()).add((Type) node);
+         AbstractTypeDeclaration declaration = getDeclaration();
+         AST ast = declaration.getAST();
+         SimpleType simpleType = ast.newSimpleType(ast.newName(type));
+         List<Type> interfaces = JDTHelper.getInterfaces(declaration);
+         interfaces.add(simpleType);
       }
       return (O) this;
    }

@@ -139,4 +139,19 @@ public class JavaInterfaceTest
       assertThat(javaImplementation.getInterfaces()).contains("com.foo.forge.MyInterface");
    }
 
+   @Test
+   public void testExtendDifferentPackage() {
+      JavaInterfaceSource outer = Roaster.create(JavaInterfaceSource.class)
+               .setPackage("outer")
+               .setName("Buggy")
+               .setPublic();
+
+      JavaInterfaceSource inner = Roaster.create(JavaInterfaceSource.class)
+               .setPackage("outer.inner")
+               .setName("Buggy")
+               .setPublic();
+
+      inner.addInterface(outer);
+      assertThat(inner.toString()).contains("public interface Buggy extends outer.Buggy");
+   }
 }
