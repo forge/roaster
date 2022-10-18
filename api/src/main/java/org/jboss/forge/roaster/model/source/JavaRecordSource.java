@@ -6,7 +6,8 @@ import org.jboss.forge.roaster.model.JavaRecordComponent;
 public interface JavaRecordSource extends
          JavaSource<JavaRecordSource>,
          JavaRecord<JavaRecordSource>,
-         MethodHolderSource<JavaRecordSource>
+         MethodHolderSource<JavaRecordSource>,
+         TypeHolderSource<JavaRecordSource>
 {
    JavaRecordComponentSource addRecordComponent(String type, String name);
    JavaRecordComponentSource addRecordComponent(Class<?> type, String name);

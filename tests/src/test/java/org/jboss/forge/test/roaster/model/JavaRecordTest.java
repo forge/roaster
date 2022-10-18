@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.JavaRecordComponent;
 import org.jboss.forge.roaster.model.Visibility;
+import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
 import org.junit.jupiter.api.Test;
 
@@ -36,5 +37,15 @@ public class JavaRecordTest
       assertThat(recordComponents).hasSize(1);
       assertThat(recordComponents.get(0).getName()).isEqualTo("number");
       assertThat(recordComponents.get(0).getType().getQualifiedName()).isEqualTo("java.math.BigInteger");
+   }
+
+   @Test
+   void testNestedTypes() {
+      final JavaRecordSource javaRecord = Roaster.create(JavaRecordSource.class)
+               .setName("PhoneNumber")
+               .setPackage("org.example.foo");
+      javaRecord.addRecordComponent(BigInteger.class, "number");
+      javaRecord.addNestedType(Roaster.create(JavaInterfaceSource.class).setName("InnerInterface"));
+      assertThat(javaRecord.getNestedTypes()).hasSize(1);
    }
 }
