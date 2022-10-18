@@ -17,11 +17,13 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jface.text.Document;
@@ -30,7 +32,6 @@ import org.jboss.forge.roaster.model.Field;
 import org.jboss.forge.roaster.model.JavaInterface;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.Method;
-import org.jboss.forge.roaster.model.Parameter;
 import org.jboss.forge.roaster.model.Property;
 import org.jboss.forge.roaster.model.ast.MethodFinderVisitor;
 import org.jboss.forge.roaster.model.source.FieldSource;
@@ -309,29 +310,21 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @Override
    public O addInterface(final String type)
    {
-      if (!this.hasInterface(type))
+      if (!hasInterface(type))
       {
-         final String simpleName = Types.toSimpleName(type);
-
-         Type interfaceType = JDTHelper.getInterfaces(
-                  Roaster.parse(JavaInterfaceImpl.class,
-                           "public interface Mock extends " + simpleName + " {}")
-                           .getDeclaration())
-                  .get(0);
-
-         if (this.hasInterface(simpleName) || this.hasImport(simpleName))
+         String typeName;
+         if (addImport(type) != null)
          {
-            interfaceType = JDTHelper.getInterfaces(Roaster.parse(JavaInterfaceImpl.class,
-                     "public interface Mock extends " + type + " {}").getDeclaration()).get(0);
+            typeName = Types.toSimpleName(type);
          }
-
-         if (!this.hasImport(simpleName))
+         else
          {
-            this.addImport(type);
+            typeName = type;
          }
-
-         ASTNode node = ASTNode.copySubtree(unit.getAST(), interfaceType);
-         JDTHelper.getInterfaces(getDeclaration()).add((Type) node);
+         AbstractTypeDeclaration declaration = getDeclaration();
+         AST ast = getDeclaration().getAST();
+         SimpleType simpleType = ast.newSimpleType(ast.newName(typeName));
+         JDTHelper.getInterfaces(declaration).add(simpleType);
       }
       return (O) this;
    }
