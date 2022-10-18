@@ -16,5 +16,5 @@ public interface JavaRecord<O extends JavaRecord<O>> extends
    /**
     * @return the list of {@link JavaRecordComponent} for this record
     */
-   List<JavaRecordComponent> getRecordComponents();
+   List<? extends JavaRecordComponent> getRecordComponents();
 }
