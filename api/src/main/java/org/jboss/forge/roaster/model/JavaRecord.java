@@ -10,7 +10,8 @@ import java.util.List;
  */
 public interface JavaRecord<O extends JavaRecord<O>> extends
          JavaType<O>,
-         MethodHolder<O>
+         MethodHolder<O>,
+         TypeHolder<O>
 {
    /**
     * @return the list of {@link JavaRecordComponent} for this record
