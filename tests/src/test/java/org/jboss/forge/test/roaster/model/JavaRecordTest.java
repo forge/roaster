@@ -6,6 +6,7 @@ import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.JavaRecordComponent;
 import org.jboss.forge.roaster.model.Visibility;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
+import org.jboss.forge.roaster.model.source.JavaRecordComponentSource;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +34,7 @@ public class JavaRecordTest
                .setPackage("org.example.foo");
       javaRecord.addRecordComponent(BigInteger.class, "number");
       javaRecord.addMethod().setName("dial").setReturnType(boolean.class).setBody("return true;");
-      List<JavaRecordComponent> recordComponents = javaRecord.getRecordComponents();
+      List<JavaRecordComponentSource> recordComponents = javaRecord.getRecordComponents();
       assertThat(recordComponents).hasSize(1);
       assertThat(recordComponents.get(0).getName()).isEqualTo("number");
       assertThat(recordComponents.get(0).getType().getQualifiedName()).isEqualTo("java.math.BigInteger");

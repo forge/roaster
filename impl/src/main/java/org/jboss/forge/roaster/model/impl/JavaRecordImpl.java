@@ -112,9 +112,9 @@ public class JavaRecordImpl extends AbstractJavaSource<JavaRecordSource> impleme
    }
 
    @Override
-   public List<JavaRecordComponent> getRecordComponents()
+   public List<JavaRecordComponentSource> getRecordComponents()
    {
-      var list = new ArrayList<JavaRecordComponent>();
+      var list = new ArrayList<JavaRecordComponentSource>();
       for (Object internal : getDeclaration().recordComponents()) {
          list.add(new JavaRecordComponentImpl(this, internal));
       }
