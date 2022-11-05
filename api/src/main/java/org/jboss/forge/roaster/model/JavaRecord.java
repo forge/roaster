@@ -11,7 +11,8 @@ import java.util.List;
 public interface JavaRecord<O extends JavaRecord<O>> extends
          JavaType<O>,
          MethodHolder<O>,
-         TypeHolder<O>
+         TypeHolder<O>,
+         InterfaceCapable
 {
    /**
     * @return the list of {@link JavaRecordComponent} for this record
