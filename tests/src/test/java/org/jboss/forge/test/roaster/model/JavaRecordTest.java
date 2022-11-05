@@ -10,6 +10,7 @@ import org.jboss.forge.roaster.model.source.JavaRecordComponentSource;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
 import org.junit.jupiter.api.Test;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
@@ -49,4 +50,27 @@ public class JavaRecordTest
       javaRecord.addNestedType(Roaster.create(JavaInterfaceSource.class).setName("InnerInterface"));
       assertThat(javaRecord.getNestedTypes()).hasSize(1);
    }
+
+   @Test
+   void testAddInterfaces() {
+      final JavaRecordSource javaRecord = Roaster.create(JavaRecordSource.class)
+               .setName("PhoneNumber")
+               .setPackage("org.example.foo");
+      javaRecord.addRecordComponent(BigInteger.class, "number");
+      javaRecord.addInterface(Serializable.class);
+      assertThat(javaRecord.getInterfaces()).hasSize(1);
+   }
+
+   @Test
+   void testRemoveInterfaces() {
+      final JavaRecordSource javaRecord = Roaster.create(JavaRecordSource.class)
+               .setName("PhoneNumber")
+               .setPackage("org.example.foo");
+      javaRecord.addRecordComponent(BigInteger.class, "number");
+      javaRecord.addInterface(Serializable.class);
+      assertThat(javaRecord.getInterfaces()).hasSize(1);
+      javaRecord.removeInterface(Serializable.class);
+      assertThat(javaRecord.getInterfaces()).isEmpty();
+   }
+
 }

@@ -14,6 +14,7 @@ import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.QualifiedType;
+import org.eclipse.jdt.core.dom.RecordDeclaration;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
 import org.eclipse.jdt.core.dom.Type;
@@ -78,6 +79,10 @@ public class JDTHelper
       if (dec instanceof EnumDeclaration)
       {
          desc = EnumDeclaration.SUPER_INTERFACE_TYPES_PROPERTY;
+      }
+      else if (dec instanceof RecordDeclaration)
+      {
+         desc = RecordDeclaration.SUPER_INTERFACE_TYPES_PROPERTY;
       }
       else
       {

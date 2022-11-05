@@ -13,11 +13,13 @@ import org.eclipse.jdt.core.dom.RecordDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jface.text.Document;
 import org.jboss.forge.roaster.Roaster;
+import org.jboss.forge.roaster.model.JavaInterface;
 import org.jboss.forge.roaster.model.JavaRecordComponent;
 import org.jboss.forge.roaster.model.Method;
 import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.ast.MethodFinderVisitor;
 import org.jboss.forge.roaster.model.source.Import;
+import org.jboss.forge.roaster.model.source.InterfaceCapableSource;
 import org.jboss.forge.roaster.model.source.JavaRecordComponentSource;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
@@ -32,7 +34,7 @@ import java.util.List;
 /**
  * Represents a Java Source File containing a Record Type.
  */
-public class JavaRecordImpl extends AbstractJavaSource<JavaRecordSource> implements JavaRecordSource
+public class JavaRecordImpl extends AbstractInterfaceCapableJavaSource<JavaRecordSource> implements JavaRecordSource
 {
    public JavaRecordImpl(JavaSource<?> enclosingType, final Document document, final CompilationUnit unit,
             RecordDeclaration body)
@@ -59,56 +61,6 @@ public class JavaRecordImpl extends AbstractJavaSource<JavaRecordSource> impleme
       result.addAll(getMethods());
 
       return result;
-   }
-
-   @Override public List<MethodSource<JavaRecordSource>> getMethods()
-   {
-      List<MethodSource<JavaRecordSource>> result = new ArrayList<>();
-
-      MethodFinderVisitor methodFinderVisitor = new MethodFinderVisitor();
-      body.accept(methodFinderVisitor);
-
-      List<MethodDeclaration> methods = methodFinderVisitor.getMethods();
-      for (MethodDeclaration methodDeclaration : methods)
-      {
-         result.add(new MethodImpl<>(this, methodDeclaration));
-      }
-      return Collections.unmodifiableList(result);
-   }
-
-   @Override public MethodSource<JavaRecordSource> addMethod()
-   {
-      var m = new MethodImpl<>(this);
-      getDeclaration().bodyDeclarations().add(m.getInternal());
-      return m;
-   }
-
-   @Override public MethodSource<JavaRecordSource> addMethod(String method)
-   {
-      var m = new MethodImpl<>(this, method);
-      getDeclaration().bodyDeclarations().add(m.getInternal());
-      return m;
-   }
-
-   @Override public MethodSource<JavaRecordSource> addMethod(java.lang.reflect.Method method)
-   {
-      var m = new MethodImpl<>(this, method);
-      getDeclaration().bodyDeclarations().add(m.getInternal());
-      return m;
-   }
-
-   @Override public MethodSource<JavaRecordSource> addMethod(Method<?, ?> method)
-   {
-      var m = new MethodImpl<>(this, method.toString());
-      getDeclaration().bodyDeclarations().add(m.getInternal());
-      return m;
-   }
-
-   @Override
-   public JavaRecordSource removeMethod(Method<JavaRecordSource, ?> method)
-   {
-      getDeclaration().bodyDeclarations().remove(method.getInternal());
-      return this;
    }
 
    @Override
