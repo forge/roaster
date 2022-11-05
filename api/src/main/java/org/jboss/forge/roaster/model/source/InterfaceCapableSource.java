@@ -33,7 +33,19 @@ public interface InterfaceCapableSource<T extends JavaSource<T>> extends Interfa
     * @param type the interface {@link Class} reference
     * @return this object
     */
-   T addInterface(Class<?> type);
+   default T addInterface(Class<?> type) {
+      return addInterface(type.getCanonicalName());
+   }
+
+   /**
+    * Implements the specified {@link JavaInterface}
+    *
+    * @param type the interface
+    * @return this object
+    */
+   default T addInterface(JavaInterface<?> type) {
+      return addInterface(type.getQualifiedName());
+   }
 
    /**
     * Implements the specified {@link Class} interface and import their abstract methods, if any.
@@ -55,13 +67,6 @@ public interface InterfaceCapableSource<T extends JavaSource<T>> extends Interfa
     */
    T implementInterface(JavaInterface<?> type);
 
-   /**
-    * Implements the specified {@link JavaInterface}
-    * 
-    * @param type the interface
-    * @return this object
-    */
-   T addInterface(JavaInterface<?> type);
 
    /**
     * Removes the specified interface FQN
@@ -77,7 +82,9 @@ public interface InterfaceCapableSource<T extends JavaSource<T>> extends Interfa
     * @param type the interface {@link Class}
     * @return this object
     */
-   T removeInterface(Class<?> type);
+   default T removeInterface(Class<?> type) {
+      return removeInterface(type.getCanonicalName());
+   }
 
    /**
     * Removes the specified interface
@@ -85,5 +92,7 @@ public interface InterfaceCapableSource<T extends JavaSource<T>> extends Interfa
     * @param type the interface {@link JavaInterface}
     * @return this object
     */
-   T removeInterface(JavaInterface<?> type);
+   default T removeInterface(JavaInterface<?> type) {
+      return removeInterface(type.getQualifiedName());
+   }
 }

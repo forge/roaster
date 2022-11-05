@@ -329,11 +329,6 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
       return (O) this;
    }
 
-   @Override
-   public O addInterface(final Class<?> type)
-   {
-      return addInterface(type.getCanonicalName());
-   }
 
    @Override
    public O implementInterface(Class<?> type)
@@ -392,12 +387,6 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    }
 
    @Override
-   public O addInterface(final JavaInterface<?> type)
-   {
-      return addInterface(type.getQualifiedName());
-   }
-
-   @Override
    public boolean hasInterface(final String type)
    {
       for (String name : getInterfaces())
@@ -408,18 +397,6 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
          }
       }
       return false;
-   }
-
-   @Override
-   public boolean hasInterface(final Class<?> type)
-   {
-      return hasInterface(type.getCanonicalName());
-   }
-
-   @Override
-   public boolean hasInterface(final JavaInterface<?> type)
-   {
-      return hasInterface(type.getQualifiedName());
    }
 
    @SuppressWarnings("unchecked")
@@ -436,18 +413,6 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
          }
       }
       return (O) this;
-   }
-
-   @Override
-   public O removeInterface(final Class<?> type)
-   {
-      return removeInterface(type.getCanonicalName());
-   }
-
-   @Override
-   public O removeInterface(final JavaInterface<?> type)
-   {
-      return removeInterface(type.getQualifiedName());
    }
 
    @Override

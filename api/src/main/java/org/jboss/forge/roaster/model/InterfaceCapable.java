@@ -20,7 +20,11 @@ public interface InterfaceCapable
 
    boolean hasInterface(String type);
 
-   boolean hasInterface(Class<?> type);
+   default boolean hasInterface(Class<?> type) {
+      return hasInterface(type.getCanonicalName());
+   }
 
-   boolean hasInterface(JavaInterface<?> type);
+   default boolean hasInterface(JavaInterface<?> type) {
+      return hasInterface(type.getQualifiedName());
+   }
 }
