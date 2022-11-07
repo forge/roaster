@@ -7,6 +7,8 @@
 
 package org.jboss.forge.roaster.model.impl;
 
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jface.text.Document;
 import org.jboss.forge.roaster.model.Visibility;
 import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 
@@ -18,9 +20,9 @@ import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 public class JavaInterfaceMethodImpl extends MethodImpl<JavaInterfaceSource>
 {
 
-   public JavaInterfaceMethodImpl(JavaInterfaceSource parent, Object internal)
+   public JavaInterfaceMethodImpl(JavaInterfaceSource parent, MethodDeclaration internal, Document document)
    {
-      super(parent, internal);
+      super(parent, internal, document);
    }
 
    @Override

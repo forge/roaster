@@ -15,6 +15,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.Javadoc;
+import org.eclipse.jface.text.Document;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.Annotation;
 import org.jboss.forge.roaster.model.ast.AnnotationAccessor;
@@ -27,25 +28,24 @@ public class EnumConstantImpl implements EnumConstantSource
 {
    private final AnnotationAccessor<JavaEnumSource, EnumConstantSource> annotations = new AnnotationAccessor<>();
    private JavaEnumSource parent;
-   private AST ast;
+   private final AST ast;
    private final EnumConstantDeclaration enumConstant;
 
-   private void init(final JavaEnumSource parent)
+   private final Document document;
+
+   public EnumConstantImpl(final JavaEnumSource parent, Document document)
    {
       this.parent = parent;
       this.ast = ((ASTNode) parent.getInternal()).getAST();
-
-   }
-
-   public EnumConstantImpl(final JavaEnumSource parent)
-   {
-      init(parent);
       this.enumConstant = ast.newEnumConstantDeclaration();
+      this.document = document;
    }
 
-   public EnumConstantImpl(final JavaEnumSource parent, final String declaration)
+   public EnumConstantImpl(final JavaEnumSource parent, final String declaration, Document document)
    {
-      init(parent);
+      this.parent = parent;
+      this.ast = ((ASTNode) parent.getInternal()).getAST();
+      this.document = document;
 
       String stub = "public enum Stub { " + declaration + " }";
       JavaEnumSource temp = (JavaEnumSource) Roaster.parse(stub);
@@ -55,10 +55,12 @@ public class EnumConstantImpl implements EnumConstantSource
       this.enumConstant = subtree;
    }
 
-   public EnumConstantImpl(final JavaEnumSource parent, final Object internal)
+   public EnumConstantImpl(final JavaEnumSource parent, final EnumConstantDeclaration internal, Document document)
    {
-      init(parent);
-      this.enumConstant = (EnumConstantDeclaration) internal;
+      this.parent = parent;
+      this.ast = ((ASTNode) parent.getInternal()).getAST();
+      this.enumConstant = internal;
+      this.document = document;
    }
 
    @Override
@@ -121,7 +123,7 @@ public class EnumConstantImpl implements EnumConstantSource
    @Override
    public Body getBody()
    {
-      return new EnumConstantBodyImpl(this);
+      return new EnumConstantBodyImpl(this, document);
    }
 
    @Override

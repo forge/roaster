@@ -222,7 +222,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @SuppressWarnings("unchecked")
    public MethodSource<O> addMethod()
    {
-      MethodSource<O> m = new MethodImpl<>((O) this);
+      MethodSource<O> m = new MethodImpl<>((O) this, document);
       getDeclaration().bodyDeclarations().add(m.getInternal());
       return m;
    }
@@ -231,7 +231,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @SuppressWarnings("unchecked")
    public MethodSource<O> addMethod(final String method)
    {
-      MethodSource<O> m = new MethodImpl<>((O) this, method);
+      MethodSource<O> m = new MethodImpl<>((O) this, method, document);
       getDeclaration().bodyDeclarations().add(m.getInternal());
       return m;
    }
@@ -240,7 +240,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @SuppressWarnings("unchecked")
    public MethodSource<O> addMethod(java.lang.reflect.Method method)
    {
-      MethodSource<O> m = new MethodImpl<>((O) this, method);
+      MethodSource<O> m = new MethodImpl<>((O) this, method, document);
       getDeclaration().bodyDeclarations().add(m.getInternal());
       return m;
    }
@@ -249,7 +249,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
    @SuppressWarnings("unchecked")
    public MethodSource<O> addMethod(Method<?, ?> method)
    {
-      MethodSource<O> m = new MethodImpl<>((O) this, method.toString());
+      MethodSource<O> m = new MethodImpl<>((O) this, method.toString(), document);
       getDeclaration().bodyDeclarations().add(m.getInternal());
       return m;
    }
@@ -266,7 +266,7 @@ public abstract class AbstractJavaSourceMemberHolder<O extends JavaSource<O> & P
       List<MethodDeclaration> methods = methodFinderVisitor.getMethods();
       for (MethodDeclaration methodDeclaration : methods)
       {
-         result.add(new MethodImpl<>((O) this, methodDeclaration));
+         result.add(new MethodImpl<>((O) this, methodDeclaration, document));
       }
       return Collections.unmodifiableList(result);
    }

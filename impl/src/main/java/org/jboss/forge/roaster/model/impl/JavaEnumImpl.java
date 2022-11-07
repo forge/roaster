@@ -40,7 +40,7 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnumSource>
       for (Object o : ((EnumDeclaration) getDeclaration()).enumConstants())
       {
          EnumConstantDeclaration constant = (EnumConstantDeclaration) o;
-         result.add(new EnumConstantImpl(this, constant));
+         result.add(new EnumConstantImpl(this, constant, document));
       }
 
       return Collections.unmodifiableList(result);
@@ -50,7 +50,7 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnumSource>
    @SuppressWarnings("unchecked")
    public EnumConstantSource addEnumConstant()
    {
-      EnumConstantImpl enumConst = new EnumConstantImpl(this);
+      EnumConstantImpl enumConst = new EnumConstantImpl(this, document);
       EnumDeclaration enumDeclaration = (EnumDeclaration) getDeclaration();
       List<EnumConstantDeclaration> constants = enumDeclaration.enumConstants();
       constants.add((EnumConstantDeclaration) enumConst.getInternal());
@@ -62,7 +62,7 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnumSource>
    @SuppressWarnings("unchecked")
    public EnumConstantSource addEnumConstant(final String declaration)
    {
-      EnumConstantImpl enumConst = new EnumConstantImpl(this, declaration);
+      EnumConstantImpl enumConst = new EnumConstantImpl(this, declaration, document);
 
       EnumDeclaration enumDeclaration = (EnumDeclaration) getDeclaration();
       List<EnumConstantDeclaration> constants = enumDeclaration.enumConstants();

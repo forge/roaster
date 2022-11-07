@@ -6,10 +6,6 @@
  */
 package org.jboss.forge.roaster.model.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
@@ -19,9 +15,12 @@ import org.jboss.forge.roaster.model.source.JavaInterfaceSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
- * 
  */
 public class JavaInterfaceImpl extends AbstractGenericCapableJavaSource<JavaInterfaceSource> implements
          JavaInterfaceSource
@@ -50,7 +49,7 @@ public class JavaInterfaceImpl extends AbstractGenericCapableJavaSource<JavaInte
       List<MethodDeclaration> methods = methodFinderVisitor.getMethods();
       for (MethodDeclaration methodDeclaration : methods)
       {
-         result.add(new JavaInterfaceMethodImpl(this, methodDeclaration));
+         result.add(new JavaInterfaceMethodImpl(this, methodDeclaration, document));
       }
       return Collections.unmodifiableList(result);
    }
