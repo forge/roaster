@@ -23,7 +23,6 @@ import org.jboss.forge.roaster.model.Annotation;
 import org.jboss.forge.roaster.model.Field;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.Method;
-import org.jboss.forge.roaster.model.Parameter;
 import org.jboss.forge.roaster.model.SyntaxError;
 import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.Visibility;
@@ -40,12 +39,9 @@ import org.jboss.forge.roaster.model.source.JavaEnumSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MemberSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
-import org.jboss.forge.roaster.model.source.ParameterSource;
-import org.jboss.forge.roaster.model.util.Types;
 import org.jboss.forge.roaster.spi.JavaParserImpl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -58,10 +54,13 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    private final EnumConstantSource enumConstant;
    private final JavaEnumSource javaEnum;
 
-   EnumConstantBodyImpl(EnumConstantSource enumConstant)
+   private final Document document;
+
+   EnumConstantBodyImpl(EnumConstantSource enumConstant, Document document)
    {
       this.enumConstant = enumConstant;
       this.javaEnum = enumConstant.getOrigin();
+      this.document = document;
       getBody();
    }
 
@@ -622,7 +621,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    @Override
    public MethodSource<Body> addMethod()
    {
-      final MethodSource<Body> m = new MethodImpl<>(this);
+      final MethodSource<Body> m = new MethodImpl<>(this, document);
       getBody().bodyDeclarations().add(m.getInternal());
       return m;
    }
@@ -630,7 +629,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    @Override
    public MethodSource<Body> addMethod(final String method)
    {
-      final MethodSource<Body> m = new MethodImpl<>(this, method);
+      final MethodSource<Body> m = new MethodImpl<>(this, method, document);
       getBody().bodyDeclarations().add(m.getInternal());
       return m;
    }
@@ -638,7 +637,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    @Override
    public MethodSource<Body> addMethod(java.lang.reflect.Method method)
    {
-      final MethodSource<Body> m = new MethodImpl<>(this, method);
+      final MethodSource<Body> m = new MethodImpl<>(this, method, document);
       getBody().bodyDeclarations().add(m.getInternal());
       return m;
    }
@@ -646,7 +645,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
    @Override
    public MethodSource<Body> addMethod(Method<?, ?> method)
    {
-      MethodSource<Body> m = new MethodImpl<>(this, method.toString());
+      MethodSource<Body> m = new MethodImpl<>(this, method.toString(), document);
       getBody().bodyDeclarations().add(m.getInternal());
       return m;
    }
@@ -661,7 +660,7 @@ class EnumConstantBodyImpl implements EnumConstantSource.Body
 
       for (MethodDeclaration methodDeclaration : methodFinderVisitor.getMethods())
       {
-         result.add(new MethodImpl<>(this, methodDeclaration));
+         result.add(new MethodImpl<>(this, methodDeclaration, document));
       }
       return Collections.unmodifiableList(result);
    }

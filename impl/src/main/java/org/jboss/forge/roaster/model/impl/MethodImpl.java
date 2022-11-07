@@ -6,17 +6,11 @@
  */
 package org.jboss.forge.roaster.model.impl;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.Block;
+import org.eclipse.jdt.core.dom.Comment;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
@@ -26,6 +20,8 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeParameter;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.Document;
 import org.jboss.forge.roaster.ParserException;
 import org.jboss.forge.roaster.Problem;
 import org.jboss.forge.roaster.Roaster;
@@ -44,8 +40,17 @@ import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
 import org.jboss.forge.roaster.model.source.TypeVariableSource;
+import org.jboss.forge.roaster.model.util.JDTOptions;
 import org.jboss.forge.roaster.model.util.Methods;
 import org.jboss.forge.roaster.model.util.Types;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -55,34 +60,34 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    private final AnnotationAccessor<O, MethodSource<O>> annotations = new AnnotationAccessor<>();
    private final ModifierAccessor modifiers = new ModifierAccessor();
 
-   private O parent = null;
-   private AST ast = null;
-   private CompilationUnit cu = null;
+   private final O parent;
+   private final AST ast;
+   private final CompilationUnit cu;
    private final MethodDeclaration method;
+   private final Document document;
 
-   private void init(final O parent)
+   public MethodImpl(final O parent, Document document)
    {
       this.parent = parent;
-      cu = (CompilationUnit) parent.getInternal();
-      ast = cu.getAST();
+      this.cu = (CompilationUnit) parent.getInternal();
+      this.ast = cu.getAST();
+      this.method = ast.newMethodDeclaration();
+      this.method.setConstructor(false);
+      this.document = document;
    }
 
-   public MethodImpl(final O parent)
+   public MethodImpl(final O parent, final MethodDeclaration internal, Document document)
    {
-      init(parent);
-      method = ast.newMethodDeclaration();
-      method.setConstructor(false);
+      this.parent = parent;
+      this.cu = (CompilationUnit) parent.getInternal();
+      this.ast = cu.getAST();
+      this.document = document;
+      this.method = internal;
    }
 
-   public MethodImpl(final O parent, final Object internal)
+   public MethodImpl(final O parent, final Method reflectMethod, Document document)
    {
-      init(parent);
-      method = (MethodDeclaration) internal;
-   }
-
-   public MethodImpl(final O parent, final Method reflectMethod)
-   {
-      this(parent);
+      this(parent, document);
       // Set method visibility
       int mod = reflectMethod.getModifiers();
       if (Modifier.isPublic(mod))
@@ -125,9 +130,12 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       }
    }
 
-   public MethodImpl(final O parent, final String method)
+   public MethodImpl(final O parent, final String method, Document document)
    {
-      init(parent);
+      this.parent = parent;
+      this.cu = (CompilationUnit) parent.getInternal();
+      this.ast = cu.getAST();
+      this.document = document;
 
       String stub = "public class Stub { " + method + " }";
       JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
@@ -142,7 +150,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
       StringBuilder signature = new StringBuilder();
       signature.append(Visibility.PACKAGE_PRIVATE == this.getVisibility() ? ""
                : this.getVisibility()
-                        .scope());
+               .scope());
       signature.append(" ");
       signature.append(this.getName()).append("(");
       List<ParameterSource<O>> parameters = this.getParameters();
@@ -255,6 +263,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    }
 
    @Override
+   @SuppressWarnings("unchecked")
    public MethodSource<O> setBody(final String body)
    {
       if (body == null)
@@ -268,10 +277,12 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
          {
             throw new ParserException(problems);
          }
-         String stub = "public class Stub { public void method() {" + body + "} }";
-         JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
-         List<MethodSource<JavaClassSource>> methods = temp.getMethods();
-         Block block = ((MethodDeclaration) methods.get(0).getInternal()).getBody();
+         Document document = new Document(body);
+         ASTParser parser = ASTParser.newParser(AST.getJLSLatest());
+         parser.setSource(document.get().toCharArray());
+         parser.setCompilerOptions(JDTOptions.getJDTOptions());
+         parser.setKind(ASTParser.K_STATEMENTS);
+         Block block = (Block) parser.createAST(null);
          block = (Block) ASTNode.copySubtree(method.getAST(), block);
          method.setBody(block);
       }
@@ -791,7 +802,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    {
       @SuppressWarnings("unchecked")
       List<TypeParameter> typeParameters = method.typeParameters();
-      for (Iterator<TypeParameter> iter = typeParameters.iterator(); iter.hasNext();)
+      for (Iterator<TypeParameter> iter = typeParameters.iterator(); iter.hasNext(); )
       {
          if (Objects.equals(name, iter.next().getName().getIdentifier()))
          {

@@ -71,35 +71,35 @@ public class JavaRecordImpl extends AbstractJavaSource<JavaRecordSource> impleme
       List<MethodDeclaration> methods = methodFinderVisitor.getMethods();
       for (MethodDeclaration methodDeclaration : methods)
       {
-         result.add(new MethodImpl<>(this, methodDeclaration));
+         result.add(new MethodImpl<>(this, methodDeclaration, document));
       }
       return Collections.unmodifiableList(result);
    }
 
    @Override public MethodSource<JavaRecordSource> addMethod()
    {
-      var m = new MethodImpl<>(this);
+      var m = new MethodImpl<>(this, document);
       getDeclaration().bodyDeclarations().add(m.getInternal());
       return m;
    }
 
    @Override public MethodSource<JavaRecordSource> addMethod(String method)
    {
-      var m = new MethodImpl<>(this, method);
+      var m = new MethodImpl<>(this, method, document);
       getDeclaration().bodyDeclarations().add(m.getInternal());
       return m;
    }
 
    @Override public MethodSource<JavaRecordSource> addMethod(java.lang.reflect.Method method)
    {
-      var m = new MethodImpl<>(this, method);
+      var m = new MethodImpl<>(this, method, document);
       getDeclaration().bodyDeclarations().add(m.getInternal());
       return m;
    }
 
    @Override public MethodSource<JavaRecordSource> addMethod(Method<?, ?> method)
    {
-      var m = new MethodImpl<>(this, method.toString());
+      var m = new MethodImpl<>(this, method.toString(), document);
       getDeclaration().bodyDeclarations().add(m.getInternal());
       return m;
    }
