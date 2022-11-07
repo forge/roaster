@@ -44,16 +44,6 @@ public class MethodBodyTest
    }
 
    @Test
-   @Disabled("ROASTER-26")
-   public void testSetMethodBodyWithComments()
-   {
-      String data = "public class Foo { Object bar() {\n//TODO comments\n return null;}}";
-      JavaClassSource source = Roaster.parse(JavaClassSource.class, data);
-      MethodSource<JavaClassSource> method = source.getMethod("bar");
-      assertEquals("//TODO comments\n return null;", method.getBody());
-   }
-
-   @Test
    public void testBodyShouldBeSet()
    {
       JavaClassSource javaClass = Roaster.create(JavaClassSource.class).setName("Foo");
@@ -66,4 +56,30 @@ public class MethodBodyTest
       assertNotNull(method.getBody());
       assertThat(method.getBody()).isNotEmpty();
    }
+
+   @Test
+   @Disabled
+   public void testGetMethodBodyWithComments()
+   {
+      String data = "public class Foo { Object bar() {\n//TODO comments\n return null;}}";
+      JavaClassSource source = Roaster.parse(JavaClassSource.class, data);
+      MethodSource<JavaClassSource> method = source.getMethod("bar");
+      assertThat(method.getBody()).isEqualTo("\n//TODO comments\n return null;");
+   }
+
+   @Test
+   @Disabled
+   public void testSetMethodBodyWithComments() {
+      JavaClassSource source = Roaster.create(JavaClassSource.class);
+      MethodSource<JavaClassSource> method = source.addMethod();
+      String body = "// this is a comment\n" +
+                    "System.out.println(\"Success\");\n" +
+                    "System.out.println(\"Success Again\");\n" +
+                    "// this is another comment\n" +
+                    "int a=21;\n" +
+                    "System.out.println(a);";
+      method.setName("myMethod").setReturnType(void.class).setBody(body);
+      assertThat(method.getBody()).isEqualTo(body);
+   }
+
 }
