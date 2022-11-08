@@ -17,7 +17,8 @@ import org.jboss.forge.roaster.model.JavaType;
  * @author Matt Benson
  */
 public interface AnnotationElementSource extends AnnotationElement<JavaAnnotationSource>,
-         AnnotationTargetSource<JavaAnnotationSource, AnnotationElementSource>, NamedSource<AnnotationElementSource>
+         AnnotationTargetSource<JavaAnnotationSource, AnnotationElementSource>, NamedSource<AnnotationElementSource>,
+         JavaDocCapableSource<AnnotationElementSource>
 {
    /**
     * Represents the default value of an {@link AnnotationElementSource} and provides mechanisms to set that value.

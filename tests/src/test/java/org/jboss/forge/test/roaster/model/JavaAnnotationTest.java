@@ -258,4 +258,12 @@ public class JavaAnnotationTest
       assertEquals(0, arrayValue.length);
    }
 
+   @Test
+   public void testJavadocInAnnotations()
+   {
+      AnnotationElementSource annotationElement = javaAnnotation.getAnnotationElement("value");
+      annotationElement.getJavaDoc().setText("This is a javadoc");
+      assertEquals("This is a javadoc", annotationElement.getJavaDoc().getText());
+   }
+
 }
