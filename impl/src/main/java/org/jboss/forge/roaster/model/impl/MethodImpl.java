@@ -6,16 +6,9 @@
  */
 package org.jboss.forge.roaster.model.impl;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Javadoc;
@@ -44,8 +37,17 @@ import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
 import org.jboss.forge.roaster.model.source.TypeVariableSource;
+import org.jboss.forge.roaster.model.util.JDTOptions;
 import org.jboss.forge.roaster.model.util.Methods;
 import org.jboss.forge.roaster.model.util.Types;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -268,10 +270,11 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
          {
             throw new ParserException(problems);
          }
-         String stub = "public class Stub { public void method() {" + body + "} }";
-         JavaClassSource temp = (JavaClassSource) Roaster.parse(stub);
-         List<MethodSource<JavaClassSource>> methods = temp.getMethods();
-         Block block = ((MethodDeclaration) methods.get(0).getInternal()).getBody();
+         ASTParser parser = ASTParser.newParser(AST.getJLSLatest());
+         parser.setSource(body.toCharArray());
+         parser.setCompilerOptions(JDTOptions.getJDTOptions());
+         parser.setKind(ASTParser.K_STATEMENTS);
+         Block block = (Block) parser.createAST(null);
          block = (Block) ASTNode.copySubtree(method.getAST(), block);
          method.setBody(block);
       }
