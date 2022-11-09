@@ -1,14 +1,14 @@
 package org.jboss.forge.roaster.model.impl;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jface.text.Document;
+import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.JavaInterface;
 import org.jboss.forge.roaster.model.Method;
 import org.jboss.forge.roaster.model.ast.MethodFinderVisitor;
@@ -90,9 +90,10 @@ public abstract class AbstractInterfaceCapableJavaSource<O extends JavaSource<O>
             typeName = type;
          }
          AbstractTypeDeclaration declaration = getDeclaration();
-         AST ast = getDeclaration().getAST();
-         SimpleType simpleType = ast.newSimpleType(ast.newName(typeName));
-         JDTHelper.getInterfaces(declaration).add(simpleType);
+         Type interfaceType = JDTHelper.getInterfaces(Roaster.parse(JavaInterfaceImpl.class,
+                  "public interface Mock extends " + typeName + " {}").getDeclaration()).get(0);
+         ASTNode node = ASTNode.copySubtree(unit.getAST(), interfaceType);
+         JDTHelper.getInterfaces(declaration).add((Type)node);
       }
       return (O) this;
    }
