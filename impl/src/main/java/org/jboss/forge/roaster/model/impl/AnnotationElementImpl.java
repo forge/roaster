@@ -19,6 +19,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AnnotationTypeMemberDeclaration;
 import org.eclipse.jdt.core.dom.ArrayInitializer;
 import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.PrimitiveType.Code;
@@ -31,6 +32,7 @@ import org.jboss.forge.roaster.model.ast.AnnotationAccessor;
 import org.jboss.forge.roaster.model.source.AnnotationElementSource;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.JavaAnnotationSource;
+import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.util.Types;
 
 /**
@@ -39,6 +41,7 @@ import org.jboss.forge.roaster.model.util.Types;
  */
 public class AnnotationElementImpl implements AnnotationElementSource
 {
+
    private class AnnotationValue extends AnnotationImpl<JavaAnnotationSource, JavaAnnotationSource>
    {
 
@@ -509,41 +512,46 @@ public class AnnotationElementImpl implements AnnotationElementSource
    }
 
    @Override
-   public int hashCode()
+   public boolean hasJavaDoc()
    {
-      final int prime = 31;
-      int result = 1;
-      result = (prime * result) + ((member == null) ? 0 : member.hashCode());
-      return result;
+      return member.getJavadoc() != null;
+   }
+
+   @SuppressWarnings("unchecked")
+   @Override
+   public JavaDocSource<AnnotationElementSource> getJavaDoc()
+   {
+      Javadoc javadoc = member.getJavadoc();
+      if (javadoc == null)
+      {
+         javadoc = ast.newJavadoc();
+         member.setJavadoc(javadoc);
+      }
+      return new JavaDocImpl<>(this, javadoc);
+   }
+
+   @SuppressWarnings("unchecked")
+   @Override
+   public AnnotationElementSource removeJavaDoc()
+   {
+      member.setJavadoc(null);
+      return this;
    }
 
    @Override
-   public boolean equals(final Object obj)
+   public boolean equals(Object o)
    {
-      if (this == obj)
-      {
+      if (this == o)
          return true;
-      }
-      if (obj == null)
-      {
+      if (o == null || getClass() != o.getClass())
          return false;
-      }
-      if (getClass() != obj.getClass())
-      {
-         return false;
-      }
-      AnnotationElementImpl other = (AnnotationElementImpl) obj;
-      if (member == null)
-      {
-         if (other.member != null)
-         {
-            return false;
-         }
-      }
-      else if (!member.equals(other.member))
-      {
-         return false;
-      }
-      return true;
+      AnnotationElementImpl that = (AnnotationElementImpl) o;
+      return member.equals(that.member);
+   }
+
+   @Override
+   public int hashCode()
+   {
+      return Objects.hash(member);
    }
 }
