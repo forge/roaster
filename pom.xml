@@ -52,7 +52,7 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
-    <version.commons-text>1.9</version.commons-text>
+    <version.commons-text>1.10.0</version.commons-text>
     <version.surefire.plugin>3.0.0-M3</version.surefire.plugin>
   </properties>
 
