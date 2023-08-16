@@ -62,6 +62,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
+        <version>3.5.0</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -98,6 +99,20 @@
                     <exclude>META-INF/*.SF</exclude>
                     <exclude>META-INF/*.DSA</exclude>
                     <exclude>META-INF/*.RSA</exclude>
+                    <exclude>META-INF/eclipse.inf</exclude>
+                    <exclude>META-INF/LICENSE</exclude>
+                    <exclude>META-INF/NOTICE</exclude>
+                    <exclude>META-INF/MANIFEST.MF</exclude>
+                    <exclude>**/module-info.class</exclude>
+                    <exclude>.options</exclude>
+                    <exclude>.api_description</exclude>
+                    <exclude>*.html</exclude>
+                    <exclude>schema/contentTypes.exsd</exclude>
+                    <exclude>schema/preferences.exsd</exclude>
+                    <exclude>plugin.xml</exclude>
+                    <exclude>plugin.properties</exclude>
+                    <exclude>about_files/*</exclude>
+                    <exclude>OSGI-INF/**</exclude>
                   </excludes>
                 </filter>
               </filters>

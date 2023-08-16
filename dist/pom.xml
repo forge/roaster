@@ -42,7 +42,6 @@
                      <descriptors>
                         <descriptor>src/main/assembly/assembly.xml</descriptor>
                      </descriptors>
-                     <finalName>${project.build.finalName}</finalName>
                   </configuration>
                </execution>
             </executions>
