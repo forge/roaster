@@ -4,7 +4,7 @@ Roaster - The only Java source parser library you'll ever need
 image:https://img.shields.io/github/workflow/status/forge/roaster/GitHub%20CI?logo=GitHub&style=for-the-badge["Actions Status", link="https://github.com/forge/roaster/actions"]
 image:http://img.shields.io/:license-EPL-blue.svg?style=for-the-badge["License", link="https://www.eclipse.org/legal/epl-v10.html"]
 image:https://img.shields.io/github/tag/forge/roaster?logo=apache-maven&label=Maven%20Central&style=for-the-badge["Maven Central", link="https://search.maven.org/artifact/org.jboss.forge.roaster/roaster-jdt"]
-image:https://img.shields.io/badge/JVM-11--17-brightgreen.svg?style=for-the-badge&logo=Java?style=for-the-badge["Supported JVM Versions"]
+image:https://img.shields.io/badge/JVM-17-brightgreen.svg?style=for-the-badge&logo=Java?style=for-the-badge["Supported JVM Versions"]
 
 Roaster (formerly known as java-parser) is a library that allows easy parsing and formatting of java source files. 
 Roaster introduces a fluent interface to manipulate Java source files, like adding fields, methods, annotations and so on.
