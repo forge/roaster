@@ -7,3 +7,7 @@ updates:
     time: "07:00"
     timezone: America/Sao_Paulo
   open-pull-requests-limit: 10
+- package-ecosystem: "github-actions" # See documentation for possible values
+  directory: "/" # Location of package manifests
+  schedule:
+    interval: "weekly"
