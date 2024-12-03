@@ -62,7 +62,6 @@ public class JavaParserImpl implements JavaParser
       parser.setSource(document.get().toCharArray());
       parser.setCompilerOptions(JDTOptions.getJDTOptions());
 
-      parser.setResolveBindings(true);
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
       CompilationUnit unit = (CompilationUnit) parser.createAST(null);
       unit.recordModifications();
