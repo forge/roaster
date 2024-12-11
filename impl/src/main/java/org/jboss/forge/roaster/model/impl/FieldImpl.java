@@ -291,17 +291,7 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    @Override
    public String getName()
    {
-      String result = null;
-      for (Object f : field.fragments())
-      {
-         if (f instanceof VariableDeclarationFragment)
-         {
-            VariableDeclarationFragment frag = (VariableDeclarationFragment) f;
-            result = frag.getName().getFullyQualifiedName();
-            break;
-         }
-      }
-      return result;
+      return fragment.getName().getFullyQualifiedName();
    }
 
    @Override
