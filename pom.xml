@@ -88,7 +88,7 @@
   <scm>
     <connection>scm:git:git://github.com/forge/roaster.git</connection>
     <developerConnection>scm:git:git@github.com:forge/roaster.git</developerConnection>
-    <url>http://github.com/forge/roaster</url>
+    <url>https://github.com/forge/roaster</url>
     <tag>HEAD</tag>
   </scm>
 
