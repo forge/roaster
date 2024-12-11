@@ -13,6 +13,7 @@ import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -125,4 +126,10 @@ public class FieldMultipleTest
       assertEquals(1, fields.get(2).getType().getArrayDimensions());
    }
 
+    @Test
+    public void testMultipleFieldDeclarationParse()
+    {
+        JavaClassSource javaClassSource = Roaster.parse(JavaClassSource.class, "public class Test { private String a,b; }");
+        assertThat(javaClassSource.getFields()).hasSize(2).extracting(FieldSource::getName).containsExactly("a", "b");
+    }
 }
