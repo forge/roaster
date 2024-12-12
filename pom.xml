@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.jboss</groupId>
     <artifactId>jboss-parent</artifactId>
-    <version>39</version>
+    <version>47</version>
   </parent>
   <groupId>org.jboss.forge.roaster</groupId>
   <artifactId>roaster-parent</artifactId>
@@ -54,7 +54,6 @@
     <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
     <version.commons-text>1.9</version.commons-text>
-    <version.surefire.plugin>3.0.0-M3</version.surefire.plugin>
   </properties>
 
   <modules>
