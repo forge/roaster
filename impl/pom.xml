@@ -151,7 +151,6 @@
                     <exclude>META-INF/eclipse.inf</exclude>
                     <exclude>META-INF/LICENSE</exclude>
                     <exclude>META-INF/NOTICE</exclude>
-                    <exclude>META-INF/MANIFEST.MF</exclude>
                     <exclude>**/module-info.class</exclude>
                     <exclude>.options</exclude>
                     <exclude>.api_description</exclude>
