@@ -50,6 +50,7 @@
   <properties>
     <maven.compiler.target>11</maven.compiler.target>
     <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.release>11</maven.compiler.release>
     <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
     <version.commons-text>1.9</version.commons-text>
