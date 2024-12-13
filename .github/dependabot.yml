@@ -7,6 +7,12 @@ updates:
     time: "07:00"
     timezone: America/Sao_Paulo
   open-pull-requests-limit: 10
+  groups:
+    eclipse:
+      patterns:
+        - "org.eclipse*"
+        - "org.osgi*"
+
 - package-ecosystem: "github-actions" # See documentation for possible values
   directory: "/" # Location of package manifests
   schedule:
