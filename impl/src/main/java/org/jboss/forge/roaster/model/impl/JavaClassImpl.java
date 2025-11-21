@@ -182,11 +182,19 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
       {
          String typeD = Types.stripGenerics(type);
          String simpleTypeDName = Types.toSimpleName(typeD);
-
-         org.eclipse.jdt.core.dom.ParameterizedType pt = body.getAST().newParameterizedType(
-                  body.getAST().newSimpleType(body.getAST().newSimpleName(simpleTypeDName)));
-            addImport(type);
-
+         final SimpleName simpleName = body.getAST().newSimpleName(simpleTypeDName);
+         Import imprt = addImport(type);
+         Type parentType;
+         if (imprt == null && !Types.isSimpleName(typeD))
+         {
+            // Conflicting import found, use qualified name for new super type
+            final Name qualifier = body.getAST().newName(Types.getPackage(typeD));
+            parentType = body.getAST().newNameQualifiedType(qualifier, simpleName);
+         } else {
+            // Same type as existing import or not qualified at all (maybe from same package)
+            parentType = body.getAST().newSimpleType(simpleName);
+         }
+         org.eclipse.jdt.core.dom.ParameterizedType pt = body.getAST().newParameterizedType(parentType);
          for (String typeP : Types.splitGenerics(type))
          {
             Type t = TypeImpl.fromString(Types.toSimpleName(typeP.trim()), body.getAST());
