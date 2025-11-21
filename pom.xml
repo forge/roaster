@@ -54,8 +54,6 @@
     <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
     <version.commons-text>1.9</version.commons-text>
-    <version.compiler.plugin>3.11.0</version.compiler.plugin>
-    <version.surefire.plugin>3.1.2</version.surefire.plugin>
   </properties>
 
   <modules>
