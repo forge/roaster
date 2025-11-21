@@ -296,7 +296,7 @@ public abstract class JavaClassTestBase
    {
       int size = source.getMethods().size();
       MethodSource<JavaClassSource> method = source.addMethod(
-               "public URL rewriteURL(String pattern, String replacement) { return null; }")
+                        "public URL rewriteURL(String pattern, String replacement) { return null; }")
                .setPackagePrivate();
       List<MethodSource<JavaClassSource>> methods = source.getMethods();
       assertEquals(size + 1, methods.size());
@@ -495,5 +495,18 @@ public abstract class JavaClassTestBase
       String importName = "foo.Error";
       source.addImport(importName);
       assertThat(source.getImport(importName)).isNotNull();
+   }
+
+   @Test
+   public void testUsesFQNOnDuplicateClassNames()
+   {
+      source.setName("Test");
+      source.addMethod().setName("method").addParameter("p2.OtherClass", "param");
+
+      source.setSuperType("p1.OtherClass<TEST>");
+      assertThat(source.getSuperType()).isEqualTo("p1.OtherClass<TEST>");
+      assertThat(source.getImport("p2.OtherClass")).isNotNull();
+      assertThat(source.getImport("p1.OtherClass")).isNull();
+
    }
 }
