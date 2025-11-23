@@ -48,6 +48,7 @@
     <maven.compiler.target>17</maven.compiler.target>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.release>17</maven.compiler.release>
+    <maven.compiler.parameters>true</maven.compiler.parameters>
     <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
     <version.commons-text>1.9</version.commons-text>
@@ -94,6 +95,7 @@
         <inherited>true</inherited>
         <configuration>
           <autoVersionSubmodules>true</autoVersionSubmodules>
+          <prepareGoals>clean install</prepareGoals>
           <releaseProfiles>release</releaseProfiles>
           <signTag>true</signTag>
           <tagNameFormat>@{project.version}</tagNameFormat>
@@ -216,10 +218,10 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
             <version>3.2.8</version>
-            <inherited>true</inherited>
             <executions>
               <execution>
-                <id>gpg-sign</id>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
                 <goals>
                   <goal>sign</goal>
                 </goals>
