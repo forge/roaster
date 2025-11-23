@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.jboss.forge.roaster</groupId>
   <artifactId>roaster-parent</artifactId>
@@ -142,6 +143,35 @@
       <id>release</id>
       <build>
         <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <configuration>
+              <archive>
+                <index>true</index>
+                <manifest>
+                  <addDefaultSpecificationEntries>
+                    true
+                  </addDefaultSpecificationEntries>
+                  <addDefaultImplementationEntries>
+                    true
+                  </addDefaultImplementationEntries>
+                </manifest>
+                <manifestEntries>
+                  <Implementation-URL>${project.url}</Implementation-URL>
+                  <Java-Version>${java.version}</Java-Version>
+                  <Java-Vendor>${java.vendor}</Java-Vendor>
+                  <Os-Name>${os.name}</Os-Name>
+                  <Os-Arch>${os.arch}</Os-Arch>
+                  <Os-Version>${os.version}</Os-Version>
+                  <Scm-Url>${project.scm.url}</Scm-Url>
+                  <Scm-Connection>${project.scm.connection}</Scm-Connection>
+                  <Scm-Revision>${buildNumber}</Scm-Revision>
+                </manifestEntries>
+              </archive>
+            </configuration>
+          </plugin>
+
           <!-- This will sign the artifact, the POM, and all attached artifacts -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
