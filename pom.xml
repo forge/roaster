@@ -94,8 +94,9 @@
         <version>3.2.0</version>
         <inherited>true</inherited>
         <configuration>
-          <preparationGoals>clean install</preparationGoals>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
           <releaseProfiles>release</releaseProfiles>
+          <signTag>true</signTag>
           <tagNameFormat>@{project.version}</tagNameFormat>
         </configuration>
       </plugin>
@@ -184,22 +185,6 @@
               </archive>
             </configuration>
           </plugin>
-
-          <!-- This will sign the artifact, the POM, and all attached artifacts -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.2.8</version>
-            <inherited>true</inherited>
-            <executions>
-              <execution>
-                <id>gpg-sign</id>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
@@ -217,6 +202,22 @@
               </execution>
             </executions>
           </plugin>
+          <!-- This will sign the artifact, the POM, and all attached artifacts -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>3.2.8</version>
+            <inherited>true</inherited>
+            <executions>
+              <execution>
+                <id>gpg-sign</id>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
         </plugins>
       </build>
     </profile>
