@@ -17,7 +17,7 @@ Installation
 
 ```xml
 <properties>
-  <version.roaster>2.30.2.Final</version.roaster>
+  <version.roaster>2.30.3.Final</version.roaster>
 </properties>
 
 <dependency>
