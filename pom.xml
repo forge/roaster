@@ -58,7 +58,6 @@
     <module>api</module>
     <module>impl</module>
     <module>dist</module>
-    <module>tests</module>
   </modules>
   <dependencyManagement>
     <dependencies>
@@ -140,6 +139,18 @@
     </plugins>
   </build>
   <profiles>
+    <profile>
+      <id>it</id>
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>!true</value>
+        </property>
+      </activation>
+      <modules>
+        <module>tests</module>
+      </modules>
+    </profile>
     <profile>
       <id>release</id>
       <build>
