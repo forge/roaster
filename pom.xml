@@ -100,6 +100,44 @@
           <tagNameFormat>@{project.version}</tagNameFormat>
         </configuration>
       </plugin>
+      <!-- Attach source jar to all builds.  Runs during the package phase.-->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.3.1</version>
+        <inherited>true</inherited>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <archive>
+            <index>true</index>
+            <manifest>
+              <addDefaultSpecificationEntries>
+                true
+              </addDefaultSpecificationEntries>
+              <addDefaultImplementationEntries>
+                true
+              </addDefaultImplementationEntries>
+            </manifest>
+            <manifestEntries>
+              <Implementation-URL>${project.url}</Implementation-URL>
+              <Java-Version>${java.version}</Java-Version>
+              <Java-Vendor>${java.vendor}</Java-Vendor>
+              <Os-Name>${os.name}</Os-Name>
+              <Os-Arch>${os.arch}</Os-Arch>
+              <Os-Version>${os.version}</Os-Version>
+              <Scm-Url>${project.scm.url}</Scm-Url>
+              <Scm-Connection>${project.scm.connection}</Scm-Connection>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.sonatype.central</groupId>
         <artifactId>central-publishing-maven-plugin</artifactId>
@@ -156,35 +194,6 @@
       <id>release</id>
       <build>
         <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <version>3.3.1</version>
-            <inherited>true</inherited>
-            <configuration>
-              <archive>
-                <index>true</index>
-                <manifest>
-                  <addDefaultSpecificationEntries>
-                    true
-                  </addDefaultSpecificationEntries>
-                  <addDefaultImplementationEntries>
-                    true
-                  </addDefaultImplementationEntries>
-                </manifest>
-                <manifestEntries>
-                  <Implementation-URL>${project.url}</Implementation-URL>
-                  <Java-Version>${java.version}</Java-Version>
-                  <Java-Vendor>${java.vendor}</Java-Vendor>
-                  <Os-Name>${os.name}</Os-Name>
-                  <Os-Arch>${os.arch}</Os-Arch>
-                  <Os-Version>${os.version}</Os-Version>
-                  <Scm-Url>${project.scm.url}</Scm-Url>
-                  <Scm-Connection>${project.scm.connection}</Scm-Connection>
-                </manifestEntries>
-              </archive>
-            </configuration>
-          </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
