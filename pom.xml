@@ -58,6 +58,8 @@
     <module>api</module>
     <module>impl</module>
     <module>dist</module>
+    <module>bom</module>
+    <module>tests</module>
   </modules>
   <dependencyManagement>
     <dependencies>
@@ -140,33 +142,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>io.sundr</groupId>
-        <artifactId>sundr-maven-plugin</artifactId>
-        <version>0.230.2</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>generate-bom</goal>
-            </goals>
-            <configuration>
-              <boms>
-                <bom>
-                  <artifactId>roaster-bom</artifactId>
-                  <name>Forge Roaster - BOM</name>
-                  <description>Forge Roaster "Bill of Materials"</description>
-                  <modules>
-                    <includes>
-                      <include>org.jboss.forge.roaster:roaster-api</include>
-                      <include>org.jboss.forge.roaster:roaster-jdt</include>
-                    </includes>
-                  </modules>
-                </bom>
-              </boms>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>org.sonatype.central</groupId>
         <artifactId>central-publishing-maven-plugin</artifactId>
         <version>0.9.0</version>
@@ -175,23 +150,12 @@
           <publishingServerId>central</publishingServerId>
           <autoPublish>true</autoPublish>
           <waitUntil>published</waitUntil>
+          <excludeArtifacts>roaster-tests</excludeArtifacts>
         </configuration>
       </plugin>
     </plugins>
   </build>
   <profiles>
-    <profile>
-      <id>it</id>
-      <activation>
-        <property>
-          <name>performRelease</name>
-          <value>!true</value>
-        </property>
-      </activation>
-      <modules>
-        <module>tests</module>
-      </modules>
-    </profile>
     <profile>
       <id>release</id>
       <build>
