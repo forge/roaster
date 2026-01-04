@@ -22,7 +22,7 @@ public class JavaEnumInitializerTest
    public void reset() throws IOException
    {
       String fileName = "/org/jboss/forge/grammar/java/MockEnum.java";
-      try (InputStream stream = JavaEnumMethodTest.class.getResourceAsStream(fileName))
+      try (InputStream stream = JavaEnumInitializerTest.class.getResourceAsStream(fileName))
       {
          javaEnum = Roaster.parse(JavaEnumSource.class, stream);
          javaEnum.addInitializer("{ System.out.println(\"Hello world!\") }");

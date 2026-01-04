@@ -22,7 +22,7 @@ public class JavaClassInitializerTest
    public void reset() throws IOException
    {
       String fileName = "/org/jboss/forge/grammar/java/MockClass.java";
-      try (InputStream stream = JavaEnumMethodTest.class.getResourceAsStream(fileName))
+      try (InputStream stream = JavaClassInitializerTest.class.getResourceAsStream(fileName))
       {
          javaClass = Roaster.parse(JavaClassSource.class, stream);
          javaClass.addInitializer("{ System.out.println(\"Hello world!\") }");
