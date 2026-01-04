@@ -23,8 +23,6 @@ import org.jboss.forge.roaster.model.util.JDTOptions;
 
 public class InitializerImpl<O extends JavaSource<O>> implements InitializerSource<O> 
 {
-    private final ModifierAccessor modifiers = new ModifierAccessor();
-    
     private O parent = null;
     private AST ast = null;
     private CompilationUnit cu = null;
@@ -98,16 +96,16 @@ public class InitializerImpl<O extends JavaSource<O>> implements InitializerSour
     @Override
     public boolean isStatic()
     {
-        return modifiers.hasModifier(initializer, ModifierKeyword.STATIC_KEYWORD);
+        return ModifierAccessor.hasModifier(initializer, ModifierKeyword.STATIC_KEYWORD);
     }
     
     @Override
     public InitializerSource<O> setStatic(boolean statc) 
     {
         if (statc)
-           modifiers.addModifier(initializer, ModifierKeyword.STATIC_KEYWORD);
+           ModifierAccessor.addModifier(initializer, ModifierKeyword.STATIC_KEYWORD);
         else
-           modifiers.removeModifier(initializer, ModifierKeyword.STATIC_KEYWORD);
+           ModifierAccessor.removeModifier(initializer, ModifierKeyword.STATIC_KEYWORD);
         return this;
     }
 
