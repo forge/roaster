@@ -6,8 +6,13 @@
  */
 package org.jboss.forge.roaster.model.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.Initializer;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.SimpleName;
@@ -18,6 +23,7 @@ import org.jboss.forge.roaster.model.JavaClass;
 import org.jboss.forge.roaster.model.JavaType;
 import org.jboss.forge.roaster.model.ast.ModifierAccessor;
 import org.jboss.forge.roaster.model.source.Import;
+import org.jboss.forge.roaster.model.source.InitializerSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
@@ -244,5 +250,46 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
          return true;
       }
       return false;
+   }
+
+   @Override
+   @SuppressWarnings("unchecked")
+   public List<InitializerSource<JavaClassSource>> getInitializers() 
+   {
+      List<InitializerSource<JavaClassSource>> result = new ArrayList<>();
+      List<BodyDeclaration> bodyDeclarations = getDeclaration().bodyDeclarations();
+      for (BodyDeclaration bodyDeclaration : bodyDeclarations)
+      {
+         if (bodyDeclaration instanceof Initializer) {
+             Initializer initializer = (Initializer) bodyDeclaration;
+             result.add(new InitializerImpl<>(this, initializer));
+         }
+      }
+      return Collections.unmodifiableList(result);
+   }
+
+   @Override
+   @SuppressWarnings("unchecked")
+   public InitializerSource<JavaClassSource> addInitializer() 
+   {
+       InitializerSource<JavaClassSource> init = new InitializerImpl<>(this);
+       getDeclaration().bodyDeclarations().add(init.getInternal());
+       return init;
+   }
+
+   @Override
+   @SuppressWarnings("unchecked")
+   public InitializerSource<JavaClassSource> addInitializer(final String initializer) 
+   {
+      InitializerSource<JavaClassSource> init = new InitializerImpl<>(this, initializer);
+      getDeclaration().bodyDeclarations().add(init.getInternal());
+      return init;
+   }
+
+   @Override
+   public JavaClassSource removeInitializer(org.jboss.forge.roaster.model.Initializer<JavaClassSource, ?> initializer) 
+   {
+      getDeclaration().bodyDeclarations().remove(initializer.getInternal());
+      return this;
    }
 }

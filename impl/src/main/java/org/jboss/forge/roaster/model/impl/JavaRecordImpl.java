@@ -7,7 +7,9 @@
 package org.jboss.forge.roaster.model.impl;
 
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.Initializer;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.RecordDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
@@ -19,6 +21,7 @@ import org.jboss.forge.roaster.model.Method;
 import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.ast.MethodFinderVisitor;
 import org.jboss.forge.roaster.model.source.Import;
+import org.jboss.forge.roaster.model.source.InitializerSource;
 import org.jboss.forge.roaster.model.source.InterfaceCapableSource;
 import org.jboss.forge.roaster.model.source.JavaRecordComponentSource;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
@@ -119,6 +122,47 @@ public class JavaRecordImpl extends AbstractInterfaceCapableJavaSource<JavaRecor
    public JavaRecordSource removeRecordComponent(JavaRecordComponent recordComponent)
    {
       getDeclaration().recordComponents().remove(recordComponent.getInternal());
+      return this;
+   }
+
+   @Override
+   @SuppressWarnings("unchecked")
+   public List<InitializerSource<JavaRecordSource>> getInitializers() 
+   {
+      List<InitializerSource<JavaRecordSource>> result = new ArrayList<>();
+      List<BodyDeclaration> bodyDeclarations = getDeclaration().bodyDeclarations();
+      for (BodyDeclaration bodyDeclaration : bodyDeclarations)
+      {
+         if (bodyDeclaration instanceof Initializer) {
+             Initializer initializer = (Initializer) bodyDeclaration;
+             result.add(new InitializerImpl<>(this, initializer));
+         }
+      }
+      return Collections.unmodifiableList(result);
+   }
+
+   @Override
+   @SuppressWarnings("unchecked")
+   public InitializerSource<JavaRecordSource> addInitializer() 
+   {
+       InitializerSource<JavaRecordSource> init = new InitializerImpl<>(this);
+       getDeclaration().bodyDeclarations().add(init.getInternal());
+       return init;
+   }
+
+   @Override
+   @SuppressWarnings("unchecked")
+   public InitializerSource<JavaRecordSource> addInitializer(final String initializer) 
+   {
+      InitializerSource<JavaRecordSource> init = new InitializerImpl<>(this, initializer);
+      getDeclaration().bodyDeclarations().add(init.getInternal());
+      return init;
+   }
+
+   @Override
+   public JavaRecordSource removeInitializer(org.jboss.forge.roaster.model.Initializer<JavaRecordSource, ?> initializer) 
+   {
+      getDeclaration().bodyDeclarations().remove(initializer.getInternal());
       return this;
    }
 }

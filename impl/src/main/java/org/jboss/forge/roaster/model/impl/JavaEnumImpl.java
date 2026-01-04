@@ -14,8 +14,10 @@ import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
+import org.eclipse.jdt.core.dom.Initializer;
 import org.eclipse.jface.text.Document;
 import org.jboss.forge.roaster.model.source.EnumConstantSource;
+import org.jboss.forge.roaster.model.source.InitializerSource;
 import org.jboss.forge.roaster.model.source.JavaEnumSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 
@@ -24,7 +26,7 @@ import org.jboss.forge.roaster.model.source.JavaSource;
  *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnumSource>implements JavaEnumSource
+public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnumSource> implements JavaEnumSource
 {
    public JavaEnumImpl(JavaSource<?> enclosingType, final Document document, final CompilationUnit unit,
             BodyDeclaration body)
@@ -87,6 +89,47 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnumSource>
    @Override
    protected JavaEnumSource updateTypeNames(final String newName)
    {
+      return this;
+   }
+
+   @Override
+   @SuppressWarnings("unchecked")
+   public List<InitializerSource<JavaEnumSource>> getInitializers() 
+   {
+      List<InitializerSource<JavaEnumSource>> result = new ArrayList<>();
+      List<BodyDeclaration> bodyDeclarations = getDeclaration().bodyDeclarations();
+      for (BodyDeclaration bodyDeclaration : bodyDeclarations)
+      {
+         if (bodyDeclaration instanceof Initializer) {
+             Initializer initializer = (Initializer) bodyDeclaration;
+             result.add(new InitializerImpl<>(this, initializer));
+         }
+      }
+      return Collections.unmodifiableList(result);
+   }
+
+   @Override
+   @SuppressWarnings("unchecked")
+   public InitializerSource<JavaEnumSource> addInitializer() 
+   {
+       InitializerSource<JavaEnumSource> init = new InitializerImpl<>(this);
+       getDeclaration().bodyDeclarations().add(init.getInternal());
+       return init;
+   }
+
+   @Override
+   @SuppressWarnings("unchecked")
+   public InitializerSource<JavaEnumSource> addInitializer(final String initializer) 
+   {
+      InitializerSource<JavaEnumSource> init = new InitializerImpl<>(this, initializer);
+      getDeclaration().bodyDeclarations().add(init.getInternal());
+      return init;
+   }
+
+   @Override
+   public JavaEnumSource removeInitializer(org.jboss.forge.roaster.model.Initializer<JavaEnumSource, ?> initializer) 
+   {
+      getDeclaration().bodyDeclarations().remove(initializer.getInternal());
       return this;
    }
 

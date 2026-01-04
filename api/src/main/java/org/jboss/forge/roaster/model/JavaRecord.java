@@ -11,6 +11,7 @@ import java.util.List;
 public interface JavaRecord<O extends JavaRecord<O>> extends
          JavaType<O>,
          MethodHolder<O>,
+         InitializerHolder<O>,
          TypeHolder<O>,
          InterfaceCapable
 {
