@@ -39,7 +39,6 @@ import org.jboss.forge.roaster.model.util.Types;
 public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
 {
    private final AnnotationAccessor<O, FieldSource<O>> annotations = new AnnotationAccessor<>();
-   private final ModifierAccessor modifiers = new ModifierAccessor();
 
    private final O parent;
    private final AST ast;
@@ -188,32 +187,32 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    @Override
    public boolean isFinal()
    {
-      return modifiers.hasModifier(field, ModifierKeyword.FINAL_KEYWORD);
+      return ModifierAccessor.hasModifier(field, ModifierKeyword.FINAL_KEYWORD);
    }
 
    @Override
    public FieldSource<O> setFinal(final boolean finl)
    {
       if (finl)
-         modifiers.addModifier(field, ModifierKeyword.FINAL_KEYWORD);
+         ModifierAccessor.addModifier(field, ModifierKeyword.FINAL_KEYWORD);
       else
-         modifiers.removeModifier(field, ModifierKeyword.FINAL_KEYWORD);
+         ModifierAccessor.removeModifier(field, ModifierKeyword.FINAL_KEYWORD);
       return this;
    }
 
    @Override
    public boolean isStatic()
    {
-      return getOrigin().isInterface() || modifiers.hasModifier(field, ModifierKeyword.STATIC_KEYWORD);
+      return getOrigin().isInterface() || ModifierAccessor.hasModifier(field, ModifierKeyword.STATIC_KEYWORD);
    }
 
    @Override
    public FieldSource<O> setStatic(final boolean statc)
    {
       if (statc)
-         modifiers.addModifier(field, ModifierKeyword.STATIC_KEYWORD);
+         ModifierAccessor.addModifier(field, ModifierKeyword.STATIC_KEYWORD);
       else
-         modifiers.removeModifier(field, ModifierKeyword.STATIC_KEYWORD);
+         ModifierAccessor.removeModifier(field, ModifierKeyword.STATIC_KEYWORD);
       return this;
    }
 
@@ -226,49 +225,49 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    @Override
    public FieldSource<O> setPackagePrivate()
    {
-      modifiers.clearVisibility(field);
+      ModifierAccessor.clearVisibility(field);
       return this;
    }
 
    @Override
    public boolean isPublic()
    {
-      return modifiers.hasModifier(field, ModifierKeyword.PUBLIC_KEYWORD);
+      return ModifierAccessor.hasModifier(field, ModifierKeyword.PUBLIC_KEYWORD);
    }
 
    @Override
    public FieldSource<O> setPublic()
    {
-      modifiers.clearVisibility(field);
-      modifiers.addModifier(field, ModifierKeyword.PUBLIC_KEYWORD);
+      ModifierAccessor.clearVisibility(field);
+      ModifierAccessor.addModifier(field, ModifierKeyword.PUBLIC_KEYWORD);
       return this;
    }
 
    @Override
    public boolean isPrivate()
    {
-      return modifiers.hasModifier(field, ModifierKeyword.PRIVATE_KEYWORD);
+      return ModifierAccessor.hasModifier(field, ModifierKeyword.PRIVATE_KEYWORD);
    }
 
    @Override
    public FieldSource<O> setPrivate()
    {
-      modifiers.clearVisibility(field);
-      modifiers.addModifier(field, ModifierKeyword.PRIVATE_KEYWORD);
+      ModifierAccessor.clearVisibility(field);
+      ModifierAccessor.addModifier(field, ModifierKeyword.PRIVATE_KEYWORD);
       return this;
    }
 
    @Override
    public boolean isProtected()
    {
-      return modifiers.hasModifier(field, ModifierKeyword.PROTECTED_KEYWORD);
+      return ModifierAccessor.hasModifier(field, ModifierKeyword.PROTECTED_KEYWORD);
    }
 
    @Override
    public FieldSource<O> setProtected()
    {
-      modifiers.clearVisibility(field);
-      modifiers.addModifier(field, ModifierKeyword.PROTECTED_KEYWORD);
+      ModifierAccessor.clearVisibility(field);
+      ModifierAccessor.addModifier(field, ModifierKeyword.PROTECTED_KEYWORD);
       return this;
    }
 
@@ -411,32 +410,32 @@ public class FieldImpl<O extends JavaSource<O>> implements FieldSource<O>
    @Override
    public boolean isTransient()
    {
-      return modifiers.hasModifier(field, ModifierKeyword.TRANSIENT_KEYWORD);
+      return ModifierAccessor.hasModifier(field, ModifierKeyword.TRANSIENT_KEYWORD);
    }
 
    @Override
    public FieldSource<O> setTransient(boolean value)
    {
       if (value)
-         modifiers.addModifier(field, ModifierKeyword.TRANSIENT_KEYWORD);
+         ModifierAccessor.addModifier(field, ModifierKeyword.TRANSIENT_KEYWORD);
       else
-         modifiers.removeModifier(field, ModifierKeyword.TRANSIENT_KEYWORD);
+         ModifierAccessor.removeModifier(field, ModifierKeyword.TRANSIENT_KEYWORD);
       return this;
    }
 
    @Override
    public boolean isVolatile()
    {
-      return modifiers.hasModifier(field, ModifierKeyword.VOLATILE_KEYWORD);
+      return ModifierAccessor.hasModifier(field, ModifierKeyword.VOLATILE_KEYWORD);
    }
 
    @Override
    public FieldSource<O> setVolatile(boolean value)
    {
       if (value)
-         modifiers.addModifier(field, ModifierKeyword.VOLATILE_KEYWORD);
+         ModifierAccessor.addModifier(field, ModifierKeyword.VOLATILE_KEYWORD);
       else
-         modifiers.removeModifier(field, ModifierKeyword.VOLATILE_KEYWORD);
+         ModifierAccessor.removeModifier(field, ModifierKeyword.VOLATILE_KEYWORD);
       return this;
    }
 

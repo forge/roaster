@@ -41,7 +41,6 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> extends JavaSo
          TypeHolderSource<O>, StaticCapableSource<O>
 {
    protected final BodyDeclaration body;
-   private final ModifierAccessor modifiers = new ModifierAccessor();
 
    protected AbstractJavaSource(JavaSource<?> enclosingType, final Document document, final CompilationUnit unit,
             BodyDeclaration body)
@@ -166,7 +165,7 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> extends JavaSo
    @Override
    public boolean isStatic()
    {
-      return modifiers.hasModifier(getDeclaration(), ModifierKeyword.STATIC_KEYWORD);
+      return ModifierAccessor.hasModifier(getDeclaration(), ModifierKeyword.STATIC_KEYWORD);
    }
 
    @Override
@@ -174,11 +173,11 @@ public abstract class AbstractJavaSource<O extends JavaSource<O>> extends JavaSo
    {
       if (_static)
       {
-         modifiers.addModifier(getDeclaration(), ModifierKeyword.STATIC_KEYWORD);
+         ModifierAccessor.addModifier(getDeclaration(), ModifierKeyword.STATIC_KEYWORD);
       }
       else
       {
-         modifiers.removeModifier(getDeclaration(), ModifierKeyword.STATIC_KEYWORD);
+         ModifierAccessor.removeModifier(getDeclaration(), ModifierKeyword.STATIC_KEYWORD);
       }
       return (O) this;
    }

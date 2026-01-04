@@ -31,7 +31,6 @@ import org.jboss.forge.roaster.model.util.Types;
  */
 public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSource> implements JavaClassSource
 {
-   private final ModifierAccessor modifiers = new ModifierAccessor();
 
    public JavaClassImpl(JavaSource<?> enclosingType, final Document document, final CompilationUnit unit,
             BodyDeclaration body)
@@ -59,7 +58,7 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
    @Override
    public boolean isAbstract()
    {
-      return modifiers.hasModifier(getDeclaration(), ModifierKeyword.ABSTRACT_KEYWORD);
+      return ModifierAccessor.hasModifier(getDeclaration(), ModifierKeyword.ABSTRACT_KEYWORD);
    }
 
    @Override
@@ -67,11 +66,11 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
    {
       if (abstrct)
       {
-         modifiers.addModifier(getDeclaration(), ModifierKeyword.ABSTRACT_KEYWORD);
+         ModifierAccessor.addModifier(getDeclaration(), ModifierKeyword.ABSTRACT_KEYWORD);
       }
       else
       {
-         modifiers.removeModifier(getDeclaration(), ModifierKeyword.ABSTRACT_KEYWORD);
+         ModifierAccessor.removeModifier(getDeclaration(), ModifierKeyword.ABSTRACT_KEYWORD);
       }
       return this;
    }
@@ -79,16 +78,16 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
    @Override
    public boolean isFinal()
    {
-      return modifiers.hasModifier(getDeclaration(), ModifierKeyword.FINAL_KEYWORD);
+      return ModifierAccessor.hasModifier(getDeclaration(), ModifierKeyword.FINAL_KEYWORD);
    }
 
    @Override
    public JavaClassSource setFinal(boolean finl)
    {
       if (finl)
-         modifiers.addModifier(getDeclaration(), ModifierKeyword.FINAL_KEYWORD);
+         ModifierAccessor.addModifier(getDeclaration(), ModifierKeyword.FINAL_KEYWORD);
       else
-         modifiers.removeModifier(getDeclaration(), ModifierKeyword.FINAL_KEYWORD);
+         ModifierAccessor.removeModifier(getDeclaration(), ModifierKeyword.FINAL_KEYWORD);
       return this;
    }
 

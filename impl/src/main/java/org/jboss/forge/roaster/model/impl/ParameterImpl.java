@@ -28,7 +28,6 @@ public class ParameterImpl<O extends JavaSource<O>> implements ParameterSource<O
    private final AnnotationAccessor<O, ParameterSource<O>> annotations = new AnnotationAccessor<>();
    private final O parent;
    private final SingleVariableDeclaration param;
-   private final ModifierAccessor modifiers = new ModifierAccessor();
 
    public ParameterImpl(final O parent, final Object internal)
    {
@@ -127,16 +126,16 @@ public class ParameterImpl<O extends JavaSource<O>> implements ParameterSource<O
    @Override
    public boolean isFinal()
    {
-      return modifiers.hasModifier(param, ModifierKeyword.FINAL_KEYWORD);
+      return ModifierAccessor.hasModifier(param, ModifierKeyword.FINAL_KEYWORD);
    }
 
    @Override
    public ParameterSource<O> setFinal(boolean finl)
    {
       if (finl)
-         modifiers.addModifier(param, ModifierKeyword.FINAL_KEYWORD);
+         ModifierAccessor.addModifier(param, ModifierKeyword.FINAL_KEYWORD);
       else
-         modifiers.removeModifier(param, ModifierKeyword.FINAL_KEYWORD);
+         ModifierAccessor.removeModifier(param, ModifierKeyword.FINAL_KEYWORD);
       return this;
    }
 
