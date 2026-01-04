@@ -53,7 +53,6 @@ import org.jboss.forge.roaster.spi.WildcardImportResolver;
 public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSource<O>
 {
    private static List<WildcardImportResolver> resolvers;
-   private final ModifierAccessor modifiers = new ModifierAccessor();
    private final AnnotationAccessor<O, O> annotations = new AnnotationAccessor<>();
 
    protected final Document document;
@@ -681,52 +680,52 @@ public abstract class JavaSourceImpl<O extends JavaSource<O>> implements JavaSou
    @Override
    public O setPackagePrivate()
    {
-      modifiers.clearVisibility(getDeclaration());
+      ModifierAccessor.clearVisibility(getDeclaration());
       return (O) this;
    }
 
    @Override
    public boolean isPublic()
    {
-      return modifiers.hasModifier(getDeclaration(), ModifierKeyword.PUBLIC_KEYWORD);
+      return ModifierAccessor.hasModifier(getDeclaration(), ModifierKeyword.PUBLIC_KEYWORD);
    }
 
    @SuppressWarnings("unchecked")
    @Override
    public O setPublic()
    {
-      modifiers.clearVisibility(getDeclaration());
-      modifiers.addModifier(getDeclaration(), ModifierKeyword.PUBLIC_KEYWORD);
+      ModifierAccessor.clearVisibility(getDeclaration());
+      ModifierAccessor.addModifier(getDeclaration(), ModifierKeyword.PUBLIC_KEYWORD);
       return (O) this;
    }
 
    @Override
    public boolean isPrivate()
    {
-      return modifiers.hasModifier(getDeclaration(), ModifierKeyword.PRIVATE_KEYWORD);
+      return ModifierAccessor.hasModifier(getDeclaration(), ModifierKeyword.PRIVATE_KEYWORD);
    }
 
    @SuppressWarnings("unchecked")
    @Override
    public O setPrivate()
    {
-      modifiers.clearVisibility(getDeclaration());
-      modifiers.addModifier(getDeclaration(), ModifierKeyword.PRIVATE_KEYWORD);
+      ModifierAccessor.clearVisibility(getDeclaration());
+      ModifierAccessor.addModifier(getDeclaration(), ModifierKeyword.PRIVATE_KEYWORD);
       return (O) this;
    }
 
    @Override
    public boolean isProtected()
    {
-      return modifiers.hasModifier(getDeclaration(), ModifierKeyword.PROTECTED_KEYWORD);
+      return ModifierAccessor.hasModifier(getDeclaration(), ModifierKeyword.PROTECTED_KEYWORD);
    }
 
    @SuppressWarnings("unchecked")
    @Override
    public O setProtected()
    {
-      modifiers.clearVisibility(getDeclaration());
-      modifiers.addModifier(getDeclaration(), ModifierKeyword.PROTECTED_KEYWORD);
+      ModifierAccessor.clearVisibility(getDeclaration());
+      ModifierAccessor.addModifier(getDeclaration(), ModifierKeyword.PROTECTED_KEYWORD);
       return (O) this;
    }
 
