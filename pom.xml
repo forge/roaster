@@ -50,7 +50,7 @@
     <maven.compiler.release>17</maven.compiler.release>
     <maven.compiler.parameters>true</maven.compiler.parameters>
     <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.commons-text>1.9</version.commons-text>
   </properties>
 

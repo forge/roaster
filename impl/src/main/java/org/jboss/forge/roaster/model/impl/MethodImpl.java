@@ -55,7 +55,6 @@ import java.util.Objects;
 public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
 {
    private final AnnotationAccessor<O, MethodSource<O>> annotations = new AnnotationAccessor<>();
-   private final ModifierAccessor modifiers = new ModifierAccessor();
 
    private O parent = null;
    private AST ast = null;
@@ -358,7 +357,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public boolean isAbstract()
    {
-      return modifiers.hasModifier(method, ModifierKeyword.ABSTRACT_KEYWORD);
+      return ModifierAccessor.hasModifier(method, ModifierKeyword.ABSTRACT_KEYWORD);
    }
 
    @Override
@@ -366,13 +365,13 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    {
       if (abstrct)
       {
-         modifiers.addModifier(method, ModifierKeyword.ABSTRACT_KEYWORD);
+         ModifierAccessor.addModifier(method, ModifierKeyword.ABSTRACT_KEYWORD);
          // Abstract methods do not specify a body
          setBody((String) null);
       }
       else
       {
-         modifiers.removeModifier(method, ModifierKeyword.ABSTRACT_KEYWORD);
+         ModifierAccessor.removeModifier(method, ModifierKeyword.ABSTRACT_KEYWORD);
          if (getBody() == null)
          {
             setBody("");
@@ -384,48 +383,48 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public boolean isFinal()
    {
-      return modifiers.hasModifier(method, ModifierKeyword.FINAL_KEYWORD);
+      return ModifierAccessor.hasModifier(method, ModifierKeyword.FINAL_KEYWORD);
    }
 
    @Override
    public MethodSource<O> setFinal(final boolean finl)
    {
       if (finl)
-         modifiers.addModifier(method, ModifierKeyword.FINAL_KEYWORD);
+         ModifierAccessor.addModifier(method, ModifierKeyword.FINAL_KEYWORD);
       else
-         modifiers.removeModifier(method, ModifierKeyword.FINAL_KEYWORD);
+         ModifierAccessor.removeModifier(method, ModifierKeyword.FINAL_KEYWORD);
       return this;
    }
 
    @Override
    public boolean isDefault()
    {
-      return modifiers.hasModifier(method, ModifierKeyword.DEFAULT_KEYWORD);
+      return ModifierAccessor.hasModifier(method, ModifierKeyword.DEFAULT_KEYWORD);
    }
 
    @Override
    public MethodSource<O> setDefault(boolean value)
    {
       if (value)
-         modifiers.addModifier(method, ModifierKeyword.DEFAULT_KEYWORD);
+         ModifierAccessor.addModifier(method, ModifierKeyword.DEFAULT_KEYWORD);
       else
-         modifiers.removeModifier(method, ModifierKeyword.DEFAULT_KEYWORD);
+         ModifierAccessor.removeModifier(method, ModifierKeyword.DEFAULT_KEYWORD);
       return this;
    }
 
    @Override
    public boolean isStatic()
    {
-      return modifiers.hasModifier(method, ModifierKeyword.STATIC_KEYWORD);
+      return ModifierAccessor.hasModifier(method, ModifierKeyword.STATIC_KEYWORD);
    }
 
    @Override
    public MethodSource<O> setStatic(final boolean statc)
    {
       if (statc)
-         modifiers.addModifier(method, ModifierKeyword.STATIC_KEYWORD);
+         ModifierAccessor.addModifier(method, ModifierKeyword.STATIC_KEYWORD);
       else
-         modifiers.removeModifier(method, ModifierKeyword.STATIC_KEYWORD);
+         ModifierAccessor.removeModifier(method, ModifierKeyword.STATIC_KEYWORD);
       return this;
    }
 
@@ -434,11 +433,11 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    {
       if (value)
       {
-         modifiers.addModifier(method, ModifierKeyword.SYNCHRONIZED_KEYWORD);
+         ModifierAccessor.addModifier(method, ModifierKeyword.SYNCHRONIZED_KEYWORD);
       }
       else
       {
-         modifiers.removeModifier(method, ModifierKeyword.SYNCHRONIZED_KEYWORD);
+         ModifierAccessor.removeModifier(method, ModifierKeyword.SYNCHRONIZED_KEYWORD);
       }
       return this;
    }
@@ -446,7 +445,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public boolean isSynchronized()
    {
-      return modifiers.hasModifier(method, ModifierKeyword.SYNCHRONIZED_KEYWORD);
+      return ModifierAccessor.hasModifier(method, ModifierKeyword.SYNCHRONIZED_KEYWORD);
    }
 
    @Override
@@ -454,13 +453,13 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    {
       if (value)
       {
-         modifiers.addModifier(method, ModifierKeyword.NATIVE_KEYWORD);
+         ModifierAccessor.addModifier(method, ModifierKeyword.NATIVE_KEYWORD);
          // Native methods do not specify a body
          setBody((String) null);
       }
       else
       {
-         modifiers.removeModifier(method, ModifierKeyword.NATIVE_KEYWORD);
+         ModifierAccessor.removeModifier(method, ModifierKeyword.NATIVE_KEYWORD);
          if (getBody() == null)
          {
             setBody("");
@@ -472,7 +471,7 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public boolean isNative()
    {
-      return modifiers.hasModifier(method, ModifierKeyword.NATIVE_KEYWORD);
+      return ModifierAccessor.hasModifier(method, ModifierKeyword.NATIVE_KEYWORD);
    }
 
    @Override
@@ -537,49 +536,49 @@ public class MethodImpl<O extends JavaSource<O>> implements MethodSource<O>
    @Override
    public MethodSource<O> setPackagePrivate()
    {
-      modifiers.clearVisibility(method);
+      ModifierAccessor.clearVisibility(method);
       return this;
    }
 
    @Override
    public boolean isPublic()
    {
-      return modifiers.hasModifier(method, ModifierKeyword.PUBLIC_KEYWORD);
+      return ModifierAccessor.hasModifier(method, ModifierKeyword.PUBLIC_KEYWORD);
    }
 
    @Override
    public MethodSource<O> setPublic()
    {
-      modifiers.clearVisibility(method);
-      modifiers.addModifier(method, ModifierKeyword.PUBLIC_KEYWORD);
+      ModifierAccessor.clearVisibility(method);
+      ModifierAccessor.addModifier(method, ModifierKeyword.PUBLIC_KEYWORD);
       return this;
    }
 
    @Override
    public boolean isPrivate()
    {
-      return modifiers.hasModifier(method, ModifierKeyword.PRIVATE_KEYWORD);
+      return ModifierAccessor.hasModifier(method, ModifierKeyword.PRIVATE_KEYWORD);
    }
 
    @Override
    public MethodSource<O> setPrivate()
    {
-      modifiers.clearVisibility(method);
-      modifiers.addModifier(method, ModifierKeyword.PRIVATE_KEYWORD);
+      ModifierAccessor.clearVisibility(method);
+      ModifierAccessor.addModifier(method, ModifierKeyword.PRIVATE_KEYWORD);
       return this;
    }
 
    @Override
    public boolean isProtected()
    {
-      return modifiers.hasModifier(method, ModifierKeyword.PROTECTED_KEYWORD);
+      return ModifierAccessor.hasModifier(method, ModifierKeyword.PROTECTED_KEYWORD);
    }
 
    @Override
    public MethodSource<O> setProtected()
    {
-      modifiers.clearVisibility(method);
-      modifiers.addModifier(method, ModifierKeyword.PROTECTED_KEYWORD);
+      ModifierAccessor.clearVisibility(method);
+      ModifierAccessor.addModifier(method, ModifierKeyword.PROTECTED_KEYWORD);
       return this;
    }
 
