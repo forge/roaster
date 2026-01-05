@@ -21,6 +21,7 @@ import org.jboss.forge.roaster.model.JavaEnum;
  */
 public interface JavaEnumSource extends JavaEnum<JavaEnumSource>, JavaSource<JavaEnumSource>,
          InterfaceCapableSource<JavaEnumSource>,
+         InitializerHolderSource<JavaEnumSource>,
          PropertyHolderSource<JavaEnumSource>, TypeHolderSource<JavaEnumSource>, StaticCapableSource<JavaEnumSource>
 {
    /**

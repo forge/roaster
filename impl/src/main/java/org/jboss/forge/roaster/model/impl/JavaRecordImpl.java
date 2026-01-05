@@ -8,27 +8,23 @@ package org.jboss.forge.roaster.model.impl;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.RecordDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jface.text.Document;
 import org.jboss.forge.roaster.Roaster;
-import org.jboss.forge.roaster.model.JavaInterface;
+import org.jboss.forge.roaster.model.Initializer;
 import org.jboss.forge.roaster.model.JavaRecordComponent;
-import org.jboss.forge.roaster.model.Method;
 import org.jboss.forge.roaster.model.Type;
-import org.jboss.forge.roaster.model.ast.MethodFinderVisitor;
+import org.jboss.forge.roaster.model.ast.InitializerAccessor;
 import org.jboss.forge.roaster.model.source.Import;
-import org.jboss.forge.roaster.model.source.InterfaceCapableSource;
+import org.jboss.forge.roaster.model.source.InitializerSource;
 import org.jboss.forge.roaster.model.source.JavaRecordComponentSource;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MemberSource;
-import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.util.Types;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -119,6 +115,37 @@ public class JavaRecordImpl extends AbstractInterfaceCapableJavaSource<JavaRecor
    public JavaRecordSource removeRecordComponent(JavaRecordComponent recordComponent)
    {
       getDeclaration().recordComponents().remove(recordComponent.getInternal());
+      return this;
+   }
+
+   @Override
+   public List<InitializerSource<JavaRecordSource>> getInitializers() 
+   {
+      return InitializerAccessor.getInitializers(this, getDeclaration());
+   }
+   
+   @Override
+   public boolean hasInitializer(Initializer<JavaRecordSource, ?> initializer)
+   {
+      return InitializerAccessor.hasInitializer(getDeclaration(), initializer);
+   }
+
+   @Override
+   public InitializerSource<JavaRecordSource> addInitializer() 
+   {
+      return InitializerAccessor.addInitializer(this, getDeclaration());
+   }
+
+   @Override
+   public InitializerSource<JavaRecordSource> addInitializer(final String initializer) 
+   {
+      return InitializerAccessor.addInitializer(this, getDeclaration(), initializer);
+   }
+
+   @Override
+   public JavaRecordSource removeInitializer(org.jboss.forge.roaster.model.Initializer<JavaRecordSource, ?> initializer) 
+   {
+      InitializerAccessor.removeInitializer(getDeclaration(), initializer);
       return this;
    }
 }

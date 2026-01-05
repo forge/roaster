@@ -15,7 +15,10 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jface.text.Document;
+import org.jboss.forge.roaster.model.Initializer;
+import org.jboss.forge.roaster.model.ast.InitializerAccessor;
 import org.jboss.forge.roaster.model.source.EnumConstantSource;
+import org.jboss.forge.roaster.model.source.InitializerSource;
 import org.jboss.forge.roaster.model.source.JavaEnumSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 
@@ -24,7 +27,7 @@ import org.jboss.forge.roaster.model.source.JavaSource;
  *
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnumSource>implements JavaEnumSource
+public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnumSource> implements JavaEnumSource
 {
    public JavaEnumImpl(JavaSource<?> enclosingType, final Document document, final CompilationUnit unit,
             BodyDeclaration body)
@@ -87,6 +90,37 @@ public class JavaEnumImpl extends AbstractJavaSourceMemberHolder<JavaEnumSource>
    @Override
    protected JavaEnumSource updateTypeNames(final String newName)
    {
+      return this;
+   }
+
+   @Override
+   public List<InitializerSource<JavaEnumSource>> getInitializers() 
+   {
+      return InitializerAccessor.getInitializers(this, getDeclaration());
+   }
+   
+   @Override
+   public boolean hasInitializer(Initializer<JavaEnumSource, ?> initializer)
+   {
+      return InitializerAccessor.hasInitializer(getDeclaration(), initializer);
+   }
+
+   @Override
+   public InitializerSource<JavaEnumSource> addInitializer() 
+   {
+      return InitializerAccessor.addInitializer(this, getDeclaration());
+   }
+
+   @Override
+   public InitializerSource<JavaEnumSource> addInitializer(final String initializer) 
+   {
+      return InitializerAccessor.addInitializer(this, getDeclaration(), initializer);
+   }
+
+   @Override
+   public JavaEnumSource removeInitializer(org.jboss.forge.roaster.model.Initializer<JavaEnumSource, ?> initializer) 
+   {
+      InitializerAccessor.removeInitializer(getDeclaration(), initializer);
       return this;
    }
 

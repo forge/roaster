@@ -9,6 +9,7 @@ public interface JavaRecordSource extends
          JavaSource<JavaRecordSource>,
          JavaRecord<JavaRecordSource>,
          MethodHolderSource<JavaRecordSource>,
+         InitializerHolderSource<JavaRecordSource>,
          TypeHolderSource<JavaRecordSource>,
          InterfaceCapableSource<JavaRecordSource>
 {

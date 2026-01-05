@@ -6,6 +6,8 @@
  */
 package org.jboss.forge.roaster.model.impl;
 
+import java.util.List;
+
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
@@ -14,10 +16,13 @@ import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jface.text.Document;
+import org.jboss.forge.roaster.model.Initializer;
 import org.jboss.forge.roaster.model.JavaClass;
 import org.jboss.forge.roaster.model.JavaType;
+import org.jboss.forge.roaster.model.ast.InitializerAccessor;
 import org.jboss.forge.roaster.model.ast.ModifierAccessor;
 import org.jboss.forge.roaster.model.source.Import;
+import org.jboss.forge.roaster.model.source.InitializerSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
@@ -243,5 +248,36 @@ public class JavaClassImpl extends AbstractGenericCapableJavaSource<JavaClassSou
          return true;
       }
       return false;
+   }
+
+   @Override
+   public List<InitializerSource<JavaClassSource>> getInitializers() 
+   {
+      return InitializerAccessor.getInitializers(this, getDeclaration());
+   }
+   
+   @Override
+   public boolean hasInitializer(Initializer<JavaClassSource, ?> initializer)
+   {
+      return InitializerAccessor.hasInitializer(getDeclaration(), initializer);
+   }
+
+   @Override
+   public InitializerSource<JavaClassSource> addInitializer() 
+   {
+      return InitializerAccessor.addInitializer(this, getDeclaration());
+   }
+
+   @Override
+   public InitializerSource<JavaClassSource> addInitializer(final String initializer) 
+   {
+      return InitializerAccessor.addInitializer(this, getDeclaration(), initializer);
+   }
+
+   @Override
+   public JavaClassSource removeInitializer(org.jboss.forge.roaster.model.Initializer<JavaClassSource, ?> initializer) 
+   {
+      InitializerAccessor.removeInitializer(getDeclaration(), initializer);
+      return this;
    }
 }
