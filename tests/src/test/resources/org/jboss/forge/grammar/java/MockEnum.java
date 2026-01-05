@@ -23,4 +23,12 @@ public enum MockEnum
    {
       return name();
    }
+   
+   static {
+      System.out.println("Hello world!");
+   }
+   
+   {
+      System.out.println("Hello world!");
+   }
 }

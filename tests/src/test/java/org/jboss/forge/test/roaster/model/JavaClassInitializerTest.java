@@ -9,6 +9,7 @@ import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -40,6 +41,25 @@ public class JavaClassInitializerTest
       assertFalse(initializer.isStatic());
       initializer.setStatic(true);
       assertTrue(initializer.isStatic());
+   }
+   
+   @Test
+   public void testGetInitializers() {
+      assertEquals(3, javaClass.getInitializers().size());
+   }
+   
+   @Test
+   public void testRemoveInitializer() {
+      assertTrue(javaClass.hasInitializer(initializer));
+      javaClass.removeInitializer(initializer);
+      assertFalse(javaClass.hasInitializer(initializer));
+   }
+   
+   @Test
+   public void testAddInitializer() {
+      assertEquals(3, javaClass.getInitializers().size());
+      javaClass.addInitializer();
+      assertEquals(4, javaClass.getInitializers().size());
    }
 
 }

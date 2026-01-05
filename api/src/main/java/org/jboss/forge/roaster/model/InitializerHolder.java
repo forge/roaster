@@ -13,4 +13,9 @@ public interface InitializerHolder<O extends JavaType<O>> {
      */
     List<? extends Initializer<O, ?>> getInitializers();
     
+    /**
+     * Return true if this {@link O} instance has the provided {@link Initializer}; otherwise false.
+     */
+    boolean hasInitializer(Initializer<O, ?> initializer);
+    
 }

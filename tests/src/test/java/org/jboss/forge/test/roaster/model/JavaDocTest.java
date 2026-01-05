@@ -12,6 +12,7 @@ import org.jboss.forge.roaster.model.JavaDoc;
 import org.jboss.forge.roaster.model.JavaDocTag;
 import org.jboss.forge.roaster.model.source.EnumConstantSource;
 import org.jboss.forge.roaster.model.source.FieldSource;
+import org.jboss.forge.roaster.model.source.InitializerSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaDocSource;
 import org.jboss.forge.roaster.model.source.JavaEnumSource;
@@ -150,6 +151,24 @@ public class JavaDocTest
       MethodSource<JavaClassSource> method = javaClass.getMethods().get(0);
       assertTrue(method.hasJavaDoc());
       JavaDocSource<MethodSource<JavaClassSource>> javaDoc = method.getJavaDoc();
+      String expected = "Do Something" + LINE_SEPARATOR + "@author George Gastaldi";
+      assertEquals(expected, javaDoc.getFullText());
+   }
+
+   @Test
+   public void testJavaDocInitializer()
+   {
+      String text = "public class MyClass {"
+               + "/**" + LINE_SEPARATOR
+               + " * Do Something" + LINE_SEPARATOR
+               + " * @author George Gastaldi" + LINE_SEPARATOR + " */" + LINE_SEPARATOR + ""
+               + "{};}";
+      JavaClassSource javaClass = Roaster.parse(JavaClassSource.class, text);
+      assertFalse(javaClass.hasJavaDoc());
+      assertEquals(1, javaClass.getInitializers().size());
+      InitializerSource<JavaClassSource> initializer = javaClass.getInitializers().get(0);
+      assertTrue(initializer.hasJavaDoc());
+      JavaDocSource<InitializerSource<JavaClassSource>> javaDoc = initializer.getJavaDoc();
       String expected = "Do Something" + LINE_SEPARATOR + "@author George Gastaldi";
       assertEquals(expected, javaDoc.getFullText());
    }

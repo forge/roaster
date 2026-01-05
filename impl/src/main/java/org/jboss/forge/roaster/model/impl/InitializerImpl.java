@@ -120,6 +120,45 @@ public class InitializerImpl<O extends JavaSource<O>> implements InitializerSour
     {
         return parent;
     }
+    
+    @Override
+   public int hashCode()
+   {
+       final int prime = 31;
+       int result = 1;
+       result = (prime * result) + ((initializer == null) ? 0 : initializer.hashCode());
+       return result;
+   }
+    
+    @Override
+   public boolean equals(Object obj)
+   {
+       if (this == obj)
+       {
+          return true;
+       }
+       if (obj == null)
+       {
+          return false;
+       }
+       if (getClass() != obj.getClass())
+       {
+          return false;
+       }
+       InitializerImpl<?> other = (InitializerImpl<?>) obj;
+       if (initializer == null)
+       {
+          if (other.initializer != null)
+          {
+             return false;
+          }
+       }
+       else if (!initializer.equals(other.initializer))
+       {
+          return false;
+       }
+       return true;
+   }
 
     @Override
     public boolean hasJavaDoc() 

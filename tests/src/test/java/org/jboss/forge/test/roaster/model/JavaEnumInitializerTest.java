@@ -9,6 +9,7 @@ import org.jboss.forge.roaster.model.source.JavaEnumSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -40,6 +41,25 @@ public class JavaEnumInitializerTest
       assertFalse(initializer.isStatic());
       initializer.setStatic(true);
       assertTrue(initializer.isStatic());
+   }
+   
+   @Test
+   public void testGetInitializers() {
+      assertEquals(3, javaEnum.getInitializers().size());
+   }
+   
+   @Test
+   public void testRemoveInitializer() {
+      assertTrue(javaEnum.hasInitializer(initializer));
+      javaEnum.removeInitializer(initializer);
+      assertFalse(javaEnum.hasInitializer(initializer));
+   }
+   
+   @Test
+   public void testAddInitializer() {
+      assertEquals(3, javaEnum.getInitializers().size());
+      javaEnum.addInitializer();
+      assertEquals(4, javaEnum.getInitializers().size());
    }
 
 }

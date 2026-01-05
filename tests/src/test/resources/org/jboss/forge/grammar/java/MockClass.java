@@ -15,4 +15,12 @@ public class MockClass {
    public String valueOf(URL url) {
       return url.getPath();
    }
+   
+   static {
+      System.out.println("Hello world!");
+   }
+   
+   {
+      System.out.println("Hello world!");
+   }
 }
