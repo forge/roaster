@@ -7,13 +7,16 @@
 
 package org.jboss.forge.test.roaster.model.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.jboss.forge.roaster.model.util.FormatterProfileReader;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -41,6 +44,34 @@ public class FormatterProfileReaderTest
          assertNull(reader.getPropertiesFor("Something Else"));
          assertNotNull(reader.getDefaultProperties());
       }
+   }
+
+   @Test
+   public void testXXEAttackIsBlocked()
+   {
+      String xxePayload = "<?xml version=\"1.0\"?>\n"
+               + "<!DOCTYPE profiles [\n"
+               + "  <!ENTITY xxe SYSTEM \"file:///etc/passwd\">\n"
+               + "]>\n"
+               + "<profiles>&xxe;</profiles>";
+      InputStream input = new ByteArrayInputStream(xxePayload.getBytes(StandardCharsets.UTF_8));
+      assertThatThrownBy(() -> FormatterProfileReader.fromEclipseXml(input))
+               .isInstanceOf(IOException.class);
+   }
+
+   @Test
+   public void testBillionLaughsAttackIsBlocked()
+   {
+      String billionLaughs = "<?xml version=\"1.0\"?>\n"
+               + "<!DOCTYPE profiles [\n"
+               + "  <!ENTITY a \"aaaaaaaaaa\">\n"
+               + "  <!ENTITY b \"&a;&a;&a;&a;&a;&a;&a;&a;&a;&a;\">\n"
+               + "  <!ENTITY c \"&b;&b;&b;&b;&b;&b;&b;&b;&b;&b;\">\n"
+               + "]>\n"
+               + "<profiles>&c;</profiles>";
+      InputStream input = new ByteArrayInputStream(billionLaughs.getBytes(StandardCharsets.UTF_8));
+      assertThatThrownBy(() -> FormatterProfileReader.fromEclipseXml(input))
+               .isInstanceOf(IOException.class);
    }
 
    @Test
